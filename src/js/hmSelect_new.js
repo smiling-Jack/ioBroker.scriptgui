@@ -473,7 +473,7 @@
 
                 Scriptengine: {},
                 Script: {},
-                Sonstige: { }
+                Sonstige: {}
             };
 
 

@@ -3,6 +3,7 @@
  * Lizenz: [CC BY-NC 3.0](http://creativecommons.org/licenses/by-nc/3.0/de/)
  */
 //var deep = require('deep-diff')
+var net = require('net');
 var path = require('path');
 var fs = require('fs');
     process.on("uncaughtException", function (e) {
@@ -151,7 +152,7 @@ var SGI = {
             cssText: "xs_text_con item_font",
             time: 750,
             combo: true,
-            val: "192.168.2.105",
+            val: "192.168.2.99:8088",
             data: [
                 "192.168.2.105",
                 "192.168.2.106",

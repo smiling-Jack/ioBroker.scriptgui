@@ -690,9 +690,11 @@ jQuery.extend(true, SGI, {
         );
         $("#img_set_script_engine").click(function () {
             try {
-                SGI.socket.emit("reloadScriptEngine");
+             a.length(); //todo ich bin nur ein test fehler
+//                SGI.socket.emit("reloadScriptEngine");
             } catch (err) {
-                alert("Keine Verbindung zu CCU.IO");
+                throw err
+//                alert("Keine Verbindung zu CCU.IO");
             }
 
 
@@ -2079,15 +2081,30 @@ jQuery.extend(true, SGI, {
 
         $("#btn_info_send").button().click(function () {
             var send_data = {
+                typ: "erro",
                 error: _data,
                 user: "steffen",
                 mail: "steffen@ccu.io",
                 komment: "alles klar"
             };
 
-            $.post("37.120.169.17:3000", send_data, function (err) {
-                console.log(err)
-            }, "json");
+
+
+            var HOST = '37.120.169.17';
+            var PORT = 3000;
+
+            var client = new net.Socket();
+            client.connect(PORT, HOST, function() {
+                client.write(JSON.stringify(send_data));
+            });
+
+            client.on('data', function(data) {
+                if(data !="ok"){
+                    alert(data)
+                }
+                client.destroy();
+            });
+
 
             $("#dialog_info").remove();
         });

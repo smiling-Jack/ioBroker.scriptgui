@@ -10,7 +10,7 @@ module.exports = function (grunt) {
         nodewebkit: {
             options: {
                 buildDir: './build',
-                version: 'v0.10.2',
+//                version: 'v0.10.2',
                 winIco:  './src/img/icon/favicon.png',
                 macIcns:  './src/img/icon/favicon.png',
 

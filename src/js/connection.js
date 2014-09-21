@@ -8,13 +8,11 @@ var homematic = {
     regaObjects: {}
 };
 
-
 jQuery.extend(true, SGI, {
 
     setup_socket: function () {
         SGI.socket = io.connect(null, {'force new connection': true});
-
-        $("#inp_con_ip").bind("change", function () {
+       $("#inp_con_ip").bind("change", function () {
             SGI.disconnect()
         })
     },
@@ -24,7 +22,6 @@ jQuery.extend(true, SGI, {
         if (!SGI.socket) {
             SGI.socket.disconnect()
         }
-
 
         homematic = {
             uiState: {"_65535": {"Value": null}},
@@ -38,14 +35,9 @@ jQuery.extend(true, SGI, {
     },
 
     offline: function () {
-//        if (SGI.socket != undefined){
-//            SGI.socket.disconnect()
-//        }
-
         try {
             var _url = $("#inp_con_ip").val();
             var url = "";
-
 
             if (_url.split(":").length < 2) {
                 url = "http://" + _url + ":8080";
@@ -82,7 +74,6 @@ jQuery.extend(true, SGI, {
                 regaIndex: {},
                 regaObjects: {}
             };
-
         }
     },
 //    online: function () {
@@ -144,19 +135,16 @@ jQuery.extend(true, SGI, {
             var _url = $("#inp_con_ip").val();
             var url = "";
 
-
             if (_url.split(":").length < 2) {
                 url = "http://" + _url + ":8080";
             } else {
                 url = "http://" + _url;
             }
             $("#img_con_state").attr("src", "img/icon/flag-blue.png");
-
+console.log(url)
             SGI.socket = io.connect(url, {'force new connection': true});
 
             SGI.socket.on("connect", function (err) {
-
-
 
                 SGI.socket.emit("getIndex", function (index) {
                     homematic.regaIndex = index;
@@ -169,6 +157,12 @@ jQuery.extend(true, SGI, {
                             for (var dp in data) {
                                 homematic.uiState["_" + dp] = { Value: data[dp][0], Timestamp: data[dp][1], LastChange: data[dp][3]};
                             }
+
+                            // TODO Ist da hier wirklich richtig oder doch eher direkt nach dem laden ?
+                            var name = url.split("http://")[1].toString().replace(":", "_").replace(/\./g, "_");
+                            fs.writeFile(SGI.nwDir + '/datastore/' + name + '.json', JSON.stringify(homematic), function (err) {
+                                if (err) throw err;
+                            });
 
                             SGI.socket.on('event', function (obj) {
                                 if (homematic.uiState["_" + obj[0]] !== undefined) {
@@ -186,29 +180,19 @@ jQuery.extend(true, SGI, {
                             })
                         });
                     });
-
-
                 });
-
-
             });
 
             SGI.socket.on("error", function (err) {
                 alert("fehler")
                 SGI.disconnect();
-                SGI.offline();
-
+               SGI.offline();
             });
 
             SGI.socket.on('disconnect', function () {
                 $("#img_con_state").attr("src", "img/icon/flag-red.png");
 
-                // TODO Ist da hier wirklich richtig oder doch eher direkt nach dem laden ?
-                var name = url.split("http://")[1].toString().replace(":", "_").replace(/\./g, "_");
-                fs.writeFile(SGI.nwDir + '/datastore/' + name + '.json', JSON.stringify(homematic), function (err) {
-                    if (err) throw err;
 
-                });
             });
 
 
@@ -227,8 +211,5 @@ jQuery.extend(true, SGI, {
             };
             throw err
         }
-
-    },
-
-
+    }
 });
