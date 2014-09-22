@@ -74,6 +74,10 @@ angular.module('tutorialApp', [])
             }
             $("#theme_css").remove();
             $("head").append('<link id="theme_css" rel="stylesheet" href="css/' + theme + '/jquery-ui.min.css"/>');
+            setTimeout(function(){
+                document.styleSheets[1].cssRules[3].style["background-color"]= $(".frame_color").css("background-color");
+            }, 500);
+
         });
 //-------------------------------------------------------------------------------------------------
 

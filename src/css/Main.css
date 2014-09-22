@@ -8,6 +8,30 @@ html {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
+    background-color: red;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    background: inherit;
+    display: none;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+    background-image: none;
+    background-color: blue;
+}
+
+::-webkit-scrollbar-corner {
+    display: none
 }
 
 body {
@@ -20,7 +44,10 @@ body {
     align-self: flex-start;
     font-family: Arial, sans-serif;
 }
-*{outline: none}
+
+* {
+    outline: none
+}
 
 .menu_body {
     height: 24px;
@@ -91,10 +118,10 @@ body {
 
 .toolbox_body {
     position: absolute !important;
-    width: 170px;
+    width: 150px;
     top: 30px;
-    height: calc(100% - 34px);
-    overflow: hidden !important;
+    height: calc(100% - 22px);
+    overflow: auto;
 }
 
 .xs_button_toolbox {
@@ -291,6 +318,7 @@ body {
     align-items: center;
     flex-direction: column;
     justify-content: flex-start;
+    overflow: hidden;
 }
 
 .xs_menu_id_select {
@@ -317,23 +345,6 @@ body {
 
 }
 
-.toolbox_slider_body {
-    position: absolute !important;
-    width: 25px;
-    top: 0;
-    right: 0;
-    height: 100%;
-    border-right: 2px solid #333333;
-    border-left: 2px solid #333333;
-}
-
-.toolbox_slider {
-    position: absolute !important;
-    width: 23px;
-    top: 12px;
-    right: 4px;
-    height: calc(100% - 24px) !important;
-}
 
 .helper {
     position: absolute;
@@ -347,22 +358,25 @@ body {
 .toolbox {
     position: absolute;
     width: 150px !important;
-    min-height: 1000px;
+    /*min-height: 99%;*/
     top: 0;
-    height: 100%;
+    /*height: 100%;*/
     text-align: center;
     display: inline-block;
+    border:none !important;
+    left: -5px;
 }
 
 .prg_body {
     position: relative !important;
     top: -32px;
     left: 150px;
-    width: calc(100% - 150px);
-    height: auto;
-    overflow: hidden;
-    background-color: transparent !important;
+    width: calc(100% - 153px);
+    height: calc(100% - 6px);
+    overflow: scroll;
     max-height: 100%;
+    border: none !important;
+
 }
 
 .prg_panel {
@@ -370,8 +384,9 @@ body {
     width: 4000px;
     height: 2000px;
     padding: 3px;
-    border: 3px solid #000000;
-    outline: 3px solid #FFFFFF;
+    /*border: 3px solid #000000;*/
+    /*outline: 3px solid #FFFFFF;*/
+    background: transparent !important;
 }
 
 .btn_input_ch {
@@ -1926,7 +1941,6 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
 }
 
-
 #img_con_state {
     position: absolute;
     right: 50px;
@@ -1992,5 +2006,6 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
 }
 
 .div_img_glass_on {
-    background: rgba(0, 255, 0, 0.25)!important;
+    background: rgba(0, 255, 0, 0.25) !important;
 }
+

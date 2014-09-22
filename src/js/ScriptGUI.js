@@ -123,25 +123,16 @@ var SGI = {
 
         // slider XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
+
+
+        $( ".prg_body" ).scrollTop( 1000-($(".prg_body").height()/2) );
+        $( ".prg_body" ).scrollLeft( 2000-($(".prg_body").width()/2) );
+
+        var color = $(".frame_color").css("background-color");
+        document.styleSheets[1].cssRules[3].style["background-color"]= color;
+
         $("#sim_output").prepend("<tr><td style='width: 100px'>Script Log</td><td></td></tr>");
 
-
-        $("#prg_body").perfectScrollbar({
-            wheelSpeed: 60,
-            top: "50%",
-            left: "50%"
-        });
-
-        $("#toolbox_body").perfectScrollbar({
-            wheelSpeed: 60
-        });
-
-        $("#sim_output_body").perfectScrollbar({
-            wheelSpeed: 20
-        });
-
-
-        $(".ps-scrollbar-x, .ps-scrollbar-y").addClass("ui-state-default frame_color_dark");
 
         // Connect XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
@@ -279,14 +270,9 @@ var SGI = {
                     $("#sim_log").css({height: "10px",
                         "min-height": "10px"});
                     $("#main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
-                    $('#toolbox_body').perfectScrollbar('update');
-                    $('#prg_body').perfectScrollbar('update');
-
                 } else {
                     $("#sim_log").css({height: log_h + "px"});
                     $("#main").css({height: 'calc(100% - ' + (58 + log_h) + 'px)'});
-                    $('#toolbox_body').perfectScrollbar('update');
-                    $('#prg_body').perfectScrollbar('update');
                 }
             })
 
@@ -319,8 +305,7 @@ var SGI = {
             $("#sim_log").css({height: "10px",
                 "min-height": "10px"});
             $("#main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
-            $('#toolbox_body').perfectScrollbar('update');
-            $('#prg_body').perfectScrollbar('update')
+
         }
 
 

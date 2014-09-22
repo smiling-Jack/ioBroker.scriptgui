@@ -58,11 +58,10 @@ jQuery.extend(true, SGI, {
         $("#ul_theme li a").click(function () {
             $("#theme_css").remove();
             $("head").append('<link id="theme_css" rel="stylesheet" href="css/' + $(this).data('info') + '/jquery-ui.min.css"/>');
+            setTimeout(function(){
+                document.styleSheets[1].cssRules[3].style["background-color"]= $(".frame_color").css("background-color");
+            }, 300);
 
-            //resize Event auslössen um Slider zu aktualisieren
-            var evt = document.createEvent('UIEvents');
-            evt.initUIEvent('resize', true, false, window, 0);
-            window.dispatchEvent(evt);
 
 
         });
