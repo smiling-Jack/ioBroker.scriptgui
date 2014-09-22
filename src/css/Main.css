@@ -8,7 +8,6 @@ html {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
-    background-color: red;
 }
 
 ::-webkit-scrollbar {
@@ -121,7 +120,8 @@ body {
     width: 150px;
     top: 30px;
     height: calc(100% - 22px);
-    overflow: auto;
+    overflow-y: overlay;
+    overflow-x: hidden;
 }
 
 .xs_button_toolbox {
