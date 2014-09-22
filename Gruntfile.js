@@ -2,47 +2,41 @@
  * Created by jack on 10.07.2014.
  */
 module.exports = function (grunt) {
-
+var ops = grunt.file.readJSON("package.json");
+    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-node-webkit-builder');
     grunt.loadNpmTasks('grunt-contrib-compress');
 
     // Project configuration.
     grunt.initConfig({
+        pkg: grunt.file.readJSON('package.json'),
+
         nodewebkit: {
             options: {
                 buildDir: './build',
-//                version: 'v0.10.2',
                 winIco:  './src/img/icon/favicon.png',
                 macIcns:  './src/img/icon/favicon.png',
-
             },
             src: './src/**/*'
-        }
-    });
-
-    grunt.initConfig({
+        },
         compress: {
             win: {
                 options: {
-                    archive: 'build/ScriptGUI_win.zip'
+                    archive: 'build/ScriptGUI_<%= pkg.version %>_win.zip'
                 },
                 files: [
-//                    {src: ['path/*'], dest: 'internal_folder/', filter: 'isFile'}, // includes files in path
-//                    {src: ['build/ScriptGUI/win/**'], dest: 'ScriptGUI'}, // includes files in path and its subdirs
                     {expand: true, cwd: 'build/ScriptGUI/win/', src: ['**'], dest: 'ScriptGUI/'},
                 ]
             },
             osx: {
                 options: {
-                    archive: 'build/ScriptGUI_osx.zip'
+                    archive: 'build/ScriptGUI_<%= pkg.version %>_osx.zip'
                 },
                 files: [
-//                    {src: ['path/*'], dest: 'internal_folder/', filter: 'isFile'}, // includes files in path
-//                    {src: ['build/ScriptGUI/win/**'], dest: 'ScriptGUI'}, // includes files in path and its subdirs
                     {expand: true, cwd: 'build/ScriptGUI/osx/', src: ['**'], dest: 'ScriptGUI/'},
                 ]
             }
-        }
+        },
     });
 
 
@@ -50,5 +44,5 @@ module.exports = function (grunt) {
     grunt.loadTasks('tasks');
 
     // By default, lint and run all tests.
-    grunt.registerTask('default', ['nodewebkit']);
+    grunt.registerTask('Build', ['nodewebkit','compress']);
 };
