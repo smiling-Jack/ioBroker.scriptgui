@@ -3,7 +3,6 @@
  */
 module.exports = function (grunt) {
 var ops = grunt.file.readJSON("package.json");
-    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-node-webkit-builder');
     grunt.loadNpmTasks('grunt-contrib-compress');
 

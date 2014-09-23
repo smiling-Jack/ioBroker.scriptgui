@@ -6,9 +6,15 @@
 var net = require('net');
 var path = require('path');
 var fs = require('fs');
-    process.on("uncaughtException", function (e) {
+process.on("uncaughtException", function (e) {
     SGI.info_box(e.stack)
 });
+
+
+var execPath = path.dirname(process.execPath);
+var startPath = process.env.PWD;
+console.log(execPath)
+console.log(process.env.PWD)
 
 
 var scope;
@@ -93,7 +99,7 @@ var SGI = {
                 SGI.Setup_dialog()
             },
             close: function () {
-                fs.writeFile(SGI.nwDir+'/datastore/setup.json', JSON.stringify(scope.setup), function (err) {
+                fs.writeFile(SGI.nwDir + '/datastore/setup.json', JSON.stringify(scope.setup), function (err) {
                     if (err) throw err;
 
                 });
@@ -124,12 +130,12 @@ var SGI = {
         // slider XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
-
-        $( ".prg_body" ).scrollTop( 1000-($(".prg_body").height()/2) );
-        $( ".prg_body" ).scrollLeft( 2000-($(".prg_body").width()/2) );
+        $(".prg_body").scrollTop(1000 - ($(".prg_body").height() / 2));
+        $(".prg_body").scrollLeft(2000 - ($(".prg_body").width() / 2));
 
         var color = $(".frame_color").css("background-color");
-        document.styleSheets[1].cssRules[3].style["background-color"]= color;
+        document.styleSheets[1].cssRules[3].style["background-color"] = color;
+        document.styleSheets[1].cssRules[4].style["background-color"] = color;
 
         $("#sim_output").prepend("<tr><td style='width: 100px'>Script Log</td><td></td></tr>");
 
@@ -152,18 +158,18 @@ var SGI = {
 
         });
         $("#inp_con_ip").hover(function () {
-
-            $("#con_panel").show("slide", {direction: "up"});
-
+            $("#con_panel").css({top: 0, left: 0})
+            $("#con_panel").show("slide", {direction: "up"}).clearQueue();
 
         }, function () {
-//            $("#con_panel").hide("slide",{direction:"up"})
+
         });
+
         $("#con_panel_wrap").hover(function () {
-//            $("#con_panel").show()
+
         }, function (e) {
             if ($(e.target).attr("id") == "con_panel_wrap")
-                $("#con_panel").hide("slide", {direction: "up"})
+                $("#con_panel").hide("slide", {direction: "up"}).clearQueue()
         });
 
 
@@ -386,7 +392,7 @@ var SGI = {
         SGI.select_mbs();
         SGI.select_fbs();
         SGI.setup_socket();
-            SGI.global_event();
+        SGI.global_event();
 
 
         $("body").css({visibility: "visible"});
@@ -2664,13 +2670,6 @@ var SGI = {
     },
 
 
-
-
-
-
-
-
-
 };
 
 window.timeoutList = [];
@@ -2726,32 +2725,40 @@ window.clearAllIntervals = function () {
         // ordner erstellen
         var nwPath = process.execPath;
         SGI.nwDir = path.dirname(nwPath);
+        SGI.prgDir = SGI.nwDir + "\\datastore\\programms\\";
 
+        $("#prgopen").attr("nwworkingdir",SGI.prgDir);
         try {
-            var stats = fs.lstatSync(SGI.nwDir+'/datastore');
-            if (!stats.isDirectory()) {
-                throw 0;
+            try {
+                var stats = fs.lstatSync(SGI.nwDir + '/datastore');
+                if (!stats.isDirectory()) {
+                    throw 0;
+                }
+            }
+            catch (e) {
+                fs.mkdirSync(SGI.nwDir + '/datastore');
+                fs.mkdirSync(SGI.nwDir + '/datastore/programms');
+                fs.mkdirSync(SGI.nwDir + '/datastore/connections');
             }
         }
         catch (e) {
-            fs.mkdirSync(SGI.nwDir+'/datastore');
-            fs.mkdirSync(SGI.nwDir+'/datastore/programms');
+
         }
 
 
         scope = angular.element($('body')).scope();
         scope.$apply();
 
-        try{
-            fs.readFile(SGI.nwDir+'/datastore/setup.json', function (err, data) {
-                if (!err){
+        try {
+            fs.readFile(SGI.nwDir + '/datastore/setup.json', function (err, data) {
+                if (!err) {
                     scope.setup = JSON.parse(data);
                     scope.$apply();
                 }
                 SGI.Setup();
             });
         }
-        catch(err){
+        catch (err) {
             SGI.Setup();
         }
 

@@ -29,19 +29,18 @@ jQuery.extend(true, SGI, {
             SGI.clear();
         });
         $("#m_save").click(function () {
-            if ($("body").find(".ui-dialog:not(.quick-help)").length == 0) {
-                SGI.save_ccu_io();
-            }
+//            if ($("body").find(".ui-dialog:not(.quick-help)").length == 0) {
+                SGI.save_local();
+//            }
         });
         $("#m_save_as").click(function () {
-            if ($("body").find(".ui-dialog:not(.quick-help)").length == 0) {
-                SGI.save_as_ccu_io();
-            }
+//            if ($("body").find(".ui-dialog:not(.quick-help)").length == 0) {
+            SGI.save_as_local();
+//            }
         });
         $("#m_open").click(function () {
 //            if ($("body").find(".ui-dialog:not(.quick-help)").length == 0) {
-            console.log("open")
-            SGI.open_ccu_io();
+            SGI.open_local();
 //            }
         });
         $("#m_example").click(function () {
@@ -58,10 +57,10 @@ jQuery.extend(true, SGI, {
         $("#ul_theme li a").click(function () {
             $("#theme_css").remove();
             $("head").append('<link id="theme_css" rel="stylesheet" href="css/' + $(this).data('info') + '/jquery-ui.min.css"/>');
-            setTimeout(function(){
-                document.styleSheets[1].cssRules[3].style["background-color"]= $(".frame_color").css("background-color");
+            setTimeout(function () {
+                document.styleSheets[1].cssRules[3].style["background-color"] = $(".frame_color").css("background-color");
+                document.styleSheets[1].cssRules[4].style["background-color"] = $(".frame_color").css("background-color");
             }, 300);
-
 
 
         });
@@ -689,7 +688,7 @@ jQuery.extend(true, SGI, {
         );
         $("#img_set_script_engine").click(function () {
             try {
-             a.length(); //todo ich bin nur ein test fehler
+                a.length(); //todo ich bin nur ein test fehler
 //                SGI.socket.emit("reloadScriptEngine");
             } catch (err) {
                 throw err
@@ -1879,57 +1878,57 @@ jQuery.extend(true, SGI, {
 
     },
 
-    save_as_ccu_io: function () {
-        SGI.make_savedata();
-        $.fm({
-            lang: SGI.language,
-            path: "/www/ScriptGUI/prg_Store/",
-            file_filter: ["prg"],
-            folder_filter: true,
-            mode: "save"
-
-        }, function (_data) {
-            SGI.socket.emit("writeRawFile", _data.path + _data.file.split(".")[0] + ".prg", JSON.stringify(PRG.valueOf()), function (data) {
-
-                SGI.prg_store = _data.path;
-                SGI.file_name = _data.file.split(".")[0];
+    save_as_local: function () {
+        var data = SGI.make_savedata();
+        var chooser = $('#prgsaveas');
+        chooser.change(function (evt) {
+            var filep = $(this).val();
+            fs.writeFile(filep, JSON.stringify(data), function (err) {
+                SGI.prg_store = filep;
+                SGI.file_name = filep.split("\\").pop();
                 $("#m_file").text(SGI.file_name);
+                if (err) throw err;
             });
         });
+        chooser.trigger('click');
     },
 
-    save_ccu_io: function () {
+    save_local: function () {
         if (SGI.file_name == "") {
-            SGI.save_as_ccu_io()
+            SGI.save_as_local()
         } else {
-            SGI.make_savedata();
+            var data = SGI.make_savedata();
             try {
-                SGI.socket.emit("writeRawFile", SGI.prg_store + SGI.file_name + ".prg", JSON.stringify(PRG.valueOf()), function (ok) {
+                fs.writeFile(SGI.prg_store, JSON.stringify(data), function (err) {
+                    if (err) throw err;
                 });
             } catch (err) {
-                alert("Keine Verbindung zu CCU.IO")
+                alert("Speichern nicht möglich")
             }
         }
     },
 
-    open_ccu_io: function () {
-        $.fm({
-            lang: SGI.language,
-            path: "www/ScriptGUI/prg_Store/",
-            file_filter: ["prg"],
-            folder_filter: true,
-            mode: "open"
+    open_local: function () {
+        var chooser = $('#prgopen');
+        chooser.change(function (evt) {
+            var filep = $(this).val();
 
-        }, function (_data) {
-            SGI.socket.emit("readJsonFile", _data.path + _data.file, function (data) {
-                SGI.clear();
-                SGI.load_prg(data);
-                SGI.prg_store = _data.path;
-                SGI.file_name = _data.file.split(".")[0];
-                $("#m_file").text(SGI.file_name);
-            });
+            try {
+                fs.readFile(filep, function (err, data) {
+                    if (!err) {
+                        SGI.clear();
+                        SGI.load_prg(JSON.parse(data));
+                        SGI.prg_store = filep;
+                        SGI.file_name = filep.split("\\").pop();
+                        $("#m_file").text(SGI.file_name);
+                    }
 
+                });
+            }
+            catch (err) {
+            }
         });
+        chooser.trigger('click');
     },
 
     example_ccu_io: function () {
@@ -2088,17 +2087,16 @@ jQuery.extend(true, SGI, {
             };
 
 
-
             var HOST = '37.120.169.17';
             var PORT = 3000;
 
             var client = new net.Socket();
-            client.connect(PORT, HOST, function() {
+            client.connect(PORT, HOST, function () {
                 client.write(JSON.stringify(send_data));
             });
 
-            client.on('data', function(data) {
-                if(data !="ok"){
+            client.on('data', function (data) {
+                if (data != "ok") {
                     alert(data)
                 }
                 client.destroy();

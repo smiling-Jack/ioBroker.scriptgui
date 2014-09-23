@@ -76,59 +76,6 @@ jQuery.extend(true, SGI, {
             };
         }
     },
-//    online: function () {
-//        try {
-//            var _url = $("#inp_con_ip").val();
-//            var url = "";
-//            console.log(_url)
-//
-//            if (_url.split(":").length < 2) {
-//                url = "http://" + _url + ":8080";
-//            } else {
-//                url = "http://" + _url;
-//            }
-//
-//
-//            SGI.socket = io.connect(url)
-//            SGI.socket.emit("getIndex", function (index) {
-//                homematic.regaIndex = index;
-//
-//                SGI.socket.emit("getObjects", function (obj) {
-//                    homematic.regaObjects = obj;
-//
-//                    SGI.socket.emit("getDatapoints", function (data) {
-//
-//                        for (var dp in data) {
-//                            homematic.uiState.attr("_" + dp, { Value: data[dp][0], Timestamp: data[dp][1], LastChange: data[dp][3]});
-//                        }
-//
-//                        SGI.socket.on('event', function (data) {
-//                            if (homematic.uiState["_" + obj[0]] !== undefined) {
-//                                var o = {};
-//                                o["_" + obj[0] + ".Value"] = obj[1];
-//                                o["_" + obj[0] + ".Timestamp"] = obj[2];
-//                                o["_" + obj[0] + ".Certain"] = obj[3];
-//                                homematic.uiState.attr(o);
-//                            }
-//                        });
-//                    });
-//                });
-//            });
-//
-//
-//            SGI.socket.on('disconnect', function(){
-//                alert("Disconnect")
-//            });
-//
-//
-//
-//
-//        }
-//        catch (e){
-//            SGI.info_box(e.stack)
-//        }
-//
-//    },
 
     online: function () {
         try {
@@ -141,7 +88,7 @@ jQuery.extend(true, SGI, {
                 url = "http://" + _url;
             }
             $("#img_con_state").attr("src", "img/icon/flag-blue.png");
-console.log(url)
+
             SGI.socket = io.connect(url, {'force new connection': true});
 
             SGI.socket.on("connect", function (err) {
@@ -160,7 +107,7 @@ console.log(url)
 
                             // TODO Ist da hier wirklich richtig oder doch eher direkt nach dem laden ?
                             var name = url.split("http://")[1].toString().replace(":", "_").replace(/\./g, "_");
-                            fs.writeFile(SGI.nwDir + '/datastore/' + name + '.json', JSON.stringify(homematic), function (err) {
+                            fs.writeFile(SGI.nwDir + '/datastore/connections/' + name + '.json', JSON.stringify(homematic), function (err) {
                                 if (err) throw err;
                             });
 

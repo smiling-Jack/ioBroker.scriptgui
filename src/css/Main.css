@@ -14,19 +14,29 @@ html {
     width: 12px;
     height: 12px;
 }
-
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-    background: inherit;
-    display: none;
+
+display:none;
 }
 
-::-webkit-scrollbar-thumb {
+#prg_body::-webkit-scrollbar-thumb{
     border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow:inset 0 0 8px rgba(0, 0, 0, 0.6),inset 0 0 100px rgba(255, 255, 255, 0.35) ;
     background-image: none;
-    background-color: blue;
+}
+
+#toolbox_body::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    -webkit-box-shadow:inset 0 0 8px rgba(0, 0, 0, 0.6),inset 0 0 100px rgba(255, 255, 255, 0.35) ;
+}
+
+::-webkit-scrollbar-button:start{
+    width: 5px;
+    height: 5px;
+}
+#toolbox_body::-webkit-scrollbar-button:end{
+    width: 5px;
+    height: 5px;
 }
 
 ::-webkit-scrollbar-corner {
@@ -119,7 +129,7 @@ body {
     position: absolute !important;
     width: 150px;
     top: 30px;
-    height: calc(100% - 22px);
+    height: calc(100% - 36px);
     overflow-y: overlay;
     overflow-x: hidden;
 }
