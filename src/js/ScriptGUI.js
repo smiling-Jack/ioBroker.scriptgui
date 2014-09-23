@@ -315,6 +315,7 @@ var SGI = {
 
         //      Make element draggable
         var active_toolbox;
+        SGI.read_experts();
         $(".fbs").draggable({
             helper: "clone",
             zIndex: -1,
@@ -2676,6 +2677,60 @@ var SGI = {
         return prg_codebox
     },
 
+    read_experts: function () {
+        fs.readdir(SGI.nwDir + "\\datastore\\experts\\", function (err, files) {
+            if (err) {
+                throw err;
+            } else {
+                $.each(files, function () {
+                    var file = this.toString();
+                    try {
+                        fs.readFile(SGI.nwDir + "\\datastore\\experts\\"+file, function (err, data) {
+                            if (err) {
+                                throw err;
+                            } else {
+                                var data = JSON.parse(data)
+                                console.log(data)
+                                $("#toolbox_expert").append('\
+                             <div id="' + data.name + '" style="width: 60px;height: auto;margin: auto;text-align: center;background-color: #ffffff;border: 1px solid #00ffff;border-radius: 7px;z-index: 50;display: inline-table;position: relative!important;margin-top:30px; overflow-x: visible;overflow-y: hidden " class="fbs_exp_custom">\
+                                <div  class="div_head" style="background-color: gray;">\
+                                    <a style="background-color:transparent; border:none; width: 56px; text-align: center;" class="head_font">'+data.name+'</a>\
+                                </div>\
+                                <div id="left_' + data.name + '" class="div_left_exp">\
+                                </div>\
+                                <div id="right_' + data.name + '" class="div_right_exp">\
+                                </div>\
+                                <label class="lab_exp_in">Inputs</label>\
+                                <label class="lab_exp_out">Outputs</label>\
+                                <a style="color: #000000" id="var_in_' + data.name + '" class="inp_exp_val_in" >'+data.in+'</a>\
+                                <a style="color: #000000" id="var_out_' + data.name + '" class="inp_exp_val_out" >'+data.out+'</a>\
+                                <button type="button" id="btn_' + data.name + '" class="btn_exp">Edit</button> \
+                             </div><br>');
+
+                                for (var i = 1; i <= parseInt(data.in); i++) {
+                                    $("#left_" + data.name).append('' +
+                                        '<div id="' + data.name + '_in' + i + '"  class="div_input ' + data.name+ '_in">' +
+                                        '<div style="background-color:gray;background-color: gray;height: 10px;width: 10px;position: relative;left: -11px; top:5px"></div>' +
+                                        '</div>')
+                                }
+                                for (var i = 1; i <= parseInt(data.out); i++) {
+                                    $("#right_" + data.name).append('<div id="' + data.name + '_out' + i + '" class="div_output1 ' + data.name + '_out">' +
+                                        '<div style="background-color:gray;background-color: gray;height: 10px;width: 10px;position: relative;left: 21px; top:5px"></div>' +
+                                        '</div>');
+
+                                }
+
+                            }
+                        });
+                    }
+                    catch (err) {
+                        throw err
+                    }
+                })
+            }
+        })
+    },
+
 
 };
 
@@ -2734,8 +2789,8 @@ window.clearAllIntervals = function () {
         SGI.nwDir = path.dirname(nwPath);
         SGI.prgDir = SGI.nwDir + "\\datastore\\programms\\";
 
-        $("#prgopen").attr("nwworkingdir",SGI.prgDir);
-        $("#prgsaveas").attr("nwworkingdir",SGI.prgDir);
+        $("#prgopen").attr("nwworkingdir", SGI.prgDir);
+        $("#prgsaveas").attr("nwworkingdir", SGI.prgDir);
         try {
             try {
                 var stats = fs.lstatSync(SGI.nwDir + '/datastore');
