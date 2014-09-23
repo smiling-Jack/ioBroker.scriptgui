@@ -68,7 +68,7 @@ SGI = $.extend(true, SGI, {
         'Listen Filter'         : {'de': 'Listen Filter',            'en': 'List filter',                 'ru': 'Фильтры'},
         'Get Set Var'           : {'de': 'Get Set Var',              'en': 'Get Set Var',                 'ru': 'Читать/Писать'},
         'Convert'               : {'de': 'Convert',                  'en': 'Convert',                     'ru': 'Конверт.'},
-        'Math.'                 : {'de': 'Math.',                    'en': 'Math.',                       'ru': 'Матем.'},         
+        'Math.'                 : {'de': 'Math.',                    'en': 'Math.',                       'ru': 'Матем.'},
         'Singel Trigger'        : {'de': 'Singel Trigger',           'en': 'Single Trigger',              'ru': 'Триггеры(один)'},
         'Zeit Trigger'          : {'de': 'Zeit Trigger',             'en': 'Time Trigger',                'ru': 'Триггеры(время)'},
         'Trigger Daten'         : {'de': 'Trigger Daten',            'en': 'Trigger Data',                'ru': 'Триггеры(данные)'},

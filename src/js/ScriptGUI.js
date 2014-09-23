@@ -2747,6 +2747,7 @@ window.clearAllIntervals = function () {
                 fs.mkdirSync(SGI.nwDir + '/datastore');
                 fs.mkdirSync(SGI.nwDir + '/datastore/programms');
                 fs.mkdirSync(SGI.nwDir + '/datastore/connections');
+                fs.mkdirSync(SGI.nwDir + '/datastore/experts');
             }
         }
         catch (e) {

@@ -1008,7 +1008,7 @@ SGI = $.extend(true, SGI, {
             scope.append($("#" + data.parent), '\
                              <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_exp ">\
                                 <div id="head_' + nr + '"  class="div_head" style="background-color: gray">\
-                                    <a class="head_font">Expert</a>\
+                                    <input style="background-color:transparent; border:none; width: 56px; text-align: center;" ng-model="fbs[' + nr + '].opt" class="head_font">\
                                 </div>\
                                 <div id="left_' + data.fbs_id + '" class="div_left_exp">\
                                 </div>\

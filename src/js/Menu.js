@@ -1872,7 +1872,22 @@ jQuery.extend(true, SGI, {
     },
 
     expert_save: function (opt) {
+        var nr = $(opt.$trigger).data("nr");
 
+
+        var data = {
+            name : scope.fbs[nr]["opt"],
+            value: scope.fbs[nr]["value"],
+        in: scope.fbs[nr]["exp_in"],
+        out: scope.fbs[nr]["exp_out"],
+        }
+
+
+        fs.writeFile(SGI.nwDir + "\\datastore\\experts\\expert_"+data.name+".json", JSON.stringify(data), function (err) {
+            if (err) {
+                throw err;
+            }
+        });
     },
 
     save_as_local: function () {
