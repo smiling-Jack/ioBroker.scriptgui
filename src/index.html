@@ -6,10 +6,8 @@
     <title>ScriptGUI</title>
     <link href="img/icon/favicon.png" rel="shortcut icon" type="image/x-icon"/>
 
-
     <script type="text/javascript" src="js/lib/angular.js"></script>
     <script type="text/javascript" src="js/controler.js"></script>
-
 
     <link rel="stylesheet" href="css/Main.css"/>
     <link rel="stylesheet" href="js/lib/fm/fm.css"/>
@@ -18,14 +16,13 @@
     <link rel="stylesheet" href="css/jquery.contextMenu.css"/>
     <link rel="stylesheet" media="screen" href="css/superfish/superfish.css"/>
 
-
     <link rel="stylesheet" href="css/jquery.selectBoxIt.css"/>
 
     <link rel="stylesheet" href="css/codemirror.css"/>
     <link rel="stylesheet" href="theme/monokai.css"/>
 
-   <script type="text/javascript" src="js/lib/socket.io_09.js"></script>
-     <!--<script type="text/javascript" src="js/lib/socket.io_10.js"></script>-->
+    <script type="text/javascript" src="js/lib/socket.io_09.js"></script>
+    <!--<script type="text/javascript" src="js/lib/socket.io_10.js"></script>-->
 
     <script type="text/javascript" src="js/lib/jquery-1.11.0.js"></script>
     <script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
@@ -54,7 +51,6 @@
     <script type="text/javascript" src="js/lib/beautify.js"></script>
 
     <script type="text/javascript" src="js/lib/superfish.min.js"></script>
-
 
     <script type="text/javascript" src="js/ScriptGUI.js"></script>
     <script type="text/javascript" src="js/Menu.js"></script>
@@ -155,8 +151,8 @@
 
 <div id="icon_bar" class="icon_bar ui-state-default">
 
-    <img src="img/icon/move_to_folder.png"   class="img_iconbar set_local title_translate" id="img_save_local" title="Speicher local"/>
-    <img src="img/icon/folder.png"           class="img_iconbar set_local title_translate" id="img_open_local" title="Öffnen local"/>
+    <img src="img/icon/move_to_folder.png"   class="img_iconbar set_local title_translate" id="img_save_local" title="Speicher"/>
+    <img src="img/icon/folder.png"           class="img_iconbar set_local title_translate" id="img_open_local" title="Öffne last"/>
 
     <img src="img/icon/shape_align_left.png"     class="img_iconbar set_algin title_translate" id="img_set_left"     title="Links Ausrichten"/>
     <img src="img/icon/shape_align_right.png"    class="img_iconbar set_algin title_translate" id="img_set_right"    title="Rechts Ausrichten"/>
@@ -175,8 +171,8 @@
         <div id="con_panel_wrap">
             <div style="margin-top: 4px">
                 <div id="con_panel" style="display: none" class="ui-state-default frame_color">
-                   <div class="div_img_glass"> <img src="img/icon/flag-green.png"  id="btn_con_online"></button></div>
-                   <div class="div_img_glass"> <img src="img/icon/flag-yellow.png"  id="btn_con_offline"></button></div>
+                   <div class="div_img_glass"> <img src="img/icon/flag-green.png"  id="btn_con_online"></div>
+                   <div class="div_img_glass"> <img src="img/icon/flag-yellow.png"  id="btn_con_offline"></div>
                 </div>
             </div>
         </div>
@@ -546,7 +542,7 @@
                               <option value="swanky-purse">Swanky Purse</option>
                               <option value="black-tie">Black Tie</option>
                               <option value="cupertino">Cupertino</option>
-                              <option value="dot-lov">Dot Lov</a</option>
+                              <option value="dot-lov">Dot Lov</option>
                               <option value="eggplant">Eggplant</option>
                               <option value="excite-bike">excite-bike</option>
                               <option value="flick">flick</option>
@@ -580,7 +576,7 @@
                  <tr>
                      <td style="width: 150px" class="translate">Live Test open</td>
                      <td>
-                         <input type="checkbox" class="setup_checkbox"  ng-model="setup.LT_open"/>
+                         <input type="checkbox" class="setup_checkbox" ng-model="setup.LT_open"/>
                      </td>
                  </tr>
                  <tr>
@@ -591,7 +587,6 @@
          </div>
          <div id="setup_con" class="setup_field_content">
              <span style="display: block; font-size: 20px; font-weight: bold; padding: 5px;" class="translate">Verbindung</span>
-
          </div>
          <div id="setup_data" class="setup_field_content">
              <span style="display: block; font-size: 20px; font-weight: bold; padding: 5px;" class="translate">Data Archiv</span>
@@ -602,6 +597,7 @@
      </div>
 </div>
 <div id="selection" class="selectiondiv"></div>
-<input id="prgopen" type="file" nwworkingdir=""  accept=".prg" /> <input id="prgsaveas" type="file" nwsaveas accept=".prg"/>
+<input style="display: none" id="prgopen" type="file" nwworkingdir=""  accept=".prg" />
+<input style="display: none" id="prgsaveas" type="file" nwsaveas accept=".prg"/>
 </body>
 </html>

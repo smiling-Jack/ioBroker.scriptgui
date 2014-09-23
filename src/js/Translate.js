@@ -47,8 +47,7 @@ SGI = $.extend(true, SGI, {
         'Datei:'                : {'de': 'Datei:',                   'en': 'File:',                       'ru': 'Файл:'},
         ' Live Test'            : {'de': ' Live Test',               'en': ' Live test',                  'ru': ' Live test'},
         'Save Element'          : {'de': 'Element speichern',        'en': 'Save element',                'ru': 'Сохранить элемент'},
-        'Speicher local'        : {'de': 'Local speichern',          'en': 'Save local',                  'ru': 'Сохранить локально'},
-        'Öffnen local'          : {'de': 'Local öffnen',             'en': 'Open local',                  'ru': 'Загрузить локально'},
+        'Öffne last'            : {'de': 'Öffne letztes prg',        'en': 'Open last prg',               'ru': 'Загрузить локально'}, //ToDo RU
         'Links Ausrichten'      : {'de': 'Links Ausrichten',         'en': 'Align left',                  'ru': 'Выравнить слева'},
         'Rechts Ausrichten'     : {'de': 'Rechts Ausrichten',        'en': 'Align right',                 'ru': 'Выравнить справа'},
         'Oben Ausrichten'       : {'de': 'Oben Ausrichten',          'en': 'Align top',                   'ru': 'Выравнить сверху'},
@@ -69,14 +68,14 @@ SGI = $.extend(true, SGI, {
         'Listen Filter'         : {'de': 'Listen Filter',            'en': 'List filter',                 'ru': 'Фильтры'},
         'Get Set Var'           : {'de': 'Get Set Var',              'en': 'Get Set Var',                 'ru': 'Читать/Писать'},
         'Convert'               : {'de': 'Convert',                  'en': 'Convert',                     'ru': 'Конверт.'},
-        'Math.'                 : {'de': 'Math.',                    'en': 'Math.',                       'ru': 'Матем.'},          //mathematik
+        'Math.'                 : {'de': 'Math.',                    'en': 'Math.',                       'ru': 'Матем.'},         
         'Singel Trigger'        : {'de': 'Singel Trigger',           'en': 'Single Trigger',              'ru': 'Триггеры(один)'},
         'Zeit Trigger'          : {'de': 'Zeit Trigger',             'en': 'Time Trigger',                'ru': 'Триггеры(время)'},
         'Trigger Daten'         : {'de': 'Trigger Daten',            'en': 'Trigger Data',                'ru': 'Триггеры(данные)'},
         'Expert'                : {'de': 'Expert',                   'en': 'Expert',                      'ru': 'Эксперт'},
-        'Mode'                : {'de': 'Mode',                   'en': 'Mode',                      'ru': ''},
-        'Editor'                : {'de': 'Editor',                   'en': 'Editor',                      'ru': ''},
-        'GUI'                : {'de': 'GUI',                   'en': 'GUI',                      'ru': ''},
+        'Mode'                  : {'de': 'Mode',                     'en': 'Mode',                        'ru': ''},//ToDo RU
+        'Editor'                : {'de': 'Editor',                   'en': 'Editor',                      'ru': ''},//ToDo RU
+        'GUI'                   : {'de': 'GUI',                      'en': 'GUI',                         'ru': ''},//ToDo RU
 
 
 // Shortcut

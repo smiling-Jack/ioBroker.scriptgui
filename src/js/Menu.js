@@ -30,7 +30,7 @@ jQuery.extend(true, SGI, {
         });
         $("#m_save").click(function () {
 //            if ($("body").find(".ui-dialog:not(.quick-help)").length == 0) {
-                SGI.save_local();
+            SGI.save_local();
 //            }
         });
         $("#m_save_as").click(function () {
@@ -338,9 +338,9 @@ jQuery.extend(true, SGI, {
 // Local
         $("#img_save_local").click(function () {
 
-            var data = SGI.make_savedata();
+            SGI.save_local();
 
-            storage.set(SGI.str_prog, data);
+
             $(this).stop(true, true).effect("highlight")
         }).hover(
             function () {
@@ -351,10 +351,7 @@ jQuery.extend(true, SGI, {
         );
 
         $("#img_open_local").click(function () {
-            var data = storage.get(SGI.str_prog);
-
-            SGI.clear();
-            SGI.load_prg(data);
+            SGI.open_last();
 
             $(this).stop(true, true).effect("highlight")
         }).hover(
@@ -816,7 +813,7 @@ jQuery.extend(true, SGI, {
         $(".setup_cat").click(function () {
             $(".setup_field_content").hide();
             $("#" + $(this).data("info")).show();
-        })
+        });
 
 
         $(".setup_field_content").hide();
@@ -1884,10 +1881,15 @@ jQuery.extend(true, SGI, {
         chooser.change(function (evt) {
             var filep = $(this).val();
             fs.writeFile(filep, JSON.stringify(data), function (err) {
-                SGI.prg_store = filep;
-                SGI.file_name = filep.split("\\").pop();
-                $("#m_file").text(SGI.file_name);
-                if (err) throw err;
+                if (err) {
+                    throw err;
+                } else {
+                    SGI.prg_store = filep;
+                    SGI.file_name = filep.split("\\").pop();
+                    $("#m_file").text(SGI.file_name);
+                    scope.setup.last_file = SGI.prg_store;
+                    scope.$apply()
+                }
             });
         });
         chooser.trigger('click');
@@ -1900,7 +1902,12 @@ jQuery.extend(true, SGI, {
             var data = SGI.make_savedata();
             try {
                 fs.writeFile(SGI.prg_store, JSON.stringify(data), function (err) {
-                    if (err) throw err;
+                    if (err) {
+                        throw err;
+                    } else {
+                        scope.setup.last_file = SGI.prg_store;
+                        scope.$apply()
+                    }
                 });
             } catch (err) {
                 alert("Speichern nicht möglich")
@@ -1915,20 +1922,47 @@ jQuery.extend(true, SGI, {
 
             try {
                 fs.readFile(filep, function (err, data) {
-                    if (!err) {
+                    if (err) {
+                        throw err;
+                    } else {
                         SGI.clear();
                         SGI.load_prg(JSON.parse(data));
                         SGI.prg_store = filep;
                         SGI.file_name = filep.split("\\").pop();
                         $("#m_file").text(SGI.file_name);
-                    }
 
+                        scope.setup.last_file = filep;
+                        scope.$apply()
+                    }
                 });
             }
             catch (err) {
+                throw err
             }
         });
         chooser.trigger('click');
+    },
+    open_last: function () {
+
+            try {
+                fs.readFile(scope.setup.last_file, function (err, data) {
+                    if (err) {
+                        throw err;
+                    } else {
+                        SGI.clear();
+                        SGI.load_prg(JSON.parse(data));
+                        SGI.prg_store = scope.setup.last_file;
+                        SGI.file_name = scope.setup.last_file.split("\\").pop();
+                        $("#m_file").text(SGI.file_name);
+
+                    }
+                });
+            }
+            catch (err) {
+                throw err
+            }
+
+
     },
 
     example_ccu_io: function () {
@@ -2001,44 +2035,6 @@ jQuery.extend(true, SGI, {
 
 
         editor.setOption("value", js_beautify(data.toString(), { indent_size: 2 }));
-
-    },
-
-    show_setup: function (data) {
-        var h = $(window).height() - 200;
-
-        $("body").append('\
-                   <div id="dialog_setup" style="text-align: left;overflow: hidden " title="Setup">\
-                    <div id="setup_body" style="width: 450px ;height: 100%;" >\
-                        <h3>CCU.IO Info</h3>\
-                        <a style="line-height: 30px" class="item_font">Längengrad</a>     <input disabled data-info="latitude" value="' + SGI.settings.ccu.latitude + ' "class="setup_inp"><br> \
-                        <a style="line-height: 30px" class="item_font">Breitengrad</a>    <input disabled data-info="longitude" value="' + SGI.settings.ccu.longitude + ' "class="setup_inp"><br> \
-                        <hr>\
-                        <h3>Dämmerung</h3>\
-                        <a style="line-height: 30px" class="item_font">Morgendämmerung</a><input data-info="sunrise" value="' + SGI.settings.ccu.sunrise + ' "class="setup_inp"><br> \
-                        <a style="line-height: 30px" class="item_font">Abenddämmerung</a> <input data-info="sunset" value="' + SGI.settings.ccu.sunset + ' "class="setup_inp"><br>\
-                          <hr>\
-                        <h3>Tageszeiten</h3>\
-                        <a style="line-height: 30px" class="item_font">Morgen</a>         <input data-info="morgen" value="' + SGI.settings.ccu.morgen + ' "class="setup_inp"><br>\
-                        <a style="line-height: 30px" class="item_font">Vormittag</a>      <input data-info="vormittag" value="' + SGI.settings.ccu.vormittag + ' "class="setup_inp"><br>\
-                        <a style="line-height: 30px" class="item_font">Mittag</a>         <input data-info="mittag" value="' + SGI.settings.ccu.mittag + ' "class="setup_inp"><br>\
-                        <a style="line-height: 30px" class="item_font">Nachmittag</a>     <input data-info="nachmittag" value="' + SGI.settings.ccu.nachmittag + ' "class="setup_inp"><br>\
-                        <a style="line-height: 30px" class="item_font">Abend</a>          <input data-info="abend" value="' + SGI.settings.ccu.abend + ' "class="setup_inp"><br>\
-                        <a style="line-height: 30px" class="item_font">Nacht</a>          <input disabled data-info="nacht" value="' + SGI.settings.ccu.nacht + ' "class="setup_inp"><br>\
-                    </div>\
-                   </div>');
-        $("#dialog_setup").dialog({
-            height: h,
-            width: 500,
-            resizable: true,
-            close: function () {
-                $("#dialog_setup").remove();
-            }
-        });
-
-        $("#dialog_setup").perfectScrollbar({
-            wheelSpeed: 60
-        });
 
     },
 

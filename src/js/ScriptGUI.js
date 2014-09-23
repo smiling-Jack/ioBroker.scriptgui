@@ -13,8 +13,8 @@ process.on("uncaughtException", function (e) {
 
 var execPath = path.dirname(process.execPath);
 var startPath = process.env.PWD;
-console.log(execPath)
-console.log(process.env.PWD)
+//console.log(execPath)
+//console.log(process.env.PWD)
 
 
 var scope;
@@ -99,10 +99,8 @@ var SGI = {
                 SGI.Setup_dialog()
             },
             close: function () {
-                fs.writeFile(SGI.nwDir + '/datastore/setup.json', JSON.stringify(scope.setup), function (err) {
-                    if (err) throw err;
+                scope.$apply();
 
-                });
             }
         });
 
@@ -399,6 +397,15 @@ var SGI = {
 
 //        console.clear();
         SGI.scope_init = scope;
+        scope.$watch("setup", function (newValue, oldValue) {
+            console.log("setup save")
+            fs.writeFile(SGI.nwDir + '/datastore/setup.json', JSON.stringify(scope.setup), function (err) {
+//                if (err) throw err;
+
+            });
+
+        }, true);
+
         console.log("Start finish")
 
 
@@ -2728,6 +2735,7 @@ window.clearAllIntervals = function () {
         SGI.prgDir = SGI.nwDir + "\\datastore\\programms\\";
 
         $("#prgopen").attr("nwworkingdir",SGI.prgDir);
+        $("#prgsaveas").attr("nwworkingdir",SGI.prgDir);
         try {
             try {
                 var stats = fs.lstatSync(SGI.nwDir + '/datastore');
@@ -2753,7 +2761,6 @@ window.clearAllIntervals = function () {
             fs.readFile(SGI.nwDir + '/datastore/setup.json', function (err, data) {
                 if (!err) {
                     scope.setup = JSON.parse(data);
-                    scope.$apply();
                 }
                 SGI.Setup();
             });

@@ -1,6 +1,13 @@
 angular.module('tutorialApp', [])
     .controller('GUICtrl', function ($scope, $compile) {
-        $scope.setup = {"lang": "de", "theme": "dark-hive", "snap_grid": "", "tooltip": "","LT_open":false};
+        $scope.setup = {
+            "lang": "de",
+            "theme": "dark-hive",
+            "snap_grid": "",
+            "tooltip": "",
+            "LT_open":false,
+            "last_file":"",
+        };
 
 
         $scope.mbs = {};
@@ -25,9 +32,6 @@ angular.module('tutorialApp', [])
             $scope.$apply();
         };
 
-        $scope.$watch("setup", function (newValue, oldValue) {
-            console.log("change setup")
-        }, true);
         $scope.$watch("mbs", function (newValue, oldValue) {
             console.log("change mbs")
 //            console.info("MBS Watch ", deep(oldValue, newValue));
@@ -81,7 +85,6 @@ angular.module('tutorialApp', [])
 
         });
 //-------------------------------------------------------------------------------------------------
-
     });
 
 
