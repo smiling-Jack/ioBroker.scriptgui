@@ -35,7 +35,7 @@ var SGI = {
     fbs_n: 0,
     mbs_n: 0,
     scope_init: {},
-
+    experts:{},
     grid: 9,
 
     str_prog: "ScriptGUI_Programm",
@@ -2234,6 +2234,7 @@ var SGI = {
                         var left = parseInt((ui["offset"]["left"] - $(ev.target).offset().left) + 32 / SGI.zoom);
                     }
 
+                    console.log(data)
                     SGI.add_fbs_element(data, left, top);
                 }
             }
@@ -2682,6 +2683,7 @@ var SGI = {
             if (err) {
                 throw err;
             } else {
+                SGI.experts ={};
                 $.each(files, function () {
                     var file = this.toString();
                     try {
@@ -2689,10 +2691,11 @@ var SGI = {
                             if (err) {
                                 throw err;
                             } else {
-                                var data = JSON.parse(data)
-                                console.log(data)
+                                var data = JSON.parse(data);
+                              SGI.experts[data.name] = data;
                                 $("#toolbox_expert").append('\
-                             <div id="' + data.name + '" style="width: 60px;height: auto;margin: auto;text-align: center;background-color: #ffffff;border: 1px solid #00ffff;border-radius: 7px;z-index: 50;display: inline-table;position: relative!important;margin-top:30px; overflow-x: visible;overflow-y: hidden " class="fbs_exp_custom">\
+                             <div id="expert_' + data.name + '" style="width: 60px;height: auto;margin: auto;text-align: center;background-color: #ffffff;border: 1px solid #00ffff;border-radius: 7px;z-index: 50;display: inline-table;margin-top:30px; overflow-x: visible;overflow-y: hidden ;min-height:72px" class="fbs_exp_custom fbs">\
+                                <div style="position: relative; height: 100%; width: 100%; display: inline-block;"> \
                                 <div  class="div_head" style="background-color: gray;">\
                                     <a style="background-color:transparent; border:none; width: 56px; text-align: center;" class="head_font">'+data.name+'</a>\
                                 </div>\
@@ -2705,6 +2708,7 @@ var SGI = {
                                 <a style="color: #000000" id="var_in_' + data.name + '" class="inp_exp_val_in" >'+data.in+'</a>\
                                 <a style="color: #000000" id="var_out_' + data.name + '" class="inp_exp_val_out" >'+data.out+'</a>\
                                 <button type="button" id="btn_' + data.name + '" class="btn_exp">Edit</button> \
+                                </div> \
                              </div><br>');
 
                                 for (var i = 1; i <= parseInt(data.in); i++) {
@@ -2719,6 +2723,34 @@ var SGI = {
                                         '</div>');
 
                                 }
+
+                                var active_toolbox;
+                                $("#expert_" + data.name).draggable({
+                                    helper: "clone",
+                                    zIndex: -1,
+                                    revert: true,
+                                    revertDuration: 0,
+                                    containment: 'body',
+                                    start: function (e) {
+                                        active_toolbox = $(e.currentTarget).parent();
+                                        var add = $(this).clone();
+                                        $(add).attr("id", "helper");
+                                        $(add).addClass("helper");
+                                        $(add).appendTo(".main");
+                                    },
+                                    drag: function (e, ui) {
+
+                                        var w = $("body").find("#helper").width();
+                                        $("body").find("#helper").css({
+                                            left: parseInt(ui.offset.left ),
+                                            top: parseInt(ui.offset.top - 54)
+                                        })
+
+                                    },
+                                    stop: function () {
+                                        $("#helper").remove()
+                                    }
+                                });
 
                             }
                         });
