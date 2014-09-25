@@ -6,7 +6,7 @@
 jQuery.extend(true, SGI, {
 
     menu_iconbar: function () {
-        $("#menu.sf-menu").superfish({
+        $("#menu.sf-menu").superclick({
             hoverClass: 'sfHover',
             uiClass: 'ui-state-hover',  // jQuery-UI modified
             pathClass: 'overideThisToUse',

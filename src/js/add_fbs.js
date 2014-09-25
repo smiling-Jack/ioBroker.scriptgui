@@ -11,7 +11,7 @@ SGI = $.extend(true, SGI, {
         SGI.fbs_n++;
         var data = {
             parent: _data.parent,
-            fbs_id:  _data.type + "_" + nr,
+            fbs_id: _data.type + "_" + nr,
             type: _data.type,
             hmid: _data.hmid || [],
             name: SGI.get_name(_data.hmid),
@@ -1004,11 +1004,14 @@ SGI = $.extend(true, SGI, {
             if (scope.fbs[nr]["value"] == 0) {
                 scope.fbs[nr]["value"] = "";
             }
+            if (scope.fbs[nr]["opt"] == "") {
+                scope.fbs[nr]["opt"] = "expert";
+            }
 
             scope.append($("#" + data.parent), '\
                              <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_exp ">\
                                 <div id="head_' + nr + '"  class="div_head" style="background-color: gray">\
-                                    <input style="background-color:transparent; border:none; width: 56px; text-align: center;" ng-model="fbs[' + nr + '].opt" class="head_font">\
+                                    <span style="background-color:transparent; border:none; width: 56px; text-align: center;" class="head_font">{{fbs[' + nr + '].opt}}</span>\
                                 </div>\
                                 <div id="left_' + data.fbs_id + '" class="div_left_exp">\
                                 </div>\
@@ -1030,7 +1033,6 @@ SGI = $.extend(true, SGI, {
             for (var i = 1; i <= parseInt(data.exp_out); i++) {
                 $("#right_" + data.fbs_id).append('<div id="' + data.fbs_id + '_out' + i + '" class="div_output1 ' + data.fbs_id + '_out"></div>');
             }
-
 
 
             var in_new = 1;
@@ -1077,23 +1079,105 @@ SGI = $.extend(true, SGI, {
                 });
 
 
-
             $("#btn_" + data.fbs_id).click(function () {
-                SGI.edit_exp(scope.fbs[nr]["value"], function (value) {
-                    scope.fbs[nr]["value"] = value;
+                SGI.edit_exp(scope.fbs[nr]["value"],scope.fbs[nr]["opt"], function (data) {
+                    scope.fbs[nr]["value"] = data.value;
+                    scope.fbs[nr]["opt"] = data.name;
                     scope.$apply();
                 });
-
             });
-
 
 
         }
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-        console.log(data.type.indexOf("expert_"));
-        if (data.type.indexOf("expert_")== 0) {
-            data.
-            console.log(data)
+
+        if (data.type.indexOf("expert_") == 0) {
+            var name = data.type.split("expert_")[1];
+            scope.fbs[nr]["opt"] = SGI.experts[name].name;
+            scope.fbs[nr]["value"] = SGI.experts[name].value;
+            scope.fbs[nr]["exp_in"] = parseInt(SGI.experts[name].in);
+            scope.fbs[nr]["exp_out"] = parseInt(SGI.experts[name].out);
+            scope.fbs[nr].scope = "expert";
+
+            scope.append($("#" + data.parent), '\
+                             <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_exp ">\
+                                <div id="head_' + nr + '"  class="div_head" style="background-color: gray">\
+                                    <span style="background-color:transparent; border:none; width: 56px; text-align: center;" class="head_font">{{fbs[' + nr + '].opt}}</span>\
+                                </div>\
+                                <div id="left_' + data.fbs_id + '" class="div_left_exp">\
+                                </div>\
+                                <div id="right_' + data.fbs_id + '" class="div_right_exp">\
+                                </div>\
+                                <label class="lab_exp_in">Inputs</label>\
+                                <label class="lab_exp_out">Outputs</label>\
+                                <input ng-model="fbs[' + nr + '].exp_in"   id="var_in_' + data.fbs_id + '" class="inp_exp_val_in" type="text">\
+                                <input ng-model="fbs[' + nr + '].exp_out"  id="var_out_' + data.fbs_id + '" class="inp_exp_val_out" type="text">\
+                                <button type="button" id="btn_' + data.fbs_id + '" class="btn_exp">Edit</button> \
+                             </div>');
+
+            $('#var_in_' + data.fbs_id).numberMask({type: 'int', beforePoint: 1});
+            $('#var_out_' + data.fbs_id).numberMask({type: 'int', beforePoint: 1});
+
+            for (var i = 1; i <= parseInt(data.exp_in); i++) {
+                $("#left_" + data.fbs_id).append('<div id="' + data.fbs_id + '_in' + i + '"  class="div_input ' + data.fbs_id + '_in"></div>')
+            }
+            for (var i = 1; i <= parseInt(data.exp_out); i++) {
+                $("#right_" + data.fbs_id).append('<div id="' + data.fbs_id + '_out' + i + '" class="div_output1 ' + data.fbs_id + '_out"></div>');
+            }
+
+
+            var in_new = 1;
+            $('#var_in_' + data.fbs_id)
+                .keyup(function () {
+                    var n_old = in_new;
+                    in_new = $(this).val();
+
+                    if (in_new < n_old) {
+                        for (var i = n_old; i > in_new; i--) {
+                            SGI.plumb_inst["inst_" + $("#" + data.parent).parent().attr("id")].deleteEndpoint(data.fbs_id + '_in_' + i);
+                            $("#" + data.fbs_id + '_in_' + i).remove();
+                        }
+                    }
+                    if (in_new > n_old) {
+                        n_old++;
+                        for (var i = n_old; i <= in_new; i++) {
+                            $("#left_" + data.fbs_id).append('<div id="' + data.fbs_id + '_in_' + i + '"  class="div_input ' + data.fbs_id + '_in"></div>');
+                            SGI.add_fbs_endpoint(data.fbs_id + '_in_' + i, "input", data);
+                        }
+                    }
+
+                });
+
+            var out_new = 1;
+            $('#var_out_' + data.fbs_id)
+                .keyup(function () {
+                    var n_old = out_new;
+                    out_new = $(this).val();
+
+                    if (out_new < n_old) {
+                        for (var i = n_old; i > out_new; i--) {
+                            SGI.plumb_inst["inst_" + $("#" + data.parent).parent().attr("id")].deleteEndpoint(data.fbs_id + '_out_' + i);
+                            $("#" + data.fbs_id + '_out_' + i).remove();
+                        }
+                    }
+                    if (out_new > n_old) {
+                        n_old++;
+                        for (var i = n_old; i <= out_new; i++) {
+                            $("#right_" + data.fbs_id).append('<div id="' + data.fbs_id + '_out_' + i + '" class="div_output1 ' + data.fbs_id + '_out"></div>');
+                            SGI.add_fbs_endpoint(data.fbs_id + '_out_' + i, "output", data);
+                        }
+                    }
+                });
+
+
+            $("#btn_" + data.fbs_id).click(function () {
+                SGI.edit_exp(scope.fbs[nr]["value"],scope.fbs[nr]["opt"], function (data) {
+                    scope.fbs[nr]["value"] = data.value;
+                    scope.fbs[nr]["opt"] = data.name;
+                    scope.$apply();
+                });
+            });
+
         }
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 //        scope.$apply();

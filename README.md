@@ -15,6 +15,7 @@ CCU-IO.ScriptGUI ist ein Visueller Script builder auf Node-Webkit basis. Mit ihm
 * Jede Programmbox mit Try Catch wrappen
 
 ### 0.8
+* Expert Bausteine Ein/Ausgänge beschriften
 * Astro shift als variable
 * Erstellen von Multi/Gewerk Triggerbausteinen ( A. Trigger) incl. Compiler einbindung
 * FBS execCmd

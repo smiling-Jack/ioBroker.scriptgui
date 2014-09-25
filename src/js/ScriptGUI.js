@@ -2,6 +2,7 @@
  * Copyright (c) 2013 Steffen Schorling http://github.com/smiling-Jack
  * Lizenz: [CC BY-NC 3.0](http://creativecommons.org/licenses/by-nc/3.0/de/)
  */
+"use strict"
 //var deep = require('deep-diff')
 var net = require('net');
 var path = require('path');
@@ -35,7 +36,7 @@ var SGI = {
     fbs_n: 0,
     mbs_n: 0,
     scope_init: {},
-    experts:{},
+    experts: {},
     grid: 9,
 
     str_prog: "ScriptGUI_Programm",
@@ -315,27 +316,24 @@ var SGI = {
 
         //      Make element draggable
         var active_toolbox;
-        SGI.read_experts();
+
         $(".fbs").draggable({
             helper: "clone",
-            zIndex: -1,
-            revert: true,
-            revertDuration: 0,
-            containment: 'body',
-            start: function (e) {
-                active_toolbox = $(e.currentTarget).parent();
-                var add = $(this).clone();
-                $(add).attr("id", "helper");
-                $(add).addClass("helper");
-                $(add).appendTo(".main");
+            appendTo: "body",
+            zIndex: 101,
+            containment: "body",
+            iframeFix: true,
+            start: function (e, ui) {
             },
             drag: function (e, ui) {
 
-                var w = $("body").find("#helper").width();
                 $("body").find("#helper").css({
-                    left: parseInt(ui.offset.left + (75 - (w / 2) )),
-                    top: parseInt(ui.offset.top - 54)
-                })
+                    left: parseInt(ui.offset.left + 30),
+                    top: parseInt(ui.offset.top - 5)
+                });
+                ui.position.left = parseInt(ui.offset.left + 32);
+                ui.position.top = parseInt(ui.offset.top - 0);
+
 
             },
             stop: function () {
@@ -345,23 +343,20 @@ var SGI = {
 
         $(".mbs").draggable({
             helper: "clone",
-            zIndex: -1,
-            revert: true,
-            revertDuration: 0,
-            containment: 'body',
-            start: function (e) {
-                active_toolbox = $(e.currentTarget).parent();
-                var add = $(this).clone();
-                $(add).attr("id", "helper");
-                $(add).addClass("helper");
-                $(add).appendTo(".main");
+            appendTo: "body",
+            zIndex: 101,
+            containment: "body",
+            iframeFix: true,
+            start: function (e, ui) {
+
             },
             drag: function (e, ui) {
-                var w = $("body").find("#helper").width();
                 $("body").find("#helper").css({
-                    left: parseInt(ui.offset.left + ( 75 - (w / 2))),
-                    top: parseInt(ui.offset.top - 54)
-                })
+                    left: parseInt(ui.offset.left + 30),
+                    top: parseInt(ui.offset.top - 5)
+                });
+                ui.position.left = parseInt(ui.offset.left + 32);
+                ui.position.top = parseInt(ui.offset.top - 0);
             },
             stop: function () {
                 $("#helper").remove()
@@ -378,8 +373,8 @@ var SGI = {
                         type: $(ui["draggable"][0]).attr("id")
 
                     };
-                    var top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top + 25) / SGI.zoom);
-                    var left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left + 8 ) / SGI.zoom);
+                    var top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top + 30) / SGI.zoom);
+                    var left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left + 42 ) / SGI.zoom);
                     SGI.add_mbs_element(data, left, top);
                 }
             }
@@ -392,7 +387,7 @@ var SGI = {
         SGI.select_fbs();
         SGI.setup_socket();
         SGI.global_event();
-
+        SGI.read_experts();
 
         $("body").css({visibility: "visible"});
 
@@ -2210,10 +2205,33 @@ var SGI = {
 
         $(".prg_codebox").droppable({
             accept: ".fbs",
-            tolerance: "touch",
+            tolerance: "pointer",
             drop: function (ev, ui) {
 
-                if (ui["draggable"] != ui["helper"]) {
+//                if (ui["draggable"] != ui["helper"]) {
+                console.log(ev);
+                if (ui["draggable"].hasClass("fbs_exp_custom")) {
+                    if (scope.setup.snap_grid) {
+
+                        var data = {
+                            parent: $(ev.target).attr("id"),
+                            type: $(ui["draggable"][0]).attr("id")
+
+                        };
+                        var top = Math.round(((ui["offset"]["top"] - $(ev.target).offset().top + 30) / SGI.zoom) / SGI.grid) * SGI.grid;
+                        var left = Math.round(((ui["offset"]["left"] - $(ev.target).offset().left + 0) / SGI.zoom) / SGI.grid) * SGI.grid;
+                    } else {
+                        var data = {
+                            parent: $(ev.target).attr("id"),
+                            type: $(ui["draggable"][0]).attr("id")
+
+                        };
+                        var top = parseInt(((ui["offset"]["top"] - $(ev.target).offset().top) + 30) / SGI.zoom);
+                        var left = parseInt(((ui["offset"]["left"] - $(ev.target).offset().left) + 0) / SGI.zoom);
+                    }
+
+                    SGI.add_fbs_element(data, left, top);
+                } else {
 
                     if (scope.setup.snap_grid) {
 
@@ -2222,21 +2240,21 @@ var SGI = {
                             type: $(ui["draggable"][0]).attr("id")
 
                         };
-                        var top = Math.round(((ui["offset"]["top"] - $(ev.target).offset().top + 32) / SGI.zoom) / SGI.grid) * SGI.grid;
-                        var left = Math.round(((ui["offset"]["left"] - $(ev.target).offset().left + 32) / SGI.zoom) / SGI.grid) * SGI.grid;
+                        var top = Math.round(((ui["offset"]["top"] - $(ev.target).offset().top + 30) / SGI.zoom) / SGI.grid) * SGI.grid;
+                        var left = Math.round(((ui["offset"]["left"] - $(ev.target).offset().left + 40) / SGI.zoom) / SGI.grid) * SGI.grid;
                     } else {
                         var data = {
                             parent: $(ev.target).attr("id"),
                             type: $(ui["draggable"][0]).attr("id")
 
                         };
-                        var top = parseInt((ui["offset"]["top"] - $(ev.target).offset().top) + 32 / SGI.zoom);
-                        var left = parseInt((ui["offset"]["left"] - $(ev.target).offset().left) + 32 / SGI.zoom);
+                        var top = parseInt(((ui["offset"]["top"] - $(ev.target).offset().top) + 30) / SGI.zoom);
+                        var left = parseInt(((ui["offset"]["left"] - $(ev.target).offset().left) + 40) / SGI.zoom);
                     }
 
-                    console.log(data)
                     SGI.add_fbs_element(data, left, top);
                 }
+//                }
             }
         });
     },
@@ -2485,28 +2503,36 @@ var SGI = {
         });
     },
 
-    edit_exp: function (data, callback) {
+    edit_exp: function (data, name, callback) {
 
 
         var h = $(window).height() - 200;
         var v = $(window).width() - 400;
 
         $("body").append('\
-                   <div id="dialog_code" style="text-align: left" title="Expert Editor">\
+                   <div id="dialog_code" style="text-align: left; min-width: 520px" title="Expert Editor">\
                    <button id="btn_exp_id">ID</button>\
                    <button id="btn_exp_group">Gruppe</button>\
                    <button id="btn_exp_device">Gerät</button>\
-                    <textarea id="codemirror" name="codemirror" class="code frame_color ui-corner-all"></textarea>\
+                   <div style="float: right; margin-top:6px"> \
+                   <span>' + SGI.translate("Name:") + '</span>\
+                   <input id="exp_name" type="text" value="' + name + '"/>\
+                   </div>\
+                   <textarea id="codemirror" name="codemirror" class="code frame_color ui-corner-all"></textarea>\
                    </div>');
         $("#dialog_code").dialog({
             height: h,
             width: v,
             resizable: true,
+            minWidth: 550,
             close: function () {
-                var data_r = editor.getValue();
+                var data = {
+                    value: editor.getValue(),
+                    name: $('#exp_name').val()
+                }
 
                 $("#dialog_code").remove();
-                return callback(data_r)
+                return callback(data)
             }
         });
 
@@ -2683,21 +2709,21 @@ var SGI = {
             if (err) {
                 throw err;
             } else {
-                SGI.experts ={};
+                SGI.experts = {};
                 $.each(files, function () {
                     var file = this.toString();
                     try {
-                        fs.readFile(SGI.nwDir + "\\datastore\\experts\\"+file, function (err, data) {
+                        fs.readFile(SGI.nwDir + "\\datastore\\experts\\" + file, function (err, data) {
                             if (err) {
                                 throw err;
                             } else {
                                 var data = JSON.parse(data);
-                              SGI.experts[data.name] = data;
+                                SGI.experts[data.name] = data;
                                 $("#toolbox_expert").append('\
                              <div id="expert_' + data.name + '" style="width: 60px;height: auto;margin: auto;text-align: center;background-color: #ffffff;border: 1px solid #00ffff;border-radius: 7px;z-index: 50;display: inline-table;margin-top:30px; overflow-x: visible;overflow-y: hidden ;min-height:72px" class="fbs_exp_custom fbs">\
                                 <div style="position: relative; height: 100%; width: 100%; display: inline-block;"> \
                                 <div  class="div_head" style="background-color: gray;">\
-                                    <a style="background-color:transparent; border:none; width: 56px; text-align: center;" class="head_font">'+data.name+'</a>\
+                                    <a style="background-color:transparent; border:none; width: 56px; text-align: center;" class="head_font">' + data.name + '</a>\
                                 </div>\
                                 <div id="left_' + data.name + '" class="div_left_exp">\
                                 </div>\
@@ -2705,15 +2731,15 @@ var SGI = {
                                 </div>\
                                 <label class="lab_exp_in">Inputs</label>\
                                 <label class="lab_exp_out">Outputs</label>\
-                                <a style="color: #000000" id="var_in_' + data.name + '" class="inp_exp_val_in" >'+data.in+'</a>\
-                                <a style="color: #000000" id="var_out_' + data.name + '" class="inp_exp_val_out" >'+data.out+'</a>\
+                                <a style="color: #000000" id="var_in_' + data.name + '" class="inp_exp_val_in" >' + data.in + '</a>\
+                                <a style="color: #000000" id="var_out_' + data.name + '" class="inp_exp_val_out" >' + data.out + '</a>\
                                 <button type="button" id="btn_' + data.name + '" class="btn_exp">Edit</button> \
                                 </div> \
                              </div><br>');
 
                                 for (var i = 1; i <= parseInt(data.in); i++) {
                                     $("#left_" + data.name).append('' +
-                                        '<div id="' + data.name + '_in' + i + '"  class="div_input ' + data.name+ '_in">' +
+                                        '<div id="' + data.name + '_in' + i + '"  class="div_input ' + data.name + '_in">' +
                                         '<div style="background-color:gray;background-color: gray;height: 10px;width: 10px;position: relative;left: -11px; top:5px"></div>' +
                                         '</div>')
                                 }
@@ -2727,25 +2753,13 @@ var SGI = {
                                 var active_toolbox;
                                 $("#expert_" + data.name).draggable({
                                     helper: "clone",
-                                    zIndex: -1,
-                                    revert: true,
-                                    revertDuration: 0,
-                                    containment: 'body',
-                                    start: function (e) {
-                                        active_toolbox = $(e.currentTarget).parent();
-                                        var add = $(this).clone();
-                                        $(add).attr("id", "helper");
-                                        $(add).addClass("helper");
-                                        $(add).appendTo(".main");
+                                    appendTo: "body",
+                                    zIndex: 101,
+                                    containment: "body",
+                                    iframeFix: true,
+                                    start: function (e, ui) {
                                     },
                                     drag: function (e, ui) {
-
-                                        var w = $("body").find("#helper").width();
-                                        $("body").find("#helper").css({
-                                            left: parseInt(ui.offset.left ),
-                                            top: parseInt(ui.offset.top - 54)
-                                        })
-
                                     },
                                     stop: function () {
                                         $("#helper").remove()
@@ -2822,25 +2836,24 @@ window.clearAllIntervals = function () {
         SGI.prgDir = SGI.nwDir + "\\datastore\\programms\\";
 
 
-
-            try {
-                if (!fs.existsSync(SGI.nwDir + '/datastore')) {
-                    fs.mkdirSync(SGI.nwDir + '/datastore');
-                }
-                if (!fs.existsSync(SGI.nwDir + '/datastore/programms')) {
-                    fs.mkdirSync(SGI.nwDir + '/datastore/programms');
-                }
-                if (!fs.existsSync(SGI.nwDir + '/datastore/connections')) {
-                    fs.mkdirSync(SGI.nwDir + '/datastore/connections');
-                }
-                if (!fs.existsSync(SGI.nwDir + '/datastore/experts')) {
-                    fs.mkdirSync(SGI.nwDir + '/datastore/experts');
-                }
-
+        try {
+            if (!fs.existsSync(SGI.nwDir + '/datastore')) {
+                fs.mkdirSync(SGI.nwDir + '/datastore');
             }
-            catch (e) {
-               console.log(e)
+            if (!fs.existsSync(SGI.nwDir + '/datastore/programms')) {
+                fs.mkdirSync(SGI.nwDir + '/datastore/programms');
             }
+            if (!fs.existsSync(SGI.nwDir + '/datastore/connections')) {
+                fs.mkdirSync(SGI.nwDir + '/datastore/connections');
+            }
+            if (!fs.existsSync(SGI.nwDir + '/datastore/experts')) {
+                fs.mkdirSync(SGI.nwDir + '/datastore/experts');
+            }
+
+        }
+        catch (e) {
+            console.log(e)
+        }
 
         $("#prgopen").attr("nwworkingdir", SGI.prgDir);
         $("#prgsaveas").attr("nwworkingdir", SGI.prgDir);
@@ -2861,7 +2874,17 @@ window.clearAllIntervals = function () {
             SGI.Setup();
         }
 
+        var gui = require('nw.gui');
 
+// Create an empty menu
+        var menu = new gui.Menu();
+
+// Add some items
+        menu.append(new gui.MenuItem({ label: 'Item A' }));
+        menu.append(new gui.MenuItem({ label: 'Item B' }));
+        menu.append(new gui.MenuItem({ type: 'separator' }));
+        menu.append(new gui.MenuItem({ label: 'Item C' }));
+        console.log(menu)
     });
 })(jQuery);
 
