@@ -2705,11 +2705,23 @@ var SGI = {
     },
 
     read_experts: function () {
-        fs.readdir(SGI.nwDir + "\\datastore\\experts\\", function (err, files) {
+        function SortFile(a, b) {
+            var aName = a.toString();
+            var bName = b.toString();
+            return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
+        }
+
+        fs.readdir(SGI.nwDir + "\\datastore\\experts\\", function (err, _files) {
             if (err) {
                 throw err;
             } else {
+                var files = _files;
                 SGI.experts = {};
+                $(".fbs_exp_custom").remove();
+                $(".expert_br").remove();
+
+                files.sort(SortFile);
+
                 $.each(files, function () {
                     var file = this.toString();
                     try {
@@ -2720,7 +2732,7 @@ var SGI = {
                                 var data = JSON.parse(data);
                                 SGI.experts[data.name] = data;
                                 $("#toolbox_expert").append('\
-                             <div id="expert_' + data.name + '" style="width: 60px;height: auto;margin: auto;text-align: center;background-color: #ffffff;border: 1px solid #00ffff;border-radius: 7px;z-index: 50;display: inline-table;margin-top:30px; overflow-x: visible;overflow-y: hidden ;min-height:72px" class="fbs_exp_custom fbs">\
+                                <div id="expert_' + data.name + '" style="width: 60px;height: auto;margin: auto;text-align: center;background-color: #ffffff;border: 1px solid #00ffff;border-radius: 7px;z-index: 50;display: inline-table;margin-top:30px; overflow-x: visible;overflow-y: hidden ;min-height:72px" class="fbs_exp_custom fbs">\
                                 <div style="position: relative; height: 100%; width: 100%; display: inline-block;"> \
                                 <div  class="div_head" style="background-color: gray;">\
                                     <a style="background-color:transparent; border:none; width: 56px; text-align: center;" class="head_font">' + data.name + '</a>\
@@ -2735,7 +2747,7 @@ var SGI = {
                                 <a style="color: #000000" id="var_out_' + data.name + '" class="inp_exp_val_out" >' + data.out + '</a>\
                                 <button type="button" id="btn_' + data.name + '" class="btn_exp">Edit</button> \
                                 </div> \
-                             </div><br>');
+                             </div><br class="expert_br">');
 
                                 for (var i = 1; i <= parseInt(data.in); i++) {
                                     $("#left_" + data.name).append('' +
@@ -2775,7 +2787,7 @@ var SGI = {
                 })
             }
         })
-    },
+    }
 
 
 };

@@ -1005,7 +1005,7 @@ SGI = $.extend(true, SGI, {
                 scope.fbs[nr]["value"] = "";
             }
             if (scope.fbs[nr]["opt"] == "") {
-                scope.fbs[nr]["opt"] = "expert";
+                scope.fbs[nr]["opt"] = "Expert";
             }
 
             scope.append($("#" + data.parent), '\
@@ -1097,7 +1097,7 @@ SGI = $.extend(true, SGI, {
             scope.fbs[nr]["value"] = SGI.experts[name].value;
             scope.fbs[nr]["exp_in"] = parseInt(SGI.experts[name].in);
             scope.fbs[nr]["exp_out"] = parseInt(SGI.experts[name].out);
-            scope.fbs[nr].scope = "expert";
+            scope.fbs[nr].scope = "xxpert";
 
             scope.append($("#" + data.parent), '\
                              <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_exp ">\

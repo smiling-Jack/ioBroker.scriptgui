@@ -973,6 +973,21 @@ jQuery.extend(true, SGI, {
             }
         });
 
+        $.contextMenu({
+            selector: '.fbs_exp_custom',
+            zIndex: 9999,
+            className: "ui-widget-content ui-corner-all",
+            items: {
+                "Del": {
+                    name: SGI.translate("Lösche Vorlage"),
+                    className: "item_font",
+                    callback: function (key, opt) {
+                        SGI.expert_del(opt)
+                    }
+                },
+            }
+        });
+
         // Trigger   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         $.contextMenu({
             selector: ".tr_singel",
@@ -1884,7 +1899,22 @@ jQuery.extend(true, SGI, {
         fs.writeFile(SGI.nwDir + "\\datastore\\experts\\expert_"+data.name+".json", JSON.stringify(data), function (err) {
             if (err) {
                 throw err;
+            }else{
+                SGI.read_experts();
             }
+
+        });
+    },
+
+    expert_del: function (opt) {
+        var name = $(opt.$trigger).attr("id");
+        fs.unlink(SGI.nwDir + "\\datastore\\experts\\"+name+".json",  function (err) {
+            if (err) {
+                throw err;
+            }else{
+                SGI.read_experts();
+            }
+
         });
     },
 
