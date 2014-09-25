@@ -2821,25 +2821,29 @@ window.clearAllIntervals = function () {
         SGI.nwDir = path.dirname(nwPath);
         SGI.prgDir = SGI.nwDir + "\\datastore\\programms\\";
 
-        $("#prgopen").attr("nwworkingdir", SGI.prgDir);
-        $("#prgsaveas").attr("nwworkingdir", SGI.prgDir);
-        try {
+
+
             try {
-                var stats = fs.lstatSync(SGI.nwDir + '/datastore');
-                if (!stats.isDirectory()) {
-                    throw 0;
+                if (!fs.existsSync(SGI.nwDir + '/datastore')) {
+                    fs.mkdirSync(SGI.nwDir + '/datastore');
                 }
+                if (!fs.existsSync(SGI.nwDir + '/datastore/programms')) {
+                    fs.mkdirSync(SGI.nwDir + '/datastore/programms');
+                }
+                if (!fs.existsSync(SGI.nwDir + '/datastore/connections')) {
+                    fs.mkdirSync(SGI.nwDir + '/datastore/connections');
+                }
+                if (!fs.existsSync(SGI.nwDir + '/datastore/experts')) {
+                    fs.mkdirSync(SGI.nwDir + '/datastore/experts');
+                }
+
             }
             catch (e) {
-                fs.mkdirSync(SGI.nwDir + '/datastore');
-                fs.mkdirSync(SGI.nwDir + '/datastore/programms');
-                fs.mkdirSync(SGI.nwDir + '/datastore/connections');
-                fs.mkdirSync(SGI.nwDir + '/datastore/experts');
+               console.log(e)
             }
-        }
-        catch (e) {
 
-        }
+        $("#prgopen").attr("nwworkingdir", SGI.prgDir);
+        $("#prgsaveas").attr("nwworkingdir", SGI.prgDir);
 
 
         scope = angular.element($('body')).scope();
