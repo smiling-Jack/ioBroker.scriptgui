@@ -46,7 +46,7 @@ SGI = $.extend(true, SGI, {
         'Show Debugscript'      : {'de': 'Zeige Debugscript',        'en': 'Show debug script',           'ru': 'Показать отладочный скрипт'},
         'Datei:'                : {'de': 'Datei:',                   'en': 'File:',                       'ru': 'Файл:'},
         ' Live Test'            : {'de': ' Live Test',               'en': ' Live test',                  'ru': ' Live test'},
-        'Save Element'          : {'de': 'Element speichern',        'en': 'Save element',                'ru': 'Сохранить элемент'},
+        'Save Element'          : {'de': 'Als vorlage speichern',    'en': 'Save as pattern',             'ru': 'Сохранить элемент'},  //ToDo RU
         'Öffne last'            : {'de': 'Öffne letztes prg',        'en': 'Open last prg',               'ru': 'Загрузить локально'}, //ToDo RU
         'Links Ausrichten'      : {'de': 'Links Ausrichten',         'en': 'Align left',                  'ru': 'Выравнить слева'},
         'Rechts Ausrichten'     : {'de': 'Rechts Ausrichten',        'en': 'Align right',                 'ru': 'Выравнить справа'},
@@ -580,7 +580,7 @@ SGI = $.extend(true, SGI, {
 				console.warn("Keine Übersätzung für "+ text + " in "+ SGI.language +" gefunden");
 			return SGI.words[text]["de"];
 		}else{
-		    console.warn(text);
+//		    console.warn(text);
 			return text;
 		}
 	}

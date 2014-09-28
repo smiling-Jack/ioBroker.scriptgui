@@ -12,6 +12,8 @@ var ops = grunt.file.readJSON("package.json");
 
         nodewebkit: {
             options: {
+//                platforms: ['win','osx'],
+//                platforms: ['osx'],
                 buildDir: './build',
                 winIco:  './src/img/icon/favicon.png',
                 macIcns:  './src/img/icon/favicon.png',

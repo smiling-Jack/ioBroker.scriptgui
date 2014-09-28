@@ -1896,7 +1896,7 @@ jQuery.extend(true, SGI, {
         out: scope.fbs[nr]["exp_out"]
         };
 
-        fs.writeFile(SGI.nwDir + "\\datastore\\experts\\expert_"+data.name+".json", JSON.stringify(data), function (err) {
+        fs.writeFile(SGI.nwDir + "/datastore/experts/expert_"+data.name+".json", JSON.stringify(data), function (err) {
             if (err) {
                 throw err;
             }else{
@@ -1908,7 +1908,7 @@ jQuery.extend(true, SGI, {
 
     expert_del: function (opt) {
         var name = $(opt.$trigger).attr("id");
-        fs.unlink(SGI.nwDir + "\\datastore\\experts\\"+name+".json",  function (err) {
+        fs.unlink(SGI.nwDir + "/datastore/experts/"+name+".json",  function (err) {
             if (err) {
                 throw err;
             }else{

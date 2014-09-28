@@ -14,8 +14,8 @@ process.on("uncaughtException", function (e) {
 
 var execPath = path.dirname(process.execPath);
 var startPath = process.env.PWD;
-//console.log(execPath)
-//console.log(process.env.PWD)
+console.log(execPath)
+console.log(process.env.PWD)
 
 
 var scope;
@@ -2844,10 +2844,12 @@ window.clearAllIntervals = function () {
 
         // ordner erstellen
         var nwPath = process.execPath;
+//        SGI.nwDir = path.dirname(nwPath).split("ScriptGUI.app")[0];
         SGI.nwDir = path.dirname(nwPath);
-        SGI.prgDir = SGI.nwDir + "\\datastore\\programms\\";
+        console.log( process.platform)
+       SGI.prgDir = SGI.nwDir + "/datastore/programms/";
 
-
+console.log(nwPath )
         try {
             if (!fs.existsSync(SGI.nwDir + '/datastore')) {
                 fs.mkdirSync(SGI.nwDir + '/datastore');
