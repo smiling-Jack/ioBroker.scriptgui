@@ -493,12 +493,12 @@ var SGI = {
                 var prg_posi = $(c.connector.svg).parent().offset();
                 var path = c.connector.getPath();
                 var svg_trans = $(c.connector.svg).children().first()[0].getAttribute("transform").replace("translate(", "").replace(")", "").split(",");
-                dot1_x = svg_posi.left - prg_posi.left + path[0].end[0] + parseInt(svg_trans[0]) + 1;
-                dot1_y = svg_posi.top - prg_posi.top + path[0].end[1] + parseInt(svg_trans[1]) + 1;
+                dot1_x = svg_posi.left  + path[0].end[0] + parseInt(svg_trans[0]) - 8;
+                dot1_y = svg_posi.top  + path[0].end[1] + parseInt(svg_trans[1])  - 8;
 
                 if (path.length == 5) {
                     dot2_x = svg_posi.left + path[3].start[0] + parseInt(svg_trans[0]) + Math.abs((path[2].start[0] - path[2].end[0]) / 2) + 1;
-                    dot2_y = svg_posi.top + path[2].start[1] - parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) + 1;
+                    dot2_y = svg_posi.top  + path[2].start[1] - parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) + 1;
                     dot2_d = "y";
                     dot3_x = svg_posi.left + path[path.length - 1].start[0] + parseInt(svg_trans[0]) - 8;
                     dot3_y = svg_posi.top + path[path.length - 1].end[1] - parseInt(svg_trans[1]);
@@ -511,14 +511,33 @@ var SGI = {
                     dot2_drag();
                     dot3_drag();
                 }
-                if (path.length == 3 && path[2].start[0] < path[2].end[0]) {
-
+                if (path.length == 3 && path[2].start[0] < path[2].end[0] && path[1].start[1] < path[1].end[1] ) {
                     dot2_x = svg_posi.left + path[1].start[0] - parseInt(svg_trans[0]) - Math.abs((path[2].start[0] - path[2].start[0]) / 2);
                     dot2_y = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[2].start[1] - path[1].start[1]) / 2);
+                    dot3_x = svg_posi.left + path[path.length-1 ].end[0] + parseInt(svg_trans[0]) - 8;
+                    dot3_y = svg_posi.top + path[path.length-1 ].end[1] - parseInt(svg_trans[1]);
 
                     $(".dot").remove();
+                    $("#prg_panel").append('<div id="dot1" class="dot" style="left:' + dot1_x + 'px;top: ' + dot1_y + 'px  "></div>');
                     $("#prg_panel").append('<div id="dot2" class="dot" style="left:' + dot2_x + 'px;top: ' + dot2_y + 'px  "></div>');
-                    dot2_drag()
+                    $("#prg_panel").append('<div id="dot3" class="dot" style="left:' + dot3_x + 'px;top: ' + dot3_y + 'px  "></div>');
+                    dot1_drag();
+                    dot2_drag();
+                    dot3_drag();
+                }
+                if (path.length == 3 && path[2].start[0] < path[2].end[0] && path[1].start[1] > path[1].end[1] ) {
+                    dot2_x = svg_posi.left + path[1].start[0] - parseInt(svg_trans[0]) - Math.abs((path[2].start[0] - path[2].start[0]) / 2);
+                    dot2_y = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) - Math.abs((path[2].start[1] - path[1].start[1]) / 2);
+                    dot3_x = svg_posi.left + path[path.length-1 ].end[0] + parseInt(svg_trans[0]) - 8;
+                    dot3_y = svg_posi.top + path[path.length-1 ].end[1] - parseInt(svg_trans[1]);
+
+                    $(".dot").remove();
+                    $("#prg_panel").append('<div id="dot1" class="dot" style="left:' + dot1_x + 'px;top: ' + dot1_y + 'px  "></div>');
+                    $("#prg_panel").append('<div id="dot2" class="dot" style="left:' + dot2_x + 'px;top: ' + dot2_y + 'px  "></div>');
+                    $("#prg_panel").append('<div id="dot3" class="dot" style="left:' + dot3_x + 'px;top: ' + dot3_y + 'px  "></div>');
+                    dot1_drag();
+                    dot2_drag();
+                    dot3_drag();
                 }
                 if (path.length == 3 && path[2].start[0] > path[2].end[0]) {
                     $(".dot").remove();
@@ -635,7 +654,7 @@ var SGI = {
                                     if (path.length == 5) {
                                         ui.position.left = svg_posi.left + path[2].start[0] + parseInt(svg_trans[0]) - Math.abs((path[3].start[0] - path[2].start[0]) / 2) + 1;
                                         ui.position.top = svg_posi.top + path[2].start[1] + parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) - 8;
-                                    } else if (path.length == $) {
+                                    } else if (path.length == 4) {
                                         ui.position.left = dot2_x = svg_posi.left + path[1].start[0] + parseInt(svg_trans[0]) - Math.abs((path[1].start[0] - path[1].end[0]) / 2) - 8;
                                         ui.position.top = dot2_y = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[1].start[1] - path[1].start[1]) / 2) + 1;
                                     } else {
@@ -2846,10 +2865,10 @@ window.clearAllIntervals = function () {
         var nwPath = process.execPath;
 //        SGI.nwDir = path.dirname(nwPath).split("ScriptGUI.app")[0];
         SGI.nwDir = path.dirname(nwPath);
-        console.log( process.platform)
-       SGI.prgDir = SGI.nwDir + "/datastore/programms/";
+        console.log(process.platform)
+        SGI.prgDir = SGI.nwDir + "/datastore/programms/";
 
-console.log(nwPath )
+        console.log(nwPath)
         try {
             if (!fs.existsSync(SGI.nwDir + '/datastore')) {
                 fs.mkdirSync(SGI.nwDir + '/datastore');
