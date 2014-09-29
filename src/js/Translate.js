@@ -76,9 +76,13 @@ SGI = $.extend(true, SGI, {
         'Mode'                  : {'de': 'Mode',                     'en': 'Mode',                        'ru': ''},//ToDo RU
         'Editor'                : {'de': 'Editor',                   'en': 'Editor',                      'ru': ''},//ToDo RU
         'GUI'                   : {'de': 'GUI',                      'en': 'GUI',                         'ru': ''},//ToDo RU
-        'Update'                : {'de': 'Update',                   'en': 'Update',                         'ru': ''},//ToDo RU
-        'Version ist:'          : {'de': 'Aktuelle Version:',        'en': 'Current Version:',                         'ru': ''},//ToDo RU
-        'Neuste Version:'       : {'de': 'Neuste Version:',          'en': 'Latest version:',                         'ru': ''},//ToDo RU
+        'Update'                : {'de': 'Update',                   'en': 'Update',                      'ru': ''},//ToDo RU
+        'Version ist:'          : {'de': 'Aktuelle Version:',        'en': 'Current Version:',            'ru': ''},//ToDo RU
+        'Neuste Version:'       : {'de': 'Neuste Version:',          'en': 'Latest version:',             'ru': ''},//ToDo RU
+        'register'             : {'de': 'Senden',                   'en': 'Send',                        'ru': ''},//ToDo RU
+        'register_info'       : {'de': 'Bitte registrieren Sie Ihre Version<br>und<br>helfen sie mit ScriptGUI zu verbessern',
+                                 'en': 'Please register your copy<br>and<br>help you to improve ScriptGUI',
+                                 'ru': ''},//ToDo RU
 
 
 

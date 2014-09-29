@@ -7,6 +7,8 @@ angular.module('tutorialApp', [])
             "tooltip": "",
             "LT_open":false,
             "last_file":"",
+            "user_name":"",
+            "user_mail":"",
         };
 
 

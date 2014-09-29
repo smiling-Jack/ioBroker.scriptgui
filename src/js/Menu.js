@@ -2096,9 +2096,15 @@ jQuery.extend(true, SGI, {
 
     },
 
-    info_box: function (data) {
+    error_box: function (data) {
 
         var _data = data.split("\n").join("<br />").replace("file:*ScriptGUI", "");
+
+        var mail = "";
+        console.log(parseInt(scope.setup.user_mail))
+        if (scope.setup.user_mail.split("@").length >1){
+            mail = scope.setup.user_mail;
+        }
 
         $("body").append('\
                    <div id="dialog_info"  title="Info">\
@@ -2107,8 +2113,8 @@ jQuery.extend(true, SGI, {
                    <div class="err_text">' + _data + '</div>\
                    <hr>\
                    <span>' + SGI.translate("Die Folgenden angaben sind optional:") + '</span><br><br>\
-                   <span style="width: 150px; display: inline-block">' + SGI.translate("E-Mail Adresse : ") + '</span><input style="width: 317px; "type="email"/><br>\
-                   <div style="display: flex; align-items: center"><span style="width: 150px ; display: inline-block">' + SGI.translate("Kommentar : ") + '</span><textarea style="width: 315px; height: 60px; max-width: 315px"></textarea></div>\
+                   <span style="width: 150px; display: inline-block">' + SGI.translate("E-Mail Adresse : ") + '</span><input id="inp_error_mail" value="'+mail+'" style="width: 317px; "type="email"/><br>\
+                   <div style="display: flex; align-items: center"><span style="width: 150px ; display: inline-block">' + SGI.translate("Kommentar : ") + '</span><textarea id="txt_error_comment" style="width: 315px; height: 60px; max-width: 315px"></textarea></div>\
                    <span style="width: 150px; display: inline-block">' + SGI.translate("Programm Daten: ") + '</span></span><input style="height:20px; width:20px; margin-left: 0; vertical-align: middle;" checked value="true" type="checkbox"/><br>\
                    <br><br>\
                    <div style="text-align: center">\
@@ -2119,7 +2125,7 @@ jQuery.extend(true, SGI, {
 
         $("#dialog_info").dialog({
 //            modal: true,
-            dialogClass: "info_box",
+            dialogClass: "error_box",
             maxWidth: "90%",
             width: "auto",
 
@@ -2133,25 +2139,28 @@ jQuery.extend(true, SGI, {
 
         $("#btn_info_send").button().click(function () {
             var send_data = {
-                typ: "erro",
+                typ: "error",
                 error: _data,
-                user: "steffen",
-                mail: "steffen@ccu.io",
-                komment: "alles klar"
+                user: scope.user_name,
+                mail: $("#inp_error_mail").val(),
+                komment: $("#txt_error_comment").val()
             };
 
+            if(send_data.mail == ""){
+                send_data.mail = scope.user_mail;
+            }
 
-            var HOST = '37.120.169.17';
-            var PORT = 3000;
 
             var client = new net.Socket();
-            client.connect(PORT, HOST, function () {
+            client.connect(SGI.HOST_PORT, SGI.HOST, function () {
                 client.write(JSON.stringify(send_data));
             });
 
             client.on('data', function (data) {
-                if (data != "ok") {
+                if (data != "error") {
                     alert(data)
+                }else{
+                    alert("Daten konnten nicht gesendet werden")
                 }
                 client.destroy();
             });

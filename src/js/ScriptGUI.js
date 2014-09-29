@@ -8,7 +8,8 @@ var net = require('net');
 var path = require('path');
 var fs = require('fs');
 process.on("uncaughtException", function (e) {
-    SGI.info_box(e.stack)
+    console.log(e)
+    SGI.error_box(e.stack)
 });
 
 
@@ -30,6 +31,10 @@ var PRG = {
 
 var SGI = {
     version: "0.7.x",
+
+    HOST : '37.120.169.17',
+    HOST_PORT : 3000,
+
     socket: {},
     settings: {},
     zoom: 1,
@@ -390,10 +395,12 @@ var SGI = {
         SGI.global_event();
         SGI.read_experts();
 
+
         $("body").css({visibility: "visible"});
 
 //        console.clear();
-        SGI.scope_init = scope;
+//        SGI.scope_init = scope;
+
         scope.$watch("setup", function (newValue, oldValue) {
             console.log("setup save")
             fs.writeFile(SGI.nwDir + '/datastore/setup.json', JSON.stringify(scope.setup), function (err) {
@@ -404,7 +411,7 @@ var SGI = {
         }, true);
 
         console.log("Start finish")
-
+        SGI.register();
 
     },
 
@@ -2807,6 +2814,68 @@ var SGI = {
                 })
             }
         })
+    },
+
+    register : function () {
+        if(scope.setup.user_mail == "" || scope.setup.user_mail == undefined){
+            $("body").append('\
+              <div id="dialog_register" style="text-align: center" title="'+SGI.translate("Register")+'">\
+              <div style="font-size: 20px; font-weight: 900;">'+SGI.translate("register_info")+'</div><br><br>\
+              <div style="width: 80px; display: inline-block;text-align: left">'+SGI.translate("Name:")+'  </div><input id="inp_register_name" style="width: 300px" type="text"/><br>\
+              <div style="width: 80px; display: inline-block;text-align: left">'+SGI.translate("E-Mail:")+'</div><input id="inp_register_mail" style="width: 300px" type="text"/><br><br>\
+              <button id="btn_register">'+SGI.translate("register")+'</button>\
+                   </div>');
+
+            $("#dialog_register").dialog({
+                width: "auto",
+                dialogClass: "update",
+                modal:true,
+                close: function () {
+                    $("#dialog_register").remove();
+                }
+            });
+
+            $("#btn_register").button()
+                .click(function () {
+
+
+                    var send_data = {
+                        typ: "register",
+                        data: {
+                            name: $("#inp_register_name").val() ,
+                            mail: $("#inp_register_mail").val() ,
+                            os: process.platform
+                        }
+                    };
+
+                    if(send_data.data.mail == "" || send_data.data.mail == undefined ){
+                        var now = new Date()
+                        send_data.data.mail = now.toLocaleDateString() + " " + now.toLocaleTimeString();
+                    }
+
+
+                    var client = new net.Socket();
+                    client.connect(SGI.HOST_PORT, SGI.HOST, function () {
+                        client.write(JSON.stringify(send_data));
+                    });
+
+                    client.on('data', function (data) {
+                        if (data != "error") {
+                            scope.setup.user_name = send_data.data.name;
+                            scope.setup.user_mail = send_data.data.mail;
+                            scope.$apply();
+                            $("#dialog_register").dialog("close")
+                        }else{
+                            alert("Daten konnten nicht gesendet werden. Bitte überprüfen sie ihre Internetverbindung")
+                        }
+                        client.destroy();
+                    });
+
+
+
+                });
+        }
+
     }
 
 
@@ -2866,10 +2935,10 @@ window.clearAllIntervals = function () {
         var nwPath = process.execPath;
 //        SGI.nwDir = path.dirname(nwPath).split("ScriptGUI.app")[0];
         SGI.nwDir = path.dirname(nwPath);
-        console.log(process.platform)
+//        console.log(process.platform)
         SGI.prgDir = SGI.nwDir + "/datastore/programms/";
 
-        console.log(nwPath)
+//        console.log(nwPath)
         try {
             if (!fs.existsSync(SGI.nwDir + '/datastore')) {
                 fs.mkdirSync(SGI.nwDir + '/datastore');
