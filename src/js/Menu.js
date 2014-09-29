@@ -130,6 +130,32 @@ jQuery.extend(true, SGI, {
             window.open("http://www.youtube.com/playlist?list=PLsNM5ZcvEidhmzZt_mp8cDlAVPXPychU7", null, "fullscreen=1,status=no,toolbar=no,menubar=no,location=no");
 
         });
+        $("#m_update").click(function () {
+
+            if ($("body").find(".update").length < 1) {
+
+                $("body").append('\
+                   <div id="dialog_update" style="text-align: center" title="'+SGI.translate("Update")+'">\
+              <div style="width: 150px; display: inline-block;text-align: left">'+SGI.translate("Version ist:")+'</div><span>'+ SGI.version+'</span><br><br>\
+              <div style="width: 150px; display: inline-block;text-align: left">'+SGI.translate("Neuste Version:")+'</div><span>'+ SGI.version+'</span><br><br><br><br>\
+              <button id="btn_update">'+SGI.translate("Update")+'</button>\
+                   </div>');
+
+                $("#dialog_update").dialog({
+                    width: "auto",
+                    dialogClass: "update",
+                    modal:true,
+                    close: function () {
+                        $("#dialog_update").remove();
+                    }
+                });
+
+            $("#btn_update").button()
+                    .click(function () {
+
+                    });
+            }
+        });
 
         $("#grid").click(function () {
             var fbs_list = $(".fbs_element");
@@ -145,21 +171,9 @@ jQuery.extend(true, SGI, {
             })
         });
 
-        $("#m_open_lfile").click(function () {
-            $("#m_open_lfile_input").trigger("click");
-        });
-        $("#m_open_lfile_input").change(function (event) {
-            var file = event.target.files;
-            var reader = new FileReader();
-            reader.onload = function () {
-                var text = reader.result;
-                SGI.clear();
-                SGI.load_prg(JSON.parse(text));
-                SGI.file_name = file[0].name.split(".")[0];
-                $("#m_file").text(SGI.file_name);
-            };
-            reader.readAsText(file[0]);
-        });
+
+
+
         $("#m_mbs-image").click(function () {
 
             var type;

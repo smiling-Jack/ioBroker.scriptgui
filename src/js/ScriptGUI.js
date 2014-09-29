@@ -29,6 +29,7 @@ var PRG = {
 };
 
 var SGI = {
+    version: "0.7.x",
     socket: {},
     settings: {},
     zoom: 1,

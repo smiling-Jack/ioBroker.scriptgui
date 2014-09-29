@@ -76,6 +76,10 @@ SGI = $.extend(true, SGI, {
         'Mode'                  : {'de': 'Mode',                     'en': 'Mode',                        'ru': ''},//ToDo RU
         'Editor'                : {'de': 'Editor',                   'en': 'Editor',                      'ru': ''},//ToDo RU
         'GUI'                   : {'de': 'GUI',                      'en': 'GUI',                         'ru': ''},//ToDo RU
+        'Update'                : {'de': 'Update',                   'en': 'Update',                         'ru': ''},//ToDo RU
+        'Version ist:'          : {'de': 'Aktuelle Version:',        'en': 'Current Version:',                         'ru': ''},//ToDo RU
+        'Neuste Version:'       : {'de': 'Neuste Version:',          'en': 'Latest version:',                         'ru': ''},//ToDo RU
+
 
 
 // Shortcut
