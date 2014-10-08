@@ -2143,7 +2143,10 @@ jQuery.extend(true, SGI, {
                 error: _data,
                 user: scope.user_name,
                 mail: $("#inp_error_mail").val(),
-                komment: $("#txt_error_comment").val()
+                komment: $("#txt_error_comment").val(),
+                prg_data: "nicht mitgesendet",
+                datapoints:"nicht mitgesendet",
+                os: SGI.os,
             };
 
             if(send_data.mail == ""){
@@ -2158,7 +2161,7 @@ jQuery.extend(true, SGI, {
 
             client.on('data', function (data) {
                 if (data != "error") {
-                    alert(data)
+                    alert("Ticketnummer: "+ data)
                 }else{
                     alert("Daten konnten nicht gesendet werden")
                 }

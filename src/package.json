@@ -6,7 +6,7 @@
     "keywords": [ ],
     "window": {
         "title": "ScriptGUI",
-        "icon": "img/icon/favicon.png",
+        "icon": "img/cube256.png",
         "toolbar": true,
         "frame": true,
         "width": 800,

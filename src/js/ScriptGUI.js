@@ -35,6 +35,8 @@ var SGI = {
     HOST : '37.120.169.17',
     HOST_PORT : 3000,
 
+    os: process.platform,
+
     socket: {},
     settings: {},
     zoom: 1,
@@ -2820,6 +2822,7 @@ var SGI = {
         if(scope.setup.user_mail == "" || scope.setup.user_mail == undefined){
             $("body").append('\
               <div id="dialog_register" style="text-align: center" title="'+SGI.translate("Register")+'">\
+              <img src="./img/logo.png" style="width: 300px"></img><br><br>\
               <div style="font-size: 20px; font-weight: 900;">'+SGI.translate("register_info")+'</div><br><br>\
               <div style="width: 80px; display: inline-block;text-align: left">'+SGI.translate("Name:")+'  </div><input id="inp_register_name" style="width: 300px" type="text"/><br>\
               <div style="width: 80px; display: inline-block;text-align: left">'+SGI.translate("E-Mail:")+'</div><input id="inp_register_mail" style="width: 300px" type="text"/><br><br>\
@@ -2844,7 +2847,7 @@ var SGI = {
                         data: {
                             name: $("#inp_register_name").val() ,
                             mail: $("#inp_register_mail").val() ,
-                            os: process.platform
+                            os: SGI.os
                         }
                     };
 
