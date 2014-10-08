@@ -2,42 +2,87 @@
  * Created by jack on 10.07.2014.
  */
 module.exports = function (grunt) {
-var ops = grunt.file.readJSON("package.json");
+    var ops = grunt.file.readJSON("package.json");
     grunt.loadNpmTasks('grunt-node-webkit-builder');
     grunt.loadNpmTasks('grunt-contrib-compress');
+
+    grunt.loadNpmTasks('grunt-ssh');
+
 
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        secret: grunt.file.readJSON('secret.json'),
 
+
+//----------------------------------------------------------------------------------------------------------------------
         nodewebkit: {
-            options: {
-//                platforms: ['win','osx'],
-//                platforms: ['osx'],
-                buildDir: './build',
-                winIco:  './src/img/icon/favicon.png',
-                macIcns:  './src/img/icon/favicon.png',
-            },
-            src: './src/**/*'
+            build: {
+                options: {
+//                    platforms: ['win', 'osx','linux32','linux64'],
+                    buildDir: './build',
+                    winIco: './src/img/cube256.ico',
+                    macIcns: './src/img/cube256.png'
+                },
+                src: './src/**/*'
+            }
         },
+
+//----------------------------------------------------------------------------------------------------------------------
         compress: {
             win: {
                 options: {
-                    archive: 'build/ScriptGUI_<%= pkg.version %>_win.zip'
+                    archive: 'build/ScriptGUI_win.zip'
                 },
                 files: [
-                    {expand: true, cwd: 'build/ScriptGUI/win/', src: ['**'], dest: 'ScriptGUI/'},
+                    {expand: true, cwd: 'build/ScriptGUI/win/', src: ['**'], dest: 'ScriptGUI/'}
                 ]
             },
             osx: {
                 options: {
-                    archive: 'build/ScriptGUI_<%= pkg.version %>_osx.zip'
+                    archive: 'build/ScriptGUI_osx.zip'
                 },
                 files: [
-                    {expand: true, cwd: 'build/ScriptGUI/osx/', src: ['**'], dest: 'ScriptGUI/'},
+                    {expand: true, cwd: 'build/ScriptGUI/osx/', src: ['**'], dest: 'ScriptGUI/'}
+                ]
+            },
+            linux32: {
+                options: {
+                    archive: 'build/ScriptGUI_linux32.zip'
+                },
+                files: [
+                    {expand: true, cwd: 'build/ScriptGUI/linux32/', src: ['**'], dest: 'ScriptGUI/'}
+                ]
+            },
+            linux64: {
+                options: {
+                    archive: 'build/ScriptGUI_linux64.zip'
+                },
+                files: [
+                    {expand: true, cwd: 'build/ScriptGUI/linux64/', src: ['**'], dest: 'ScriptGUI/'}
                 ]
             }
         },
+//----------------------------------------------------------------------------------------------------------------------
+        sftp: {
+            uploading: {
+                files: {
+                    "./": ["build/*json", "build/*zip"]
+                },
+                    options: {
+                        srcBasePath: "build/",
+                        path: '/var/www/jdownloads/ScriptGUI',
+                        host: '<%= secret.host %>',
+                        username: '<%= secret.username %>',
+                        password: '<%= secret.password %>',
+                        showProgress: true
+                    }
+                }
+            }
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
     });
 
 
@@ -45,5 +90,22 @@ var ops = grunt.file.readJSON("package.json");
     grunt.loadTasks('tasks');
 
     // By default, lint and run all tests.
-    grunt.registerTask('Build', ['nodewebkit','compress']);
+//    grunt.registerTask('Build', ['nodewebkit',c,'make_build_data','upload']);
+
+    grunt.registerTask('make_build_data', function () {
+
+        var _data = grunt.file.readJSON('src/package.json');
+        var d = new Date()
+        var build = {
+            version: _data.version,
+            time: d.toLocaleTimeString(),
+            date: d.getDate() + "." + parseInt(d.getMonth() + 1) + "." + d.getFullYear()
+
+        };
+        grunt.file.write("build/build_data.json", JSON.stringify(build))
+        console.log('finish_make_build_data')
+    });
+
+    grunt.registerTask('Test_Build', ['make_build_data','nodewebkit:build']);
+    grunt.registerTask('Build', ['make_build_data','nodewebkit:build','compress','sftp:uploading']);
 };
