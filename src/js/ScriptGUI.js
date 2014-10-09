@@ -7,8 +7,11 @@
 var net = require('net');
 var path = require('path');
 var fs = require('fs');
-var gui = require('nw.gui');
-gui.Window.get().showDevTools();
+var nw_gui = require('nw.gui');
+var nw_win = nw_gui.Window.get();
+
+var nw_manifest = nw_gui.App.manifest;
+nw_win.title= nw_manifest.name + " " + nw_manifest.version ;
 
 var request = require("request");
 //var deep = require('deep-diff')
@@ -22,12 +25,7 @@ process.on("uncaughtException", function (e) {
     SGI.error_box(e.stack)
 });
 
-
 var execPath = path.dirname(process.execPath);
-var startPath = process.env.PWD;
-console.log(execPath);
-console.log(process.env.PWD);
-
 
 var scope;
 
@@ -40,7 +38,7 @@ var PRG = {
 };
 
 var SGI = {
-    version: "0.7.x",
+    version: nw_manifest.version,
 
     HOST: '37.120.169.17',
     HOST_PORT: 3000,
@@ -422,6 +420,8 @@ var SGI = {
 
         }, true);
 
+
+
         console.log("Start finish")
         setTimeout(function () {
             SGI.register()
@@ -452,8 +452,9 @@ var SGI = {
                 SGI.paste_selected();
                 $("body").css({cursor: "default"});
             } else if (SGI.key == 89 &&  event.altKey == true) {
-                gui.Window.get().showDevTools();
-                $("body").css({cursor: "default"});
+                nw_win.showDevTools();
+            }else if (SGI.key == 88 &&  event.altKey == true) {
+                document.location.reload(true)
             } else if (SGI.key == 17 || SGI.key == 91 || SGI.key == 93 || event.ctrlKey == true) {
                 $("body").css({cursor: "help"});
                 SGI.key = 17;
@@ -2981,6 +2982,21 @@ window.clearAllIntervals = function () {
     window.intervalList = [];
 };
 
+
+var deleteFolderRecursive = function(path) {
+    if( fs.existsSync(path) ) {
+        fs.readdirSync(path).forEach(function(file,index){
+            var curPath = path + "/" + file;
+            if(fs.statSync(curPath).isDirectory()) { // recurse
+                deleteFolderRecursive(curPath);
+            } else { // delete file
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
+};
+
 (function () {
     $(document).ready(function () {
 
@@ -3022,6 +3038,23 @@ window.clearAllIntervals = function () {
             fs.readFile(SGI.nwDir + '/datastore/setup.json', function (err, data) {
                 if (!err) {
                     scope.setup = JSON.parse(data);
+
+                    if (scope.setup.update == true) {
+                        try {
+                            $.ajax({
+                                url: "http://37.120.169.17/jdownloads/ScriptGUI/build_data.json",
+                                dataType: "json",
+                                success: function (_data) {
+                                    if (SGI.version != _data.version) {
+                                        SGI.update()
+                                    }
+                                }
+                            });
+                        }
+                        catch (e) {
+
+                        }
+                    }
                 }
                 SGI.Setup();
             });
@@ -3030,17 +3063,7 @@ window.clearAllIntervals = function () {
             SGI.Setup();
         }
 
-        var gui = require('nw.gui');
 
-// Create an empty menu
-        var menu = new gui.Menu();
-
-// Add some items
-        menu.append(new gui.MenuItem({ label: 'Item A' }));
-        menu.append(new gui.MenuItem({ label: 'Item B' }));
-        menu.append(new gui.MenuItem({ type: 'separator' }));
-        menu.append(new gui.MenuItem({ label: 'Item C' }));
-        console.log(menu)
     });
 })(jQuery);
 

@@ -77,7 +77,7 @@ SGI = $.extend(true, SGI, {
         'Editor'                : {'de': 'Editor',                   'en': 'Editor',                      'ru': ''},//ToDo RU
         'GUI'                   : {'de': 'GUI',                      'en': 'GUI',                         'ru': ''},//ToDo RU
         'Update'                : {'de': 'Update',                   'en': 'Update',                      'ru': ''},//ToDo RU
-        'Version ist:'          : {'de': 'Aktuelle Version:',        'en': 'Current Version:',            'ru': ''},//ToDo RU
+        'Version ist:'          : {'de': 'Installierte Version:',    'en': 'Installed version:',            'ru': ''},//ToDo RU
         'Neuste Version:'       : {'de': 'Neuste Version:',          'en': 'Latest version:',             'ru': ''},//ToDo RU
         'register'              : {'de': 'Senden',                   'en': 'Send',                        'ru': ''},//ToDo RU
         'erstellung'            : {'de': 'Build: ',                   'en': 'Build: ',                     'ru': ''},//ToDo RU
@@ -85,6 +85,8 @@ SGI = $.extend(true, SGI, {
                                  'en': 'Please register your copy<br>and<br>help you to improve ScriptGUI',
                                  'ru': ''},//ToDo RU
 
+// Setup Dialog
+        'Auto update'            : {'de': 'Neue Version suchen',                   'en': 'Search new version',                     'ru': ''},//ToDo RU
 
 
 // Shortcut

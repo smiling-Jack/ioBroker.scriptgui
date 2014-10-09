@@ -131,112 +131,7 @@ jQuery.extend(true, SGI, {
 
         });
         $("#m_update").click(function () {
-            $("#dialog_update").remove();
-            try {
-                $.ajax({
-                    url: "http://37.120.169.17/jdownloads/ScriptGUI/build_data.json",
-                    dataType: "json",
-                    success: function (data) {
-                        console.log(data)
-                        $("body").append('\
-                            <div id="dialog_update" style="width: 438px; height:428px; text-align: center" title="' + SGI.translate("Update") + '">\
-                            <img src="./img/logo.png" style="width: 300px"/>\
-                            <br><br><br>\
-                            <div style="width: 150px; display: inline-block;text-align: left">' + SGI.translate("Version ist:") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + SGI.version + '</div>\
-                            <br><br><br><br>\
-                            <div style="width: 150px; display: inline-block;text-align: left">' + SGI.translate("Neuste Version: ") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + data.version + '</div>\
-                            <br><br>\
-                            <div style="width: 150px; display: inline-block;text-align: left">' + SGI.translate("erstellung") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + data.time + ' ' + data.date + '</div>\
-                            <br><br><br><br>\
-                            <button id="btn_update">' + SGI.translate("Update") + '</button>\
-                            </div>');
-
-
-                        $("#btn_update").button()
-                            .click(function () {
-                                update()
-                            });
-
-                        if (SGI.version == data.version) {
-                            $("#btn_update").button("disable")
-                        }
-
-                        setTimeout(function () {
-                            $("#dialog_update").dialog({
-                                width: "auto",
-                                dialogClass: "update",
-                                modal: true,
-                                close: function () {
-                                    $("#dialog_update").remove();
-                                }
-                            });
-                        }, 100);
-
-
-                        function update() {
-                            $("#btn_update").remove();
-                            $("#dialog_update").append('<div style="width: 100%" class="frame_color ui-state-default ui-corner-all" id="update_info"></div>');
-                            if (SGI.os == "win32") {
-                                var url = "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_win.zip"
-                            } else if (SGI.os == "darwin") {
-                                var url = "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_osx.zip"
-                            }
-
-                            var tmpFile = SGI.nwDir + "/datastore/update.zip";
-
-                            $('#update_info').text("Downloading");
-                            console.log("Downloading")
-                            request(url).pipe(fs.createWriteStream(tmpFile)).on("close", function () {
-                                setTimeout(function () {
-                                    $('#update_info').text("Unzip");
-                                    var zip = new Admzip(tmpFile);
-                                    zip.extractAllTo(SGI.nwDir + "/datastore", true);
-
-                                    setTimeout(function () {
-                                        $('#update_info').text("Copy");
-                                        var source = SGI.nwDir + "/datastore/ScriptGUI",
-                                            destination = SGI.nwDir;
-                                        ncp(source, destination, function (err) {
-                                            if (err) {
-                                                return
-                                            }
-                                            setTimeout(function () {
-                                                $('#update_info').text("Cleanup");
-                                                var deleteFolderRecursive = function (path) {
-                                                    if (fs.existsSync(path)) {
-                                                        fs.readdirSync(path).forEach(function (file, index) {
-                                                            var curPath = path + "/" + file;
-                                                            if (fs.statSync(curPath).isDirectory()) { // recurse
-                                                                deleteFolderRecursive(curPath);
-                                                            } else { // delete file
-                                                                fs.unlinkSync(curPath);
-                                                            }
-                                                        });
-                                                        fs.rmdirSync(path);
-                                                    }
-                                                    fs.unlinkSync(SGI.nwDir + "/datastore/update.zip");
-                                                };
-                                                deleteFolderRecursive(SGI.nwDir + "/datastore/ScriptGUI");
-                                                setTimeout(function () {
-                                                    $('#update_info').text("Restart");
-                                                    setTimeout(function () {
-                                                        document.location.reload(true)
-                                                    }, 2000);
-                                                }, 500);
-                                            }, 500);
-                                        });
-                                    }, 500);
-                                }, 0);
-                            });
-                        }
-                    }
-                });
-
-            }
-            catch (e) {
-
-            }
-
+         SGI.update();
 
         });
 
@@ -2254,6 +2149,107 @@ jQuery.extend(true, SGI, {
         });
     },
 
+    update: function () {
+        $("#dialog_update").remove();
+        try {
+            $.ajax({
+                url: "http://37.120.169.17/jdownloads/ScriptGUI/build_data.json",
+                dataType: "json",
+                success: function (data) {
+                    console.log(data)
+                    $("body").append('\
+                            <div id="dialog_update" style="width: 438px; height:428px; text-align: center" title="' + SGI.translate("Update") + '">\
+                            <img src="./img/logo.png" style="width: 300px"/>\
+                            <br><br><br>\
+                            <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("Version ist:") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + SGI.version + '</div>\
+                            <br><br><hr><br>\
+                            <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("Neuste Version: ") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + data.version + '</div>\
+                            <br><br>\
+                            <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("erstellung") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + data.time + ' ' + data.date + '</div>\
+                            <br><br><br>\
+                            <button id="btn_update">' + SGI.translate("Update") + '</button>\
+                            </div>');
+
+
+                    $("#btn_update").button()
+                        .click(function () {
+                            update()
+                        });
+
+                    if (SGI.version == data.version) {
+                        $("#btn_update").button("disable")
+                    }
+
+                    setTimeout(function () {
+                        $("#dialog_update").dialog({
+                            width: "auto",
+                            dialogClass: "update",
+                            modal: true,
+                            close: function () {
+                                $("#dialog_update").remove();
+                            }
+                        });
+                    }, 100);
+
+
+                    function update() {
+                        $("#btn_update").remove();
+                        $("#dialog_update").append('<div style="width: 100%; height: 33px; line-height: 33px" class="ui-state-default ui-corner-all" id="update_info"></div>');
+                        if (SGI.os == "win32") {
+                            var url = "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_win.zip"
+                        } else if (SGI.os == "darwin") {
+                            var url = "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_osx.zip"
+                        }
+
+                        var tmpFile = SGI.nwDir + "/datastore/update.zip";
+
+                        $('#update_info').text("Downloading");
+                        request(url).pipe(fs.createWriteStream(tmpFile)).on("close", function () {
+                            setTimeout(function () {
+                                $('#update_info').text("Unzip");
+                                var zip = new Admzip(tmpFile);
+                                if( fs.existsSync(SGI.nwDir + "/datastore/ScriptGUI") ) {
+                                    deleteFolderRecursive(SGI.nwDir + "/datastore/ScriptGUI");
+                                }
+                                zip.extractAllTo(SGI.nwDir + "/datastore", true);
+
+                                setTimeout(function () {
+                                    $('#update_info').text("Copy");
+                                    var source = SGI.nwDir + "/datastore/ScriptGUI/",
+                                        destination = SGI.nwDir;
+                                    ncp(source, destination, function (err) {
+                                        if (err) {
+                                            throw err
+                                        }
+                                        setTimeout(function () {
+                                            $('#update_info').text("Cleanup");
+                                            deleteFolderRecursive(SGI.nwDir + "/datastore/ScriptGUI");
+                                            fs.unlinkSync(SGI.nwDir + "/datastore/update.zip");
+
+                                                setTimeout(function () {
+                                                    $('#update_info').text("Restart");
+                                                    setTimeout(function () {
+//                                                        document.location.reload(true)
+                                                    }, 2000);
+                                                }, 500);
+
+                                        }, 500);
+                                    });
+                                }, 500);
+                            }, 0);
+                        });
+                    }
+                }
+            });
+
+        }
+        catch (e) {
+            console.log(e)
+            alert("Überprüfen Sie Ihre Internetverbindung")
+        }
+
+    },
+
     open_quick_help_dialog: function () {
 
         if ($("body").find(".quick-help").length < 1) {
@@ -2286,7 +2282,6 @@ jQuery.extend(true, SGI, {
         }
 
     },
-
 
     quick_help: function () {
         var help = {
