@@ -2,11 +2,21 @@
  * Copyright (c) 2013 Steffen Schorling http://github.com/smiling-Jack
  * Lizenz: [CC BY-NC 3.0](http://creativecommons.org/licenses/by-nc/3.0/de/)
  */
-"use strict"
-//var deep = require('deep-diff')
+"use strict";
+
 var net = require('net');
 var path = require('path');
 var fs = require('fs');
+var gui = require('nw.gui');
+gui.Window.get().showDevTools();
+
+var request = require("request");
+//var deep = require('deep-diff')
+var getmac = require('getmac');
+var Admzip = require('adm-zip');
+var ncp = require('ncp');
+
+
 process.on("uncaughtException", function (e) {
     console.log(e)
     SGI.error_box(e.stack)
@@ -15,8 +25,8 @@ process.on("uncaughtException", function (e) {
 
 var execPath = path.dirname(process.execPath);
 var startPath = process.env.PWD;
-console.log(execPath)
-console.log(process.env.PWD)
+console.log(execPath);
+console.log(process.env.PWD);
 
 
 var scope;
@@ -32,8 +42,8 @@ var PRG = {
 var SGI = {
     version: "0.7.x",
 
-    HOST : '37.120.169.17',
-    HOST_PORT : 3000,
+    HOST: '37.120.169.17',
+    HOST_PORT: 3000,
 
     os: process.platform,
 
@@ -413,7 +423,9 @@ var SGI = {
         }, true);
 
         console.log("Start finish")
-        SGI.register();
+        setTimeout(function () {
+            SGI.register()
+        }, 5000);
 
     },
 
@@ -427,12 +439,11 @@ var SGI = {
             }
         });
 
+        //todo umstellung auf node-webkit shortcuts
         $(document).keydown(function (event) {
             SGI.key = event.keyCode;
-            if (SGI.key == 17 || SGI.key == 91 || SGI.key == 93 || event.ctrlKey == true) {
-                $("body").css({cursor: "help"});
-                SGI.key = 17;
-            } else if (SGI.key == 46) {
+
+            if (SGI.key == 46) {
                 SGI.del_selected()
             } else if (SGI.key == 67 && event.ctrlKey == true) {
                 SGI.copy_selected();
@@ -440,8 +451,12 @@ var SGI = {
             } else if (SGI.key == 86 && event.ctrlKey == true) {
                 SGI.paste_selected();
                 $("body").css({cursor: "default"});
-            } else if (SGI.key == 65 && event.ctrlKey == true && event.altKey == true) {
-                $("#develop_menu").show();
+            } else if (SGI.key == 89 &&  event.altKey == true) {
+                gui.Window.get().showDevTools();
+                $("body").css({cursor: "default"});
+            } else if (SGI.key == 17 || SGI.key == 91 || SGI.key == 93 || event.ctrlKey == true) {
+                $("body").css({cursor: "help"});
+                SGI.key = 17;
             }
 
         });
@@ -503,12 +518,12 @@ var SGI = {
                 var prg_posi = $(c.connector.svg).parent().offset();
                 var path = c.connector.getPath();
                 var svg_trans = $(c.connector.svg).children().first()[0].getAttribute("transform").replace("translate(", "").replace(")", "").split(",");
-                dot1_x = svg_posi.left  + path[0].end[0] + parseInt(svg_trans[0]) - 8;
-                dot1_y = svg_posi.top  + path[0].end[1] + parseInt(svg_trans[1])  - 8;
+                dot1_x = svg_posi.left + path[0].end[0] + parseInt(svg_trans[0]) - 8;
+                dot1_y = svg_posi.top + path[0].end[1] + parseInt(svg_trans[1]) - 8;
 
                 if (path.length == 5) {
                     dot2_x = svg_posi.left + path[3].start[0] + parseInt(svg_trans[0]) + Math.abs((path[2].start[0] - path[2].end[0]) / 2) + 1;
-                    dot2_y = svg_posi.top  + path[2].start[1] - parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) + 1;
+                    dot2_y = svg_posi.top + path[2].start[1] - parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) + 1;
                     dot2_d = "y";
                     dot3_x = svg_posi.left + path[path.length - 1].start[0] + parseInt(svg_trans[0]) - 8;
                     dot3_y = svg_posi.top + path[path.length - 1].end[1] - parseInt(svg_trans[1]);
@@ -521,11 +536,11 @@ var SGI = {
                     dot2_drag();
                     dot3_drag();
                 }
-                if (path.length == 3 && path[2].start[0] < path[2].end[0] && path[1].start[1] < path[1].end[1] ) {
+                if (path.length == 3 && path[2].start[0] < path[2].end[0] && path[1].start[1] < path[1].end[1]) {
                     dot2_x = svg_posi.left + path[1].start[0] - parseInt(svg_trans[0]) - Math.abs((path[2].start[0] - path[2].start[0]) / 2);
                     dot2_y = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[2].start[1] - path[1].start[1]) / 2);
-                    dot3_x = svg_posi.left + path[path.length-1 ].end[0] + parseInt(svg_trans[0]) - 8;
-                    dot3_y = svg_posi.top + path[path.length-1 ].end[1] - parseInt(svg_trans[1]);
+                    dot3_x = svg_posi.left + path[path.length - 1 ].end[0] + parseInt(svg_trans[0]) - 8;
+                    dot3_y = svg_posi.top + path[path.length - 1 ].end[1] - parseInt(svg_trans[1]);
 
                     $(".dot").remove();
                     $("#prg_panel").append('<div id="dot1" class="dot" style="left:' + dot1_x + 'px;top: ' + dot1_y + 'px  "></div>');
@@ -535,11 +550,11 @@ var SGI = {
                     dot2_drag();
                     dot3_drag();
                 }
-                if (path.length == 3 && path[2].start[0] < path[2].end[0] && path[1].start[1] > path[1].end[1] ) {
+                if (path.length == 3 && path[2].start[0] < path[2].end[0] && path[1].start[1] > path[1].end[1]) {
                     dot2_x = svg_posi.left + path[1].start[0] - parseInt(svg_trans[0]) - Math.abs((path[2].start[0] - path[2].start[0]) / 2);
                     dot2_y = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) - Math.abs((path[2].start[1] - path[1].start[1]) / 2);
-                    dot3_x = svg_posi.left + path[path.length-1 ].end[0] + parseInt(svg_trans[0]) - 8;
-                    dot3_y = svg_posi.top + path[path.length-1 ].end[1] - parseInt(svg_trans[1]);
+                    dot3_x = svg_posi.left + path[path.length - 1 ].end[0] + parseInt(svg_trans[0]) - 8;
+                    dot3_y = svg_posi.top + path[path.length - 1 ].end[1] - parseInt(svg_trans[1]);
 
                     $(".dot").remove();
                     $("#prg_panel").append('<div id="dot1" class="dot" style="left:' + dot1_x + 'px;top: ' + dot1_y + 'px  "></div>');
@@ -1473,62 +1488,73 @@ var SGI = {
 
             function make_dot() {
                 connector_data = scope.con.fbs[id][c.id].connector;
+                console.log(connector_data)
                 var svg_posi = $(c.connector.svg).position();
-                var codebox_posi = $(c.connector.svg).parent().offset();
+
+                var prg_posi = $(c.connector.svg).parent().offset();
                 var path = c.connector.getPath();
                 var svg_trans = $(c.connector.svg).children().first()[0].getAttribute("transform").replace("translate(", "").replace(")", "").split(",");
-                dot1_x = svg_posi.left - codebox_posi.left + path[0].end[0] + parseInt(svg_trans[0]) + 1;
-                dot1_y = svg_posi.top - codebox_posi.top + path[0].end[1] + parseInt(svg_trans[1]) + 1;
+                dot1_x = svg_posi.left + path[0].end[0] + parseInt(svg_trans[0]) - 8;
+                dot1_y = svg_posi.top + path[0].end[1] + parseInt(svg_trans[1]) - 8;
 
-                console.log(path)
                 if (path.length == 5) {
-                    dot2_x = svg_posi.left - codebox_posi.left + path[2].start[0] + parseInt(svg_trans[0]) - Math.abs((path[3].start[0] - path[2].start[0]) / 2) + 1;
-                    dot2_y = svg_posi.top - codebox_posi.top + path[2].start[1] + parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) + 1;
-
+                    dot2_x = svg_posi.left + path[3].start[0] + parseInt(svg_trans[0]) + Math.abs((path[2].start[0] - path[2].end[0]) / 2) - 8;
+                    dot2_y = svg_posi.top + path[2].start[1] - parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) - 8;
                     dot2_d = "y";
-
-                    dot3_x = svg_posi.left - codebox_posi.left + path[path.length - 1].start[0] + parseInt(svg_trans[0]) + 2;
-                    dot3_y = svg_posi.top - codebox_posi.top + path[path.length - 1].end[1] + parseInt(svg_trans[1]) + 2;
+                    dot3_x = svg_posi.left + path[path.length - 1].start[0] + parseInt(svg_trans[0]) - 8;
+                    dot3_y = svg_posi.top + path[path.length - 1].end[1] - parseInt(svg_trans[1]);
 
                     $(".dot").remove();
-                    $("#prg_" + id).append('<div id="dot1" class="dot" style="left:' + dot1_x + 'px;top: ' + dot1_y + 'px  "></div>');
-                    $("#prg_" + id).append('<div id="dot2" class="dot" style="left:' + dot2_x + 'px;top: ' + dot2_y + 'px  "></div>');
-                    $("#prg_" + id).append('<div id="dot3" class="dot" style="left:' + dot3_x + 'px;top: ' + dot3_y + 'px  "></div>');
+                    $(c.connector.svg).parent().append('<div id="dot1" class="dot" style="left:' + dot1_x + 'px;top: ' + dot1_y + 'px  "></div>');
+                    $(c.connector.svg).parent().append('<div id="dot2" class="dot" style="left:' + dot2_x + 'px;top: ' + dot2_y + 'px  "></div>');
+                    $(c.connector.svg).parent().append('<div id="dot3" class="dot" style="left:' + dot3_x + 'px;top: ' + dot3_y + 'px  "></div>');
                     dot1_drag();
                     dot2_drag();
                     dot3_drag();
                 }
-                if (path.length == 3) {
-
-                    dot1_x = svg_posi.left - codebox_posi.left + path[0].end[0] + parseInt(svg_trans[0]) + 1;
-                    dot1_y = svg_posi.top - codebox_posi.top + path[0].end[1] + parseInt(svg_trans[1]) + 1;
-
-                    dot2_x = svg_posi.left - codebox_posi.left + path[1].start[0] + parseInt(svg_trans[0]) - Math.abs((path[2].start[0] - path[2].start[0]) / 2) + 1;
-                    dot2_y = svg_posi.top - codebox_posi.top + path[1].start[1] + parseInt(svg_trans[1]) + Math.abs((path[2].start[1] - path[1].start[1]) / 2) + 1;
-
-                    dot3_x = svg_posi.left - codebox_posi.left + path[path.length - 1].end[0] + parseInt(svg_trans[0]) - 1;
-                    dot3_y = svg_posi.top - codebox_posi.top + path[path.length - 1].end[1] + parseInt(svg_trans[1]) - 1;
+                if (path.length == 3 && path[2].start[0] < path[2].end[0] && path[1].start[1] < path[1].end[1]) {
+                    dot2_x = svg_posi.left + path[1].start[0] - parseInt(svg_trans[0]) - Math.abs((path[2].start[0] - path[2].start[0]) / 2) + 8;
+                    dot2_y = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[2].start[1] - path[1].start[1]) / 2) + 8;
+                    dot3_x = svg_posi.left + path[path.length - 1 ].end[0] + parseInt(svg_trans[0]) - 8;
+                    dot3_y = svg_posi.top + path[path.length - 1 ].end[1] - parseInt(svg_trans[1]) + 8;
 
                     $(".dot").remove();
-                    $("#prg_" + id).append('<div id="dot1" class="dot" style="left:' + dot1_x + 'px;top: ' + dot1_y + 'px  "></div>');
-                    $("#prg_" + id).append('<div id="dot2" class="dot" style="left:' + dot2_x + 'px;top: ' + dot2_y + 'px  "></div>');
-                    $("#prg_" + id).append('<div id="dot3" class="dot" style="left:' + dot3_x + 'px;top: ' + dot3_y + 'px  "></div>');
+                    $(c.connector.svg).parent().append('<div id="dot1" class="dot" style="left:' + dot1_x + 'px;top: ' + dot1_y + 'px  "></div>');
+                    $(c.connector.svg).parent().append('<div id="dot2" class="dot" style="left:' + dot2_x + 'px;top: ' + dot2_y + 'px  "></div>');
+                    $(c.connector.svg).parent().append('<div id="dot3" class="dot" style="left:' + dot3_x + 'px;top: ' + dot3_y + 'px  "></div>');
                     dot1_drag();
                     dot2_drag();
-                    dot3_drag()
-
+                    dot3_drag();
                 }
+                if (path.length == 3 && path[2].start[0] < path[2].end[0] && path[1].start[1] > path[1].end[1]) {
+                    dot2_x = svg_posi.left + path[1].start[0] - parseInt(svg_trans[0]) - Math.abs((path[2].start[0] - path[2].start[0]) / 2) + 8;
+                    dot2_y = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) - Math.abs((path[2].start[1] - path[1].start[1]) / 2) + 8;
+                    dot3_x = svg_posi.left + path[path.length - 1 ].end[0] + parseInt(svg_trans[0]) - 8;
+                    dot3_y = svg_posi.top + path[path.length - 1 ].end[1] - parseInt(svg_trans[1]) + 8;
 
-                if (path.length == 4 && path[3].start[0] == path[3].end[0]) {
-                    var dot2_x = svg_posi.left - codebox_posi.left + path[2].start[0] + parseInt(svg_trans[0]) - 5 + ((path[3].start[0] - path[2].start[0]) / 2);
-                    var dot2_y = svg_posi.top - codebox_posi.top + path[2].start[1] + parseInt(svg_trans[1]) - 1 + ((path[3].start[1] - path[2].start[1]) / 2);
-
+                    $(".dot").remove();
+                    $(c.connector.svg).parent().append('<div id="dot1" class="dot" style="left:' + dot1_x + 'px;top: ' + dot1_y + 'px  "></div>');
+                    $(c.connector.svg).parent().append('<div id="dot2" class="dot" style="left:' + dot2_x + 'px;top: ' + dot2_y + 'px  "></div>');
+                    $(c.connector.svg).parent().append('<div id="dot3" class="dot" style="left:' + dot3_x + 'px;top: ' + dot3_y + 'px  "></div>');
+                    dot1_drag();
+                    dot2_drag();
+                    dot3_drag();
+                }
+                if (path.length == 3 && path[2].start[0] > path[2].end[0]) {
+                    $(".dot").remove();
+                    $("#prg_panel").append('<div id="dot1" class="dot" style="left:' + dot1_x + 'px;top: ' + dot1_y + 'px  "></div>');
+                    dot1_drag()
+                }
+                if (path.length == 4) {
+                    dot2_x = svg_posi.left + path[1].start[0] + parseInt(svg_trans[0]) - Math.abs((path[1].start[0] - path[1].end[0]) / 2) - 8;
+                    dot2_y = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[1].start[1] - path[1].start[1]) / 2) + 1;
                     dot2_d = "y";
                     $(".dot").remove();
-                    $("#prg_" + id).append('<div id="dot2" class="dot" style="left:' + dot2_x + 'px;top: ' + dot2_y + 'px  "></div>');
+                    $(c.connector.svg).parent().append('<div id="dot2" class="dot" style="left:' + dot2_x + 'px;top: ' + dot2_y + 'px  "></div>');
                     dot2_drag()
 
                 }
+
 
                 function dot1_drag() {
 
@@ -1539,7 +1565,7 @@ var SGI = {
 
 
                             dot_start = ui.position;
-                            connector_data = scope.con.fbs[id][c.id].connector;
+//                            connector_data = scope.con.fbs[id].connector;
                             old_stub = connector_data.stub.slice();
 
                             $("#dot2, #dot3").remove()
@@ -1563,7 +1589,7 @@ var SGI = {
                             dot1_x = svg_posi.left + path[0].end[0] + parseInt(svg_trans[0]);
                         },
                         stop: function () {
-                            scope.con.fbs[id][c.id].connector = connector_data;
+                            scope.con.fbs[id].connector = connector_data;
                             scope.$apply();
                             make_dot();
                         }
@@ -1573,16 +1599,20 @@ var SGI = {
                 function dot2_drag() {
                     $("#dot2").draggable({
                         axis: dot2_d,
-                        containment: $(c.connector.svg).parent(),
+//                        containment: $(c.connector.svg).parent(),
                         start: function (e, ui) {
                             $("#dot1, #dot3").remove();
-                            connector_data = scope.con.fbs[id][c.id].connector;
+//                            connector_data = scope.con.fbs[id].connector;
                             svg_w = parseInt(c.connector.bounds.maxX - (connector_data.stub[0] + connector_data.stub[1]));
                             svg_h = parseInt(c.connector.bounds.maxY);
                             dot_start = ui.position;
                             old_midpoint = parseFloat(connector_data.midpoint);
 
-                            if (path.length > 3) {
+                            if (path.length == 4) {
+                                svg_h = parseInt(c.connector.bounds.maxY - (connector_data.stub[0]));
+                            }
+
+                            if (path.length == 5) {
                                 if (path[2].start[0] == path[2].end[0]) {
                                     dot2_d = "x";
                                     $("#dot2").draggable("option", "axis", "x");
@@ -1608,23 +1638,44 @@ var SGI = {
                             path = c.connector.getPath();
 
                             if (dot2_d == "x") {
-                                var new_midpoint = Math.round((1 / svg_w * (svg_w * old_midpoint + dif_x)) * 100) / 100
+                                var new_midpoint = Math.round((1 / svg_w * (svg_w * old_midpoint + dif_x)) * 100) / 100;
+
                             } else {
-                                var new_midpoint = Math.round((1 / svg_h * (svg_h * old_midpoint + dif_y)) * 100) / 100
+                                if (path[1].start[1] < path[1].end[1] || path[0].start[1] < path[0].end[1]) {
+                                    var new_midpoint = Math.round((1 / svg_h * (svg_h * old_midpoint + dif_y)) * 100) / 100;
+                                } else {
+                                    var new_midpoint = Math.round((1 / svg_h * (svg_h * old_midpoint - dif_y)) * 100) / 100;
+                                }
                             }
 
                             if (new_midpoint > 0.98 || new_midpoint < 0.02) {
 
                                 if (new_midpoint > 0.98) {
                                     new_midpoint = 0.98;
-                                    ui.position.left = svg_posi.left - codebox_posi.left + path[2].start[0] + parseInt(svg_trans[0]) - Math.abs((path[3].start[0] - path[2].start[0]) / 2) + 1;
-                                    ui.position.top = svg_posi.top - codebox_posi.top + path[2].start[1] + parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) + 1;
+                                    if (path.length == 5) {
+                                        ui.position.left = svg_posi.left + path[2].start[0] + parseInt(svg_trans[0]) - Math.abs((path[3].start[0] - path[2].start[0]) / 2) + 1;
+                                        ui.position.top = svg_posi.top + path[2].start[1] + parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) - 8;
+                                    } else if (path.length == 4) {
+                                        ui.position.left = dot2_x = svg_posi.left + path[1].start[0] + parseInt(svg_trans[0]) - Math.abs((path[1].start[0] - path[1].end[0]) / 2) - 8;
+                                        ui.position.top = dot2_y = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[1].start[1] - path[1].start[1]) / 2) + 1;
+                                    } else {
+                                        ui.position.left = svg_posi.left + path[1].start[0] - parseInt(svg_trans[0]) - Math.abs((path[2].start[0] - path[2].start[0]) / 2);
+                                        ui.position.top = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[2].start[1] - path[1].start[1]) / 2);
+                                    }
                                 }
 
                                 if (new_midpoint < 0.02) {
                                     new_midpoint = 0.02;
-                                    ui.position.left = svg_posi.left - codebox_posi.left + path[2].start[0] + parseInt(svg_trans[0]) - Math.abs((path[3].start[0] - path[2].start[0]) / 2) + 1;
-                                    ui.position.top = svg_posi.top - codebox_posi.top + path[2].start[1] + parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) + 1;
+                                    if (path.length == 5) {
+                                        ui.position.left = svg_posi.left + path[2].start[0] + parseInt(svg_trans[0]) - Math.abs((path[3].start[0] - path[2].start[0]) / 2) + 1;
+                                        ui.position.top = svg_posi.top + path[2].start[1] + parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) - 8;
+                                    } else if (path.length == 4) {
+                                        ui.position.left = dot2_x = svg_posi.left + path[1].start[0] + parseInt(svg_trans[0]) - Math.abs((path[1].start[0] - path[1].end[0]) / 2) - 8;
+                                        ui.position.top = dot2_y = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[1].start[1] - path[1].start[1]) / 2) + 1;
+                                    } else {
+                                        ui.position.left = svg_posi.left + path[1].start[0] - parseInt(svg_trans[0]) - Math.abs((path[2].start[0] - path[2].start[0]) / 2);
+                                        ui.position.top = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[2].start[1] - path[1].start[1]) / 2);
+                                    }
                                 }
                             } else {
                                 dot2_old_posi = ui.position
@@ -1634,7 +1685,7 @@ var SGI = {
                             c.setConnector([ "Flowchart", { stub: connector_data.stub, alwaysRespectStubs: true, midpoint: connector_data.midpoint}  ]);
                         },
                         stop: function () {
-                            scope.con.fbs[id][c.id].connector = connector_data;
+                            scope.con.fbs[id].connector = connector_data;
                             scope.$apply();
                             make_dot();
                         }
@@ -1649,7 +1700,7 @@ var SGI = {
                         start: function (e, ui) {
 
                             dot_start = ui.position;
-                            connector_data = scope.con.fbs[id][c.id].connector;
+//                            connector_data = scope.con.fbs[id].connector;
                             old_stub = connector_data.stub.slice();
 
                             $("#dot1, #dot2").remove()
@@ -1682,7 +1733,7 @@ var SGI = {
                             }
                         },
                         stop: function () {
-                            scope.con.fbs[id][c.id].connector = connector_data;
+                            scope.con.fbs[id].connector = connector_data;
                             scope.$apply();
                             make_dot();
                         }
@@ -2818,21 +2869,21 @@ var SGI = {
         })
     },
 
-    register : function () {
-        if(scope.setup.user_mail == "" || scope.setup.user_mail == undefined){
+    register: function () {
+        if (scope.setup.user_mail == "" || scope.setup.user_mail == undefined) {
             $("body").append('\
-              <div id="dialog_register" style="text-align: center" title="'+SGI.translate("Register")+'">\
+              <div id="dialog_register" style="text-align: center" title="' + SGI.translate("Register") + '">\
               <img src="./img/logo.png" style="width: 300px"></img><br><br>\
-              <div style="font-size: 20px; font-weight: 900;">'+SGI.translate("register_info")+'</div><br><br>\
-              <div style="width: 80px; display: inline-block;text-align: left">'+SGI.translate("Name:")+'  </div><input id="inp_register_name" style="width: 300px" type="text"/><br>\
-              <div style="width: 80px; display: inline-block;text-align: left">'+SGI.translate("E-Mail:")+'</div><input id="inp_register_mail" style="width: 300px" type="text"/><br><br>\
-              <button id="btn_register">'+SGI.translate("register")+'</button>\
+              <div style="font-size: 20px; font-weight: 900;">' + SGI.translate("register_info") + '</div><br><br>\
+              <div style="width: 80px; display: inline-block;text-align: left">' + SGI.translate("Name:") + '  </div><input id="inp_register_name" style="width: 300px" type="text"/><br>\
+              <div style="width: 80px; display: inline-block;text-align: left">' + SGI.translate("E-Mail:") + '</div><input id="inp_register_mail" style="width: 300px" type="text"/><br><br>\
+              <button id="btn_register">' + SGI.translate("register") + '</button>\
                    </div>');
 
             $("#dialog_register").dialog({
                 width: "auto",
                 dialogClass: "update",
-                modal:true,
+                modal: true,
                 close: function () {
                     $("#dialog_register").remove();
                 }
@@ -2845,13 +2896,13 @@ var SGI = {
                     var send_data = {
                         typ: "register",
                         data: {
-                            name: $("#inp_register_name").val() ,
-                            mail: $("#inp_register_mail").val() ,
+                            name: $("#inp_register_name").val(),
+                            mail: $("#inp_register_mail").val(),
                             os: SGI.os
                         }
                     };
 
-                    if(send_data.data.mail == "" || send_data.data.mail == undefined ){
+                    if (send_data.data.mail == "" || send_data.data.mail == undefined) {
                         var now = new Date()
                         send_data.data.mail = now.toLocaleDateString() + " " + now.toLocaleTimeString();
                     }
@@ -2868,12 +2919,11 @@ var SGI = {
                             scope.setup.user_mail = send_data.data.mail;
                             scope.$apply();
                             $("#dialog_register").dialog("close")
-                        }else{
+                        } else {
                             alert("Daten konnten nicht gesendet werden. Bitte überprüfen sie ihre Internetverbindung")
                         }
                         client.destroy();
                     });
-
 
 
                 });

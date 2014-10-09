@@ -11,7 +11,7 @@ jQuery.extend(true, SGI, {
             uiClass: 'ui-state-hover',  // jQuery-UI modified
             pathClass: 'overideThisToUse',
             pathLevels: 1,
-            disableHI: false,
+            disableHI: false
         });
 
         $('li.ui-state-default').hover(
@@ -131,30 +131,113 @@ jQuery.extend(true, SGI, {
 
         });
         $("#m_update").click(function () {
+            $("#dialog_update").remove();
+            try {
+                $.ajax({
+                    url: "http://37.120.169.17/jdownloads/ScriptGUI/build_data.json",
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data)
+                        $("body").append('\
+                            <div id="dialog_update" style="width: 438px; height:428px; text-align: center" title="' + SGI.translate("Update") + '">\
+                            <img src="./img/logo.png" style="width: 300px"/>\
+                            <br><br><br>\
+                            <div style="width: 150px; display: inline-block;text-align: left">' + SGI.translate("Version ist:") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + SGI.version + '</div>\
+                            <br><br><br><br>\
+                            <div style="width: 150px; display: inline-block;text-align: left">' + SGI.translate("Neuste Version: ") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + data.version + '</div>\
+                            <br><br>\
+                            <div style="width: 150px; display: inline-block;text-align: left">' + SGI.translate("erstellung") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + data.time + ' ' + data.date + '</div>\
+                            <br><br><br><br>\
+                            <button id="btn_update">' + SGI.translate("Update") + '</button>\
+                            </div>');
 
-            if ($("body").find(".update").length < 1) {
 
-                $("body").append('\
-                   <div id="dialog_update" style="text-align: center" title="'+SGI.translate("Update")+'">\
-              <div style="width: 150px; display: inline-block;text-align: left">'+SGI.translate("Version ist:")+'</div><span>'+ SGI.version+'</span><br><br>\
-              <div style="width: 150px; display: inline-block;text-align: left">'+SGI.translate("Neuste Version:")+'</div><span>'+ SGI.version+'</span><br><br><br><br>\
-              <button id="btn_update">'+SGI.translate("Update")+'</button>\
-                   </div>');
+                        $("#btn_update").button()
+                            .click(function () {
+                                update()
+                            });
 
-                $("#dialog_update").dialog({
-                    width: "auto",
-                    dialogClass: "update",
-                    modal:true,
-                    close: function () {
-                        $("#dialog_update").remove();
+                        if (SGI.version == data.version) {
+                            $("#btn_update").button("disable")
+                        }
+
+                        setTimeout(function () {
+                            $("#dialog_update").dialog({
+                                width: "auto",
+                                dialogClass: "update",
+                                modal: true,
+                                close: function () {
+                                    $("#dialog_update").remove();
+                                }
+                            });
+                        }, 100);
+
+
+                        function update() {
+                            $("#btn_update").remove();
+                            $("#dialog_update").append('<div style="width: 100%" class="frame_color ui-state-default ui-corner-all" id="update_info"></div>');
+                            if (SGI.os == "win32") {
+                                var url = "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_win.zip"
+                            } else if (SGI.os == "darwin") {
+                                var url = "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_osx.zip"
+                            }
+
+                            var tmpFile = SGI.nwDir + "/datastore/update.zip";
+
+                            $('#update_info').text("Downloading");
+                            console.log("Downloading")
+                            request(url).pipe(fs.createWriteStream(tmpFile)).on("close", function () {
+                                setTimeout(function () {
+                                    $('#update_info').text("Unzip");
+                                    var zip = new Admzip(tmpFile);
+                                    zip.extractAllTo(SGI.nwDir + "/datastore", true);
+
+                                    setTimeout(function () {
+                                        $('#update_info').text("Copy");
+                                        var source = SGI.nwDir + "/datastore/ScriptGUI",
+                                            destination = SGI.nwDir;
+                                        ncp(source, destination, function (err) {
+                                            if (err) {
+                                                return
+                                            }
+                                            setTimeout(function () {
+                                                $('#update_info').text("Cleanup");
+                                                var deleteFolderRecursive = function (path) {
+                                                    if (fs.existsSync(path)) {
+                                                        fs.readdirSync(path).forEach(function (file, index) {
+                                                            var curPath = path + "/" + file;
+                                                            if (fs.statSync(curPath).isDirectory()) { // recurse
+                                                                deleteFolderRecursive(curPath);
+                                                            } else { // delete file
+                                                                fs.unlinkSync(curPath);
+                                                            }
+                                                        });
+                                                        fs.rmdirSync(path);
+                                                    }
+                                                    fs.unlinkSync(SGI.nwDir + "/datastore/update.zip");
+                                                };
+                                                deleteFolderRecursive(SGI.nwDir + "/datastore/ScriptGUI");
+                                                setTimeout(function () {
+                                                    $('#update_info').text("Restart");
+                                                    setTimeout(function () {
+                                                        document.location.reload(true)
+                                                    }, 2000);
+                                                }, 500);
+                                            }, 500);
+                                        });
+                                    }, 500);
+                                }, 0);
+                            });
+                        }
                     }
                 });
 
-            $("#btn_update").button()
-                    .click(function () {
-
-                    });
             }
+            catch (e) {
+
+            }
+
+
         });
 
         $("#grid").click(function () {
@@ -170,8 +253,6 @@ jQuery.extend(true, SGI, {
                 $(this).css({"left": n_left + "px", "top": n_top + "px"})
             })
         });
-
-
 
 
         $("#m_mbs-image").click(function () {
@@ -998,7 +1079,7 @@ jQuery.extend(true, SGI, {
                     callback: function (key, opt) {
                         SGI.expert_del(opt)
                     }
-                },
+                }
             }
         });
 
@@ -1904,16 +1985,16 @@ jQuery.extend(true, SGI, {
         var nr = $(opt.$trigger).data("nr");
 
         var data = {
-            name : scope.fbs[nr]["opt"],
+            name: scope.fbs[nr]["opt"],
             value: scope.fbs[nr]["value"],
-        in: scope.fbs[nr]["exp_in"],
-        out: scope.fbs[nr]["exp_out"]
+            in: scope.fbs[nr]["exp_in"],
+            out: scope.fbs[nr]["exp_out"]
         };
 
-        fs.writeFile(SGI.nwDir + "/datastore/experts/expert_"+data.name+".json", JSON.stringify(data), function (err) {
+        fs.writeFile(SGI.nwDir + "/datastore/experts/expert_" + data.name + ".json", JSON.stringify(data), function (err) {
             if (err) {
                 throw err;
-            }else{
+            } else {
                 SGI.read_experts();
             }
 
@@ -1922,10 +2003,10 @@ jQuery.extend(true, SGI, {
 
     expert_del: function (opt) {
         var name = $(opt.$trigger).attr("id");
-        fs.unlink(SGI.nwDir + "/datastore/experts/"+name+".json",  function (err) {
+        fs.unlink(SGI.nwDir + "/datastore/experts/" + name + ".json", function (err) {
             if (err) {
                 throw err;
-            }else{
+            } else {
                 SGI.read_experts();
             }
 
@@ -2002,23 +2083,23 @@ jQuery.extend(true, SGI, {
 
     open_last: function () {
 
-            try {
-                fs.readFile(scope.setup.last_file, function (err, data) {
-                    if (err) {
-                        throw err;
-                    } else {
-                        SGI.clear();
-                        SGI.load_prg(JSON.parse(data));
-                        SGI.prg_store = scope.setup.last_file;
-                        SGI.file_name = scope.setup.last_file.split("\\").pop();
-                        $("#m_file").text(SGI.file_name);
+        try {
+            fs.readFile(scope.setup.last_file, function (err, data) {
+                if (err) {
+                    throw err;
+                } else {
+                    SGI.clear();
+                    SGI.load_prg(JSON.parse(data));
+                    SGI.prg_store = scope.setup.last_file;
+                    SGI.file_name = scope.setup.last_file.split("\\").pop();
+                    $("#m_file").text(SGI.file_name);
 
-                    }
-                });
-            }
-            catch (err) {
-                throw err
-            }
+                }
+            });
+        }
+        catch (err) {
+            throw err
+        }
 
 
     },
@@ -2102,7 +2183,7 @@ jQuery.extend(true, SGI, {
 
         var mail = "";
         console.log(parseInt(scope.setup.user_mail))
-        if (scope.setup.user_mail.split("@").length >1){
+        if (scope.setup.user_mail.split("@").length > 1) {
             mail = scope.setup.user_mail;
         }
 
@@ -2113,7 +2194,7 @@ jQuery.extend(true, SGI, {
                    <div class="err_text">' + _data + '</div>\
                    <hr>\
                    <span>' + SGI.translate("Die Folgenden angaben sind optional:") + '</span><br><br>\
-                   <span style="width: 150px; display: inline-block">' + SGI.translate("E-Mail Adresse : ") + '</span><input id="inp_error_mail" value="'+mail+'" style="width: 317px; "type="email"/><br>\
+                   <span style="width: 150px; display: inline-block">' + SGI.translate("E-Mail Adresse : ") + '</span><input id="inp_error_mail" value="' + mail + '" style="width: 317px; "type="email"/><br>\
                    <div style="display: flex; align-items: center"><span style="width: 150px ; display: inline-block">' + SGI.translate("Kommentar : ") + '</span><textarea id="txt_error_comment" style="width: 315px; height: 60px; max-width: 315px"></textarea></div>\
                    <span style="width: 150px; display: inline-block">' + SGI.translate("Programm Daten: ") + '</span></span><input style="height:20px; width:20px; margin-left: 0; vertical-align: middle;" checked value="true" type="checkbox"/><br>\
                    <br><br>\
@@ -2145,11 +2226,11 @@ jQuery.extend(true, SGI, {
                 mail: $("#inp_error_mail").val(),
                 komment: $("#txt_error_comment").val(),
                 prg_data: "nicht mitgesendet",
-                datapoints:"nicht mitgesendet",
+                datapoints: "nicht mitgesendet",
                 os: SGI.os,
             };
 
-            if(send_data.mail == ""){
+            if (send_data.mail == "") {
                 send_data.mail = scope.user_mail;
             }
 
@@ -2161,8 +2242,8 @@ jQuery.extend(true, SGI, {
 
             client.on('data', function (data) {
                 if (data != "error") {
-                    alert("Ticketnummer: "+ data)
-                }else{
+                    alert("Ticketnummer: " + data)
+                } else {
                     alert("Daten konnten nicht gesendet werden")
                 }
                 client.destroy();
@@ -2205,6 +2286,7 @@ jQuery.extend(true, SGI, {
         }
 
     },
+
 
     quick_help: function () {
         var help = {

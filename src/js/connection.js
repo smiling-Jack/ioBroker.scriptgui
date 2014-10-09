@@ -160,3 +160,4 @@ jQuery.extend(true, SGI, {
         }
     }
 });
+
