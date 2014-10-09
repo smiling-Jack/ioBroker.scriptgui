@@ -11,7 +11,7 @@ var nw_gui = require('nw.gui');
 var nw_win = nw_gui.Window.get();
 
 var nw_manifest = nw_gui.App.manifest;
-nw_win.title= nw_manifest.name + " " + nw_manifest.version ;
+nw_win.title= nw_manifest.name + " " + nw_manifest.native.version ;
 
 var request = require("request");
 //var deep = require('deep-diff')
@@ -38,7 +38,7 @@ var PRG = {
 };
 
 var SGI = {
-    version: nw_manifest.version,
+    version: nw_manifest.native.version,
 
     HOST: '37.120.169.17',
     HOST_PORT: 3000,
@@ -3045,7 +3045,7 @@ var deleteFolderRecursive = function(path) {
                                 url: "http://37.120.169.17/jdownloads/ScriptGUI/build_data.json",
                                 dataType: "json",
                                 success: function (_data) {
-                                    if (SGI.version != _data.version) {
+                                    if (nw_manifest.native.version != _data.version) {
                                         SGI.update()
                                     }
                                 }

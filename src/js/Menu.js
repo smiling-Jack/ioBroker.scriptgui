@@ -2162,10 +2162,12 @@ jQuery.extend(true, SGI, {
                             <img src="./img/logo.png" style="width: 300px"/>\
                             <br><br><br>\
                             <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("Version ist:") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + SGI.version + '</div>\
+                            <br><br>\
+                            <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("erstellung") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + nw_manifest.native.build_date + ' ' + nw_manifest.native.build_time  + '</div>\
                             <br><br><hr><br>\
                             <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("Neuste Version: ") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + data.version + '</div>\
                             <br><br>\
-                            <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("erstellung") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + data.time + ' ' + data.date + '</div>\
+                            <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("erstellung") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + data.date + ' ' + data.time + '</div>\
                             <br><br><br>\
                             <button id="btn_update">' + SGI.translate("Update") + '</button>\
                             </div>');
@@ -2176,9 +2178,9 @@ jQuery.extend(true, SGI, {
                             update()
                         });
 
-                    if (SGI.version == data.version) {
-                        $("#btn_update").button("disable")
-                    }
+//                    if (SGI.version == data.version) {
+//                        $("#btn_update").button("disable")
+//                    }
 
                     setTimeout(function () {
                         $("#dialog_update").dialog({

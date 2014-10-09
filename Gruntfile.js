@@ -94,15 +94,18 @@ module.exports = function (grunt) {
 
     grunt.registerTask('make_build_data', function () {
 
-        var _data = grunt.file.readJSON('src/package.json');
+        var manifest = grunt.file.readJSON('src/package.json');
         var d = new Date()
         var build = {
-            version: _data.version,
+            version: manifest.native.version,
             time: d.toLocaleTimeString(),
             date: d.getDate() + "." + parseInt(d.getMonth() + 1) + "." + d.getFullYear()
-
         };
-        grunt.file.write("build/build_data.json", JSON.stringify(build))
+        manifest.native.build_time = d.toLocaleTimeString();
+        manifest.native.build_date = d.getDate() + "." + parseInt(d.getMonth() + 1) + "." + d.getFullYear();
+
+        grunt.file.write("build/build_data.json", JSON.stringify(build));
+        grunt.file.write("src/package.json", JSON.stringify(manifest));
         console.log('finish_make_build_data')
     });
 

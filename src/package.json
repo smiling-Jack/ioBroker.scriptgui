@@ -1,23 +1,19 @@
-{
-    "main": "index.html",
-    "name": "ScriptGUI",
-    "description": "Script GUI",
-    "version": "0.7.1",
-    "keywords": [ ],
-    "window": {
-        "title": "ScriptGUI",
-        "icon": "img/cube256.png",
-        "toolbar": false,
-        "frame": true,
-        "width": 1024,
-        "height": 768,
-        "min_width": 800,
-        "min_height": 600,
-        "max_width":"100%",
-        "max_height": "100%",
-        "resizable": true
-    },
-    "webkit": {
-        "plugin": true
-    }
-}
+{"main": "index.html", "name": "ScriptGUI", "description": "Script GUI", "keywords": [], "window": {
+    "title": "ScriptGUI",
+    "icon": "img/cube256.png",
+    "toolbar": false,
+    "frame": true,
+    "width": 1024,
+    "height": 768,
+    "min_width": 800,
+    "min_height": 600,
+    "max_width": "100%",
+    "max_height": "100%",
+    "resizable": true
+}, "webkit": {
+    "plugin": true
+}, "native": {
+    "version": "0.7.x",
+    "build_time": "01:39:28",
+    "build_date": "10.10.2014"
+}}
