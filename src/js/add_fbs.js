@@ -7,7 +7,7 @@
 SGI = $.extend(true, SGI, {
 
     add_fbs_element: function (_data, left, top, copy) {
-        var nr = SGI.fbs_n;
+        var nr = _data.counter || SGI.fbs_n;
         SGI.fbs_n++;
         var data = {
             parent: _data.parent,
@@ -26,6 +26,7 @@ SGI = $.extend(true, SGI, {
             opt3: _data.opt3 || "",
             exp_in: _data.exp_in || 1,
             exp_out: _data.exp_out || 1,
+            counter: nr,
             input: {},
             output: {},
 
@@ -756,6 +757,7 @@ SGI = $.extend(true, SGI, {
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
         if (data.type == "next") {
+            console.log(data)
             scope.append($("#" + data.parent), '\
                         <div style="z-index: 5"  id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_onborder fbs_element_next">\
                                 <p class="head_next">Next</p>\

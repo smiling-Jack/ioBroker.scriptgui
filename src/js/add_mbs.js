@@ -6,7 +6,7 @@
 SGI = $.extend(true, SGI, {
 
     add_mbs_element: function (_data, left, top) {
-        var nr = SGI.mbs_n;
+        var nr = _data.counter || SGI.mbs_n;
         SGI.mbs_n++;
 
         var data = {
@@ -20,10 +20,9 @@ SGI = $.extend(true, SGI, {
             day: _data.day || ["88"],
             val: _data.val || [],
             wert: _data.wert || [],
-            width: _data.width,
-            height: _data.height,
             kommentar: _data.kommentar || "Kommentar",
             titel: _data.titel || "Programm_" + nr,
+            counter: nr,
 
             style: _data.style || {
                 "left": left + "px",

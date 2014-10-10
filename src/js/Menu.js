@@ -69,12 +69,6 @@ jQuery.extend(true, SGI, {
             $("#setup_dialog").dialog("open");
         });
 
-        $("#clear_cache").click(function () {
-            storage.set(SGI.str_theme, null);
-            storage.set(SGI.str_settings, null);
-            storage.set(SGI.str_prog, null);
-        });
-
         $("#m_show_script").click(function () {
             if ($("body").find(".ui-dialog:not(.quick-help)").length == 0) {
 
@@ -148,7 +142,6 @@ jQuery.extend(true, SGI, {
                 $(this).css({"left": n_left + "px", "top": n_top + "px"})
             })
         });
-
 
         $("#m_mbs-image").click(function () {
 
@@ -227,7 +220,7 @@ jQuery.extend(true, SGI, {
                         }
                     });
 
-                    $("#dialog_photo").append(canvas)
+                    $("#dialog_photo").append(canvas);
                     canvas.toBlob(function (blob) {
                         saveAs(blob, type + ".png");
                     });
@@ -306,14 +299,6 @@ jQuery.extend(true, SGI, {
 
         });
 
-        $("#m_new-struck").click(function () {
-
-            SGI.make_struc_new()
-        });
-        $("#m_add_fir_bug").click(function () {
-
-            $("head").append('<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>')
-        });
         $("#m_show_debugscript").click(function () {
 
             if ($("body").find(".ui-dialog:not(.quick-help)").length == 0) {
@@ -373,7 +358,7 @@ jQuery.extend(true, SGI, {
                 var codebox = $(items.parent().parent()).attr("id");
                 SGI.plumb_inst["inst_" + codebox].repaintEverything();
             }
-            var items = $(".mbs_selected");
+           items = $(".mbs_selected");
             if (items.length > 1) {
 
                 function SortByName(a, b) {
@@ -401,7 +386,9 @@ jQuery.extend(true, SGI, {
         );
 
         $("#img_set_right").click(function () {
+            var position;
             var items = $(".fbs_selected");
+
             if (items.length > 1) {
                 function SortByName(a, b) {
                     var aName = $(a).position().left + $(a).width();
@@ -410,7 +397,7 @@ jQuery.extend(true, SGI, {
                 }
 
                 items.sort(SortByName);
-                var position = $(items[0]).position().left + $(items[0]).width();
+                position = $(items[0]).position().left + $(items[0]).width();
 
                 $.each(items, function () {
                     $(this).css("left", position - $(this).width());
@@ -419,7 +406,7 @@ jQuery.extend(true, SGI, {
                 var codebox = $(items.parent().parent()).attr("id");
                 SGI.plumb_inst["inst_" + codebox].repaintEverything();
             }
-            var items = $(".mbs_selected");
+            items = $(".mbs_selected");
             if (items.length > 1) {
                 function SortByName(a, b) {
                     var aName = $(a).position().left + $(a).width();
@@ -428,7 +415,7 @@ jQuery.extend(true, SGI, {
                 }
 
                 items.sort(SortByName);
-                var position = $(items[0]).position().left + $(items[0]).width();
+                position = $(items[0]).position().left + $(items[0]).width();
 
                 $.each(items, function () {
                     $(this).css("left", position - $(this).width());
@@ -446,6 +433,7 @@ jQuery.extend(true, SGI, {
         );
 
         $("#img_set_top").click(function () {
+            var position;
             var items = $(".fbs_selected");
             if (items.length > 1) {
                 function SortByName(a, b) {
@@ -455,7 +443,7 @@ jQuery.extend(true, SGI, {
                 }
 
                 items.sort(SortByName);
-                var position = $(items[0]).position().top;
+                position = $(items[0]).position().top;
 
                 $.each(items, function () {
                     $(this).css("top", position);
@@ -463,7 +451,7 @@ jQuery.extend(true, SGI, {
                 var codebox = $(items.parent().parent()).attr("id");
                 SGI.plumb_inst["inst_" + codebox].repaintEverything();
             }
-            var items = $(".mbs_selected");
+            items = $(".mbs_selected");
             if (items.length > 1) {
                 function SortByName(a, b) {
                     var aName = $(a).position().top;
@@ -472,7 +460,7 @@ jQuery.extend(true, SGI, {
                 }
 
                 items.sort(SortByName);
-                var position = $(items[0]).position().top;
+                position = $(items[0]).position().top;
 
                 $.each(items, function () {
                     $(this).css("top", position);
@@ -490,6 +478,7 @@ jQuery.extend(true, SGI, {
         );
 
         $("#img_set_bottom").click(function () {
+            var position;
             var items = $(".fbs_selected");
             if (items.length > 1) {
                 function SortByName(a, b) {
@@ -499,7 +488,7 @@ jQuery.extend(true, SGI, {
                 }
 
                 items.sort(SortByName);
-                var position = $(items[0]).position().top;
+                position = $(items[0]).position().top;
 
                 $.each(items, function () {
                     $(this).css("top", position);
@@ -516,7 +505,7 @@ jQuery.extend(true, SGI, {
                 }
 
                 items.sort(SortByName);
-                var position = $(items[0]).position().top;
+                position = $(items[0]).position().top;
 
                 $.each(items, function () {
                     $(this).css("top", position);
@@ -534,6 +523,7 @@ jQuery.extend(true, SGI, {
         );
 
         $("#img_set_steps").click(function () {
+
             var items = $(".fbs_selected");
             if (items.length > 1) {
                 function SortByTop(a, b) {
@@ -1477,7 +1467,7 @@ jQuery.extend(true, SGI, {
             selector: '._jsPlumb_connector',
             zIndex: 9999,
             className: "ui-widget-content ui-corner-all",
-            build: function ($trigger, e) {
+            build: function ($trigger) {
                 if ($trigger.parent().attr("id") == "prg_panel") {
                     return {
                         className: "ui-widget-content ui-corner-all",
@@ -1485,7 +1475,7 @@ jQuery.extend(true, SGI, {
                             "auto_route": {
                                 name: SGI.translate("Auto route"),
                                 className: "item_font ",
-                                callback: function (key, opt) {
+                                callback: function () {
                                     $(".dot").remove();
                                     scope.con.mbs[SGI.con.id].connector.stub = [30, 30];
                                     scope.con.mbs[SGI.con.id].connector.midpoint = 0.5;
@@ -1503,14 +1493,14 @@ jQuery.extend(true, SGI, {
                         "add_Force": {
                             name: SGI.translate("Add Force"),
                             className: "item_font ",
-                            callback: function (key, opt) {
+                            callback: function () {
                                 SGI.add_force(SGI.con);
                             }
                         },
                         "del_Force": {
                             name: SGI.translate("Del Force"),
                             className: "item_font ",
-                            callback: function (key, opt) {
+                            callback: function () {
 
                                 SGI.del_force(SGI.con);
 
@@ -1519,7 +1509,7 @@ jQuery.extend(true, SGI, {
                         "auto_route": {
                             name: SGI.translate("Auto route"),
                             className: "item_font ",
-                            callback: function (key, opt) {
+                            callback: function () {
                                 $(".dot").remove();
                                 scope.con.fbs[$trigger.parent().attr("id")][SGI.con.id].connector.stub = [30, 30];
                                 scope.con.fbs[$trigger.parent().attr("id")][SGI.con.id].connector.midpoint = 0.5;
@@ -1541,7 +1531,7 @@ jQuery.extend(true, SGI, {
                 "format": {
                     name: SGI.translate("Autoformat"),
                     className: "item_font ",
-                    callback: function (key, opt) {
+                    callback: function () {
                         var _data = editor.getSelection();
                         editor.replaceSelection(js_beautify(_data));
                     }
@@ -1911,7 +1901,7 @@ jQuery.extend(true, SGI, {
     save_as_local: function () {
         var data = SGI.make_savedata();
         var chooser = $('#prgsaveas');
-        chooser.change(function (evt) {
+        chooser.change(function () {
             var filep = $(this).val();
             fs.writeFile(filep, JSON.stringify(data), function (err) {
                 if (err) {
@@ -2077,7 +2067,6 @@ jQuery.extend(true, SGI, {
         var _data = data.split("\n").join("<br />").replace("file:*ScriptGUI", "");
 
         var mail = "";
-        console.log(parseInt(scope.setup.user_mail))
         if (scope.setup.user_mail.split("@").length > 1) {
             mail = scope.setup.user_mail;
         }
@@ -2122,7 +2111,7 @@ jQuery.extend(true, SGI, {
                 komment: $("#txt_error_comment").val(),
                 prg_data: "nicht mitgesendet",
                 datapoints: "nicht mitgesendet",
-                os: SGI.os,
+                os: SGI.os
             };
 
             if (send_data.mail == "") {
@@ -2156,7 +2145,7 @@ jQuery.extend(true, SGI, {
                 url: "http://37.120.169.17/jdownloads/ScriptGUI/build_data.json",
                 dataType: "json",
                 success: function (data) {
-                    console.log(data)
+
                     $("body").append('\
                             <div id="dialog_update" style="width: 438px; height:428px; text-align: center" title="' + SGI.translate("Update") + '">\
                             <img src="./img/logo.png" style="width: 300px"/>\
@@ -2195,12 +2184,13 @@ jQuery.extend(true, SGI, {
 
 
                     function update() {
+                        var url;
                         $("#btn_update").remove();
                         $("#dialog_update").append('<div style="width: 100%; height: 33px; line-height: 33px" class="ui-state-default ui-corner-all" id="update_info"></div>');
                         if (SGI.os == "win32") {
-                            var url = "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_win.zip"
+                            url = "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_win.zip"
                         } else if (SGI.os == "darwin") {
-                            var url = "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_osx.zip"
+                            url = "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_osx.zip"
                         }
 
                         var tmpFile = SGI.nwDir + "/datastore/update.zip";
@@ -2246,7 +2236,7 @@ jQuery.extend(true, SGI, {
 
         }
         catch (e) {
-            console.log(e)
+            console.log(e);
             alert("Überprüfen Sie Ihre Internetverbindung")
         }
 
@@ -2355,9 +2345,9 @@ jQuery.extend(true, SGI, {
             if (SGI.key == 17) {
                 SGI.open_quick_help_dialog();
                 $("#help-content").children().remove();
-
+                var type;
                 if ($(elem.target).hasClass("fbs_element") || $(elem.target).hasClass("mbs_element")) {
-                    var type = "";
+
                     if ($(elem.target).attr("id").split("_")[0] == "trigger") {
                         type = $(elem.target).attr("id").split("_")[0] + "_" + $(elem.target).attr("id").split("_")[1];
                     } else {
@@ -2386,7 +2376,7 @@ jQuery.extend(true, SGI, {
                 }
 
                 if ($(elem.target).parent().hasClass("fbs") || $(elem.target).parent().hasClass("mbs")) {
-                    var type = $(elem.target).parent().attr("id");
+                    type = $(elem.target).parent().attr("id");
                     $("#help-content").append(help[type]);
                 }
 

@@ -8,10 +8,11 @@ var net = require('net');
 var path = require('path');
 var fs = require('fs');
 var nw_gui = require('nw.gui');
+
 var nw_win = nw_gui.Window.get();
 
 var nw_manifest = nw_gui.App.manifest;
-nw_win.title= nw_manifest.name + " " + nw_manifest.native.version ;
+nw_win.title = nw_manifest.name + " " + nw_manifest.native.version;
 
 var request = require("request");
 //var deep = require('deep-diff')
@@ -21,7 +22,7 @@ var ncp = require('ncp');
 
 
 process.on("uncaughtException", function (e) {
-    console.log(e)
+    console.log(e);
     SGI.error_box(e.stack)
 });
 
@@ -309,13 +310,9 @@ var SGI = {
                 if (start_h - dd.deltaY < 100) {
                     $("#sim_log").css({height: "100px"});
                     $("#main").css({height: 'calc(100% - ' + (58 + 100) + 'px)'});
-                    $('#toolbox_body').perfectScrollbar('update');
-                    $('#prg_body').perfectScrollbar('update');
                 } else {
                     $("#sim_log").css({height: start_h - dd.deltaY + "px"});
                     $("#main").css({height: 'calc(100% - ' + (58 + start_h - dd.deltaY) + 'px)'});
-                    $('#toolbox_body').perfectScrollbar('update');
-                    $('#prg_body').perfectScrollbar('update');
                 }
 
             });
@@ -421,11 +418,11 @@ var SGI = {
         }, true);
 
 
-
-        console.log("Start finish")
-        setTimeout(function () {
-            SGI.register()
-        }, 5000);
+        console.log("Start finish");
+        // todo Register mit Homepage verbinden
+//        setTimeout(function () {
+//            SGI.register()
+//        }, 5000);
 
     },
 
@@ -451,9 +448,9 @@ var SGI = {
             } else if (SGI.key == 86 && event.ctrlKey == true) {
                 SGI.paste_selected();
                 $("body").css({cursor: "default"});
-            } else if (SGI.key == 89 &&  event.altKey == true) {
+            } else if (SGI.key == 89 && event.altKey == true) {
                 nw_win.showDevTools();
-            }else if (SGI.key == 88 &&  event.altKey == true) {
+            } else if (SGI.key == 88 && event.altKey == true) {
                 document.location.reload(true)
             } else if (SGI.key == 17 || SGI.key == 91 || SGI.key == 93 || event.ctrlKey == true) {
                 $("body").css({cursor: "help"});
@@ -660,16 +657,17 @@ var SGI = {
                         drag: function (e, ui) {
                             var dif_x = ui.position.left - dot_start.left;
                             var dif_y = ui.position.top - dot_start.top;
+                            var new_midpoint;
                             path = c.connector.getPath();
 
                             if (dot2_d == "x") {
-                                var new_midpoint = Math.round((1 / svg_w * (svg_w * old_midpoint + dif_x)) * 100) / 100;
+                                new_midpoint = Math.round((1 / svg_w * (svg_w * old_midpoint + dif_x)) * 100) / 100;
 
                             } else {
                                 if (path[1].start[1] < path[1].end[1] || path[0].start[1] < path[0].end[1]) {
-                                    var new_midpoint = Math.round((1 / svg_h * (svg_h * old_midpoint + dif_y)) * 100) / 100;
+                                    new_midpoint = Math.round((1 / svg_h * (svg_h * old_midpoint + dif_y)) * 100) / 100;
                                 } else {
-                                    var new_midpoint = Math.round((1 / svg_h * (svg_h * old_midpoint - dif_y)) * 100) / 100;
+                                    new_midpoint = Math.round((1 / svg_h * (svg_h * old_midpoint - dif_y)) * 100) / 100;
                                 }
                             }
 
@@ -731,9 +729,12 @@ var SGI = {
                             $("#dot1, #dot2").remove()
                         },
                         drag: function (e, ui) {
+                            var dif_x;
+                            var new_stub;
+
                             if (path[path.length - 1].start[0] < path[path.length - 1].end[0]) {
-                                var dif_x = ui.position.left - dot_start.left;
-                                var new_stub = parseInt(old_stub[1]) - dif_x;
+                                dif_x = ui.position.left - dot_start.left;
+                                new_stub = parseInt(old_stub[1]) - dif_x;
                                 if (new_stub < 30) {
                                     new_stub = 30;
                                     ui.position = dot3_old_posi;
@@ -744,8 +745,8 @@ var SGI = {
                                 c.setConnector([ "Flowchart", { stub: connector_data.stub, alwaysRespectStubs: true, midpoint: connector_data.midpoint}  ]);
                                 dot2_x = svg_posi.left + path[0].end[0] + parseInt(svg_trans[0]);
                             } else {
-                                var dif_x = ui.position.left - dot_start.left;
-                                var new_stub = parseInt(old_stub[1]) + dif_x;
+                                dif_x = ui.position.left - dot_start.left;
+                                new_stub = parseInt(old_stub[1]) + dif_x;
                                 if (new_stub < 30) {
                                     new_stub = 30;
                                     ui.position = dot3_old_posi;
@@ -1112,73 +1113,145 @@ var SGI = {
 
     },
 
-    load_prg: function (data) {
-        console.log(data);
-        $.each(data.mbs, function () {
-            SGI.add_mbs_element(this);
-            if (this.counter > SGI.mbs_n) {
-                SGI.mbs_n = this.counter
-            }
-        });
-        $.each(data.fbs, function () {
-            SGI.add_fbs_element(this);
-            if (this.counter > SGI.fbs_n) {
-                SGI.fbs_n = this.counter
-            }
-        });
-        $.each(data.con.mbs, function () {
-            console.log(this);
-            var source = this.pageSourceId;
-            var target = this.pageTargetId;
-            if (target.split("_")[0] == "codebox") {
-                var c = SGI.plumb_inst.inst_mbs.connect({
-                    uuids: [source],
-                    target: target
+    load_prg: function (_data) {
+        var data = _data;
+        if (data.version == undefined) {
 
-                });
-                c.setConnector([ "Flowchart", { stub: this.connector.stub, alwaysRespectStubs: true, midpoint: this.connector.midpoint}  ]);
-                scope.con.mbs[c.id] = {
-                    pageSourceId: c.sourceId,
-                    pageTargetId: c.targetId,
-                    connector: {
-                        stub: this.connector.stub,
-                        midpoint: this.connector.midpoint
-                    }
+            $.each(data.mbs, function () {
+                this["style"] = {
+                    "left": this.left + "px",
+                    "top": this.top + "px",
+                    "width": this.width + "px",
+                    "height": this.height + "px"
                 };
 
-            } else {
-                var c = SGI.plumb_inst.inst_mbs.connect({uuids: [source, target]});
+                delete this.left;
+                delete this.top;
+                delete this.width;
+                delete this.height;
 
-                c.setConnector([ "Flowchart", { stub: this.connector.stub, alwaysRespectStubs: true, midpoint: this.connector.midpoint}  ]);
-                console.log(c)
-                scope.con.mbs[c.id] = {
-                    pageSourceId: c.sourceId,
-                    pageTargetId: c.targetId,
-                    connector: {
-                        stub: this.connector.stub,
-                        midpoint: this.connector.midpoint
-                    }
+
+                SGI.add_mbs_element(this);
+                if (this.counter > SGI.mbs_n) {
+                    SGI.mbs_n = this.counter
                 }
-            }
 
-        });
+            });
+            $.each(data.fbs, function () {
+                this["style"] = {
+                    "left": this.left + "px",
+                    "top": this.top + "px",
 
-        $.each(data.con.fbs, function (index) {
-            $.each(this, function () {
+                };
 
-                try {
+                delete this.left;
+                delete this.top;
 
-                    var source = this.pageSourceId;
-                    var target = this.pageTargetId;
 
-                    var c = SGI.plumb_inst["inst_" + index].connect({
-                        uuids: [source, target]
+                SGI.add_fbs_element(this);
+                if (this.counter > SGI.mbs_n) {
+                    SGI.fbs_n = this.counter
+                }
+            });
+            $.each(data.connections.mbs, function () {
+                var source = this.pageSourceId;
+                var target = this.pageTargetId;
+                var c;
 
-                    });
+                if (target.split("_")[0] == "codebox") {
+                    try{
+                        c = SGI.plumb_inst.inst_mbs.connect({
+                            uuids: [source],
+                            target: target
+
+                        });
+                        c.setConnector([ "Flowchart", { stub: this.connector.stub, alwaysRespectStubs: true, midpoint: this.connector.midpoint}  ]);
+                        scope.con.mbs[c.id] = {
+                            pageSourceId: c.sourceId,
+                            pageTargetId: c.targetId,
+                            connector: {
+                                stub: this.connector.stub,
+                                midpoint: this.connector.midpoint
+                            }
+                        };
+                    }catch (err){}
+
+
+                } else {
+                    try{
+                    c = SGI.plumb_inst.inst_mbs.connect({uuids: [source, target]});
 
                     c.setConnector([ "Flowchart", { stub: this.connector.stub, alwaysRespectStubs: true, midpoint: this.connector.midpoint}  ]);
+                    scope.con.mbs[c.id] = {
+                        pageSourceId: c.sourceId,
+                        pageTargetId: c.targetId,
+                        connector: {
+                            stub: this.connector.stub,
+                            midpoint: this.connector.midpoint
+                        }
+                    }
+                    }catch (err){}
+                }
 
-                    scope.con.fbs[index][c.id] = {
+            });
+            $.each(data.connections.fbs, function (index) {
+                $.each(this, function () {
+
+                    try {
+
+                        var source = this.pageSourceId;
+                        var target = this.pageTargetId;
+
+                        var c = SGI.plumb_inst["inst_" + index].connect({
+                            uuids: [source, target]
+
+                        });
+
+                        c.setConnector([ "Flowchart", { stub: this.connector.stub, alwaysRespectStubs: true, midpoint: this.connector.midpoint}  ]);
+
+                        scope.con.fbs[index][c.id] = {
+                            pageSourceId: c.sourceId,
+                            pageTargetId: c.targetId,
+                            connector: {
+                                stub: this.connector.stub,
+                                midpoint: this.connector.midpoint
+                            }
+                        };
+                        scope.$apply()
+
+                    } catch (err) {
+                        console.log(err);
+                        console.log(this)
+                    }
+                });
+            });
+
+        } else {
+            $.each(data.mbs, function () {
+                SGI.add_mbs_element(this);
+                if (this.counter > SGI.mbs_n) {
+                    SGI.mbs_n = this.counter
+                }
+            });
+            $.each(data.fbs, function () {
+                SGI.add_fbs_element(this);
+                if (this.counter > SGI.fbs_n) {
+                    SGI.fbs_n = this.counter
+                }
+            });
+            $.each(data.con.mbs, function () {
+                var source = this.pageSourceId;
+                var target = this.pageTargetId;
+                var c;
+
+                if (target.split("_")[0] == "codebox") {
+                    c = SGI.plumb_inst.inst_mbs.connect({
+                        uuids: [source],
+                        target: target
+
+                    });
+                    c.setConnector([ "Flowchart", { stub: this.connector.stub, alwaysRespectStubs: true, midpoint: this.connector.midpoint}  ]);
+                    scope.con.mbs[c.id] = {
                         pageSourceId: c.sourceId,
                         pageTargetId: c.targetId,
                         connector: {
@@ -1186,14 +1259,58 @@ var SGI = {
                             midpoint: this.connector.midpoint
                         }
                     };
-                    scope.$apply()
 
-                } catch (err) {
-                    console.log(err);
-                    console.log(this)
+                } else {
+                    c = SGI.plumb_inst.inst_mbs.connect({uuids: [source, target]});
+
+                    c.setConnector([ "Flowchart", { stub: this.connector.stub, alwaysRespectStubs: true, midpoint: this.connector.midpoint}  ]);
+                    scope.con.mbs[c.id] = {
+                        pageSourceId: c.sourceId,
+                        pageTargetId: c.targetId,
+                        connector: {
+                            stub: this.connector.stub,
+                            midpoint: this.connector.midpoint
+                        }
+                    }
                 }
+
             });
-        });
+            $.each(data.con.fbs, function (index) {
+                $.each(this, function () {
+
+                    try {
+
+                        var source = this.pageSourceId;
+                        var target = this.pageTargetId;
+
+                        var c = SGI.plumb_inst["inst_" + index].connect({
+                            uuids: [source, target]
+
+                        });
+
+                        c.setConnector([ "Flowchart", { stub: this.connector.stub, alwaysRespectStubs: true, midpoint: this.connector.midpoint}  ]);
+
+                        scope.con.fbs[index][c.id] = {
+                            pageSourceId: c.sourceId,
+                            pageTargetId: c.targetId,
+                            connector: {
+                                stub: this.connector.stub,
+                                midpoint: this.connector.midpoint
+                            }
+                        };
+                        scope.$apply()
+
+                    } catch (err) {
+                        console.log(err);
+                        console.log(this)
+                    }
+                });
+            });
+        }
+
+        SGI.fbs_n ++;
+        SGI.mbs_n ++;
+
     },
 
     add_input: function (opt) {
@@ -1224,7 +1341,7 @@ var SGI = {
         var id = _id;
         var position = _position || "";
         var type = _type || "";
-
+        var endpointStyle = {};
         var _stub = 30;
 
         var codebox = $("#" + parent).parent().attr("id");
@@ -1232,7 +1349,7 @@ var SGI = {
 
         if (scope == "singel") {
             if (type == "input") {
-                var endpointStyle = {fillStyle: "green"};
+                 endpointStyle = {fillStyle: "green"};
                 SGI.plumb_inst["inst_" + codebox].addEndpoint(id.toString(), { uuid: id.toString() }, {
                     anchor: [0, 0.5, -1, 0, 0, 0],
                     isTarget: true,
@@ -1269,7 +1386,7 @@ var SGI = {
         if (scope == "liste_ch") {
 
             if (type == "input") {
-                var endpointStyle = {fillStyle: "#660066"};
+                 endpointStyle = {fillStyle: "#660066"};
                 SGI.plumb_inst["inst_" + codebox].addEndpoint(id.toString(), { uuid: id.toString() }, {
                     anchor: [0, 0.5, -1, 0, 0, 0],
                     isTarget: true,
@@ -1296,7 +1413,7 @@ var SGI = {
         if (scope == "liste_ch_dp") {
 
             if (type == "input") {
-                var endpointStyle = {fillStyle: "#660066"};
+                endpointStyle = {fillStyle: "#660066"};
                 SGI.plumb_inst["inst_" + codebox].addEndpoint(id.toString(), { uuid: id.toString() }, {
                     anchor: [0, 0.5, -1, 0, 0, 0],
                     isTarget: true,
@@ -1323,7 +1440,7 @@ var SGI = {
         if (scope == "liste_val") {
 
             if (type == "input") {
-                var endpointStyle = {fillStyle: "#bb55bb"};
+                endpointStyle = {fillStyle: "#bb55bb"};
                 SGI.plumb_inst["inst_" + codebox].addEndpoint(id.toString(), { uuid: id.toString() }, {
                     anchor: ["Left"],
                     isTarget: true,
@@ -1350,7 +1467,7 @@ var SGI = {
         }
         if (scope == "expert") {
             if (type == "input") {
-                var endpointStyle = {fillStyle: "gray"};
+                endpointStyle = {fillStyle: "gray"};
                 SGI.plumb_inst["inst_" + codebox].addEndpoint(id.toString(), { uuid: id.toString() }, {
                     anchor: [0, 0.5, -1, 0, 0, 0],
                     isTarget: true,
@@ -1377,6 +1494,7 @@ var SGI = {
     },
 
     add_mbs_endpoint: function (data) {
+        var endpointStyle;
 
         if (data.type == "codebox") {
 
@@ -1391,7 +1509,7 @@ var SGI = {
 
         } else if ($("#" + data.fbs_id).hasClass("fbs_element_onborder")) {
 
-            var endpointStyle = {fillStyle: "blue"};
+            endpointStyle = {fillStyle: "blue"};
             SGI.plumb_inst.inst_mbs.addEndpoint(data.fbs_id, { uuid: data.fbs_id }, {
 //            filter:".ep",				// only supported by jquery
                 anchor: "Center",
@@ -1405,7 +1523,7 @@ var SGI = {
 
 
         } else if (data.type == "brake" || data.type == "intervall" || data.type == "loop") {
-            var endpointStyle = {fillStyle: "blue"};
+            endpointStyle = {fillStyle: "blue"};
             SGI.plumb_inst.inst_mbs.addEndpoint(data.mbs_id + "_in1", { uuid: data.mbs_id + "_in1" }, {
                 dropOptions: { hoverClass: "dragHover" },
                 anchor: ["Left"],
@@ -1433,7 +1551,7 @@ var SGI = {
             });
 
         } else if (data.type != "komex" && data.type != "scriptobj" && data.type != "ccuobj" && data.type != "ccuobjpersi") {
-            var endpointStyle = {fillStyle: "blue"};
+            endpointStyle = {fillStyle: "blue"};
             SGI.plumb_inst.inst_mbs.addEndpoint(data.mbs_id, { uuid: data.mbs_id }, {
                 anchor: ["Bottom", "Left", "Right", "Top"],
                 isSource: true,
@@ -1468,7 +1586,7 @@ var SGI = {
         scope.$apply();
 
         SGI.plumb_inst["inst_" + id].bind("click", function (c, p) {
-            console.clear()
+            console.clear();
             var connector_data;
             var dot1_x;
             var dot1_y;
@@ -1488,15 +1606,14 @@ var SGI = {
 
 
             function make_dot() {
-                connector_data = scope.con.fbs[id][c.id].connector;
-                console.log(connector_data)
+                var connector_data = scope.con.fbs[id][c.id].connector;
                 var svg_posi = $(c.connector.svg).position();
-
                 var prg_posi = $(c.connector.svg).parent().offset();
                 var path = c.connector.getPath();
                 var svg_trans = $(c.connector.svg).children().first()[0].getAttribute("transform").replace("translate(", "").replace(")", "").split(",");
                 dot1_x = svg_posi.left + path[0].end[0] + parseInt(svg_trans[0]) - 8;
                 dot1_y = svg_posi.top + path[0].end[1] + parseInt(svg_trans[1]) - 8;
+
 
                 if (path.length == 5) {
                     dot2_x = svg_posi.left + path[3].start[0] + parseInt(svg_trans[0]) + Math.abs((path[2].start[0] - path[2].end[0]) / 2) - 8;
@@ -1634,18 +1751,19 @@ var SGI = {
                             }
                         },
                         drag: function (e, ui) {
+                            var new_midpoint;
                             var dif_x = ui.position.left - dot_start.left;
                             var dif_y = ui.position.top - dot_start.top;
                             path = c.connector.getPath();
 
                             if (dot2_d == "x") {
-                                var new_midpoint = Math.round((1 / svg_w * (svg_w * old_midpoint + dif_x)) * 100) / 100;
+                                 new_midpoint = Math.round((1 / svg_w * (svg_w * old_midpoint + dif_x)) * 100) / 100;
 
                             } else {
                                 if (path[1].start[1] < path[1].end[1] || path[0].start[1] < path[0].end[1]) {
-                                    var new_midpoint = Math.round((1 / svg_h * (svg_h * old_midpoint + dif_y)) * 100) / 100;
+                                    new_midpoint = Math.round((1 / svg_h * (svg_h * old_midpoint + dif_y)) * 100) / 100;
                                 } else {
-                                    var new_midpoint = Math.round((1 / svg_h * (svg_h * old_midpoint - dif_y)) * 100) / 100;
+                                    new_midpoint = Math.round((1 / svg_h * (svg_h * old_midpoint - dif_y)) * 100) / 100;
                                 }
                             }
 
@@ -1707,9 +1825,11 @@ var SGI = {
                             $("#dot1, #dot2").remove()
                         },
                         drag: function (e, ui) {
+                            var dif_x;
+                            var new_stub;
                             if (path[path.length - 1].start[0] < path[path.length - 1].end[0]) {
-                                var dif_x = ui.position.left - dot_start.left;
-                                var new_stub = parseInt(old_stub[1]) - dif_x;
+                                dif_x = ui.position.left - dot_start.left;
+                                new_stub = parseInt(old_stub[1]) - dif_x;
                                 if (new_stub < 30) {
                                     new_stub = 30;
                                     ui.position = dot3_old_posi;
@@ -1720,8 +1840,8 @@ var SGI = {
                                 c.setConnector([ "Flowchart", { stub: connector_data.stub, alwaysRespectStubs: true, midpoint: connector_data.midpoint}  ]);
                                 dot2_x = svg_posi.left + path[0].end[0] + parseInt(svg_trans[0]);
                             } else {
-                                var dif_x = ui.position.left - dot_start.left;
-                                var new_stub = parseInt(old_stub[1]) + dif_x;
+                                dif_x = ui.position.left - dot_start.left;
+                                new_stub = parseInt(old_stub[1]) + dif_x;
                                 if (new_stub < 30) {
                                     new_stub = 30;
                                     ui.position = dot3_old_posi;
@@ -2170,10 +2290,11 @@ var SGI = {
                 }
 
             })
+
             .drag("end", function () {
                 var nr = $(this).data("nr");
-                scope.fbs[nr].style.top = $(this).css("top");
-                scope.fbs[nr].style.left = $(this).css("left");
+                scope.fbs[nr].style.top = $(this).position().top+"px";
+                scope.fbs[nr].style.left = $(this).position().left+"px";
 
                 scope.$apply();
                 if ($.isArray(ep_fbs) == true) {
@@ -2268,7 +2389,7 @@ var SGI = {
                         });
                     }
 
-                    SGI.plumb_inst.inst_mbs.repaintEverything() //todo UNBEDINGT das Everything ersetzen eigentlich alle repaintEverything !!!
+                    SGI.plumb_inst.inst_mbs.repaintEverything(); //todo UNBEDINGT das Everything ersetzen eigentlich alle repaintEverything !!!
 
 
                 })
@@ -2288,27 +2409,29 @@ var SGI = {
             accept: ".fbs",
             tolerance: "pointer",
             drop: function (ev, ui) {
-
+                var data;
+                var top;
+                var left;
 //                if (ui["draggable"] != ui["helper"]) {
                 console.log(ev);
                 if (ui["draggable"].hasClass("fbs_exp_custom")) {
                     if (scope.setup.snap_grid) {
 
-                        var data = {
+                        data = {
                             parent: $(ev.target).attr("id"),
                             type: $(ui["draggable"][0]).attr("id")
 
                         };
-                        var top = Math.round(((ui["offset"]["top"] - $(ev.target).offset().top + 30) / SGI.zoom) / SGI.grid) * SGI.grid;
-                        var left = Math.round(((ui["offset"]["left"] - $(ev.target).offset().left + 0) / SGI.zoom) / SGI.grid) * SGI.grid;
+                        top = Math.round(((ui["offset"]["top"] - $(ev.target).offset().top + 30) / SGI.zoom) / SGI.grid) * SGI.grid;
+                        left = Math.round(((ui["offset"]["left"] - $(ev.target).offset().left + 0) / SGI.zoom) / SGI.grid) * SGI.grid;
                     } else {
-                        var data = {
+                        data = {
                             parent: $(ev.target).attr("id"),
                             type: $(ui["draggable"][0]).attr("id")
 
                         };
-                        var top = parseInt(((ui["offset"]["top"] - $(ev.target).offset().top) + 30) / SGI.zoom);
-                        var left = parseInt(((ui["offset"]["left"] - $(ev.target).offset().left) + 0) / SGI.zoom);
+                        top = parseInt(((ui["offset"]["top"] - $(ev.target).offset().top) + 30) / SGI.zoom);
+                        left = parseInt(((ui["offset"]["left"] - $(ev.target).offset().left) + 0) / SGI.zoom);
                     }
 
                     SGI.add_fbs_element(data, left, top);
@@ -2316,21 +2439,19 @@ var SGI = {
 
                     if (scope.setup.snap_grid) {
 
-                        var data = {
+                       data = {
                             parent: $(ev.target).attr("id"),
                             type: $(ui["draggable"][0]).attr("id")
-
                         };
-                        var top = Math.round(((ui["offset"]["top"] - $(ev.target).offset().top + 30) / SGI.zoom) / SGI.grid) * SGI.grid;
-                        var left = Math.round(((ui["offset"]["left"] - $(ev.target).offset().left + 40) / SGI.zoom) / SGI.grid) * SGI.grid;
+                        top = Math.round(((ui["offset"]["top"] - $(ev.target).offset().top + 30) / SGI.zoom) / SGI.grid) * SGI.grid;
+                        left = Math.round(((ui["offset"]["left"] - $(ev.target).offset().left + 40) / SGI.zoom) / SGI.grid) * SGI.grid;
                     } else {
-                        var data = {
+                        data = {
                             parent: $(ev.target).attr("id"),
                             type: $(ui["draggable"][0]).attr("id")
-
                         };
-                        var top = parseInt(((ui["offset"]["top"] - $(ev.target).offset().top) + 30) / SGI.zoom);
-                        var left = parseInt(((ui["offset"]["left"] - $(ev.target).offset().left) + 40) / SGI.zoom);
+                        top = parseInt(((ui["offset"]["top"] - $(ev.target).offset().top) + 30) / SGI.zoom);
+                        left = parseInt(((ui["offset"]["left"] - $(ev.target).offset().left) + 40) / SGI.zoom);
                     }
 
                     SGI.add_fbs_element(data, left, top);
@@ -2342,6 +2463,7 @@ var SGI = {
 
     make_savedata: function () {
         return   {
+            version:nw_manifest.native.version,
             mbs: scope.mbs,
             fbs: scope.fbs,
             con: scope.con
@@ -2414,6 +2536,7 @@ var SGI = {
                 }
             });
 
+
             function SortByLeft(a, b) {
                 var aName = a.left;
                 var bName = b.left;
@@ -2436,7 +2559,7 @@ var SGI = {
             });
 
             var sortable = [];
-            for (x in data) {
+            for (var x in data) {
                 sortable.push({
                     ebene: data[x].ebene,
                     fbs_id: data[x].fbs_id,
@@ -2610,7 +2733,7 @@ var SGI = {
                 var data = {
                     value: editor.getValue(),
                     name: $('#exp_name').val()
-                }
+                };
 
                 $("#dialog_code").remove();
                 return callback(data)
@@ -2663,11 +2786,8 @@ var SGI = {
     },
 
     clear: function () {
-        console.log("clear")
-        SGI.plumb_inst.inst_mbs.cleanupListeners()
-        console.log("clear")
+        SGI.plumb_inst.inst_mbs.cleanupListeners();
 //    SGI.plumb_inst.inst_mbs.reset();
-        console.log("reset")
 //        SGI.plumb_inst.inst_fbs.reset();
         $("#prg_panel").children().remove();
         SGI.mbs_n = 0;
@@ -2689,7 +2809,7 @@ var SGI = {
             fbs: {}
         };
 
-        scope.$apply()
+        scope.$apply();
         SGI.mbs_inst();
     },
 
@@ -2725,7 +2845,7 @@ var SGI = {
 
         $.each(Object.keys(homematic.regaObjects).sort(), function () {
 
-            var id = parseInt(this)
+            var id = parseInt(this);
 
             if (id > 99999) {
                 if (id == last_id) {
@@ -2833,12 +2953,12 @@ var SGI = {
                                 for (var i = 1; i <= parseInt(data.in); i++) {
                                     $("#left_" + data.name).append('' +
                                         '<div id="' + data.name + '_in' + i + '"  class="div_input ' + data.name + '_in">' +
-                                        '<div style="background-color:gray;background-color: gray;height: 10px;width: 10px;position: relative;left: -11px; top:5px"></div>' +
+                                        '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: -11px; top:5px"></div>' +
                                         '</div>')
                                 }
                                 for (var i = 1; i <= parseInt(data.out); i++) {
                                     $("#right_" + data.name).append('<div id="' + data.name + '_out' + i + '" class="div_output1 ' + data.name + '_out">' +
-                                        '<div style="background-color:gray;background-color: gray;height: 10px;width: 10px;position: relative;left: 21px; top:5px"></div>' +
+                                        '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: 21px; top:5px"></div>' +
                                         '</div>');
 
                                 }
@@ -2871,28 +2991,27 @@ var SGI = {
     },
 
     register: function () {
-        if (scope.setup.user_mail == "" || scope.setup.user_mail == undefined) {
-            $("body").append('\
-              <div id="dialog_register" style="text-align: center" title="' + SGI.translate("Register") + '">\
-              <img src="./img/logo.png" style="width: 300px"></img><br><br>\
-              <div style="font-size: 20px; font-weight: 900;">' + SGI.translate("register_info") + '</div><br><br>\
-              <div style="width: 80px; display: inline-block;text-align: left">' + SGI.translate("Name:") + '  </div><input id="inp_register_name" style="width: 300px" type="text"/><br>\
-              <div style="width: 80px; display: inline-block;text-align: left">' + SGI.translate("E-Mail:") + '</div><input id="inp_register_mail" style="width: 300px" type="text"/><br><br>\
-              <button id="btn_register">' + SGI.translate("register") + '</button>\
+        try {
+            if (scope.setup.user_mail == "" || scope.setup.user_mail == undefined) {
+                $("body").append('\
+                <div id="dialog_register" style="text-align: center" title="' + SGI.translate("Register") + '">\
+                <img src="./img/logo.png" style="width: 300px"/><br><br>\
+                <div style="font-size: 20px; font-weight: 900;">' + SGI.translate("register_info") + '</div><br><br>\
+                <div style="width: 80px; display: inline-block;text-align: left">' + SGI.translate("Name:") + '  </div><input id="inp_register_name" style="width: 300px" type="text"/><br>\
+                <div style="width: 80px; display: inline-block;text-align: left">' + SGI.translate("E-Mail:") + '</div><input id="inp_register_mail" style="width: 300px" type="text"/><br><br>\
+                <button id="btn_register">' + SGI.translate("register") + '</button>\
                    </div>');
 
-            $("#dialog_register").dialog({
-                width: "auto",
-                dialogClass: "update",
-                modal: true,
-                close: function () {
-                    $("#dialog_register").remove();
-                }
-            });
+                $("#dialog_register").dialog({
+                    width: "auto",
+                    dialogClass: "update",
+                    modal: true,
+                    close: function () {
+                        $("#dialog_register").remove();
+                    }
+                });
 
-            $("#btn_register").button()
-                .click(function () {
-
+                $("#btn_register").button().click(function () {
 
                     var send_data = {
                         typ: "register",
@@ -2903,36 +3022,42 @@ var SGI = {
                         }
                     };
 
-                    if (send_data.data.mail == "" || send_data.data.mail == undefined) {
-                        var now = new Date()
-                        send_data.data.mail = now.toLocaleDateString() + " " + now.toLocaleTimeString();
+                    function send_to_server(data) {
+
+                        var client = new net.Socket();
+                        client.connect(SGI.HOST_PORT, SGI.HOST, function () {
+                            client.write(JSON.stringify(send_data));
+                        });
+
+                        client.on('data', function (data) {
+                            if (data != "error") {
+                                scope.setup.user_name = send_data.data.name;
+                                scope.setup.user_mail = send_data.data.mail;
+                                scope.$apply();
+                                $("#dialog_register").dialog("close")
+                            } else {
+                                alert("Daten konnten nicht gesendet werden. Bitte überprüfen sie ihre Internetverbindung")
+                            }
+                            client.destroy();
+                        });
                     }
 
-
-                    var client = new net.Socket();
-                    client.connect(SGI.HOST_PORT, SGI.HOST, function () {
-                        client.write(JSON.stringify(send_data));
-                    });
-
-                    client.on('data', function (data) {
-                        if (data != "error") {
-                            scope.setup.user_name = send_data.data.name;
-                            scope.setup.user_mail = send_data.data.mail;
-                            scope.$apply();
-                            $("#dialog_register").dialog("close")
-                        } else {
-                            alert("Daten konnten nicht gesendet werden. Bitte überprüfen sie ihre Internetverbindung")
-                        }
-                        client.destroy();
-                    });
-
-
+                    if (send_data.data.mail == "" || send_data.data.mail == undefined) {
+                        getmac.getMac(function (err, macAddress) {
+                            if (err)  throw err;
+                            send_data.data.mail = macAddress;
+                            send_to_server(send_data)
+                        })
+                    } else {
+                        send_to_server(send_data)
+                    }
                 });
+            }
+        } catch (err) {
+            console.log("register nicht möglich");
+            console.log(err)
         }
-
     }
-
-
 };
 
 window.timeoutList = [];
@@ -2983,11 +3108,11 @@ window.clearAllIntervals = function () {
 };
 
 
-var deleteFolderRecursive = function(path) {
-    if( fs.existsSync(path) ) {
-        fs.readdirSync(path).forEach(function(file,index){
+var deleteFolderRecursive = function (path) {
+    if (fs.existsSync(path)) {
+        fs.readdirSync(path).forEach(function (file, index) {
             var curPath = path + "/" + file;
-            if(fs.statSync(curPath).isDirectory()) { // recurse
+            if (fs.statSync(curPath).isDirectory()) { // recurse
                 deleteFolderRecursive(curPath);
             } else { // delete file
                 fs.unlinkSync(curPath);
