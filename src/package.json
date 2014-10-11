@@ -5,8 +5,8 @@
     "frame": true,
     "width": 1024,
     "height": 768,
-    "min_width": 800,
-    "min_height": 600,
+    "min_width": 8,
+    "min_height": 6,
     "max_width": "100%",
     "max_height": "100%",
     "resizable": true

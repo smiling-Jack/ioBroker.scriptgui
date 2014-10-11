@@ -40,7 +40,9 @@ jQuery.extend(true, SGI, {
         });
         $("#m_open").click(function () {
 //            if ($("body").find(".ui-dialog:not(.quick-help)").length == 0) {
+
             SGI.open_local();
+
 //            }
         });
         $("#m_example").click(function () {
@@ -1942,13 +1944,16 @@ jQuery.extend(true, SGI, {
         var chooser = $('#prgopen');
         chooser.change(function (evt) {
             var filep = $(this).val();
-
+            $("#wait_div").show();
+            SGI.clear();
             try {
                 fs.readFile(filep, function (err, data) {
                     if (err) {
                         throw err;
                     } else {
-                        SGI.clear();
+
+
+
                         SGI.load_prg(JSON.parse(data));
                         SGI.prg_store = filep;
                         SGI.file_name = filep.split("\\").pop();
@@ -1956,13 +1961,20 @@ jQuery.extend(true, SGI, {
 
                         scope.setup.last_file = filep;
                         scope.$apply()
+                        $("#wait_div").hide();
                     }
                 });
             }
             catch (err) {
+                $("#wait_div").hide();
                 throw err
+
             }
+
+
+
         });
+
         chooser.trigger('click');
     },
 
@@ -2345,7 +2357,7 @@ jQuery.extend(true, SGI, {
             if (SGI.key == 17) {
                 SGI.open_quick_help_dialog();
                 $("#help-content").children().remove();
-                var type;
+                var type
                 if ($(elem.target).hasClass("fbs_element") || $(elem.target).hasClass("mbs_element")) {
 
                     if ($(elem.target).attr("id").split("_")[0] == "trigger") {
