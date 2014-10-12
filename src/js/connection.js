@@ -15,6 +15,8 @@ jQuery.extend(true, SGI, {
        $("#inp_con_ip").bind("change", function () {
             SGI.disconnect()
         })
+
+
     },
 
     disconnect: function () {
@@ -31,6 +33,8 @@ jQuery.extend(true, SGI, {
         $("#img_con_state").attr("src", "img/icon/flag-red.png");
         $("#btn_con_online").parent().removeClass("div_img_glass_on");
         $("#btn_con_offline").parent().removeClass("div_img_glass_on");
+        $("#img_set_script_engine").hide();
+        $("#img_con_state").attr("title","");
 //        $("#inp_con_ip").unbind("change")
     },
 
@@ -69,6 +73,7 @@ jQuery.extend(true, SGI, {
             $("#img_con_state").attr("src", "img/icon/flag-red.png");
             $("#btn_con_offline").parent().removeClass("div_img_glass_on");
             $("#btn_con_online").parent().removeClass("div_img_glass_on");
+
             homematic = {
                 uiState: {"_65535": {"Value": null}},
                 regaIndex: {},
@@ -93,9 +98,16 @@ jQuery.extend(true, SGI, {
 
             SGI.socket.on("connect", function (err) {
 
+                SGI.socket.emit("getSettings", function (data) {
+                    console.log(data)
+                    if(data.basedir.split("/")[2] == "ccu.io"){
+                    $("#img_set_script_engine").show()
+                    $("#img_con_state").attr("title","CCU.IO<br> Version: " + data.version +"<br>Scriptengine: " + data.scriptEngineEnabled);
+                    }
+
+
                 SGI.socket.emit("getIndex", function (index) {
                     homematic.regaIndex = index;
-
                     SGI.socket.emit("getObjects", function (obj) {
                         homematic.regaObjects = obj;
 
@@ -129,17 +141,17 @@ jQuery.extend(true, SGI, {
                     });
                 });
             });
-
+            });
             SGI.socket.on("error", function (err) {
-                alert("fehler")
+                alert("fehler");
                 SGI.disconnect();
                SGI.offline();
             });
 
             SGI.socket.on('disconnect', function () {
                 $("#img_con_state").attr("src", "img/icon/flag-red.png");
-
-
+                $("#img_set_script_engine").hide();
+                $("#img_con_state").attr(" ");
             });
 
 
@@ -151,6 +163,7 @@ jQuery.extend(true, SGI, {
             $("#img_con_state").attr("src", "img/icon/flag-red.png");
             $("#btn_con_offline").parent().removeClass("div_img_glass_on");
             $("#btn_con_online").parent().removeClass("div_img_glass_on");
+
             homematic = {
                 uiState: {"_65535": {"Value": null}},
                 regaIndex: {},

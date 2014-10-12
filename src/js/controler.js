@@ -20,6 +20,14 @@ angular.module('tutorialApp', [])
             fbs: {}
         };
 
+        $scope.save_scope_watchers = function(){
+            $scope.orig = angular.copy($scope.$$watchers);
+        };
+
+        $scope.reset_scope_watchers = function() {
+            $scope.$$watchers = angular.copy($scope.orig);
+        };
+
 
         $scope.add_mbs = function (id, data) {
 
@@ -35,20 +43,19 @@ angular.module('tutorialApp', [])
             $scope.$apply();
         };
 
-        $scope.$watch("mbs", function (newValue, oldValue) {
-            console.log("change mbs")
-//            console.info("MBS Watch ", deep(oldValue, newValue));
-        }, true);
+//        $scope.$watch("mbs", function (newValue, oldValue) {
+//            console.log("change mbs")
+//
+//        }, true);
 
-        $scope.$watch("fbs", function (newValue, oldValue) {
-            console.log("change fbs")
-//            console.info("FBS Watch ", deep(oldValue, newValue));
-        }, true);
+//        $scope.$watch("fbs", function (newValue, oldValue) {
+//            console.log("change fbs")
+//        }, true);
 
-        $scope.$watch("con", function (newValue, oldValue) {
-            console.log("change con")
-//            console.info("CON Watch ", deep(oldValue, newValue));
-        }, true);
+//        $scope.$watch("con", function (newValue, oldValue) {
+//            console.log("change con")
+////            console.info("CON Watch ", deep(oldValue, newValue));
+//        }, true);
 
 
 //SETUP WATCHER ------------------------------------------------------------------------------------
@@ -60,7 +67,11 @@ angular.module('tutorialApp', [])
          }
          });
 //-------------------------------------------------------------------------------------------------
-        $(document).tooltip();
+        $(document).tooltip({
+            content: function(){
+                return $(this).attr('title');
+            }
+        });
          $scope.$watch("setup.tooltip", function (newValue) {
          if (newValue) {
          $("#img_set_tooltip_on").addClass("ui-state-focus");

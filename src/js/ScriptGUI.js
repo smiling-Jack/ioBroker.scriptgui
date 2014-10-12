@@ -156,7 +156,19 @@ var SGI = {
         $("#sim_output").prepend("<tr><td style='width: 100px'>Script Log</td><td></td></tr>");
 
 
-        // Connect XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        // Connect XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+        var con_files = [];
+        $.each(fs.readdirSync(SGI.nwDir + '/datastore/connections/'), function(){
+            var test = this.split(".json")[0];
+            test = test.replace("_",".");
+            test = test.replace("_",".");
+            test = test.replace("_",".");
+            test = test.replace("_",":");
+            con_files.push(test)
+        });
+
 
         $("#inp_con_ip").xs_combo({
             addcssButton: "xs_button_con frame_color ",
@@ -165,14 +177,10 @@ var SGI = {
             cssText: "xs_text_con item_font",
             time: 750,
             combo: true,
-            val: "192.168.2.99:8088",
-            data: [
-                "192.168.2.105",
-                "192.168.2.106",
-                "192.168.2.107"
-            ]
-
+            val: con_files[0],
+            data: con_files
         });
+
         $("#inp_con_ip").hover(function () {
             $("#con_panel").css({top: 0, left: 0})
             $("#con_panel").show("slide", {direction: "up"}).clearQueue();
@@ -418,6 +426,7 @@ var SGI = {
         }, true);
 
 
+        scope.save_scope_watchers()
         console.log("Start finish");
         // todo Register mit Homepage verbinden
 //        setTimeout(function () {
@@ -1140,8 +1149,7 @@ var SGI = {
             $.each(data.fbs, function () {
                 this["style"] = {
                     "left": this.left + "px",
-                    "top": this.top + "px",
-
+                    "top": this.top + "px"
                 };
 
                 delete this.left;
@@ -1157,6 +1165,10 @@ var SGI = {
                 var source = this.pageSourceId;
                 var target = this.pageTargetId;
                 var c;
+                this["connector"] = {
+                    "stub": [30, 30],
+                    "midpoint": 0.5
+                };
 
                 if (target.split("_")[0] == "codebox") {
                     try{
@@ -1196,6 +1208,10 @@ var SGI = {
             });
             $.each(data.connections.fbs, function (index) {
                 $.each(this, function () {
+                    this["connector"] = {
+                        "stub": [30, 30],
+                        "midpoint": 0.5
+                    };
 
                     try {
 
@@ -1243,7 +1259,6 @@ var SGI = {
                 var source = this.pageSourceId;
                 var target = this.pageTargetId;
                 var c;
-
                 if (target.split("_")[0] == "codebox") {
                     c = SGI.plumb_inst.inst_mbs.connect({
                         uuids: [source],
@@ -1586,7 +1601,7 @@ var SGI = {
         scope.$apply();
 
         SGI.plumb_inst["inst_" + id].bind("click", function (c, p) {
-            console.clear();
+
             var connector_data;
             var dot1_x;
             var dot1_y;
@@ -2809,6 +2824,7 @@ var SGI = {
             fbs: {}
         };
 
+        scope.reset_scope_watchers();
         scope.$apply();
         SGI.mbs_inst();
     },
@@ -3158,11 +3174,12 @@ var deleteFolderRecursive = function (path) {
 
         scope = angular.element($('body')).scope();
         scope.$apply();
-
         try {
-            fs.readFile(SGI.nwDir + '/datastore/setup.json', function (err, data) {
+            fs.readFile(SGI.nwDir + '/datastore/setup.json',"utf8", function (err, data) {
+
                 if (!err) {
-                    scope.setup = JSON.parse(data);
+                   console.log(data);
+                    scope.setup = JSON.parse(data.split("}")[0]+"}");
 
                     if (scope.setup.update == true) {
                         try {

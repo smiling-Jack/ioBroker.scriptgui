@@ -8,7 +8,8 @@
 
 
 (function ($) {
-    $.fn.xs_combo = function (_options) {
+    $.fn.xs_combo = function (_options,_newData) {
+
 
         if (typeof _options == "string") {
             var text = $(this).children("span");
@@ -39,7 +40,6 @@
             var timer;
             var readonly ="";
 
-            console.log(o.combo);
             if (!o.combo){
                 readonly = "readonly";
             }

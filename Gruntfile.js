@@ -19,10 +19,9 @@ module.exports = function (grunt) {
         nodewebkit: {
             build: {
                 options: {
-//                    platforms: ['win', 'osx','linux32','linux64'],
                     buildDir: './build',
-                    winIco: './src/img/cube256.ico',
-                    macIcns: './src/img/cube256.png'
+                    winIco: './src/img/cube32.ico',
+                    macIcns: './src/img/cube32.png'
                 },
                 src: './src/**/*'
             }
@@ -46,22 +45,22 @@ module.exports = function (grunt) {
                     {expand: true, cwd: 'build/ScriptGUI/osx/', src: ['**'], dest: 'ScriptGUI/'}
                 ]
             },
-            linux32: {
-                options: {
-                    archive: 'build/ScriptGUI_linux32.zip'
-                },
-                files: [
-                    {expand: true, cwd: 'build/ScriptGUI/linux32/', src: ['**'], dest: 'ScriptGUI/'}
-                ]
-            },
-            linux64: {
-                options: {
-                    archive: 'build/ScriptGUI_linux64.zip'
-                },
-                files: [
-                    {expand: true, cwd: 'build/ScriptGUI/linux64/', src: ['**'], dest: 'ScriptGUI/'}
-                ]
-            }
+//            linux32: {
+//                options: {
+//                    archive: 'build/ScriptGUI_linux32.zip'
+//                },
+//                files: [
+//                    {expand: true, cwd: 'build/ScriptGUI/linux32/', src: ['**'], dest: 'ScriptGUI/'}
+//                ]
+//            },
+//            linux64: {
+//                options: {
+//                    archive: 'build/ScriptGUI_linux64.zip'
+//                },
+//                files: [
+//                    {expand: true, cwd: 'build/ScriptGUI/linux64/', src: ['**'], dest: 'ScriptGUI/'}
+//                ]
+//            }
         },
 //----------------------------------------------------------------------------------------------------------------------
         sftp: {

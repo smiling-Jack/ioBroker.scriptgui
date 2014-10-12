@@ -667,11 +667,10 @@ jQuery.extend(true, SGI, {
         );
         $("#img_set_script_engine").click(function () {
             try {
-                a.length(); //todo ich bin nur ein test fehler
-//                SGI.socket.emit("reloadScriptEngine");
+//                a.length(); //todo ich bin nur ein test fehler
+                SGI.socket.emit("reloadScriptEngine");
             } catch (err) {
-                throw err
-//                alert("Keine Verbindung zu CCU.IO");
+                alert("Keine Verbindung zu CCU.IO");
             }
 
 
@@ -1942,23 +1941,23 @@ jQuery.extend(true, SGI, {
 
     open_local: function () {
         var chooser = $('#prgopen');
+        chooser.val("");
         chooser.change(function (evt) {
             var filep = $(this).val();
+            console.log("show")
             $("#wait_div").show();
-            SGI.clear();
             try {
+
                 fs.readFile(filep, function (err, data) {
                     if (err) {
+                        $("#wait_div").hide();
                         throw err;
                     } else {
-
-
-
+                        SGI.clear();
                         SGI.load_prg(JSON.parse(data));
                         SGI.prg_store = filep;
                         SGI.file_name = filep.split("\\").pop();
                         $("#m_file").text(SGI.file_name);
-
                         scope.setup.last_file = filep;
                         scope.$apply()
                         $("#wait_div").hide();
@@ -1981,8 +1980,10 @@ jQuery.extend(true, SGI, {
     open_last: function () {
 
         try {
+            $("#wait_div").show();
             fs.readFile(scope.setup.last_file, function (err, data) {
                 if (err) {
+                    $("#wait_div").hide();
                     throw err;
                 } else {
                     SGI.clear();
@@ -1990,11 +1991,12 @@ jQuery.extend(true, SGI, {
                     SGI.prg_store = scope.setup.last_file;
                     SGI.file_name = scope.setup.last_file.split("\\").pop();
                     $("#m_file").text(SGI.file_name);
-
+                    $("#wait_div").hide();
                 }
             });
         }
         catch (err) {
+            $("#wait_div").hide();
             throw err
         }
 
