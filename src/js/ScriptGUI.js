@@ -160,15 +160,17 @@ var SGI = {
 
 
         var con_files = [];
-        $.each(fs.readdirSync(SGI.nwDir + '/datastore/connections/'), function(){
-            var test = this.split(".json")[0];
-            test = test.replace("_",".");
-            test = test.replace("_",".");
-            test = test.replace("_",".");
-            test = test.replace("_",":");
-            con_files.push(test)
-        });
-
+        try {
+            $.each(fs.readdirSync(SGI.nwDir + '/datastore/connections/'), function () {
+                var test = this.split(".json")[0];
+                test = test.replace("_", ".");
+                test = test.replace("_", ".");
+                test = test.replace("_", ".");
+                test = test.replace("_", ":");
+                con_files.push(test)
+            });
+        }
+        catch(e){}
 
         $("#inp_con_ip").xs_combo({
             addcssButton: "xs_button_con frame_color ",
@@ -2928,7 +2930,7 @@ var SGI = {
             return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
         }
 
-        fs.readdir(SGI.nwDir + "\\datastore\\experts\\", function (err, _files) {
+        fs.readdir(SGI.nwDir + "/datastore/experts/", function (err, _files) {
             if (err) {
                 throw err;
             } else {
@@ -2942,7 +2944,7 @@ var SGI = {
                 $.each(files, function () {
                     var file = this.toString();
                     try {
-                        fs.readFile(SGI.nwDir + "\\datastore\\experts\\" + file, function (err, data) {
+                        fs.readFile(SGI.nwDir + "/datastore/experts/" + file, function (err, data) {
                             if (err) {
                                 throw err;
                             } else {
@@ -3143,8 +3145,8 @@ var deleteFolderRecursive = function (path) {
 
         // ordner erstellen
         var nwPath = process.execPath;
-//        SGI.nwDir = path.dirname(nwPath).split("ScriptGUI.app")[0];
-        SGI.nwDir = path.dirname(nwPath);
+        SGI.nwDir = path.dirname(nwPath).split("ScriptGUI.app")[0];
+//        SGI.nwDir = path.dirname(nwPath);
 //        console.log(process.platform)
         SGI.prgDir = SGI.nwDir + "/datastore/programms/";
 

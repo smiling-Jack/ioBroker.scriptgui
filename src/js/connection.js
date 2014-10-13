@@ -66,10 +66,12 @@ jQuery.extend(true, SGI, {
                         regaIndex: {},
                         regaObjects: {}
                     };
+                    throw err
                 }
             });
         }
         catch (err) {
+
             $("#img_con_state").attr("src", "img/icon/flag-red.png");
             $("#btn_con_offline").parent().removeClass("div_img_glass_on");
             $("#btn_con_online").parent().removeClass("div_img_glass_on");
@@ -79,6 +81,7 @@ jQuery.extend(true, SGI, {
                 regaIndex: {},
                 regaObjects: {}
             };
+            throw err
         }
     },
 

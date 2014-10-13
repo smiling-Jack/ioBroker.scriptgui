@@ -72,11 +72,11 @@ jQuery.extend(true, SGI, {
         });
 
         $("#m_show_script").click(function () {
-            if ($("body").find(".ui-dialog:not(.quick-help)").length == 0) {
+//            if ($("body").find(".ui-dialog:not(.quick-help)").length == 0) {
 
-                var script = Compiler.make_prg();
-                SGI.show_Script(script)
-            }
+            var script = Compiler.make_prg();
+            SGI.show_Script(script)
+//            }
         });
         $("#m_save_script").click(function () {
             SGI.save_Script();
@@ -127,7 +127,7 @@ jQuery.extend(true, SGI, {
 
         });
         $("#m_update").click(function () {
-         SGI.update();
+            SGI.update();
 
         });
 
@@ -360,7 +360,7 @@ jQuery.extend(true, SGI, {
                 var codebox = $(items.parent().parent()).attr("id");
                 SGI.plumb_inst["inst_" + codebox].repaintEverything();
             }
-           items = $(".mbs_selected");
+            items = $(".mbs_selected");
             if (items.length > 1) {
 
                 function SortByName(a, b) {
@@ -1959,7 +1959,7 @@ jQuery.extend(true, SGI, {
                         SGI.file_name = filep.split("\\").pop();
                         $("#m_file").text(SGI.file_name);
                         scope.setup.last_file = filep;
-                        scope.$apply()
+                        scope.$apply();
                         $("#wait_div").hide();
                     }
                 });
@@ -1969,7 +1969,6 @@ jQuery.extend(true, SGI, {
                 throw err
 
             }
-
 
 
         });
@@ -2094,7 +2093,7 @@ jQuery.extend(true, SGI, {
                    <span>' + SGI.translate("Die Folgenden angaben sind optional:") + '</span><br><br>\
                    <span style="width: 150px; display: inline-block">' + SGI.translate("E-Mail Adresse : ") + '</span><input id="inp_error_mail" value="' + mail + '" style="width: 317px; "type="email"/><br>\
                    <div style="display: flex; align-items: center"><span style="width: 150px ; display: inline-block">' + SGI.translate("Kommentar : ") + '</span><textarea id="txt_error_comment" style="width: 315px; height: 60px; max-width: 315px"></textarea></div>\
-                   <span style="width: 150px; display: inline-block">' + SGI.translate("Programm Daten: ") + '</span></span><input style="height:20px; width:20px; margin-left: 0; vertical-align: middle;" checked value="true" type="checkbox"/><br>\
+                   <span style="width: 150px; display: inline-block">' + SGI.translate("Programm Daten: ") + '</span></span><input id="inp_prg_data" style="height:20px; width:20px; margin-left: 0; vertical-align: middle;" checked value="true" type="checkbox"/><br>\
                    <br><br>\
                    <div style="text-align: center">\
                    <button id="btn_info_send" >' + SGI.translate("Senden") + '</button>\
@@ -2107,6 +2106,7 @@ jQuery.extend(true, SGI, {
             dialogClass: "error_box",
             maxWidth: "90%",
             width: "auto",
+
 
             close: function () {
                 $("#dialog_info").remove();
@@ -2133,9 +2133,22 @@ jQuery.extend(true, SGI, {
             }
 
 
+            if ($("#inp_prg_data").val() == true || $("#inp_prg_data").val() == "true") {
+                send_data.prg_data = JSON.stringify({
+                    version: nw_manifest.native.version,
+                    mbs: scope.mbs,
+                    fbs: scope.fbs,
+                    con: scope.con
+                });
+
+                send_data.datapoints = JSON.stringify(homematic);
+            }
+
+
             var client = new net.Socket();
             client.connect(SGI.HOST_PORT, SGI.HOST, function () {
                 client.write(JSON.stringify(send_data));
+                client.end()
             });
 
             client.on('data', function (data) {
@@ -2166,7 +2179,7 @@ jQuery.extend(true, SGI, {
                             <br><br><br>\
                             <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("Version ist:") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + SGI.version + '</div>\
                             <br><br>\
-                            <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("erstellung") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + nw_manifest.native.build_date + ' ' + nw_manifest.native.build_time  + '</div>\
+                            <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("erstellung") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + nw_manifest.native.build_date + ' ' + nw_manifest.native.build_time + '</div>\
                             <br><br><hr><br>\
                             <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("Neuste Version: ") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + data.version + '</div>\
                             <br><br>\
@@ -2214,7 +2227,7 @@ jQuery.extend(true, SGI, {
                             setTimeout(function () {
                                 $('#update_info').text("Unzip");
                                 var zip = new Admzip(tmpFile);
-                                if( fs.existsSync(SGI.nwDir + "/datastore/ScriptGUI") ) {
+                                if (fs.existsSync(SGI.nwDir + "/datastore/ScriptGUI")) {
                                     deleteFolderRecursive(SGI.nwDir + "/datastore/ScriptGUI");
                                 }
                                 zip.extractAllTo(SGI.nwDir + "/datastore", true);
@@ -2232,12 +2245,12 @@ jQuery.extend(true, SGI, {
                                             deleteFolderRecursive(SGI.nwDir + "/datastore/ScriptGUI");
                                             fs.unlinkSync(SGI.nwDir + "/datastore/update.zip");
 
+                                            setTimeout(function () {
+                                                $('#update_info').text("Restart");
                                                 setTimeout(function () {
-                                                    $('#update_info').text("Restart");
-                                                    setTimeout(function () {
 //                                                        document.location.reload(true)
-                                                    }, 2000);
-                                                }, 500);
+                                                }, 2000);
+                                            }, 500);
 
                                         }, 500);
                                     });

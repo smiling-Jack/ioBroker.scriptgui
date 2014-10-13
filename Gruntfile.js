@@ -5,9 +5,9 @@ module.exports = function (grunt) {
     var ops = grunt.file.readJSON("package.json");
     grunt.loadNpmTasks('grunt-node-webkit-builder');
     grunt.loadNpmTasks('grunt-contrib-compress');
-
+    grunt.loadNpmTasks('grunt-zip');
     grunt.loadNpmTasks('grunt-ssh');
-
+    grunt.loadNpmTasks('grunt-zip-directories');
 
     // Project configuration.
     grunt.initConfig({
@@ -19,6 +19,7 @@ module.exports = function (grunt) {
         nodewebkit: {
             build: {
                 options: {
+//                    platforms: ['osx'],
                     buildDir: './build',
                     winIco: './src/img/cube32.ico',
                     macIcns: './src/img/cube32.png'
@@ -39,7 +40,8 @@ module.exports = function (grunt) {
             },
             osx: {
                 options: {
-                    archive: 'build/ScriptGUI_osx.zip'
+                    mode: "tar",
+                    archive: 'build/ScriptGUI_osx.tar'
                 },
                 files: [
                     {expand: true, cwd: 'build/ScriptGUI/osx/', src: ['**'], dest: 'ScriptGUI/'}
@@ -61,6 +63,18 @@ module.exports = function (grunt) {
 //                    {expand: true, cwd: 'build/ScriptGUI/linux64/', src: ['**'], dest: 'ScriptGUI/'}
 //                ]
 //            }
+        },
+
+        zip_directories: {
+            irep: {
+                files: [{
+                    filter: 'isDirectory',
+                    expand: true,
+                    cwd: 'build/osx',
+                    src: ['*'],
+                    dest: 'build'
+                }]
+            }
         },
 //----------------------------------------------------------------------------------------------------------------------
         sftp: {
@@ -110,4 +124,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('Test_Build', ['make_build_data','nodewebkit:build']);
     grunt.registerTask('Build', ['make_build_data','nodewebkit:build','compress','sftp:uploading']);
+
+
 };

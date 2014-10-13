@@ -124,13 +124,8 @@
                         <br>\
                    </div>');
 
-        $("#tb_body").perfectScrollbar({
-            wheelSpeed: 20,
-        });
 
-        $("#grid_hmid").resize(function (e) {
-            $("#tb_body").perfectScrollbar("update");
-        });
+
 
         $("#dialog_hmid").dialog({
             dialogClass: "dialog_hmid ",
@@ -141,7 +136,7 @@
             }
 
         });
-        $("#dialog_hmid").find(".ps-scrollbar-x, .ps-scrollbar-y").addClass("ui-state-default frame_color_dark");
+
         $("#btn_hmid_ok")
             .button().click(function () {
                 var id = $("#iddialog_inp_id_direct").val();
