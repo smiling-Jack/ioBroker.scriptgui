@@ -2168,11 +2168,14 @@ jQuery.extend(true, SGI, {
 
     update: function () {
         $("#dialog_update").remove();
-        try {
-            $.ajax({
-                url: "http://37.120.169.17/jdownloads/ScriptGUI/build_data.json",
-                dataType: "json",
-                success: function (data) {
+
+
+// ------------- Step 1 -------------
+            upd.checkNewVersion(function(error, newVersionExists, manifest) {
+
+                if (!error && newVersionExists) {
+
+                    console.log(manifest);
 
                     $("body").append('\
                             <div id="dialog_update" style="width: 438px; height:428px; text-align: center" title="' + SGI.translate("Update") + '">\
@@ -2182,25 +2185,14 @@ jQuery.extend(true, SGI, {
                             <br><br>\
                             <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("erstellung") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + nw_manifest.native.build_date + ' ' + nw_manifest.native.build_time + '</div>\
                             <br><br><hr><br>\
-                            <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("Neuste Version: ") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + data.version + '</div>\
+                            <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("Neuste Version: ") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + manifest.version + '</div>\
                             <br><br>\
-                            <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("erstellung") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + data.date + ' ' + data.time + '</div>\
+                            <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("erstellung") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + manifest.version + ' ' + manifest.version + '</div>\
                             <br><br><br>\
                             <button id="btn_update">' + SGI.translate("Update") + '</button>\
                             </div>');
 
-
-                    $("#btn_update").button()
-                        .click(function () {
-                            update()
-                        });
-
-//                    if (SGI.version == data.version) {
-//                        $("#btn_update").button("disable")
-//                    }
-
-                    setTimeout(function () {
-                        $("#dialog_update").dialog({
+                    $("#dialog_update").dialog({
                             width: "auto",
                             dialogClass: "update",
                             modal: true,
@@ -2208,65 +2200,122 @@ jQuery.extend(true, SGI, {
                                 $("#dialog_update").remove();
                             }
                         });
-                    }, 100);
+                    $("#btn_update").button()
+                        .click(function () {
+                            $("#btn_update").remove();
+                            $("#dialog_update").append('<div style="width: 100%; height: 33px; line-height: 33px" class="ui-state-default ui-corner-all" id="update_info"></div>');
+                            $('#update_info').text("Downloading");
 
+                            upd.download(function(error, filename) {
+                                if (!error) {
+                                    $('#update_info').text("Unzip");
+// ------------- Step 3 -------------
+                                    upd.unpack(filename, function(error, newAppPath) {
 
-                    function update() {
-                        var url;
-                        $("#btn_update").remove();
-                        $("#dialog_update").append('<div style="width: 100%; height: 33px; line-height: 33px" class="ui-state-default ui-corner-all" id="update_info"></div>');
-                        if (SGI.os == "win32") {
-                            url = "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_win.zip"
-                        } else if (SGI.os == "darwin") {
-                            url = "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_osx.zip"
-                        }
+                                        if (!error) {
 
-                        var tmpFile = SGI.nwDir + "/datastore/update.zip";
+                                            // ------------- Step 4 -------------
+                                            $('#update_info').text("Restart");
+                                            var _np = newAppPath.split("ScriptGUI.")
+                                            var np = _np[0] +"ScriptGUI/ScriptGUI." + _np[1];
 
-                        $('#update_info').text("Downloading");
-                        request(url).pipe(fs.createWriteStream(tmpFile)).on("close", function () {
-                            setTimeout(function () {
-                                $('#update_info').text("Unzip");
-                                var zip = new Admzip(tmpFile);
-                                if (fs.existsSync(SGI.nwDir + "/datastore/ScriptGUI")) {
-                                    deleteFolderRecursive(SGI.nwDir + "/datastore/ScriptGUI");
-                                }
-                                zip.extractAllTo(SGI.nwDir + "/datastore", true);
-
-                                setTimeout(function () {
-                                    $('#update_info').text("Copy");
-                                    var source = SGI.nwDir + "/datastore/ScriptGUI/",
-                                        destination = SGI.nwDir;
-                                    ncp(source, destination, function (err) {
-                                        if (err) {
-                                            throw err
+                                            upd.runInstaller(np, [upd.getAppPath(), upd.getAppExec()],{});
+                                            nw_gui.App.quit();
                                         }
-                                        setTimeout(function () {
-                                            $('#update_info').text("Cleanup");
-                                            deleteFolderRecursive(SGI.nwDir + "/datastore/ScriptGUI");
-                                            fs.unlinkSync(SGI.nwDir + "/datastore/update.zip");
-
-                                            setTimeout(function () {
-                                                $('#update_info').text("Restart");
-                                                setTimeout(function () {
-//                                                        document.location.reload(true)
-                                                }, 2000);
-                                            }, 500);
-
-                                        }, 500);
-                                    });
-                                }, 500);
-                            }, 0);
+                                    }, manifest);
+                                }
+                            }, manifest);
                         });
-                    }
+
+
+// ------------- Step 2 -------------
+
                 }
             });
 
-        }
-        catch (e) {
-            console.log(e);
-            alert("Überprüfen Sie Ihre Internetverbindung")
-        }
+
+
+
+
+
+
+
+
+
+
+//
+//        try {
+//            $.ajax({
+//                url: "http://37.120.169.17/jdownloads/ScriptGUI/build_data.json",
+//                dataType: "json",
+//                success: function (data) {
+
+
+
+//                    if (SGI.version == data.version) {
+//                        $("#btn_update").button("disable")
+////                    }
+//
+//                    setTimeout(function () {
+//
+//                    }, 100);
+//
+//
+//                    function update() {
+//                        var url;
+//
+//                        if (SGI.os == "win32") {
+//                            url = "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_win.zip"
+//                        } else if (SGI.os == "darwin") {
+//                            url = "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_osx.zip"
+//                        }
+//
+//                        var tmpFile = SGI.nwDir + "/datastore/update.zip";
+//
+//
+//                        request(url).pipe(fs.createWriteStream(tmpFile)).on("close", function () {
+//                            setTimeout(function () {
+//
+//                                var zip = new Admzip(tmpFile);
+//                                if (fs.existsSync(SGI.nwDir + "/datastore/ScriptGUI")) {
+//                                    deleteFolderRecursive(SGI.nwDir + "/datastore/ScriptGUI");
+//                                }
+//                                zip.extractAllTo(SGI.nwDir + "/datastore", true);
+//
+//                                setTimeout(function () {
+//                                    $('#update_info').text("Copy");
+//                                    var source = SGI.nwDir + "/datastore/ScriptGUI/",
+//                                        destination = SGI.nwDir;
+//                                    ncp(source, destination, function (err) {
+//                                        if (err) {
+//                                            throw err
+//                                        }
+//                                        setTimeout(function () {
+//                                            $('#update_info').text("Cleanup");
+//                                            deleteFolderRecursive(SGI.nwDir + "/datastore/ScriptGUI");
+//                                            fs.unlinkSync(SGI.nwDir + "/datastore/update.zip");
+//
+//                                            setTimeout(function () {
+//
+//                                                setTimeout(function () {
+////                                                        document.location.reload(true)
+//                                                }, 2000);
+//                                            }, 500);
+//
+//                                        }, 500);
+//                                    });
+//                                }, 500);
+//                            }, 0);
+//                        });
+//                    }
+//                }
+//            });
+//
+//        }
+//        catch (e) {
+//            console.log(e);
+//            alert("Überprüfen Sie Ihre Internetverbindung")
+//        }
 
     },
 

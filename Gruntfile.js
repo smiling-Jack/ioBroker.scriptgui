@@ -1,6 +1,8 @@
 /**
  * Created by jack on 10.07.2014.
  */
+
+
 module.exports = function (grunt) {
     var ops = grunt.file.readJSON("package.json");
     grunt.loadNpmTasks('grunt-node-webkit-builder');
@@ -19,7 +21,7 @@ module.exports = function (grunt) {
         nodewebkit: {
             build: {
                 options: {
-//                    platforms: ['osx'],
+                    platforms: ['win'],
                     buildDir: './build',
                     winIco: './src/img/cube32.ico',
                     macIcns: './src/img/cube32.png'
@@ -78,20 +80,34 @@ module.exports = function (grunt) {
         },
 //----------------------------------------------------------------------------------------------------------------------
         sftp: {
-            uploading: {
+            update_json: {
                 files: {
-                    "./": ["build/*json", "build/*zip"]
+                    "./": ["src/update.json"]
                 },
-                    options: {
-                        srcBasePath: "build/",
-                        path: '/var/www/jdownloads/ScriptGUI',
-                        host: '<%= secret.host %>',
-                        username: '<%= secret.username %>',
-                        password: '<%= secret.password %>',
-                        showProgress: true
-                    }
+                options: {
+                    srcBasePath: "src/",
+                    path: '/var/www/jdownloads/ScriptGUI',
+                    host: '<%= secret.host %>',
+                    username: '<%= secret.username %>',
+                    password: '<%= secret.password %>',
+                    showProgress: true
+                }
+            },
+            data_zips: {
+                files: {
+                    "./": ["build/*zip"]
+
+                },
+                options: {
+                    srcBasePath: "build/",
+                    path: '/var/www/jdownloads/ScriptGUI',
+                    host: '<%= secret.host %>',
+                    username: '<%= secret.username %>',
+                    password: '<%= secret.password %>',
+                    showProgress: true
                 }
             }
+        }
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -122,8 +138,7 @@ module.exports = function (grunt) {
         console.log('finish_make_build_data')
     });
 
-    grunt.registerTask('Test_Build', ['make_build_data','nodewebkit:build']);
-    grunt.registerTask('Build', ['make_build_data','nodewebkit:build','compress','sftp:uploading']);
+    grunt.registerTask('WIN_Build_ZIP_UP', ['nodewebkit:build','compress:win','sftp:data_zips']);
 
 
 };

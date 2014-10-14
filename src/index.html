@@ -3,11 +3,17 @@
 
 <html id="html" ng-app="tutorialApp">
 
-<head >
+<head>
     <title>ScriptGUI</title>
+
+
 
     <script type="text/javascript" src="js/lib/angular.js"></script>
     <script type="text/javascript" src="js/controler.js"></script>
+    <script type="text/javascript" src="js/lib/jquery-1.11.0.js"></script>
+    <script type="text/javascript" src="js/ScriptGUI.js"></script>
+
+
 
     <link rel="stylesheet" href="css/Main.css"/>
     <link rel="stylesheet" href="js/lib/fm/fm.css"/>
@@ -24,7 +30,7 @@
     <script type="text/javascript" src="js/lib/socket.io_09.js"></script>
     <!--<script type="text/javascript" src="js/lib/socket.io_10.js"></script>-->
 
-    <script type="text/javascript" src="js/lib/jquery-1.11.0.js"></script>
+
     <script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
     <script type="text/javascript" src="js/lib/jquery.contextMenu.js"></script>
 
@@ -52,7 +58,7 @@
 
     <script type="text/javascript" src="js/lib/superclick.js"></script>
 
-    <script type="text/javascript" src="js/ScriptGUI.js"></script>
+
     <script type="text/javascript" src="js/Menu.js"></script>
     <script type="text/javascript" src="js/Translate.js"></script>
     <script type="text/javascript" src="js/add_fbs.js"></script>
@@ -68,52 +74,82 @@
 </head>
 
 <body id="body" ng-controller="GUICtrl" class="">
-
+<img id="main_logo" src="./img/logo.png" style="width: 341px; height: 174px; padding: 10px"/>
+<div id="body_wrap" >
 <div id="menu_body" class="menu_body ui-state-default">
     <ul id="menu" style="margin-top: 1px;" class="sf-menu">
         <li class="ui-state-default ui-corner-all" style="border: none"><a class=" translate">Datei</a>
             <ul class="">
-                <li class="ui-state-default frame_color menu_item"><a id="m_neu"       class="translate">Neu</a></li>
-                <li class="ui-state-default frame_color menu_item"><a id="m_open"      class="translate">Öffnen</a></li>
-                <li class="ui-state-default frame_color menu_item"><a id="m_example"   class="translate">Vorlagen</a></li>
-                <li class="ui-state-default frame_color menu_item"><a id="m_save"      class="translate">Speichern</a></li>
-                <li class="ui-state-default frame_color menu_item"><a id="m_save_as"   class="translate">Speichern als</a></li>
-                <li class="ui-state-default frame_color menu_item"><a                  class="translate">Export</a></li>
+                <li class="ui-state-default frame_color menu_item"><a id="m_neu" class="translate">Neu</a></li>
+                <li class="ui-state-default frame_color menu_item"><a id="m_open" class="translate">Öffnen</a></li>
+                <li class="ui-state-default frame_color menu_item"><a id="m_example" class="translate">Vorlagen</a></li>
+                <li class="ui-state-default frame_color menu_item"><a id="m_save" class="translate">Speichern</a></li>
+                <li class="ui-state-default frame_color menu_item"><a id="m_save_as" class="translate">Speichern als</a>
+                </li>
+                <li class="ui-state-default frame_color menu_item"><a class="translate">Export</a></li>
             </ul>
         </li>
         <li class="ui-state-default ui-corner-all" style="border: none"><a class="menu_font translate">Einstellungen</a>
             <ul class="">
                 <li class="ui-state-default frame_color menu_item"><a class="translate">Theme</a>
-                    <ul id="ul_theme" class="" >
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="dark-hive">Dark-Hive</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="start">Start</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="humanity">humanity</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="blitzer">blitzer</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="swanky-purse">Swanky Purse</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="black-tie">Black Tie</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="cupertino">Cupertino</a></li>
-                    <!--<li class="ui-state-default frame_color menu_item"><a class="translate" data-info="dot-lov">Dot Lov</a></li>-->
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="eggplant">Eggplant</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="excite-bike">excite-bike</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="flick">flick</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="le-frog">le-frog</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="mint-choc">mint-choc</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="overcast">overcast</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="pepper-grinder">pepper-grinder</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="redmond">redmond</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="smoothness">smoothness</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="south-street">south-street</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="sunny">sunny</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="trontastic">trontastic</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="ui-darkness">ui-darkness</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="ui-lightness">ui-lightness</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="vader">vader</a></li>
+                    <ul id="ul_theme" class="">
+                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="dark-hive">Dark-Hive</a>
+                        </li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate"
+                                                                              data-info="start">Start</a></li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="humanity">humanity</a>
+                        </li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="blitzer">blitzer</a>
+                        </li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate"
+                                                                              data-info="swanky-purse">Swanky Purse</a>
+                        </li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="black-tie">Black
+                            Tie</a></li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="cupertino">Cupertino</a>
+                        </li>
+                        <!--<li class="ui-state-default frame_color menu_item"><a class="translate" data-info="dot-lov">Dot Lov</a></li>-->
+                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="eggplant">Eggplant</a>
+                        </li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="excite-bike">excite-bike</a>
+                        </li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate"
+                                                                              data-info="flick">flick</a></li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="le-frog">le-frog</a>
+                        </li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="mint-choc">mint-choc</a>
+                        </li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="overcast">overcast</a>
+                        </li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate"
+                                                                              data-info="pepper-grinder">pepper-grinder</a>
+                        </li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="redmond">redmond</a>
+                        </li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="smoothness">smoothness</a>
+                        </li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate"
+                                                                              data-info="south-street">south-street</a>
+                        </li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate"
+                                                                              data-info="sunny">sunny</a></li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="trontastic">trontastic</a>
+                        </li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="ui-darkness">ui-darkness</a>
+                        </li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate"
+                                                                              data-info="ui-lightness">ui-lightness</a>
+                        </li>
+                        <li class="ui-state-default frame_color menu_item"><a class="translate"
+                                                                              data-info="vader">vader</a></li>
                     </ul>
                 </li>
                 <li class="ui-state-default frame_color menu_item" style="border: none"><a class="translate">Mode</a>
                     <ul id="ul_mode" class="">
-                        <li class="ui-state-default frame_color menu_item"><a id="m_mode_editor" class="translate" >Editor</a></li>
-                        <li class="ui-state-default frame_color menu_item"><a id="m_mode_gui" class="item_font   translate" >GUI</a></li>
+                        <li class="ui-state-default frame_color menu_item"><a id="m_mode_editor" class="translate">Editor</a>
+                        </li>
+                        <li class="ui-state-default frame_color menu_item"><a id="m_mode_gui"
+                                                                              class="item_font   translate">GUI</a></li>
                     </ul>
                 </li>
                 <li class="ui-state-default frame_color menu_item"><a id="m_setup" class="translate">Setup</a></li>
@@ -121,26 +157,38 @@
         </li>
         <li class="ui-state-default ui-corner-all" style="border: none"><a class="menu_font translate">Compiler</a>
             <ul class="">
-                <li class="ui-state-default frame_color menu_item"><a id="m_show_script" class="translate">Zeige Script</a></li>
-                <li class="ui-state-default frame_color menu_item"><a id="m_save_script" class="translate">Speicher Script</a></li>
-                <li class="ui-state-default frame_color menu_item"><a id="m_del_script" class="translate">Lösche Script</a></li>
+                <li class="ui-state-default frame_color menu_item"><a id="m_show_script" class="translate">Zeige
+                    Script</a></li>
+                <li class="ui-state-default frame_color menu_item"><a id="m_save_script" class="translate">Speicher
+                    Script</a></li>
+                <li class="ui-state-default frame_color menu_item"><a id="m_del_script" class="translate">Lösche
+                    Script</a></li>
             </ul>
         </li>
         <li class="ui-state-default ui-corner-all" style="border: none"><a class="menu_font translate">Help</a>
             <ul class="">
-                <li class="ui-state-default frame_color menu_item"><a id="m_quick-help" class="translate">Schnell Hilfe</a></li>
-                <li class="ui-state-default frame_color menu_item"><a id="m_shortcuts" class="translate">Tastenkominationen</a></li>
-                <li class="ui-state-default frame_color menu_item"><a id="m_video" class="translate">Video Tutorials</a></li>
+                <li class="ui-state-default frame_color menu_item"><a id="m_quick-help" class="translate">Schnell
+                    Hilfe</a></li>
+                <li class="ui-state-default frame_color menu_item"><a id="m_shortcuts" class="translate">Tastenkominationen</a>
+                </li>
+                <li class="ui-state-default frame_color menu_item"><a id="m_video" class="translate">Video Tutorials</a>
+                </li>
                 <li class="ui-state-default frame_color menu_item"><a id="m_update" class="translate">Update</a></li>
             </ul>
         </li>
         <li id="develop_menu" style="display: none" class=""><a class="menu_font translate">Develop</a>
             <ul class="">
-                <li class="ui-state-default frame_color menu_item"><a id="m_mbs-image" style="white-space:nowrap;" class="translate">MBS Image</a></li>
-                <li class="ui-state-default frame_color menu_item"><a id="m_fbs-image" style="white-space:nowrap;" class="translate">FBS Image</a></li>
-                <li class="ui-state-default frame_color menu_item"><a id="m_new-struck" style="white-space:nowrap;" class="translate">New Struck</a></li>
-                <li class="ui-state-default frame_color menu_item"><a id="m_add_fir_bug" style="white-space:nowrap;" class="translate">Add FireBug</a></li>
-                <li class="ui-state-default frame_color menu_item"><a id="m_show_debugscript" style="white-space:nowrap;" class="translate">Show Debugscript</a></li>
+                <li class="ui-state-default frame_color menu_item"><a id="m_mbs-image" style="white-space:nowrap;"
+                                                                      class="translate">MBS Image</a></li>
+                <li class="ui-state-default frame_color menu_item"><a id="m_fbs-image" style="white-space:nowrap;"
+                                                                      class="translate">FBS Image</a></li>
+                <li class="ui-state-default frame_color menu_item"><a id="m_new-struck" style="white-space:nowrap;"
+                                                                      class="translate">New Struck</a></li>
+                <li class="ui-state-default frame_color menu_item"><a id="m_add_fir_bug" style="white-space:nowrap;"
+                                                                      class="translate">Add FireBug</a></li>
+                <li class="ui-state-default frame_color menu_item"><a id="m_show_debugscript"
+                                                                      style="white-space:nowrap;" class="translate">Show
+                    Debugscript</a></li>
             </ul>
         </li>
     </ul>
@@ -151,34 +199,47 @@
 
 <div id="icon_bar" class="icon_bar ui-state-default">
 
-    <img src="img/icon/move_to_folder.png"   class="img_iconbar set_local title_translate" id="img_save_local" title="Speicher"/>
-    <img src="img/icon/folder.png"           class="img_iconbar set_local title_translate" id="img_open_local" title="Öffne last"/>
+    <img src="img/icon/move_to_folder.png" class="img_iconbar set_local title_translate" id="img_save_local"
+         title="Speicher"/>
+    <img src="img/icon/folder.png" class="img_iconbar set_local title_translate" id="img_open_local"
+         title="Öffne last"/>
 
-    <img src="img/icon/shape_align_left.png"     class="img_iconbar set_algin title_translate" id="img_set_left"     title="Links Ausrichten"/>
-    <img src="img/icon/shape_align_right.png"    class="img_iconbar set_algin title_translate" id="img_set_right"    title="Rechts Ausrichten"/>
-    <img src="img/icon/shape_align_top.png"      class="img_iconbar set_algin title_translate" id="img_set_top"      title="Oben Ausrichten"/>
-    <img src="img/icon/shape_align_bottom.png"   class="img_iconbar set_algin title_translate" id="img_set_bottom"   title="Unten Ausrichten"/>
-    <img src="img/icon/shape_move_back.png"      class="img_iconbar set_algin title_translate" id="img_set_steps"    title="Diagonal Ausrichten"/>
+    <img src="img/icon/shape_align_left.png" class="img_iconbar set_algin title_translate" id="img_set_left"
+         title="Links Ausrichten"/>
+    <img src="img/icon/shape_align_right.png" class="img_iconbar set_algin title_translate" id="img_set_right"
+         title="Rechts Ausrichten"/>
+    <img src="img/icon/shape_align_top.png" class="img_iconbar set_algin title_translate" id="img_set_top"
+         title="Oben Ausrichten"/>
+    <img src="img/icon/shape_align_bottom.png" class="img_iconbar set_algin title_translate" id="img_set_bottom"
+         title="Unten Ausrichten"/>
+    <img src="img/icon/shape_move_back.png" class="img_iconbar set_algin title_translate" id="img_set_steps"
+         title="Diagonal Ausrichten"/>
 
-    <img src="img/icon/zoom.png"         class="img_iconbar set_zoom title_translate" id="img_set_zoom"      title="Zoom zuckrücksetzen"/>
-    <img src="img/icon/zoom_in.png"      class="img_iconbar set_zoom title_translate" id="img_set_zoom_in"   title="Zoom In"/>
-    <img src="img/icon/zoom_out.png"     class="img_iconbar set_zoom title_translate" id="img_set_zoom_out"  title="Zoom Out"/>
+    <img src="img/icon/zoom.png" class="img_iconbar set_zoom title_translate" id="img_set_zoom"
+         title="Zoom zuckrücksetzen"/>
+    <img src="img/icon/zoom_in.png" class="img_iconbar set_zoom title_translate" id="img_set_zoom_in" title="Zoom In"/>
+    <img src="img/icon/zoom_out.png" class="img_iconbar set_zoom title_translate" id="img_set_zoom_out"
+         title="Zoom Out"/>
 
-    <img src="img/icon/table.png"        class="img_iconbar ui-state-focus set_grid title_translate"     id="img_set_grid_on"     title="An Grid fangen ON/OFF"/>
-    <img src="img/icon/information.png"  class="img_iconbar ui-state-focus set_tooltip title_translate"  id="img_set_tooltip_on"  title="Tooltip ON/OFF"/>
+    <img src="img/icon/table.png" class="img_iconbar ui-state-focus set_grid title_translate" id="img_set_grid_on"
+         title="An Grid fangen ON/OFF"/>
+    <img src="img/icon/information.png" class="img_iconbar ui-state-focus set_tooltip title_translate"
+         id="img_set_tooltip_on" title="Tooltip ON/OFF"/>
+
     <div id="con_body">
-    <div id="inp_con_ip"></div>
+        <div id="inp_con_ip"></div>
         <div id="con_panel_wrap">
             <div style="margin-top: 4px">
                 <div id="con_panel" style="display: none" class="ui-state-default frame_color">
-                   <div class="div_img_glass"> <img src="img/icon/flag-green.png"  id="btn_con_online"></div>
-                   <div class="div_img_glass"> <img src="img/icon/flag-yellow.png"  id="btn_con_offline"></div>
+                    <div class="div_img_glass"><img src="img/icon/flag-green.png" id="btn_con_online"></div>
+                    <div class="div_img_glass"><img src="img/icon/flag-yellow.png" id="btn_con_offline"></div>
                 </div>
             </div>
         </div>
     </div>
-    <img src="img/icon/flag-red.png"   class="img_iconbar title_translate"      id="img_con_state"            title="Status"/>
-    <img src="img/icon/cog.png" class="img_iconbar script_engine title_translate" id="img_set_script_engine" style="display: none" title="Scriptengine Neustarten"/>
+    <img src="img/icon/flag-red.png" class="img_iconbar title_translate" id="img_con_state" title="Status"/>
+    <img src="img/icon/cog.png" class="img_iconbar script_engine title_translate" id="img_set_script_engine"
+         style="display: none" title="Scriptengine Neustarten"/>
 
 
 </div>
@@ -447,13 +508,13 @@
     <br>
     <hr>
     <!--<div id="trigdevid" class="fbs">-->
-        <!--<img alt="" src="img/FBS/trigdevid.png" onError="this.src='img/icon/image.png';">-->
+    <!--<img alt="" src="img/FBS/trigdevid.png" onError="this.src='img/icon/image.png';">-->
     <!--</div>-->
     <!--<div id="trigdevname" class="fbs">-->
-        <!--<img alt="" src="img/FBS/trigdevname.png" onError="this.src='img/icon/image.png';">-->
+    <!--<img alt="" src="img/FBS/trigdevname.png" onError="this.src='img/icon/image.png';">-->
     <!--</div>-->
     <!--<div id="trigdevtype" class="fbs">-->
-        <!--<img alt="" src="img/FBS/trigdevtype.png" onError="this.src='img/icon/image.png';">-->
+    <!--<img alt="" src="img/FBS/trigdevtype.png" onError="this.src='img/icon/image.png';">-->
     <!--</div>-->
 
 
@@ -472,13 +533,18 @@
 <div id="sim_log" class="sim_log frame_color ui-state-default">
     <div id="sim_log_head" class="sim_log_head ui-state-default"></div>
     <div class="div_sim_controll">
-        <div class="item_font translate" style="align-self: flex-start; font-size: 26px;font-weight: bold; padding-bottom: 5px; padding-left: 5px"> Live Test</div>
+        <div class="item_font translate"
+             style="align-self: flex-start; font-size: 26px;font-weight: bold; padding-bottom: 5px; padding-left: 5px">
+            Live Test
+        </div>
         <div class="div_sim_controll_icons">
-            <img alt="" style="height: 30px; width: 30px" src="img/icon/play.png" class="img_iconbar script_engine set_script title_translate" id="img_set_script_play"
+            <img alt="" style="height: 30px; width: 30px" src="img/icon/play.png"
+                 class="img_iconbar script_engine set_script title_translate" id="img_set_script_play"
                  title="Teste Script"/>
-            <img alt="" style="height: 30px; width: 30px" src="img/icon/stop.png" class="img_iconbar script_engine set_script title_translate" id="img_set_script_stop"
+            <img alt="" style="height: 30px; width: 30px" src="img/icon/stop.png"
+                 class="img_iconbar script_engine set_script title_translate" id="img_set_script_stop"
                  title="Stop"/>
-            <button class="translate" id="clear_force" >Force entfernen</button>
+            <button class="translate" id="clear_force">Force entfernen</button>
         </div>
 
     </div>
@@ -492,117 +558,127 @@
         <!--</div>-->
     </div>
 </div>
-<div id="setup_dialog" class="" >
-    <input class="focus_dummy" style="border:none;height: 1px;padding: 1px;width: 1px;background: transparent;z-index: 101" type="button"/>
-     <div id="setup_cat" class="frame_color ui-state-default">
-         <a data-info="setup_alg" class="translate setup_cat">Allgemein</a>
-         <a data-info="setup_startup" class="translate setup_cat">Startup</a>
-         <a data-info="setup_con" class="translate setup_cat">Verbindung</a>
-         <a data-info="setup_data" class="translate setup_cat">Data Archiv</a>
-         <a data-info="setup_editor" class="translate setup_cat">Editor</a>
-     </div>
-     <div id="setup_field" class="frame_color ui-state-default">
-         <div id="setup_alg" class="setup_field_content">
-             <span style="display: block; font-size: 20px; font-weight: bold; padding: 5px;" class="translate">Allgemein</span>
-             <table>
-                 <tr>
-                     <td style="width: 200px" class="translate">Sprache</td>
-                     <td><select id="setup_lang" class="setup_select ui-state-default frame_color " ng-model="setup.lang">
-                         <option value="de">Deutsch</option>
-                         <option value="en">English</option>
-                         <option value="ru">Rusisch</option>
-                     </select>
-                     </td>
-                 </tr>
-                 <tr>
-                 </tr>
-                    <!--<tr>-->
-                        <!--<td class="translate">3</td>-->
-                     <!--<td>c</td>-->
-                 <!--</tr>-->
-                    <!--<tr>-->
-                        <!--<td class="translate">4</td>-->
-                     <!--<td>d</td>-->
-                 <!--</tr>-->
-             </table>
-         </div>
-         <div id="setup_startup" class="setup_field_content">
-             <span style="display: block; font-size: 20px; font-weight: bold; padding: 5px;" class="translate">Startup</span>
-             <table>
-                 <tr>
-                     <td class="translate">Thema</td>
-                     <td>
-                         <select class="setup_select ui-state-default frame_color "  ng-model="setup.theme">
-                              <option value="dark-hive">Dark-Hive</option>
-                              <option value="start">Start</option>
-                              <option value="humanity">humanity</option>
-                              <option value="blitzer">blitzer</option>
-                              <option value="swanky-purse">Swanky Purse</option>
-                              <option value="black-tie">Black Tie</option>
-                              <option value="cupertino">Cupertino</option>
-                              <option value="dot-lov">Dot Lov</option>
-                              <option value="eggplant">Eggplant</option>
-                              <option value="excite-bike">excite-bike</option>
-                              <option value="flick">flick</option>
-                              <option value="le-frog">le-frog</option>
-                              <option value="mint-choc">mint-choc</option>
-                              <option value="overcast">overcast</option>
-                              <option value="pepper-grinder">pepper-grinder</option>
-                              <option value="redmond">redmond</option>
-                              <option value="smoothness">smoothness</option>
-                              <option value="south-street">south-street</option>
-                              <option value="sunny">sunny</option>
-                              <option value="trontastic">trontastic</option>
-                              <option value="ui-darkness">ui-darkness</option>
-                              <option value="ui-lightness">ui-lightness</option>
-                              <option value="vader">vader</option>
+<div id="setup_dialog" class="">
+    <input class="focus_dummy"
+           style="border:none;height: 1px;padding: 1px;width: 1px;background: transparent;z-index: 101" type="button"/>
+
+    <div id="setup_cat" class="frame_color ui-state-default">
+        <a data-info="setup_alg" class="translate setup_cat">Allgemein</a>
+        <a data-info="setup_startup" class="translate setup_cat">Startup</a>
+        <a data-info="setup_con" class="translate setup_cat">Verbindung</a>
+        <a data-info="setup_data" class="translate setup_cat">Data Archiv</a>
+        <a data-info="setup_editor" class="translate setup_cat">Editor</a>
+    </div>
+    <div id="setup_field" class="frame_color ui-state-default">
+        <div id="setup_alg" class="setup_field_content">
+            <span style="display: block; font-size: 20px; font-weight: bold; padding: 5px;"
+                  class="translate">Allgemein</span>
+            <table>
+                <tr>
+                    <td style="width: 200px" class="translate">Sprache</td>
+                    <td><select id="setup_lang" class="setup_select ui-state-default frame_color "
+                                ng-model="setup.lang">
+                        <option value="de">Deutsch</option>
+                        <option value="en">English</option>
+                        <option value="ru">Rusisch</option>
+                    </select>
+                    </td>
+                </tr>
+                <tr>
+                </tr>
+                <!--<tr>-->
+                <!--<td class="translate">3</td>-->
+                <!--<td>c</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                <!--<td class="translate">4</td>-->
+                <!--<td>d</td>-->
+                <!--</tr>-->
+            </table>
+        </div>
+        <div id="setup_startup" class="setup_field_content">
+            <span style="display: block; font-size: 20px; font-weight: bold; padding: 5px;"
+                  class="translate">Startup</span>
+            <table>
+                <tr>
+                    <td class="translate">Thema</td>
+                    <td>
+                        <select class="setup_select ui-state-default frame_color " ng-model="setup.theme">
+                            <option value="dark-hive">Dark-Hive</option>
+                            <option value="start">Start</option>
+                            <option value="humanity">humanity</option>
+                            <option value="blitzer">blitzer</option>
+                            <option value="swanky-purse">Swanky Purse</option>
+                            <option value="black-tie">Black Tie</option>
+                            <option value="cupertino">Cupertino</option>
+                            <option value="dot-lov">Dot Lov</option>
+                            <option value="eggplant">Eggplant</option>
+                            <option value="excite-bike">excite-bike</option>
+                            <option value="flick">flick</option>
+                            <option value="le-frog">le-frog</option>
+                            <option value="mint-choc">mint-choc</option>
+                            <option value="overcast">overcast</option>
+                            <option value="pepper-grinder">pepper-grinder</option>
+                            <option value="redmond">redmond</option>
+                            <option value="smoothness">smoothness</option>
+                            <option value="south-street">south-street</option>
+                            <option value="sunny">sunny</option>
+                            <option value="trontastic">trontastic</option>
+                            <option value="ui-darkness">ui-darkness</option>
+                            <option value="ui-lightness">ui-lightness</option>
+                            <option value="vader">vader</option>
                         </select>
-                     </td>
-                 </tr>
-                 <tr style="border-bottom: 1px solid inherit; ">
-                     <td style="width: 200px" class="translate">Am Gitter Fangen</td>
-                     <td>
-                         <input type="checkbox" class="setup_checkbox"  ng-model="setup.snap_grid"/>
-                     </td>
-                 </tr>
-                 <tr>
-                     <td style="width: 150px" class="translate">ToolTip</td>
-                     <td>
-                         <input type="checkbox" class="setup_checkbox"  ng-model="setup.tooltip"/>
-                     </td>
-                 </tr>
-                 <tr>
-                     <td style="width: 150px" class="translate">Live Test open</td>
-                     <td>
-                         <input type="checkbox" class="setup_checkbox" ng-model="setup.LT_open"/>
-                     </td>
-                 </tr>
-                 <tr>
-                     <td style="width: 200px" class="translate">Auto update</td>
-                     <td>
-                         <input type="checkbox" class="setup_checkbox"  ng-model="setup.update"/>
-                     </td>
-                 </tr>
-             </table>
-         </div>
-         <div id="setup_con" class="setup_field_content">
-             <span style="display: block; font-size: 20px; font-weight: bold; padding: 5px;" class="translate">Verbindung</span>
-         </div>
-         <div id="setup_data" class="setup_field_content">
-             <span style="display: block; font-size: 20px; font-weight: bold; padding: 5px;" class="translate">Data Archiv</span>
-         </div>
-         <div id="setup_editor" class="setup_field_content">
-             <span style="display: block; font-size: 20px; font-weight: bold; padding: 5px;" class="translate">Editor</span>
-         </div>
-     </div>
+                    </td>
+                </tr>
+                <tr style="border-bottom: 1px solid inherit; ">
+                    <td style="width: 200px" class="translate">Am Gitter Fangen</td>
+                    <td>
+                        <input type="checkbox" class="setup_checkbox" ng-model="setup.snap_grid"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 150px" class="translate">ToolTip</td>
+                    <td>
+                        <input type="checkbox" class="setup_checkbox" ng-model="setup.tooltip"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 150px" class="translate">Live Test open</td>
+                    <td>
+                        <input type="checkbox" class="setup_checkbox" ng-model="setup.LT_open"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 200px" class="translate">Auto update</td>
+                    <td>
+                        <input type="checkbox" class="setup_checkbox" ng-model="setup.update"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="setup_con" class="setup_field_content">
+            <span style="display: block; font-size: 20px; font-weight: bold; padding: 5px;"
+                  class="translate">Verbindung</span>
+        </div>
+        <div id="setup_data" class="setup_field_content">
+            <span style="display: block; font-size: 20px; font-weight: bold; padding: 5px;" class="translate">Data Archiv</span>
+        </div>
+        <div id="setup_editor" class="setup_field_content">
+            <span style="display: block; font-size: 20px; font-weight: bold; padding: 5px;"
+                  class="translate">Editor</span>
+        </div>
+    </div>
 </div>
 <div id="selection" class="selectiondiv"></div>
-<input style="display: none" id="prgopen" type="file" nwworkingdir=""  accept=".prg" />
+<input style="display: none" id="prgopen" type="file" nwworkingdir="" accept=".prg"/>
 <input style="display: none" id="prgsaveas" type="file" nwsaveas accept=".prg"/>
+
 <div id="wait_div">
-<div style="width: 100%; height: 100%; opacity: 0.9" class="frame_color ui-state-default"></div>
-<div class="circle wait_div"></div>
-<div class="circle1 wait_div"></div>
+    <div style="width: 100%; height: 100%; opacity: 0.9" class="frame_color ui-state-default"></div>
+    <div class="circle wait_div"></div>
+    <div class="circle1 wait_div"></div>
+
+</div>
 </div>
 </body>
 </html>

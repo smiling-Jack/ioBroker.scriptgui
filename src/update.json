@@ -1,0 +1,16 @@
+{
+    "name": "ScriptGUI",
+    "version": "0.71.1",
+    "manifestUrl": "http://37.120.169.17/jdownloads/ScriptGUI/update.json",
+    "packages": {
+        "mac": {
+            "url": "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_osx.zip"
+        },
+        "win": {
+            "url": "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_win.zip"
+        },
+        "linux32": {
+            "url": "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_linux.tar.gz"
+        }
+    }
+}

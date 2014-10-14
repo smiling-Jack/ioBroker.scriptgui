@@ -90,7 +90,13 @@ function simulate(target) {
         });
 
         function getState(id) {
-            return homematic.uiState["_" + id]["Value"]
+            if (homematic.uiState["_" + id]["Value"] != undefined){
+                return homematic.uiState["_" + id]["Value"]
+
+            }else{
+
+            }
+
         }
 
         function setState(id, data) {

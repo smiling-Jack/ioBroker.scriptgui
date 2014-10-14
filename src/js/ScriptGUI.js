@@ -17,8 +17,31 @@ nw_win.title = nw_manifest.name + " " + nw_manifest.native.version;
 var request = require("request");
 //var deep = require('deep-diff')
 var getmac = require('getmac');
-var Admzip = require('adm-zip');
 var ncp = require('ncp');
+
+
+//Updater----------------------------------------------------------------------
+var pkg = require('./update.json');
+var updater = require('node-webkit-updater');
+var upd = new updater(pkg);
+var copyPath;
+var execPath;
+
+
+if (nw_gui.App.argv.length) {
+//if (nw_gui.App.argv.length == 0) {
+// ------------- Step 5 -------------
+    copyPath = nw_gui.App.argv[0];
+    execPath = nw_gui.App.argv[1];
+
+    upd.install(copyPath, function (err) {
+        if (!err) {
+            upd.run(execPath, [],{});
+            nw_gui.App.quit();
+        }
+    });
+}
+//-----------------------------------------------------------------------------
 
 
 process.on("uncaughtException", function (e) {
@@ -26,7 +49,7 @@ process.on("uncaughtException", function (e) {
     SGI.error_box(e.stack)
 });
 
-var execPath = path.dirname(process.execPath);
+//var execPath = path.dirname(process.execPath);
 
 var scope;
 
@@ -170,7 +193,8 @@ var SGI = {
                 con_files.push(test)
             });
         }
-        catch(e){}
+        catch (e) {
+        }
 
         $("#inp_con_ip").xs_combo({
             addcssButton: "xs_button_con frame_color ",
@@ -185,8 +209,8 @@ var SGI = {
 
         $("#inp_con_ip").hover(function () {
             console.log($("#con_panel").css("display"))
-            if ($("#con_panel").css("display") == "none" ){
-                $("#con_panel").stop(true,true).show("slide", {direction: "up"});
+            if ($("#con_panel").css("display") == "none") {
+                $("#con_panel").stop(true, true).show("slide", {direction: "up"});
             }
 
         }, function () {
@@ -419,7 +443,10 @@ var SGI = {
         SGI.read_experts();
 
 
-        $("body").css({visibility: "visible"});
+        $("#main_logo").remove();
+        $("#body_wrap").css({visibility: "visible"});
+        nw_win.moveBy(-317, -242);
+        nw_win.resizeTo(1000, 700);
 
 //        console.clear();
 //        SGI.scope_init = scope;
@@ -469,7 +496,7 @@ var SGI = {
                 nw_win.showDevTools();
             } else if (SGI.key == 88 && event.altKey == true) {
                 document.location.reload(true)
-            }else if (SGI.key == 70 && event.altKey == true) {
+            } else if (SGI.key == 70 && event.altKey == true) {
                 var test = test_fehler;
             } else if (SGI.key == 17 || SGI.key == 91 || SGI.key == 93 || event.ctrlKey == true) {
                 $("body").css({cursor: "help"});
@@ -1186,7 +1213,7 @@ var SGI = {
                 };
 
                 if (target.split("_")[0] == "codebox") {
-                    try{
+                    try {
                         c = SGI.plumb_inst.inst_mbs.connect({
                             uuids: [source],
                             target: target
@@ -1201,23 +1228,25 @@ var SGI = {
                                 midpoint: this.connector.midpoint
                             }
                         };
-                    }catch (err){}
+                    } catch (err) {
+                    }
 
 
                 } else {
-                    try{
-                    c = SGI.plumb_inst.inst_mbs.connect({uuids: [source, target]});
+                    try {
+                        c = SGI.plumb_inst.inst_mbs.connect({uuids: [source, target]});
 
-                    c.setConnector([ "Flowchart", { stub: this.connector.stub, alwaysRespectStubs: true, midpoint: this.connector.midpoint}  ]);
-                    scope.con.mbs[c.id] = {
-                        pageSourceId: c.sourceId,
-                        pageTargetId: c.targetId,
-                        connector: {
-                            stub: this.connector.stub,
-                            midpoint: this.connector.midpoint
+                        c.setConnector([ "Flowchart", { stub: this.connector.stub, alwaysRespectStubs: true, midpoint: this.connector.midpoint}  ]);
+                        scope.con.mbs[c.id] = {
+                            pageSourceId: c.sourceId,
+                            pageTargetId: c.targetId,
+                            connector: {
+                                stub: this.connector.stub,
+                                midpoint: this.connector.midpoint
+                            }
                         }
+                    } catch (err) {
                     }
-                    }catch (err){}
                 }
 
             });
@@ -1338,8 +1367,8 @@ var SGI = {
             });
         }
 
-        SGI.fbs_n ++;
-        SGI.mbs_n ++;
+        SGI.fbs_n++;
+        SGI.mbs_n++;
 
     },
 
@@ -1379,7 +1408,7 @@ var SGI = {
 
         if (scope == "singel") {
             if (type == "input") {
-                 endpointStyle = {fillStyle: "green"};
+                endpointStyle = {fillStyle: "green"};
                 SGI.plumb_inst["inst_" + codebox].addEndpoint(id.toString(), { uuid: id.toString() }, {
                     anchor: [0, 0.5, -1, 0, 0, 0],
                     isTarget: true,
@@ -1416,7 +1445,7 @@ var SGI = {
         if (scope == "liste_ch") {
 
             if (type == "input") {
-                 endpointStyle = {fillStyle: "#660066"};
+                endpointStyle = {fillStyle: "#660066"};
                 SGI.plumb_inst["inst_" + codebox].addEndpoint(id.toString(), { uuid: id.toString() }, {
                     anchor: [0, 0.5, -1, 0, 0, 0],
                     isTarget: true,
@@ -1787,7 +1816,7 @@ var SGI = {
                             path = c.connector.getPath();
 
                             if (dot2_d == "x") {
-                                 new_midpoint = Math.round((1 / svg_w * (svg_w * old_midpoint + dif_x)) * 100) / 100;
+                                new_midpoint = Math.round((1 / svg_w * (svg_w * old_midpoint + dif_x)) * 100) / 100;
 
                             } else {
                                 if (path[1].start[1] < path[1].end[1] || path[0].start[1] < path[0].end[1]) {
@@ -2325,8 +2354,8 @@ var SGI = {
 
             .drag("end", function () {
                 var nr = $(this).data("nr");
-                scope.fbs[nr].style.top = $(this).position().top+"px";
-                scope.fbs[nr].style.left = $(this).position().left+"px";
+                scope.fbs[nr].style.top = $(this).position().top + "px";
+                scope.fbs[nr].style.left = $(this).position().left + "px";
 
                 scope.$apply();
                 if ($.isArray(ep_fbs) == true) {
@@ -2471,7 +2500,7 @@ var SGI = {
 
                     if (scope.setup.snap_grid) {
 
-                       data = {
+                        data = {
                             parent: $(ev.target).attr("id"),
                             type: $(ui["draggable"][0]).attr("id")
                         };
@@ -2495,7 +2524,7 @@ var SGI = {
 
     make_savedata: function () {
         return   {
-            version:nw_manifest.native.version,
+            version: nw_manifest.native.version,
             mbs: scope.mbs,
             fbs: scope.fbs,
             con: scope.con
@@ -3156,73 +3185,76 @@ var deleteFolderRecursive = function (path) {
 };
 
 (function () {
-    $(document).ready(function () {
+    if (nw_gui.App.argv.length == 0) {
+//    if (nw_gui.App.argv.length != 0) {
+        $(document).ready(function () {
 
-        // ordner erstellen
-        var nwPath = process.execPath;
-        SGI.nwDir = path.dirname(nwPath).split("ScriptGUI.app")[0];
+            // ordner erstellen
+            var nwPath = process.execPath;
+            SGI.nwDir = path.dirname(nwPath).split("ScriptGUI.app")[0];
 //        SGI.nwDir = path.dirname(nwPath);
 //        console.log(process.platform)
-        SGI.prgDir = SGI.nwDir + "/datastore/programms/";
+            SGI.prgDir = SGI.nwDir + "/datastore/programms/";
 
 //        console.log(nwPath)
-        try {
-            if (!fs.existsSync(SGI.nwDir + '/datastore')) {
-                fs.mkdirSync(SGI.nwDir + '/datastore');
-            }
-            if (!fs.existsSync(SGI.nwDir + '/datastore/programms')) {
-                fs.mkdirSync(SGI.nwDir + '/datastore/programms');
-            }
-            if (!fs.existsSync(SGI.nwDir + '/datastore/connections')) {
-                fs.mkdirSync(SGI.nwDir + '/datastore/connections');
-            }
-            if (!fs.existsSync(SGI.nwDir + '/datastore/experts')) {
-                fs.mkdirSync(SGI.nwDir + '/datastore/experts');
-            }
-
-        }
-        catch (e) {
-            console.log(e)
-        }
-
-        $("#prgopen").attr("nwworkingdir", SGI.prgDir);
-        $("#prgsaveas").attr("nwworkingdir", SGI.prgDir);
-
-
-        scope = angular.element($('body')).scope();
-        scope.$apply();
-        try {
-            fs.readFile(SGI.nwDir + '/datastore/setup.json',"utf8", function (err, data) {
-
-                if (!err) {
-                   console.log(data);
-                    scope.setup = JSON.parse(data.split("}")[0]+"}");
-
-                    if (scope.setup.update == true) {
-                        try {
-                            $.ajax({
-                                url: "http://37.120.169.17/jdownloads/ScriptGUI/build_data.json",
-                                dataType: "json",
-                                success: function (_data) {
-                                    if (nw_manifest.native.version != _data.version) {
-                                        SGI.update()
-                                    }
-                                }
-                            });
-                        }
-                        catch (e) {
-
-                        }
-                    }
+            try {
+                if (!fs.existsSync(SGI.nwDir + '/datastore')) {
+                    fs.mkdirSync(SGI.nwDir + '/datastore');
                 }
+                if (!fs.existsSync(SGI.nwDir + '/datastore/programms')) {
+                    fs.mkdirSync(SGI.nwDir + '/datastore/programms');
+                }
+                if (!fs.existsSync(SGI.nwDir + '/datastore/connections')) {
+                    fs.mkdirSync(SGI.nwDir + '/datastore/connections');
+                }
+                if (!fs.existsSync(SGI.nwDir + '/datastore/experts')) {
+                    fs.mkdirSync(SGI.nwDir + '/datastore/experts');
+                }
+
+            }
+            catch (e) {
+                console.log(e)
+            }
+
+            $("#prgopen").attr("nwworkingdir", SGI.prgDir);
+            $("#prgsaveas").attr("nwworkingdir", SGI.prgDir);
+
+
+            scope = angular.element($('body')).scope();
+            scope.$apply();
+            try {
+                fs.readFile(SGI.nwDir + '/datastore/setup.json', "utf8", function (err, data) {
+
+                    if (!err) {
+//                        console.log(data);
+                        scope.setup = JSON.parse(data.split("}")[0] + "}");
+
+//                        if (scope.setup.update == true) {
+//                            try {
+//                                $.ajax({
+//                                    url: "http://37.120.169.17/jdownloads/ScriptGUI/build_data.json",
+//                                    dataType: "json",
+//                                    success: function (_data) {
+//                                        if (nw_manifest.native.version != _data.version) {
+//                                            SGI.update()
+//                                        }
+//                                    }
+//                                });
+//                            }
+//                            catch (e) {
+//
+//                            }
+//                        }
+                    }
+                    SGI.Setup();
+                });
+            }
+            catch (err) {
                 SGI.Setup();
-            });
-        }
-        catch (err) {
-            SGI.Setup();
-        }
+            }
 
 
-    });
+        });
+    }
 })(jQuery);
 
