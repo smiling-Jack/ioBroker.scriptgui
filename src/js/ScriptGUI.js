@@ -792,9 +792,9 @@ var SGI = {
         SGI.plumb_inst.inst_mbs.bind("dblclick", function (c) {
             if (SGI.klick.target.tagName == "path") {
                 $(".dot").remove();
-                delete scope.con.mbs[c.id];
+
                 SGI.plumb_inst.inst_mbs.detach(c);
-                scope.$apply();
+
             }
         });
 
@@ -821,6 +821,11 @@ var SGI = {
 
         SGI.plumb_inst.inst_mbs.bind("contextmenu", function (c) {
             SGI.con = c;
+        });
+
+        SGI.plumb_inst.inst_mbs.bind("connectionDetached", function (c) {
+            delete scope.con.mbs[c.connection.id];
+            scope.$apply();
         });
 
     },
@@ -1892,15 +1897,8 @@ var SGI = {
 
         SGI.plumb_inst["inst_" + id].bind("dblclick", function (c) {
             $(".dot").remove();
-            var fbs_in = c.targetId.split("_in")[0];
-            var fbs_out = c.sourceId.split("_out")[0];
-
-
-            delete scope.con.fbs[id][c.id];
-            delete scope.fbs[$("#" + fbs_in).data("nr")].input[c.targetId.split("_")[2]];
-            delete scope.fbs[$("#" + fbs_out).data("nr")].output[c.sourceId.split("_")[2]];
             SGI.plumb_inst["inst_" + id].detach(c);
-            scope.$apply()
+
         });
 
         SGI.plumb_inst["inst_" + id].bind("connection", function (c) {
@@ -1926,6 +1924,15 @@ var SGI = {
 
         SGI.plumb_inst["inst_" + id].bind("contextmenu", function (c) {
             SGI.con = c;
+        });
+
+        SGI.plumb_inst["inst_" + id].bind("connectionDetached", function (c) {
+            var fbs_in = c.connection.targetId.split("_in")[0];
+            var fbs_out = c.connection.sourceId.split("_out")[0];
+            delete scope.con.fbs[id][c.connection.id];
+            delete scope.fbs[$("#" + fbs_in).data("nr")].input[c.connection.targetId.split("_")[2]];
+            delete scope.fbs[$("#" + fbs_out).data("nr")].output[c.connection.sourceId.split("_")[2]];
+            scope.$apply();
         });
 
     },
