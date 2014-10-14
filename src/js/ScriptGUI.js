@@ -184,8 +184,10 @@ var SGI = {
         });
 
         $("#inp_con_ip").hover(function () {
-            $("#con_panel").css({top: 0, left: 0})
-            $("#con_panel").show("slide", {direction: "up"}).clearQueue();
+            console.log($("#con_panel").css("display"))
+            if ($("#con_panel").css("display") == "none" ){
+                $("#con_panel").stop(true,true).show("slide", {direction: "up"});
+            }
 
         }, function () {
 
@@ -194,8 +196,12 @@ var SGI = {
         $("#con_panel_wrap").hover(function () {
 
         }, function (e) {
-            if ($(e.target).attr("id") == "con_panel_wrap")
-                $("#con_panel").hide("slide", {direction: "up"}).clearQueue()
+            console.log(e)
+            if ($(e.toElement).attr("id") != "inp_con_ip") {
+                if ($(e.target).attr("id") == "con_panel_wrap") {
+                    $("#con_panel").stop(true, true).hide("slide", {direction: "up"});
+                }
+            }
         });
 
 
@@ -463,6 +469,8 @@ var SGI = {
                 nw_win.showDevTools();
             } else if (SGI.key == 88 && event.altKey == true) {
                 document.location.reload(true)
+            }else if (SGI.key == 70 && event.altKey == true) {
+                var test = test_fehler;
             } else if (SGI.key == 17 || SGI.key == 91 || SGI.key == 93 || event.ctrlKey == true) {
                 $("body").css({cursor: "help"});
                 SGI.key = 17;

@@ -1977,26 +1977,27 @@ jQuery.extend(true, SGI, {
     },
 
     open_last: function () {
-
-        try {
-            $("#wait_div").show();
-            fs.readFile(scope.setup.last_file, function (err, data) {
-                if (err) {
-                    $("#wait_div").hide();
-                    throw err;
-                } else {
-                    SGI.clear();
-                    SGI.load_prg(JSON.parse(data));
-                    SGI.prg_store = scope.setup.last_file;
-                    SGI.file_name = scope.setup.last_file.split("\\").pop();
-                    $("#m_file").text(SGI.file_name);
-                    $("#wait_div").hide();
-                }
-            });
-        }
-        catch (err) {
-            $("#wait_div").hide();
-            throw err
+        if (scope.setup.last_file != "") {
+            try {
+                $("#wait_div").show();
+                fs.readFile(scope.setup.last_file, function (err, data) {
+                    if (err) {
+                        $("#wait_div").hide();
+                       alert("Datei kann nicht gelesen werden")
+                    } else {
+                        SGI.clear();
+                        SGI.load_prg(JSON.parse(data));
+                        SGI.prg_store = scope.setup.last_file;
+                        SGI.file_name = scope.setup.last_file.split("\\").pop();
+                        $("#m_file").text(SGI.file_name);
+                        $("#wait_div").hide();
+                    }
+                });
+            }
+            catch (err) {
+                $("#wait_div").hide();
+                throw err
+            }
         }
 
 
