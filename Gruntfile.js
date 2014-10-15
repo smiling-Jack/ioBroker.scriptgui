@@ -9,7 +9,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-zip');
     grunt.loadNpmTasks('grunt-ssh');
-    grunt.loadNpmTasks('grunt-zip-directories');
+
+
 
     // Project configuration.
     grunt.initConfig({
@@ -21,10 +22,11 @@ module.exports = function (grunt) {
         nodewebkit: {
             build: {
                 options: {
-                    platforms: ['win'],
+                    platforms: ['osx'],
                     buildDir: './build',
                     winIco: './src/img/cube32.ico',
-                    macIcns: './src/img/cube32.png'
+                    macIcns: './src/img/cube32.png',
+                    macZip:true
                 },
                 src: './src/**/*'
             }
@@ -42,8 +44,8 @@ module.exports = function (grunt) {
             },
             osx: {
                 options: {
-                    mode: "tar",
-                    archive: 'build/ScriptGUI_osx.tar'
+                    mode: "zip",
+                    archive: 'build/ScriptGUI_osx.zip'
                 },
                 files: [
                     {expand: true, cwd: 'build/ScriptGUI/osx/', src: ['**'], dest: 'ScriptGUI/'}
@@ -67,17 +69,6 @@ module.exports = function (grunt) {
 //            }
         },
 
-        zip_directories: {
-            irep: {
-                files: [{
-                    filter: 'isDirectory',
-                    expand: true,
-                    cwd: 'build/osx',
-                    src: ['*'],
-                    dest: 'build'
-                }]
-            }
-        },
 //----------------------------------------------------------------------------------------------------------------------
         sftp: {
             update_json: {

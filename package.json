@@ -1,6 +1,7 @@
 {
   "name": "ScriptGUI",
   "devDependencies": {
+    "grunt-contrib-compress": "^0.12.0",
     "grunt-node-webkit-builder": "^0.2.1",
     "node-webkit-builder": "^0.1.3"
   }

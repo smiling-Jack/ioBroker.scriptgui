@@ -226,7 +226,7 @@ jQuery.extend(true, SGI, {
                     canvas.toBlob(function (blob) {
                         saveAs(blob, type + ".png");
                     });
-                    var data = storage.get(SGI.str_prog);
+                    var data = scope.setup.last_file
 
                     SGI.clear();
                     SGI.load_prg(data);
@@ -291,7 +291,7 @@ jQuery.extend(true, SGI, {
                     canvas.toBlob(function (blob) {
                         saveAs(blob, type + ".png");
                     });
-                    var data = storage.get(SGI.str_prog);
+                    var data = scope.last_file
 
                     SGI.clear();
                     SGI.load_prg(data);
@@ -778,7 +778,6 @@ jQuery.extend(true, SGI, {
             $(this).stop(true, true).effect("highlight");
 
         });
-
     },
 
     Setup_dialog: function () {
@@ -1877,7 +1876,7 @@ jQuery.extend(true, SGI, {
             out: scope.fbs[nr]["exp_out"]
         };
 
-        fs.writeFile(SGI.nwDir + "/datastore/experts/expert_" + data.name + ".json", JSON.stringify(data), function (err) {
+        fs.writeFile(nwDir + "/datastore/experts/expert_" + data.name + ".json", JSON.stringify(data), function (err) {
             if (err) {
                 throw err;
             } else {
@@ -1889,7 +1888,7 @@ jQuery.extend(true, SGI, {
 
     expert_del: function (opt) {
         var name = $(opt.$trigger).attr("id");
-        fs.unlink(SGI.nwDir + "/datastore/experts/" + name + ".json", function (err) {
+        fs.unlink(nwDir + "/datastore/experts/" + name + ".json", function (err) {
             if (err) {
                 throw err;
             } else {
@@ -1983,7 +1982,7 @@ jQuery.extend(true, SGI, {
                 fs.readFile(scope.setup.last_file, function (err, data) {
                     if (err) {
                         $("#wait_div").hide();
-                       alert("Datei kann nicht gelesen werden")
+                        alert("Datei kann nicht gelesen werden")
                     } else {
                         SGI.clear();
                         SGI.load_prg(JSON.parse(data));
@@ -2169,65 +2168,64 @@ jQuery.extend(true, SGI, {
     update: function () {
         $("#dialog_update").remove();
 
+        upd.checkNewVersion(function (error, newVersionExists, manifest) {
 
-// ------------- Step 1 -------------
-            upd.checkNewVersion(function(error, newVersionExists, manifest) {
+            if (!error && newVersionExists) {
 
-                if (!error && newVersionExists) {
 
-                    console.log(manifest);
+                $("body").append('\
+                    <div id="dialog_update" style="width: 438px; height:428px; text-align: center" title="' + SGI.translate("Update") + '">\
+                    <img src="./img/logo.png" style="width: 300px"/>\
+                    <br><br><br>\
+                    <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("Version ist:") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + up_pkg.version + '</div>\
+                    <br><br>\
+                    <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("erstellung") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + up_pkg.build_date + ' ' + up_pkg.build_time + '</div>\
+                    <br><br><hr><br>\
+                    <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("Neuste Version: ") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + manifest.version + '</div>\
+                    <br><br>\
+                    <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("erstellung") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + manifest.build_date + ' ' + manifest.build_time + '</div>\
+                    <br><br><br>\
+                    <button id="btn_update">' + SGI.translate("Update") + '</button>\
+                    </div>');
 
-                    $("body").append('\
-                            <div id="dialog_update" style="width: 438px; height:428px; text-align: center" title="' + SGI.translate("Update") + '">\
-                            <img src="./img/logo.png" style="width: 300px"/>\
-                            <br><br><br>\
-                            <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("Version ist:") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + SGI.version + '</div>\
-                            <br><br>\
-                            <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("erstellung") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + main_manifest.native.build_date + ' ' + main_manifest.native.build_time + '</div>\
-                            <br><br><hr><br>\
-                            <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("Neuste Version: ") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + manifest.version + '</div>\
-                            <br><br>\
-                            <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("erstellung") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + manifest.version + ' ' + manifest.version + '</div>\
-                            <br><br><br>\
-                            <button id="btn_update">' + SGI.translate("Update") + '</button>\
-                            </div>');
+                $("#dialog_update").dialog({
+                    width: "auto",
+                    height: 500,
+                    dialogClass: "update",
+                    modal: true,
+                    close: function () {
+                        $("#dialog_update").remove();
+                    }
+                });
+                $("#btn_update").button()
+                    .click(function () {
+                        $("#btn_update").remove();
+                        $("#dialog_update").append('<div style="width: 100%; height: 33px; line-height: 33px" class="ui-state-default ui-corner-all" id="update_info"></div>');
+                        $('#update_info').text("Downloading");
 
-                    $("#dialog_update").dialog({
-                            width: "auto",
-                            dialogClass: "update",
-                            modal: true,
-                            close: function () {
-                                $("#dialog_update").remove();
+                        upd.download(function (error, filename) {
+                            if (!error) {
+                                $('#update_info').text("Unzip");
+
+                                upd.unpack(filename, function (error, newAppPath) {
+
+                                    if (!error) {
+
+                                        $('#update_info').text("Restart");
+                                        var _np = newAppPath.split("ScriptGUI.")
+                                        var np = _np[0] + "ScriptGUI/ScriptGUI." + _np[1];
+                                        upd.runInstaller(np, [upd.getAppPath(), upd.getAppExec()], {});
+                                        main_win.close()
+
+                                    } else {
+
+                                    }
+                                }, manifest);
                             }
-                        });
-                    $("#btn_update").button()
-                        .click(function () {
-                            $("#btn_update").remove();
-                            $("#dialog_update").append('<div style="width: 100%; height: 33px; line-height: 33px" class="ui-state-default ui-corner-all" id="update_info"></div>');
-                            $('#update_info').text("Downloading");
-
-                            upd.download(function(error, filename) {
-                                if (!error) {
-                                    $('#update_info').text("Unzip");
-// ------------- Step 3 -------------
-                                    upd.unpack(filename, function(error, newAppPath) {
-
-                                        if (!error) {
-
-                                            // ------------- Step 4 -------------
-                                            $('#update_info').text("Restart");
-                                            var _np = newAppPath.split("ScriptGUI.")
-                                            var np = _np[0] +"ScriptGUI/ScriptGUI." + _np[1];
-
-                                            upd.runInstaller(np, [upd.getAppPath(), upd.getAppExec()],{});
-                                            nw_gui.App.quit();
-                                        }
-                                    }, manifest);
-                                }
-                            }, manifest);
-                        });
-                }
-            });
+                        }, manifest);
+                    });
+            }
+        });
     },
 
     open_quick_help_dialog: function () {

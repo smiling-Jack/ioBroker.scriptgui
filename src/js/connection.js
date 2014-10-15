@@ -51,7 +51,7 @@ jQuery.extend(true, SGI, {
 
             var name = url.split("http://")[1].toString().replace(":", "_").replace(/\./g, "_");
 
-            fs.readFile(SGI.nwDir + '/datastore/' + name + '.json', function (err, data) {
+            fs.readFile(nwDir + '/datastore/' + name + '.json', function (err, data) {
                 if (!err) {
                     homematic = JSON.parse(data);
                     $("#img_con_state").attr("src", "img/icon/flag-yellow.png");
@@ -122,7 +122,7 @@ jQuery.extend(true, SGI, {
 
                             // TODO Ist da hier wirklich richtig oder doch eher direkt nach dem laden ?
                             var name = url.split("http://")[1].toString().replace(":", "_").replace(/\./g, "_");
-                            fs.writeFile(SGI.nwDir + '/datastore/connections/' + name + '.json', JSON.stringify(homematic), function (err) {
+                            fs.writeFile(nwDir + '/datastore/connections/' + name + '.json', JSON.stringify(homematic), function (err) {
                                 if (err) throw err;
                             });
 

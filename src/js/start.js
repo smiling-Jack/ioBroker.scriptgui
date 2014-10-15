@@ -6,7 +6,6 @@
 
         var nw_gui = require('nw.gui');
         var path = require('path');
-        var nwPath = process.execPath;
         var start_win = nw_gui.Window.get();
         var pkg = require('./update.json');
         var updater = require('node-webkit-updater');
@@ -31,7 +30,6 @@
 
         setTimeout(function () {
             start_win.show();
-
             if (nw_gui.App.argv.length) {
 //            if (nw_gui.App.argv.length == 0) {
                 //Updater----------------------------------------------------------------------
@@ -41,8 +39,10 @@
 
                 upd.install(copyPath, function (err) {
                     if (!err) {
-                        upd.run(execPath, [], {});
-                        nw_gui.App.quit();
+                        setTimeout(function(){
+                            upd.run(execPath, [], {});
+                            nw_gui.App.quit();
+                        },500)
                     }
                 });
             } else {
@@ -53,10 +53,6 @@
                 main_win.on('document-end', function () {
                     main_win.window.haveParent(start_win);
                 });
-
-
-
-
 
             }
         }, 20);

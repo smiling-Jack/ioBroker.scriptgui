@@ -16,9 +16,9 @@ var main_manifest = nw_gui.App.manifest;
 var request = require("request");
 var getmac = require('getmac');
 var ncp = require('ncp');
-var pkg = require('./update.json');
+var up_pkg = require('./update.json');
 var updater = require('node-webkit-updater');
-var upd = new updater(pkg);;
+var upd = new updater(up_pkg);
 
 main_win.title = main_manifest.name + " " + main_manifest.native.version;
 
@@ -26,6 +26,7 @@ function haveParent(theParent){
    start_win = theParent;
 }
 
+var nwDir = upd.getAppPath();
 
 process.on("uncaughtException", function (e) {
     console.log(e);
@@ -37,13 +38,6 @@ process.on("uncaughtException", function (e) {
 
 var scope;
 
-var PRG = {
-    struck: {
-        codebox: {},
-        trigger: [],
-        control: []
-    }
-};
 
 var SGI = {
     version: main_manifest.native.version,
@@ -63,7 +57,6 @@ var SGI = {
     experts: {},
     grid: 9,
 
-    str_prog: "ScriptGUI_Programm",
     str_tollbox: "ScriptGUI_Toolbox",
 
     sim_run: false,
@@ -168,7 +161,7 @@ var SGI = {
 
         var con_files = [];
         try {
-            $.each(fs.readdirSync(SGI.nwDir + '/datastore/connections/'), function () {
+            $.each(fs.readdirSync(nwDir + '/datastore/connections/'), function () {
                 var test = this.split(".json")[0];
                 test = test.replace("_", ".");
                 test = test.replace("_", ".");
@@ -426,17 +419,20 @@ var SGI = {
         SGI.global_event();
         SGI.read_experts();
 
-        upd.checkNewVersion(function(error, newVersionExists, manifest) {
+        if(scope.setup.update){
+            upd.checkNewVersion(function(error, newVersionExists, manifest) {
 
-            if (!error && newVersionExists) {
-                SGI.update()
-            }
-        });
+                if (!error && newVersionExists) {
+                    SGI.update()
+                }
+            });
+        }
+
 
 
         scope.$watch("setup", function (newValue, oldValue) {
             console.log("setup save")
-            fs.writeFile(SGI.nwDir + '/datastore/setup.json', JSON.stringify(scope.setup), function (err) {
+            fs.writeFile(nwDir + '/datastore/setup.json', JSON.stringify(scope.setup), function (err) {
 //                if (err) throw err;
 
             });
@@ -444,12 +440,12 @@ var SGI = {
         }, true);
         scope.save_scope_watchers();
 
-        console.log("Start finish");
+
 
         main_win.focus();
         main_win.show();
         start_win.close();
-
+        console.log("Start finish");
 
 
         // todo Register mit Homepage verbinden
@@ -484,7 +480,7 @@ var SGI = {
             } else if (SGI.key == 89 && event.altKey == true) {
                 main_win.showDevTools();
             } else if (SGI.key == 88 && event.altKey == true) {
-                document.location.reload(true)
+                main_win.reloadIgnoringCache();
             } else if (SGI.key == 70 && event.altKey == true) {
                 var test = test_fehler;
             } else if (SGI.key == 17 || SGI.key == 91 || SGI.key == 93 || event.ctrlKey == true) {
@@ -2963,7 +2959,7 @@ var SGI = {
             return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
         }
 
-        fs.readdir(SGI.nwDir + "/datastore/experts/", function (err, _files) {
+        fs.readdir(nwDir + "/datastore/experts/", function (err, _files) {
             if (err) {
                 throw err;
             } else {
@@ -2977,7 +2973,7 @@ var SGI = {
                 $.each(files, function () {
                     var file = this.toString();
                     try {
-                        fs.readFile(SGI.nwDir + "/datastore/experts/" + file, function (err, data) {
+                        fs.readFile(nwDir + "/datastore/experts/" + file, function (err, data) {
                             if (err) {
                                 throw err;
                             } else {
@@ -3180,24 +3176,24 @@ var deleteFolderRecursive = function (path) {
 
             // ordner erstellen
             var nwPath = process.execPath;
-            SGI.nwDir = path.dirname(nwPath).split("ScriptGUI.app")[0];
-//        SGI.nwDir = path.dirname(nwPath);
+            nwDir = path.dirname(nwPath).split("ScriptGUI.app")[0];
+//        nwDir = path.dirname(nwPath);
 //        console.log(process.platform)
-            SGI.prgDir = SGI.nwDir + "/datastore/programms/";
+            SGI.prgDir = nwDir + "/datastore/programms/";
 
 //        console.log(nwPath)
             try {
-                if (!fs.existsSync(SGI.nwDir + '/datastore')) {
-                    fs.mkdirSync(SGI.nwDir + '/datastore');
+                if (!fs.existsSync(nwDir + '/datastore')) {
+                    fs.mkdirSync(nwDir + '/datastore');
                 }
-                if (!fs.existsSync(SGI.nwDir + '/datastore/programms')) {
-                    fs.mkdirSync(SGI.nwDir + '/datastore/programms');
+                if (!fs.existsSync(nwDir + '/datastore/programms')) {
+                    fs.mkdirSync(nwDir + '/datastore/programms');
                 }
-                if (!fs.existsSync(SGI.nwDir + '/datastore/connections')) {
-                    fs.mkdirSync(SGI.nwDir + '/datastore/connections');
+                if (!fs.existsSync(nwDir + '/datastore/connections')) {
+                    fs.mkdirSync(nwDir + '/datastore/connections');
                 }
-                if (!fs.existsSync(SGI.nwDir + '/datastore/experts')) {
-                    fs.mkdirSync(SGI.nwDir + '/datastore/experts');
+                if (!fs.existsSync(nwDir + '/datastore/experts')) {
+                    fs.mkdirSync(nwDir + '/datastore/experts');
                 }
             }
             catch (e) {
@@ -3211,7 +3207,7 @@ var deleteFolderRecursive = function (path) {
             scope.$apply();
 
             try {
-                fs.readFile(SGI.nwDir + '/datastore/setup.json', "utf8", function (err, data) {
+                fs.readFile(nwDir + '/datastore/setup.json', "utf8", function (err, data) {
                     if (!err) {
                         scope.setup = JSON.parse(data.split("}")[0] + "}");
                     }
