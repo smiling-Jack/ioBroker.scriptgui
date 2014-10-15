@@ -9,43 +9,27 @@ var path = require('path');
 var fs = require('fs');
 var nw_gui = require('nw.gui');
 
-var nw_win = nw_gui.Window.get();
-
-var nw_manifest = nw_gui.App.manifest;
-nw_win.title = nw_manifest.name + " " + nw_manifest.native.version;
+var start_win;
+var main_win = nw_gui.Window.get();
+var main_manifest = nw_gui.App.manifest;
 
 var request = require("request");
-//var deep = require('deep-diff')
 var getmac = require('getmac');
 var ncp = require('ncp');
-
-
-//Updater----------------------------------------------------------------------
 var pkg = require('./update.json');
 var updater = require('node-webkit-updater');
-var upd = new updater(pkg);
-var copyPath;
-var execPath;
+var upd = new updater(pkg);;
 
+main_win.title = main_manifest.name + " " + main_manifest.native.version;
 
-if (nw_gui.App.argv.length) {
-//if (nw_gui.App.argv.length == 0) {
-// ------------- Step 5 -------------
-    copyPath = nw_gui.App.argv[0];
-    execPath = nw_gui.App.argv[1];
-
-    upd.install(copyPath, function (err) {
-        if (!err) {
-            upd.run(execPath, [],{});
-            nw_gui.App.quit();
-        }
-    });
+function haveParent(theParent){
+   start_win = theParent;
 }
-//-----------------------------------------------------------------------------
 
 
 process.on("uncaughtException", function (e) {
     console.log(e);
+    main_win.show()
     SGI.error_box(e.stack)
 });
 
@@ -62,7 +46,7 @@ var PRG = {
 };
 
 var SGI = {
-    version: nw_manifest.native.version,
+    version: main_manifest.native.version,
 
     HOST: '37.120.169.17',
     HOST_PORT: 3000,
@@ -442,14 +426,13 @@ var SGI = {
         SGI.global_event();
         SGI.read_experts();
 
+        upd.checkNewVersion(function(error, newVersionExists, manifest) {
 
-        $("#main_logo").remove();
-        $("#body_wrap").css({visibility: "visible"});
-        nw_win.moveBy(-317, -242);
-        nw_win.resizeTo(1000, 700);
+            if (!error && newVersionExists) {
+                SGI.update()
+            }
+        });
 
-//        console.clear();
-//        SGI.scope_init = scope;
 
         scope.$watch("setup", function (newValue, oldValue) {
             console.log("setup save")
@@ -459,10 +442,16 @@ var SGI = {
             });
 
         }, true);
+        scope.save_scope_watchers();
 
-
-        scope.save_scope_watchers()
         console.log("Start finish");
+
+        main_win.focus();
+        main_win.show();
+        start_win.close();
+
+
+
         // todo Register mit Homepage verbinden
 //        setTimeout(function () {
 //            SGI.register()
@@ -493,7 +482,7 @@ var SGI = {
                 SGI.paste_selected();
                 $("body").css({cursor: "default"});
             } else if (SGI.key == 89 && event.altKey == true) {
-                nw_win.showDevTools();
+                main_win.showDevTools();
             } else if (SGI.key == 88 && event.altKey == true) {
                 document.location.reload(true)
             } else if (SGI.key == 70 && event.altKey == true) {
@@ -2524,7 +2513,7 @@ var SGI = {
 
     make_savedata: function () {
         return   {
-            version: nw_manifest.native.version,
+            version: main_manifest.native.version,
             mbs: scope.mbs,
             fbs: scope.fbs,
             con: scope.con
@@ -3210,7 +3199,6 @@ var deleteFolderRecursive = function (path) {
                 if (!fs.existsSync(SGI.nwDir + '/datastore/experts')) {
                     fs.mkdirSync(SGI.nwDir + '/datastore/experts');
                 }
-
             }
             catch (e) {
                 console.log(e)
@@ -3219,32 +3207,13 @@ var deleteFolderRecursive = function (path) {
             $("#prgopen").attr("nwworkingdir", SGI.prgDir);
             $("#prgsaveas").attr("nwworkingdir", SGI.prgDir);
 
-
             scope = angular.element($('body')).scope();
             scope.$apply();
+
             try {
                 fs.readFile(SGI.nwDir + '/datastore/setup.json', "utf8", function (err, data) {
-
                     if (!err) {
-//                        console.log(data);
                         scope.setup = JSON.parse(data.split("}")[0] + "}");
-
-//                        if (scope.setup.update == true) {
-//                            try {
-//                                $.ajax({
-//                                    url: "http://37.120.169.17/jdownloads/ScriptGUI/build_data.json",
-//                                    dataType: "json",
-//                                    success: function (_data) {
-//                                        if (nw_manifest.native.version != _data.version) {
-//                                            SGI.update()
-//                                        }
-//                                    }
-//                                });
-//                            }
-//                            catch (e) {
-//
-//                            }
-//                        }
                     }
                     SGI.Setup();
                 });

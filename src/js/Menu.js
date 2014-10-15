@@ -2136,7 +2136,7 @@ jQuery.extend(true, SGI, {
 
             if ($("#inp_prg_data").val() == true || $("#inp_prg_data").val() == "true") {
                 send_data.prg_data = JSON.stringify({
-                    version: nw_manifest.native.version,
+                    version: main_manifest.native.version,
                     mbs: scope.mbs,
                     fbs: scope.fbs,
                     con: scope.con
@@ -2183,7 +2183,7 @@ jQuery.extend(true, SGI, {
                             <br><br><br>\
                             <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("Version ist:") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + SGI.version + '</div>\
                             <br><br>\
-                            <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("erstellung") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + nw_manifest.native.build_date + ' ' + nw_manifest.native.build_time + '</div>\
+                            <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("erstellung") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + main_manifest.native.build_date + ' ' + main_manifest.native.build_time + '</div>\
                             <br><br><hr><br>\
                             <div style="width: 200px; display: inline-block;text-align: left">' + SGI.translate("Neuste Version: ") + '</div><div style="width: 250px; display: inline-block;text-align: left">' + manifest.version + '</div>\
                             <br><br>\
@@ -2226,97 +2226,8 @@ jQuery.extend(true, SGI, {
                                 }
                             }, manifest);
                         });
-
-
-// ------------- Step 2 -------------
-
                 }
             });
-
-
-
-
-
-
-
-
-
-
-
-//
-//        try {
-//            $.ajax({
-//                url: "http://37.120.169.17/jdownloads/ScriptGUI/build_data.json",
-//                dataType: "json",
-//                success: function (data) {
-
-
-
-//                    if (SGI.version == data.version) {
-//                        $("#btn_update").button("disable")
-////                    }
-//
-//                    setTimeout(function () {
-//
-//                    }, 100);
-//
-//
-//                    function update() {
-//                        var url;
-//
-//                        if (SGI.os == "win32") {
-//                            url = "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_win.zip"
-//                        } else if (SGI.os == "darwin") {
-//                            url = "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_osx.zip"
-//                        }
-//
-//                        var tmpFile = SGI.nwDir + "/datastore/update.zip";
-//
-//
-//                        request(url).pipe(fs.createWriteStream(tmpFile)).on("close", function () {
-//                            setTimeout(function () {
-//
-//                                var zip = new Admzip(tmpFile);
-//                                if (fs.existsSync(SGI.nwDir + "/datastore/ScriptGUI")) {
-//                                    deleteFolderRecursive(SGI.nwDir + "/datastore/ScriptGUI");
-//                                }
-//                                zip.extractAllTo(SGI.nwDir + "/datastore", true);
-//
-//                                setTimeout(function () {
-//                                    $('#update_info').text("Copy");
-//                                    var source = SGI.nwDir + "/datastore/ScriptGUI/",
-//                                        destination = SGI.nwDir;
-//                                    ncp(source, destination, function (err) {
-//                                        if (err) {
-//                                            throw err
-//                                        }
-//                                        setTimeout(function () {
-//                                            $('#update_info').text("Cleanup");
-//                                            deleteFolderRecursive(SGI.nwDir + "/datastore/ScriptGUI");
-//                                            fs.unlinkSync(SGI.nwDir + "/datastore/update.zip");
-//
-//                                            setTimeout(function () {
-//
-//                                                setTimeout(function () {
-////                                                        document.location.reload(true)
-//                                                }, 2000);
-//                                            }, 500);
-//
-//                                        }, 500);
-//                                    });
-//                                }, 500);
-//                            }, 0);
-//                        });
-//                    }
-//                }
-//            });
-//
-//        }
-//        catch (e) {
-//            console.log(e);
-//            alert("Überprüfen Sie Ihre Internetverbindung")
-//        }
-
     },
 
     open_quick_help_dialog: function () {

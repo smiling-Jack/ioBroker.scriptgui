@@ -1,6 +1,6 @@
 {
     "name": "ScriptGUI",
-    "version": "0.71.1",
+    "version": "0.71.0",
     "manifestUrl": "http://37.120.169.17/jdownloads/ScriptGUI/update.json",
     "packages": {
         "mac": {
