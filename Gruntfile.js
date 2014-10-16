@@ -5,10 +5,12 @@
 
 module.exports = function (grunt) {
     var ops = grunt.file.readJSON("package.json");
+    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-node-webkit-builder');
     grunt.loadNpmTasks('grunt-contrib-rename');
     grunt.loadNpmTasks('grunt-zip');
     grunt.loadNpmTasks('grunt-ssh');
+
 
 
 
@@ -18,7 +20,7 @@ module.exports = function (grunt) {
 //        secret: grunt.file.readJSON('secret.json'),
         secret: "",
 
-
+        clean: ["build"],
 
 //----------------------------------------------------------------------------------------------------------------------
         nodewebkit: {
@@ -34,8 +36,7 @@ module.exports = function (grunt) {
                 options: {
                     platforms: ['osx'],
                     buildDir: './build/osx',
-                    macZip: true
-                },
+            },
                 src: './src/**/*'
             }
         },
@@ -145,7 +146,10 @@ module.exports = function (grunt) {
         console.log('finish_make_build_data')
     });
 
-    grunt.registerTask('WIN_Build_ZIP_UP', ['nodewebkit:build','compress:win','sftp:data_zips']);
+    grunt.registerTask('Build_ZIP_UP', ['clean','make_build_data','nodewebkit','rename','zip','sftp:data_zips']);
+    grunt.registerTask('Build_ZIP', ['clean','make_build_data','nodewebkit','rename','zip']);
+    grunt.registerTask('Build', ['clean','make_build_data','nodewebkit']);
+
 
 
 };
