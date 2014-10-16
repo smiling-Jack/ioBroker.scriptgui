@@ -20,10 +20,10 @@ var up_pkg = require('./update.json');
 var updater = require('node-webkit-updater');
 var upd = new updater(up_pkg);
 
-main_win.title = main_manifest.name + " " + main_manifest.native.version;
+main_win.title = main_manifest.name + " " + main_manifest.version + " Beta-Test";
 
-function haveParent(theParent){
-   start_win = theParent;
+function haveParent(theParent) {
+    start_win = theParent;
 }
 
 var nwDir = upd.getAppPath();
@@ -38,9 +38,16 @@ process.on("uncaughtException", function (e) {
 
 var scope;
 
+var PRG = {
+    struck: {
+        codebox: {},
+        trigger: [],
+        control: []
+    }
+};
 
 var SGI = {
-    version: main_manifest.native.version,
+    version: main_manifest.version,
 
     HOST: '37.120.169.17',
     HOST_PORT: 3000,
@@ -48,6 +55,8 @@ var SGI = {
     os: process.platform,
 
     socket: {},
+    con_files: [],
+    con_data: false,
     settings: {},
     zoom: 1,
     theme: "",
@@ -159,15 +168,12 @@ var SGI = {
         // Connect XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
-        var con_files = [];
+        SGI.con_files = [];
         try {
             $.each(fs.readdirSync(nwDir + '/datastore/connections/'), function () {
-                var test = this.split(".json")[0];
-                test = test.replace("_", ".");
-                test = test.replace("_", ".");
-                test = test.replace("_", ".");
-                test = test.replace("_", ":");
-                con_files.push(test)
+                var con_name = this.split(".json")[0];
+                con_name = con_name.replace("port", ":");
+                SGI.con_files.push(con_name)
             });
         }
         catch (e) {
@@ -180,27 +186,65 @@ var SGI = {
             cssText: "xs_text_con item_font",
             time: 750,
             combo: true,
-            val: con_files[0],
-            data: con_files
+            val: SGI.con_files[0],
+            data: SGI.con_files
         });
 
-        $("#inp_con_ip").hover(function () {
-            console.log($("#con_panel").css("display"))
-            if ($("#con_panel").css("display") == "none") {
-                $("#con_panel").stop(true, true).show("slide", {direction: "up"});
+        if (SGI.con_files.length == 0) {
+            $("#btn_con_offline").parent().hide()
+        }
+
+
+        $("#inp_con_ip").bind("change", function () {
+            SGI.disconnect();
+
+            if (SGI.con_files.indexOf($(this).val()) == -1) {
+                $("#btn_con_offline").parent().hide()
+            } else {
+                $("#btn_con_offline").parent().show()
             }
 
-        }, function () {
+        });
 
+        $("#inp_con_ip").bind("keyup", function (e) {
+
+            if (SGI.con_data) {
+                SGI.disconnect();
+            }
+            if (SGI.con_files.indexOf($(this).children().first().val()) == -1) {
+                $("#btn_con_offline").parent().hide()
+            } else {
+                $("#btn_con_offline").parent().show()
+            }
+
+        });
+
+
+        var movementTimer = null;
+        var panel_open = false;
+        $("#inp_con_ip").mousemove(function (e, x) {
+            clearTimeout(movementTimer);
+            movementTimer = setTimeout(function () {
+                if (!panel_open) {
+                    panel_open = true;
+                    $("#con_panel").stop(true, false).slideDown(300)
+                }
+
+            }, 150);
+        });
+
+        $("#inp_con_ip").mouseout(function (e) {
+            clearTimeout(movementTimer);
         });
 
         $("#con_panel_wrap").hover(function () {
 
         }, function (e) {
-            console.log(e)
+
             if ($(e.toElement).attr("id") != "inp_con_ip") {
                 if ($(e.target).attr("id") == "con_panel_wrap") {
-                    $("#con_panel").stop(true, true).hide("slide", {direction: "up"});
+                    panel_open = false;
+                    $("#con_panel").stop(true, false).slideUp(700)
                 }
             }
         });
@@ -419,15 +463,14 @@ var SGI = {
         SGI.global_event();
         SGI.read_experts();
 
-        if(scope.setup.update){
-            upd.checkNewVersion(function(error, newVersionExists, manifest) {
+        if (scope.setup.update) {
+            upd.checkNewVersion(function (error, newVersionExists, manifest) {
 
                 if (!error && newVersionExists) {
                     SGI.update()
                 }
             });
         }
-
 
 
         scope.$watch("setup", function (newValue, oldValue) {
@@ -439,7 +482,6 @@ var SGI = {
 
         }, true);
         scope.save_scope_watchers();
-
 
 
         main_win.focus();
@@ -2509,7 +2551,7 @@ var SGI = {
 
     make_savedata: function () {
         return   {
-            version: main_manifest.native.version,
+            version: SGI.version,
             mbs: scope.mbs,
             fbs: scope.fbs,
             con: scope.con
@@ -3176,9 +3218,6 @@ var deleteFolderRecursive = function (path) {
 
             // ordner erstellen
             var nwPath = process.execPath;
-            nwDir = path.dirname(nwPath).split("ScriptGUI.app")[0];
-//        nwDir = path.dirname(nwPath);
-//        console.log(process.platform)
             SGI.prgDir = nwDir + "/datastore/programms/";
 
 //        console.log(nwPath)

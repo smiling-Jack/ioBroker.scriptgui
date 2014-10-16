@@ -1943,7 +1943,6 @@ jQuery.extend(true, SGI, {
         chooser.val("");
         chooser.change(function (evt) {
             var filep = $(this).val();
-            console.log("show")
             $("#wait_div").show();
             try {
 
@@ -1954,7 +1953,7 @@ jQuery.extend(true, SGI, {
                     } else {
                         SGI.clear();
                         SGI.load_prg(JSON.parse(data));
-                        SGI.prg_store = filep;
+
                         SGI.file_name = filep.split("\\").pop();
                         $("#m_file").text(SGI.file_name);
                         scope.setup.last_file = filep;

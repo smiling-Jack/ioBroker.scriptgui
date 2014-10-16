@@ -1,22 +1,26 @@
-{"main": "start.html", "name": "ScriptGUI", "version": "0", "description": "Script GUI", "keywords": [], "window": {
-    "title": "ScriptGUI",
-    "icon": "img/cube256.png",
-    "toolbar": false,
-    "frame": false,
-    "width": 370,
-    "height": 245,
-    "resizable": false,
-    "show": false
-}, "webkit": {
-    "plugin": true
-}, "native": {
-    "version": "0.71.0",
-    "build_time": "00:34:14",
-    "build_date": "14.10.2014"
-}, "maintainers": [
-    {
-        "name": "Steffen Schorling",
-        "email": "Steffen@ccu.io",
-        "web": "http://www.scriptgui.info"
-    }
-]}
+{"main": "start.html",
+    "name": "ScriptGUI",
+    "version": "0.72.0",
+    "description": "Script GUI",
+    "keywords": [],
+    "window": {
+        "title": "ScriptGUI",
+        "icon": "img/cube256.png",
+        "toolbar": false,
+        "frame": false,
+        "width": 370,
+        "height": 245,
+        "resizable": false,
+        "show": false
+    },
+    "webkit": {
+        "plugin": true
+    },
+    "maintainers": [
+        {
+            "name": "Steffen Schorling",
+            "email": "Steffen@ccu.io",
+            "web": "http://www.scriptgui.info"
+        }
+    ]
+}

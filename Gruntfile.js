@@ -6,7 +6,7 @@
 module.exports = function (grunt) {
     var ops = grunt.file.readJSON("package.json");
     grunt.loadNpmTasks('grunt-node-webkit-builder');
-    grunt.loadNpmTasks('grunt-contrib-compress');
+    grunt.loadNpmTasks('grunt-contrib-rename');
     grunt.loadNpmTasks('grunt-zip');
     grunt.loadNpmTasks('grunt-ssh');
 
@@ -15,16 +15,25 @@ module.exports = function (grunt) {
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        secret: grunt.file.readJSON('secret.json'),
+//        secret: grunt.file.readJSON('secret.json'),
+        secret: "",
+
 
 
 //----------------------------------------------------------------------------------------------------------------------
         nodewebkit: {
-            build: {
+            build_win: {
+                options: {
+                    platforms: ['win'],
+                    buildDir: './build/win',
+                    winIco: './src/img/cube32.ico',
+                },
+                src: './src/**/*'
+            },
+            build_osx: {
                 options: {
                     platforms: ['osx'],
-                    buildDir: './build',
-                    winIco: './src/img/cube32.ico',
+                    buildDir: './build/osx',
                     macIcns: './src/img/cube32.png',
                     macZip:true
                 },
@@ -33,42 +42,39 @@ module.exports = function (grunt) {
         },
 
 //----------------------------------------------------------------------------------------------------------------------
-        compress: {
-            win: {
-                options: {
-                    archive: 'build/ScriptGUI_win.zip'
-                },
+
+
+        rename: {
+           'rn-win': {
                 files: [
-                    {expand: true, cwd: 'build/ScriptGUI/win/', src: ['**'], dest: 'ScriptGUI/'}
+                    {src: ['build/ScriptGUI/win/win'], dest: 'build/ScriptGUI/win/ScriptGUI'},
                 ]
             },
-            osx: {
-                options: {
-                    mode: "zip",
-                    archive: 'build/ScriptGUI_osx.zip'
-                },
+            'rn-osw': {
                 files: [
-                    {expand: true, cwd: 'build/ScriptGUI/osx/', src: ['**'], dest: 'ScriptGUI/'}
+                    {src: ['build/ScriptGUI/osx/osx'], dest: 'build/ScriptGUI/osx/ScriptGUI'},
                 ]
-            },
-//            linux32: {
-//                options: {
-//                    archive: 'build/ScriptGUI_linux32.zip'
-//                },
-//                files: [
-//                    {expand: true, cwd: 'build/ScriptGUI/linux32/', src: ['**'], dest: 'ScriptGUI/'}
-//                ]
-//            },
-//            linux64: {
-//                options: {
-//                    archive: 'build/ScriptGUI_linux64.zip'
-//                },
-//                files: [
-//                    {expand: true, cwd: 'build/ScriptGUI/linux64/', src: ['**'], dest: 'ScriptGUI/'}
-//                ]
-//            }
+            }
         },
 
+        zip: {
+            'zip-win': {
+                cwd: 'build/ScriptGUI/win',
+                src: ['build/ScriptGUI/win/**'],
+                dest: 'build/ScriptGUI_win.zip',
+//                compression: 'DEFLATE',
+//                base64: true,
+//                dot: true
+            },
+            'zip-osx': {
+                cwd: 'build/ScriptGUI/osx',
+                src: ['build/ScriptGUI/osx/**'],
+                dest: 'build/ScriptGUI_osx.zip',
+//                compression: 'DEFLATE',
+//                base64: true,
+//                dot: true
+            }
+        },
 //----------------------------------------------------------------------------------------------------------------------
         sftp: {
             update_json: {
@@ -98,16 +104,15 @@ module.exports = function (grunt) {
                     showProgress: true
                 }
             }
-        }
+        },
 
 //----------------------------------------------------------------------------------------------------------------------
-
 
     });
 
 
     // Actually load this plugin's task(s)1
-    grunt.loadTasks('tasks');
+//    grunt.loadTasks('tasks');
 
     // By default, lint and run all tests.
 //    grunt.registerTask('Build', ['nodewebkit',c,'make_build_data','upload']);
@@ -115,17 +120,29 @@ module.exports = function (grunt) {
     grunt.registerTask('make_build_data', function () {
 
         var manifest = grunt.file.readJSON('src/package.json');
-        var d = new Date()
-        var build = {
-            version: manifest.native.version,
-            time: d.toLocaleTimeString(),
-            date: d.getDate() + "." + parseInt(d.getMonth() + 1) + "." + d.getFullYear()
-        };
-        manifest.native.build_time = d.toLocaleTimeString();
-        manifest.native.build_date = d.getDate() + "." + parseInt(d.getMonth() + 1) + "." + d.getFullYear();
+        var d = new Date();
 
-        grunt.file.write("build/build_data.json", JSON.stringify(build));
-        grunt.file.write("src/package.json", JSON.stringify(manifest));
+        var update = {
+            "name": "ScriptGUI",
+            "version": manifest.version,
+            "build_time": d.toLocaleTimeString(),
+            "build_date": d.getDate() + "." + parseInt(d.getMonth() + 1) + "." + d.getFullYear(),
+            "manifestUrl": "http://37.120.169.17/jdownloads/ScriptGUI/update.json",
+            "packages": {
+                "mac": {
+                    "url": "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_osx.zip"
+                },
+                "win": {
+                    "url": "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_win.zip"
+                },
+                "linux32": {
+                    "url": "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_linux.tar.gz"
+                }
+            }
+        };
+
+
+        grunt.file.write("src/update.json", JSON.stringify(update));
         console.log('finish_make_build_data')
     });
 
