@@ -438,21 +438,46 @@ var SGI = {
         });
 
         //Make element droppable
-        $(".prg_panel").droppable({
-            accept: ".mbs",
-            drop: function (ev, ui) {
+        $(".prg_panel")
+            .droppable({
+                accept: ".mbs , .fbs",
+                drop: function (ev, ui) {
+                    if ($(ui["draggable"][0]).hasClass("mbs")) {
+                        if (ui["draggable"] != ui["helper"] && ev.pageX > 150) {
+                            var data = {
+                                type: $(ui["draggable"][0]).attr("id")
 
-                if (ui["draggable"] != ui["helper"] && ev.pageX > 150) {
-                    var data = {
-                        type: $(ui["draggable"][0]).attr("id")
+                            };
+                            var top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top + 30) / SGI.zoom);
+                            var left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left + 42 ) / SGI.zoom);
+                            SGI.add_mbs_element(data, left, top);
+                        }
+                    } else {
+                        console.log(ui)
+                        if($(ev.target).attr("id") == "prg_panel"){
+                            var data = {
+                                type: "codebox"
 
-                    };
-                    var top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top + 30) / SGI.zoom);
-                    var left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left + 42 ) / SGI.zoom);
-                    SGI.add_mbs_element(data, left, top);
+                            };
+                            var top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top + 30) / SGI.zoom);
+                            var left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left + 42 ) / SGI.zoom);
+                            SGI.add_mbs_element(data, left, top);
+
+
+
+                            data = {
+                                parent: $("#prg_panel").children().last().children().last().attr("id"),
+                                type: $(ui["draggable"][0]).attr("id")
+                            };
+
+
+                            SGI.add_fbs_element(data, 50/ SGI.zoom, 50/ SGI.zoom);
+                        }
+
+                    }
                 }
-            }
-        });
+            });
+
 
         SGI.menu_iconbar();
         SGI.context_menu();
