@@ -1688,7 +1688,10 @@ jQuery.extend(true, SGI, {
                 SGI.plumb_inst.inst_mbs.deleteEndpoint($(ep).attr("elementId"));
             }
 
-            delete scope.fbs[$(this).data("nr")];
+            if($(this).hasClass("fbs_element")){
+                delete scope.fbs[$(this).data("nr")];
+            }
+
         });
         $($this).remove();
         delete scope.mbs[$($this).data("nr")];

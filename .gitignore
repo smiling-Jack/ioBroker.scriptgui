@@ -5,3 +5,5 @@ sftpCache.json
 cache/0.10.5/win/datastore
 cache/0.10.5/linux64
 cache/0.10.5/linux32
+
+node_modules/grunt-node-webkit-builder

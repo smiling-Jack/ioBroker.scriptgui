@@ -34,8 +34,7 @@ module.exports = function (grunt) {
                 options: {
                     platforms: ['osx'],
                     buildDir: './build/osx',
-                    macIcns: './src/img/cube32.png',
-                    macZip:true
+                    macZip: true
                 },
                 src: './src/**/*'
             }
@@ -47,28 +46,28 @@ module.exports = function (grunt) {
         rename: {
            'rn-win': {
                 files: [
-                    {src: ['build/ScriptGUI/win/win'], dest: 'build/ScriptGUI/win/ScriptGUI'},
+                    {src: ['build/win/ScriptGUI/win'], dest: 'build/win/ScriptGUI/ScriptGUI'},
                 ]
             },
             'rn-osw': {
                 files: [
-                    {src: ['build/ScriptGUI/osx/osx'], dest: 'build/ScriptGUI/osx/ScriptGUI'},
+                    {src: ['build/osx/ScriptGUI/osx'], dest: 'build/osx/ScriptGUI/ScriptGUI'},
                 ]
             }
         },
 
         zip: {
             'zip-win': {
-                cwd: 'build/ScriptGUI/win',
-                src: ['build/ScriptGUI/win/**'],
+                cwd: 'build/win/ScriptGUI',
+                src: ['build/win/ScriptGUI/**'],
                 dest: 'build/ScriptGUI_win.zip',
 //                compression: 'DEFLATE',
 //                base64: true,
 //                dot: true
             },
             'zip-osx': {
-                cwd: 'build/ScriptGUI/osx',
-                src: ['build/ScriptGUI/osx/**'],
+                cwd: 'build/osx/ScriptGUI',
+                src: ['build/osx/ScriptGUI/**'],
                 dest: 'build/ScriptGUI_osx.zip',
 //                compression: 'DEFLATE',
 //                base64: true,

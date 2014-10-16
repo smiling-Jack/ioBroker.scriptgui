@@ -87,6 +87,7 @@ SGI = $.extend(true, SGI, {
 
 // Setup Dialog
         'Auto update'            : {'de': 'Neue Version suchen',                   'en': 'Search new version',                     'ru': ''},//ToDo RU
+        'Auto Codebox'            : {'de': 'Auto Codebox',                   'en': 'Auto Codebox',                     'ru': ''},//ToDo RU
 
 
 // Shortcut

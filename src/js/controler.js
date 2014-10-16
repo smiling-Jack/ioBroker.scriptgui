@@ -5,6 +5,7 @@ angular.module('tutorialApp', [])
             "theme": "dark-hive",
             "snap_grid": "",
             "tooltip": "",
+            "fbs_wrap": true,
             "LT_open": false,
             "last_file": "",
             "update": true,

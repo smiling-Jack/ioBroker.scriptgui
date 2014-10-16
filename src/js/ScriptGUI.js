@@ -66,6 +66,7 @@ var SGI = {
     experts: {},
     grid: 9,
 
+    drop_block: false,
     str_tollbox: "ScriptGUI_Toolbox",
 
     sim_run: false,
@@ -442,6 +443,10 @@ var SGI = {
             .droppable({
                 accept: ".mbs , .fbs",
                 drop: function (ev, ui) {
+                    setTimeout(function(){
+
+
+
                     if ($(ui["draggable"][0]).hasClass("mbs")) {
                         if (ui["draggable"] != ui["helper"] && ev.pageX > 150) {
                             var data = {
@@ -453,8 +458,8 @@ var SGI = {
                             SGI.add_mbs_element(data, left, top);
                         }
                     } else {
-                        console.log(ui)
-                        if($(ev.target).attr("id") == "prg_panel"){
+
+                        if($(ev.target).attr("id") == "prg_panel" && SGI.drop_block == false && scope.setup.fbs_wrap == true ){
                             var data = {
                                 type: "codebox"
 
@@ -472,10 +477,13 @@ var SGI = {
 
 
                             SGI.add_fbs_element(data, 50/ SGI.zoom, 50/ SGI.zoom);
+
                         }
 
                     }
+                    },0);
                 }
+
             });
 
 
@@ -538,10 +546,10 @@ var SGI = {
 
             if (SGI.key == 46) {
                 SGI.del_selected()
-            } else if (SGI.key == 67 && event.ctrlKey == true) {
+            } else if (SGI.key == 67 && event.altKey == true) {
                 SGI.copy_selected();
                 $("body").css({cursor: "default"});
-            } else if (SGI.key == 86 && event.ctrlKey == true) {
+            } else if (SGI.key == 86 && event.altKey == true) {
                 SGI.paste_selected();
                 $("body").css({cursor: "default"});
             } else if (SGI.key == 89 && event.altKey == true) {
@@ -2525,8 +2533,10 @@ var SGI = {
                 var data;
                 var top;
                 var left;
-//                if (ui["draggable"] != ui["helper"]) {
-                console.log(ev);
+                SGI.drop_block = true;
+                setTimeout(function(){
+                    SGI.drop_block = false;
+                },500);
                 if (ui["draggable"].hasClass("fbs_exp_custom")) {
                     if (scope.setup.snap_grid) {
 
@@ -2569,7 +2579,6 @@ var SGI = {
 
                     SGI.add_fbs_element(data, left, top);
                 }
-//                }
             }
         });
     },
