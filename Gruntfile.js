@@ -6,11 +6,10 @@
 module.exports = function (grunt) {
     var ops = grunt.file.readJSON("package.json");
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-node-webkit-builder');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-rename');
     grunt.loadNpmTasks('grunt-zip');
     grunt.loadNpmTasks('grunt-ssh');
-
 
 
 
@@ -23,24 +22,13 @@ module.exports = function (grunt) {
         clean: ["build"],
 
 //----------------------------------------------------------------------------------------------------------------------
-        nodewebkit: {
-            build_win: {
-                options: {
-                    platforms: ['win'],
-                    buildDir: './build/win',
-                    winIco: './src/img/cube32.ico',
-                },
-                src: './src/**/*'
+        copy: {
+            win_webkit: {
+                files: [
+                    {expand: true, src: ['cache/win/**'], dest: 'build/win/ScriptGUI'},
+                ],
             },
-            build_osx: {
-                options: {
-                    platforms: ['osx'],
-                    buildDir: './build/osx',
-            },
-                src: './src/**/*'
-            }
         },
-
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -67,6 +55,14 @@ module.exports = function (grunt) {
 //                dot: true
             },
             'zip-osx': {
+                cwd: 'build/osx/ScriptGUI',
+                src: ['build/osx/ScriptGUI/**'],
+                dest: 'build/ScriptGUI_osx.zip',
+//                compression: 'DEFLATE',
+//                base64: true,
+//                dot: true
+            },
+            'win-nw': {
                 cwd: 'build/osx/ScriptGUI',
                 src: ['build/osx/ScriptGUI/**'],
                 dest: 'build/ScriptGUI_osx.zip',
@@ -145,6 +141,17 @@ module.exports = function (grunt) {
         grunt.file.write("src/update.json", JSON.stringify(update));
         console.log('finish_make_build_data')
     });
+
+    grunt.registerTask('build_win', function () {
+        grunt.file.mkdir("build/win/ScripGUI/");
+        grunt.file.mkdir("build/osx/ScripGUI/");
+
+
+        grunt.task.run(["copy"]);
+
+        grunt.log.ok("hallo")
+    });
+
 
     grunt.registerTask('Build_ZIP_UP', ['clean','make_build_data','nodewebkit','rename','zip','sftp:data_zips']);
     grunt.registerTask('Build_ZIP', ['clean','make_build_data','nodewebkit','rename','zip']);

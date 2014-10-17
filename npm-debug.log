@@ -1,0 +1,60 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install',
+1 verbose cli   'grunt-contrib-copy' ]
+2 info using npm@1.4.14
+3 info using node@v0.10.29
+4 verbose node symlink C:\Program Files\nodejs\\node.exe
+5 warn package.json ScriptGUI@ No repository field.
+6 verbose readDependencies using package.json deps
+7 verbose cache add [ 'grunt-contrib-copy', null ]
+8 verbose cache add name=undefined spec="grunt-contrib-copy" args=["grunt-contrib-copy",null]
+9 verbose parsed url { protocol: null,
+9 verbose parsed url   slashes: null,
+9 verbose parsed url   auth: null,
+9 verbose parsed url   host: null,
+9 verbose parsed url   port: null,
+9 verbose parsed url   hostname: null,
+9 verbose parsed url   hash: null,
+9 verbose parsed url   search: null,
+9 verbose parsed url   query: null,
+9 verbose parsed url   pathname: 'grunt-contrib-copy',
+9 verbose parsed url   path: 'grunt-contrib-copy',
+9 verbose parsed url   href: 'grunt-contrib-copy' }
+10 silly lockFile a84690fa-grunt-contrib-copy grunt-contrib-copy
+11 verbose lock grunt-contrib-copy C:\Users\schorling\AppData\Roaming\npm-cache\a84690fa-grunt-contrib-copy.lock
+12 silly lockFile a84690fa-grunt-contrib-copy grunt-contrib-copy
+13 silly lockFile a84690fa-grunt-contrib-copy grunt-contrib-copy
+14 verbose addNamed [ 'grunt-contrib-copy', '' ]
+15 verbose addNamed [ null, '*' ]
+16 silly lockFile 9ec4cea0-grunt-contrib-copy grunt-contrib-copy@
+17 verbose lock grunt-contrib-copy@ C:\Users\schorling\AppData\Roaming\npm-cache\9ec4cea0-grunt-contrib-copy.lock
+18 silly addNameRange { name: 'grunt-contrib-copy', range: '*', hasData: false }
+19 verbose url raw grunt-contrib-copy
+20 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-contrib-copy' ]
+21 verbose url resolved https://registry.npmjs.org/grunt-contrib-copy
+22 info trying registry request attempt 1 at 15:28:58
+23 http GET https://registry.npmjs.org/grunt-contrib-copy
+24 info retry will retry, error on last attempt: Error: tunneling socket could not be established, cause=getaddrinfo ENOTFOUND
+25 info trying registry request attempt 2 at 15:29:11
+26 http GET https://registry.npmjs.org/grunt-contrib-copy
+27 info retry will retry, error on last attempt: Error: tunneling socket could not be established, cause=getaddrinfo ENOTFOUND
+28 info trying registry request attempt 3 at 15:30:13
+29 http GET https://registry.npmjs.org/grunt-contrib-copy
+30 silly lockFile 9ec4cea0-grunt-contrib-copy grunt-contrib-copy@
+31 silly lockFile 9ec4cea0-grunt-contrib-copy grunt-contrib-copy@
+32 error network tunneling socket could not be established, cause=getaddrinfo ENOTFOUND
+32 error network This is most likely not a problem with npm itself
+32 error network and is related to network connectivity.
+32 error network In most cases you are behind a proxy or have bad network settings.
+32 error network
+32 error network If you are behind a proxy, please make sure that the
+32 error network 'proxy' config is set properly.  See: 'npm help config'
+33 error System Windows_NT 6.1.7601
+34 error command "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "grunt-contrib-copy"
+35 error cwd C:\Schorling\Git\ScriptGUI.app
+36 error node -v v0.10.29
+37 error npm -v 1.4.14
+38 error code ECONNRESET
+39 verbose exit [ 1, true ]
