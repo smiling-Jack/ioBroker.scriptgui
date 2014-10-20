@@ -22,7 +22,7 @@ var Compiler = {
         $.each(PRG.struck.trigger, function () {
 
             var nr = this.mbs_id.split("_").pop();
-console.log(nr)
+
             var targets = "";
             $.each(this.target, function () {
 //                if (this[1] == 0) {
@@ -158,7 +158,7 @@ console.log(nr)
                         Compiler.trigger += ' || ';
                     }
                 });
-                Compiler.trigger += '){' + targets + '});'
+                Compiler.trigger += '){' + targets + '}});'
 
             }
             if (PRG._scope.mbs[nr].type == "trigger_yearly") {

@@ -3,7 +3,6 @@
  */
 (function () {
     $(document).ready(function () {
-
         var nw_gui = require('nw.gui');
         var path = require('path');
         var start_win = nw_gui.Window.get();

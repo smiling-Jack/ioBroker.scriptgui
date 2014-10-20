@@ -8,6 +8,7 @@ var net = require('net');
 var path = require('path');
 var fs = require('fs');
 var nw_gui = require('nw.gui');
+var unzip = require('unzip');
 
 var start_win;
 var main_win = nw_gui.Window.get();

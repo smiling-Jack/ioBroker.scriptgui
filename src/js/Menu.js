@@ -2137,7 +2137,7 @@ jQuery.extend(true, SGI, {
 
             if ($("#inp_prg_data").val() == true || $("#inp_prg_data").val() == "true") {
                 send_data.prg_data = JSON.stringify({
-                    version: main_manifest.native.version,
+                    version: main_manifest.version,
                     mbs: scope.mbs,
                     fbs: scope.fbs,
                     con: scope.con
@@ -2220,7 +2220,7 @@ jQuery.extend(true, SGI, {
                                         main_win.close()
 
                                     } else {
-
+throw error
                                     }
                                 }, manifest);
                             }

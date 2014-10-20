@@ -10,22 +10,36 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-rename');
     grunt.loadNpmTasks('grunt-zip');
     grunt.loadNpmTasks('grunt-ssh');
-
+    grunt.loadNpmTasks('grunt-exec');
 
 
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 //        secret: grunt.file.readJSON('secret.json'),
-        secret: "",
+        secret: grunt.file.readJSON("secret.json"),
+//----------------------------------------------------------------------------------------------------------------------
+        clean:{
+            build:["build"],
+            after_win:["build/win/ScriptGUI/nw.exe","build/win/ScriptGUI/nwsnapshot.exe","build/win/ScriptGUI/sg.nw"]
 
-        clean: ["build"],
+        },
 
 //----------------------------------------------------------------------------------------------------------------------
         copy: {
             win_webkit: {
                 files: [
-                    {expand: true, src: ['cache/win/**'], dest: 'build/win/ScriptGUI'},
+                    {expand: true,cwd: 'cache/win/', src: ['**'], dest: 'build/win/ScriptGUI'},
+                ],
+            },
+            osx_webkit: {
+                files: [
+                    {expand: true,cwd: 'cache/osx/', src: ['node-webkit.app/**'], dest: 'build/osx/ScriptGUI'},
+                ],
+            },
+            osx_src: {
+                files: [
+                    {expand: true,cwd: 'src', src: ['**'], dest: 'build/osx/ScriptGUI/node-webkit.app/Contents/Resources/app.nw/'},
                 ],
             },
         },
@@ -33,22 +47,17 @@ module.exports = function (grunt) {
 
 
         rename: {
-           'rn-win': {
+           'osx.app': {
                 files: [
-                    {src: ['build/win/ScriptGUI/win'], dest: 'build/win/ScriptGUI/ScriptGUI'},
+                    {src: ['build/osx/ScriptGUI/node-webkit.app'], dest: 'build/osx/ScriptGUI/ScriptGUI.app'},
                 ]
             },
-            'rn-osw': {
-                files: [
-                    {src: ['build/osx/ScriptGUI/osx'], dest: 'build/osx/ScriptGUI/ScriptGUI'},
-                ]
-            }
         },
 
         zip: {
             'zip-win': {
-                cwd: 'build/win/ScriptGUI',
-                src: ['build/win/ScriptGUI/**'],
+                cwd: 'build/win',
+                src: ['build/win/**'],
                 dest: 'build/ScriptGUI_win.zip',
 //                compression: 'DEFLATE',
 //                base64: true,
@@ -58,14 +67,14 @@ module.exports = function (grunt) {
                 cwd: 'build/osx/ScriptGUI',
                 src: ['build/osx/ScriptGUI/**'],
                 dest: 'build/ScriptGUI_osx.zip',
-//                compression: 'DEFLATE',
-//                base64: true,
-//                dot: true
+                compression: 'DEFLATE',
+                base64: true,
+                dot: true
             },
-            'win-nw': {
-                cwd: 'build/osx/ScriptGUI',
-                src: ['build/osx/ScriptGUI/**'],
-                dest: 'build/ScriptGUI_osx.zip',
+            'win_nw_pack': {
+                cwd: 'src/',
+                src: ['src/**'],
+                dest: 'build/win/Scriptgui/sg.nw',
 //                compression: 'DEFLATE',
 //                base64: true,
 //                dot: true
@@ -101,23 +110,20 @@ module.exports = function (grunt) {
                 }
             }
         },
-
+        //----------------------------------------------------------------------------------------------------------------------
+        exec: {
+            win_copy_b: {
+                cwd: "E:/Home_Programming/ScriptGUI.app/build/win/ScriptGUI/",
+                command: "copy /b nw.exe+sg.nw ScriptGUI.exe"
+            }
+        }
 //----------------------------------------------------------------------------------------------------------------------
 
     });
 
-
-    // Actually load this plugin's task(s)1
-//    grunt.loadTasks('tasks');
-
-    // By default, lint and run all tests.
-//    grunt.registerTask('Build', ['nodewebkit',c,'make_build_data','upload']);
-
     grunt.registerTask('make_build_data', function () {
-
         var manifest = grunt.file.readJSON('src/package.json');
         var d = new Date();
-
         var update = {
             "name": "ScriptGUI",
             "version": manifest.version,
@@ -136,26 +142,29 @@ module.exports = function (grunt) {
                 }
             }
         };
-
-
         grunt.file.write("src/update.json", JSON.stringify(update));
-        console.log('finish_make_build_data')
     });
 
     grunt.registerTask('build_win', function () {
-        grunt.file.mkdir("build/win/ScripGUI/");
-        grunt.file.mkdir("build/osx/ScripGUI/");
+        grunt.file.mkdir("build/win/ScriptGUI/");
+        grunt.task.run(["copy:win_webkit"]);
+        grunt.task.run(["zip:win_nw_pack"]);
+        grunt.task.run(["exec:win_copy_b"]);
+        grunt.task.run(["clean:after_win"]);
 
+    });
 
-        grunt.task.run(["copy"]);
-
-        grunt.log.ok("hallo")
+    grunt.registerTask('build_osx', function () {
+        grunt.file.mkdir("build/osx/ScriptGUI/");
+        grunt.task.run(["copy:osx_webkit"]);
+        grunt.task.run(["copy:osx_src"]);
+        grunt.task.run(["rename:osx.app"]);
     });
 
 
-    grunt.registerTask('Build_ZIP_UP', ['clean','make_build_data','nodewebkit','rename','zip','sftp:data_zips']);
-    grunt.registerTask('Build_ZIP', ['clean','make_build_data','nodewebkit','rename','zip']);
-    grunt.registerTask('Build', ['clean','make_build_data','nodewebkit']);
+    grunt.registerTask('Build_ZIP_UP', ['clean','make_build_data','build_win','build_osx','zip','sftp:data_zips']);
+    grunt.registerTask('Build_ZIP', ['clean','make_build_data','build_win','build_osx','zip']);
+    grunt.registerTask('Build',['clean','make_build_data','build_win','build_osx']);
 
 
 

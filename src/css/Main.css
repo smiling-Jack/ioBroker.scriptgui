@@ -1697,10 +1697,16 @@ body {
 
 #tb_body {
     height: calc(100% - 150px) !important;
-    overflow-x: hidden;
-    overflow: hidden;
+    overflow: scroll;
     position: relative;
 }
+
+#tb_body::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);
+    background-image: none;
+}
+
 
 #btn_hmid_ok {
     position: absolute !important;
