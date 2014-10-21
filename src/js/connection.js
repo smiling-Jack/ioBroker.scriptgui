@@ -21,7 +21,7 @@ jQuery.extend(true, SGI, {
             SGI.socket.disconnect()
         }
 
-        SGI.con_data= false;
+        SGI.con_data = false;
 
         homematic = {
             uiState: {"_65535": {"Value": null}},
@@ -48,7 +48,7 @@ jQuery.extend(true, SGI, {
                     $("#img_con_state").attr("src", "img/icon/flag-yellow.png");
                     $("#btn_con_offline").parent().addClass("div_img_glass_on");
                     $("#btn_con_online").parent().removeClass("div_img_glass_on");
-                    SGI.con_data= true;
+                    SGI.con_data = true;
                 } else {
                     alert(err)
                     $("#img_con_state").attr("src", "img/icon/flag-red.png");
@@ -59,7 +59,7 @@ jQuery.extend(true, SGI, {
                         regaIndex: {},
                         regaObjects: {}
                     };
-                    SGI.con_data= false;
+                    SGI.con_data = false;
                     throw err
                 }
             });
@@ -75,7 +75,7 @@ jQuery.extend(true, SGI, {
                 regaIndex: {},
                 regaObjects: {}
             };
-            SGI.con_data= false;
+            SGI.con_data = false;
             throw err
         }
     },
@@ -84,72 +84,104 @@ jQuery.extend(true, SGI, {
         try {
             var _url = $("#inp_con_ip").val();
             var url = "";
-
-            if (_url.split(":").length < 2) {
-                url = "http://" + _url + ":8080";
-            } else {
-                url = "http://" + _url;
+            if ( _url.split(".")[0] == "s" || _url.split(".")[0] == "S" ){
+                if (_url.split(":").length < 2) {
+                    url = "https://" + _url.replace("s.","") + ":8443";
+                } else {
+                    url = "https://" + _url.replace("s.","") ;
+                }
+            }else{
+                if (_url.split(":").length < 2) {
+                    url = "http://" + _url + ":8080";
+                } else {
+                    url = "http://" + _url;
+                }
             }
+
+
             $("#img_con_state").attr("src", "img/icon/flag-blue.png");
 
-            SGI.socket = io.connect(url, {'force new connection': true});
+             $.ajax({
+                url: url + "/auth/auth.js",
+                type: "GET",
+                dataType: "text"
+            })
+            .done(function( data ) {
+                console.log( data );
+            })
+            .fail(function( jqXHR, textStatus ) {
+                console.log( textStatus);
+            });
 
-            SGI.socket.on("connect", function (err) {
+            $.get(url + "/auth/auth.js", function (data) {
+                var socketSession_id = data.split('\'')[1];
 
-                SGI.socket.emit("getSettings", function (data) {
-                    if (data.basedir.split("/")[2] == "ccu.io") {
-                        $("#img_set_script_engine").show();
-                        $("#img_con_state").attr("title", "CCU.IO<br> Version: " + data.version + "<br>Scriptengine: " + data.scriptEngineEnabled);
-                    }
-                    SGI.socket.emit("getIndex", function (index) {
-                        homematic.regaIndex = index;
-                        SGI.socket.emit("getObjects", function (obj) {
-                            homematic.regaObjects = obj;
-                            SGI.socket.emit("getDatapoints", function (data) {
+                console.log(data)
 
-                                for (var dp in data) {
-                                    homematic.uiState["_" + dp] = { Value: data[dp][0], Timestamp: data[dp][1], LastChange: data[dp][3]};
-                                }
+                SGI.socket = io.connect(url + "?key=" + socketSession_id, {'force new connection': true});
 
-                                // TODO Ist da hier wirklich richtig oder doch eher direkt nach dem laden ?
-                                var name = $("#inp_con_ip").val().replace(":", "port");
-                                fs.writeFile(nwDir + '/datastore/connections/' + name + '.json', JSON.stringify(homematic), function (err) {
-                                    if (err) throw err;
-                                });
+                SGI.socket.on("connect", function (err) {
 
-                                SGI.socket.on('event', function (obj) {
-                                    if (homematic.uiState["_" + obj[0]] !== undefined) {
-                                        var o = {};
-                                        o["_" + obj[0] + ".Value"] = obj[1];
-                                        o["_" + obj[0] + ".Timestamp"] = obj[2];
-                                        o["_" + obj[0] + ".Certain"] = obj[3];
-                                        homematic.uiState["_" + obj[0]] = o;
+                    SGI.socket.emit("getSettings", function (data) {
+                        if (data.basedir.split("/")[2] == "ccu.io") {
+                            $("#img_set_script_engine").show();
+                            $("#img_con_state").attr("title", "CCU.IO<br> Version: " + data.version + "<br>Scriptengine: " + data.scriptEngineEnabled);
+                        }
+                        SGI.socket.emit("getIndex", function (index) {
+                            homematic.regaIndex = index;
+                            SGI.socket.emit("getObjects", function (obj) {
+                                homematic.regaObjects = obj;
+                                SGI.socket.emit("getDatapoints", function (data) {
+
+                                    for (var dp in data) {
+                                        homematic.uiState["_" + dp] = { Value: data[dp][0], Timestamp: data[dp][1], LastChange: data[dp][3]};
                                     }
-                                });
 
-                                SGI.con_data= true;
-                                $("#img_con_state").attr("src", "img/icon/flag-green.png");
+                                    // TODO Ist da hier wirklich richtig oder doch eher direkt nach dem laden ?
+                                    var name = $("#inp_con_ip").val().replace(":", "port");
+                                    fs.writeFile(nwDir + '/datastore/connections/' + name + '.json', JSON.stringify(homematic), function (err) {
+                                        if (err) throw err;
+                                    });
+
+                                    SGI.socket.on('event', function (obj) {
+                                        if (homematic.uiState["_" + obj[0]] !== undefined) {
+                                            var o = {};
+                                            o["_" + obj[0] + ".Value"] = obj[1];
+                                            o["_" + obj[0] + ".Timestamp"] = obj[2];
+                                            o["_" + obj[0] + ".Certain"] = obj[3];
+                                            homematic.uiState["_" + obj[0]] = o;
+                                        }
+                                    });
+
+                                    SGI.con_data = true;
+                                    $("#img_con_state").attr("src", "img/icon/flag-green.png");
+                                });
                             });
                         });
                     });
                 });
-            });
-            SGI.socket.on("error", function (err) {
-                alert("fehler");
-                SGI.disconnect();
-                SGI.offline();
-            });
+                SGI.socket.on("error", function (err) {
+                    alert("fehler");
+                    SGI.disconnect();
+                    SGI.offline();
+                });
 
-            SGI.socket.on('disconnect', function () {
-                $("#img_con_state").attr("src", "img/icon/flag-red.png");
-                $("#img_set_script_engine").hide();
-                $("#img_con_state").attr(" ");
+                SGI.socket.on('disconnect', function () {
+                    $("#img_con_state").attr("src", "img/icon/flag-red.png");
+                    $("#img_set_script_engine").hide();
+                    $("#img_con_state").attr(" ");
 
-            });
+                });
 
 
-            $("#btn_con_online").parent().addClass("div_img_glass_on");
-            $("#btn_con_offline").parent().removeClass("div_img_glass_on")
+                $("#btn_con_online").parent().addClass("div_img_glass_on");
+                $("#btn_con_offline").parent().removeClass("div_img_glass_on")
+            })
+
+                .fail(function (err) {
+                    throw err
+                });
+
 
         }
         catch (err) {
@@ -162,7 +194,7 @@ jQuery.extend(true, SGI, {
                 regaIndex: {},
                 regaObjects: {}
             };
-            SGI.con_data= false;
+            SGI.con_data = false;
             throw err
         }
     }

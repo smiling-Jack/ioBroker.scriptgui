@@ -46,6 +46,9 @@ CCU-IO.ScriptGUI ist ein Visueller Script builder auf Node-Webkit basis. Mit ihm
 
 
 ## Changelog
+### 0.72.6
+* Unterstüzung http authentifikation (https wird nicht unterstützt)
+
 ### 0.72.5
 * Bugfix Livetest lässt sich nicht mehr starten wenn keine online/offline Daten geladen sind
 * Bugfix undefined 'Name' bei ID Select (Ticket 52)

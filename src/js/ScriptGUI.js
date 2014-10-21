@@ -520,7 +520,10 @@ var SGI = {
 
         main_win.focus();
         main_win.show();
-        start_win.close();
+        try{
+            start_win.close();
+        }
+       catch(err){}
         console.log("Start finish");
 
 
@@ -556,7 +559,8 @@ var SGI = {
             } else if (SGI.key == 89 && event.altKey == true) {
                 main_win.showDevTools();
             } else if (SGI.key == 88 && event.altKey == true) {
-                main_win.reloadIgnoringCache();
+//                main_win.close();
+                main_win.reload();
             } else if (SGI.key == 70 && event.altKey == true) {
                 var test = test_fehler;
             } else if (SGI.key == 17 || SGI.key == 91 || SGI.key == 93 || event.ctrlKey == true) {
