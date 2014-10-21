@@ -29,7 +29,7 @@ module.exports = function (grunt) {
         copy: {
             win_webkit: {
                 files: [
-                    {expand: true,cwd: 'cache/win/', src: ['**'], dest: 'build/win/ScriptGUI'},
+                    {expand: true,cwd: 'cache/win/', src: ['*'], dest: 'build/win/ScriptGUI', filter: 'isFile'},
                 ],
             },
             osx_webkit: {
@@ -152,6 +152,7 @@ module.exports = function (grunt) {
         grunt.task.run(["exec:win_copy_b"]);
         grunt.task.run(["clean:after_win"]);
 
+
     });
 
     grunt.registerTask('build_osx', function () {
@@ -162,8 +163,8 @@ module.exports = function (grunt) {
     });
 
 
-    grunt.registerTask('Build_ZIP_UP', ['clean','make_build_data','build_win','build_osx','zip','sftp:data_zips']);
-    grunt.registerTask('Build_ZIP', ['clean','make_build_data','build_win','build_osx','zip']);
+    grunt.registerTask('Build_ZIP_UP', ['clean','make_build_data','build_win','build_osx',"clean:after_win",'zip:zip-win','zip:zip-osx','sftp']);
+    grunt.registerTask('Build_ZIP', ['clean','make_build_data','build_win','build_osx','zip:zip-win','zip:zip-osx']);
     grunt.registerTask('Build',['clean','make_build_data','build_win','build_osx']);
 
 

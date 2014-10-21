@@ -101,13 +101,10 @@ jQuery.extend(true, SGI, {
                         $("#img_set_script_engine").show();
                         $("#img_con_state").attr("title", "CCU.IO<br> Version: " + data.version + "<br>Scriptengine: " + data.scriptEngineEnabled);
                     }
-
-
                     SGI.socket.emit("getIndex", function (index) {
                         homematic.regaIndex = index;
                         SGI.socket.emit("getObjects", function (obj) {
                             homematic.regaObjects = obj;
-
                             SGI.socket.emit("getDatapoints", function (data) {
 
                                 for (var dp in data) {

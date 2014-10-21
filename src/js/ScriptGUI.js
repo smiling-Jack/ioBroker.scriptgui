@@ -8,7 +8,7 @@ var net = require('net');
 var path = require('path');
 var fs = require('fs');
 var nw_gui = require('nw.gui');
-var unzip = require('unzip');
+
 
 var start_win;
 var main_win = nw_gui.Window.get();
@@ -2857,7 +2857,7 @@ var SGI = {
                     value: editor.getValue(),
                     name: $('#exp_name').val()
                 };
-
+                $.contextMenu( 'destroy', '.CodeMirror' );
                 $("#dialog_code").remove();
                 return callback(data)
             }
@@ -2873,6 +2873,22 @@ var SGI = {
         });
 
         editor.setOption("value", data.toString());
+
+        $.contextMenu({
+            selector: '.CodeMirror',
+            zIndex: 9999,
+            className: "ui-widget-content ui-corner-all",
+            items: {
+                "format": {
+                    name: SGI.translate("Autoformat"),
+                    className: "item_font ",
+                    callback: function () {
+                        var _data = editor.getSelection();
+                        editor.replaceSelection(js_beautify(_data));
+                    }
+                }
+            }
+        });
 
 
         $("#btn_exp_id").button().click(function () {
@@ -2946,19 +2962,24 @@ var SGI = {
                 return  "UNGÜLTIGE ID !!!";
             } else {
 
-                if (homematic.regaObjects[hmid]["TypeName"] == "VARDP" || homematic.regaObjects[hmid]["TypeName"] == "PROGRAM") {
-                    _name = homematic.regaObjects[hmid]["Name"].split(".").pop();
+                try{
+                    if (homematic.regaObjects[hmid]["TypeName"] == "VARDP" || homematic.regaObjects[hmid]["TypeName"] == "PROGRAM") {
+                        _name = homematic.regaObjects[hmid]["Name"].split(".").pop();
 
-                } else if (homematic.regaObjects[hmid]["TypeName"].match(/ENUM/)) {
-                    _name = SGI.translate(homematic.regaObjects[hmid]["TypeName"].split("ENUM_")[1]) + " > " + homematic.regaObjects[hmid]["Name"];
-                } else if (homematic.regaObjects[hmid]["TypeName"] == "FAVORITE") {
-                    _name = SGI.translate("FAVORITE") + " > " + homematic.regaObjects[hmid]["Name"];
-                } else {
-                    var parent = homematic.regaObjects[hmid]["Parent"];
-                    var parent_data = homematic.regaObjects[parent];
-                    _name = parent_data.Name + " > " + homematic.regaObjects[hmid]["Name"].split(".").pop();
+                    } else if (homematic.regaObjects[hmid]["TypeName"].match(/ENUM/)) {
+                        _name = SGI.translate(homematic.regaObjects[hmid]["TypeName"].split("ENUM_")[1]) + " > " + homematic.regaObjects[hmid]["Name"];
+                    } else if (homematic.regaObjects[hmid]["TypeName"] == "FAVORITE") {
+                        _name = SGI.translate("FAVORITE") + " > " + homematic.regaObjects[hmid]["Name"];
+                    } else {
+                        var parent = homematic.regaObjects[hmid]["Parent"];
+                        var parent_data = homematic.regaObjects[parent];
+                        _name = parent_data.Name + " > " + homematic.regaObjects[hmid]["Name"].split(".").pop();
+                    }
+                    return [_name];
+                }catch (err){
+                    return  "UNGÜLTIGE ID !!!";
                 }
-                return [_name];
+
             }
         }
     },

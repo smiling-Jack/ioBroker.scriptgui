@@ -740,10 +740,18 @@ jQuery.extend(true, SGI, {
 
 // Live Test
         $("#img_set_script_play").click(function () {
-                simulate();
+                if(SGI.con_data){
+                    simulate();
+                }else{
+                    alert("Keine Online/Offline daten")
+                }
+
+
+
             }
         ).hover(
             function () {
+                if(SGI.con_data)
                 $(this).addClass("ui-state-focus");
             }, function () {
                 $(this).removeClass("ui-state-focus");
@@ -755,6 +763,7 @@ jQuery.extend(true, SGI, {
             }
         ).hover(
             function () {
+                if(SGI.con_data)
                 $(this).addClass("ui-state-focus");
             }, function () {
                 $(this).removeClass("ui-state-focus");
@@ -1523,21 +1532,6 @@ jQuery.extend(true, SGI, {
 
         });
 
-        $.contextMenu({
-            selector: '.CodeMirror',
-            zIndex: 9999,
-            className: "ui-widget-content ui-corner-all",
-            items: {
-                "format": {
-                    name: SGI.translate("Autoformat"),
-                    className: "item_font ",
-                    callback: function () {
-                        var _data = editor.getSelection();
-                        editor.replaceSelection(js_beautify(_data));
-                    }
-                }
-            }
-        });
     },
 
     add_force: function (con) {
@@ -1688,7 +1682,7 @@ jQuery.extend(true, SGI, {
                 SGI.plumb_inst.inst_mbs.deleteEndpoint($(ep).attr("elementId"));
             }
 
-            if($(this).hasClass("fbs_element")){
+            if ($(this).hasClass("fbs_element")) {
                 delete scope.fbs[$(this).data("nr")];
             }
 
@@ -1910,8 +1904,8 @@ jQuery.extend(true, SGI, {
                 if (err) {
                     throw err;
                 } else {
-                    SGI.prg_store = filep;
-                    SGI.file_name = filep.split("\\").pop();
+                    SGI.prg_store = path.dirname(filep);
+                    SGI.file_name = path.basename(filep);
                     $("#m_file").text(SGI.file_name);
                     scope.setup.last_file = SGI.prg_store;
                     scope.$apply()
@@ -1957,7 +1951,7 @@ jQuery.extend(true, SGI, {
                         SGI.clear();
                         SGI.load_prg(JSON.parse(data));
 
-                        SGI.file_name = filep.split("\\").pop();
+                        SGI.file_name = path.basename(filep)
                         $("#m_file").text(SGI.file_name);
                         scope.setup.last_file = filep;
                         scope.$apply();
@@ -1989,7 +1983,7 @@ jQuery.extend(true, SGI, {
                         SGI.clear();
                         SGI.load_prg(JSON.parse(data));
                         SGI.prg_store = scope.setup.last_file;
-                        SGI.file_name = scope.setup.last_file.split("\\").pop();
+                        SGI.file_name = path.basename(scope.setup.last_file);
                         $("#m_file").text(SGI.file_name);
                         $("#wait_div").hide();
                     }
@@ -2000,8 +1994,6 @@ jQuery.extend(true, SGI, {
                 throw err
             }
         }
-
-
     },
 
     example_ccu_io: function () {
@@ -2016,7 +2008,7 @@ jQuery.extend(true, SGI, {
             SGI.socket.emit("readJsonFile", _data.path + _data.file, function (data) {
                 SGI.clear();
                 SGI.load_prg(data);
-                SGI.file_name = _data.file.split(".")[0];
+                SGI.file_name = _data.file;
                 $("#m_file").text(SGI.file_name);
             });
         });
@@ -2025,10 +2017,12 @@ jQuery.extend(true, SGI, {
     save_Script: function () {
         var script = Compiler.make_prg();
         if (SGI.file_name == undefined || SGI.file_name == "Neu" || SGI.file_name == "") {
-            alert("Bitte erst Programm Speichern")
+            alert("Bitte erst Programm Speichern");
+
         } else {
             try {
-                SGI.socket.emit("writeRawFile", "scripts/" + SGI.file_name + ".js", script);
+                var name = SGI.file_name.replace('.prg','.js');
+                SGI.socket.emit("writeRawFile", "scripts/" + name , script);
             } catch (err) {
                 alert("Keine Verbindung zu CCU.IO")
             }
@@ -2210,17 +2204,20 @@ jQuery.extend(true, SGI, {
                                 $('#update_info').text("Unzip");
 
                                 upd.unpack(filename, function (error, newAppPath) {
-
                                     if (!error) {
-
                                         $('#update_info').text("Restart");
-                                        var _np = newAppPath.split("ScriptGUI.")
-                                        var np = _np[0] + "ScriptGUI/ScriptGUI." + _np[1];
+                                        var _np = newAppPath.split("ScriptGUI.");
+                                        var np;
+                                        if (SGI.os == "darwin") {
+                                            np = newAppPath
+                                        } else {
+                                            np = _np[0] + "ScriptGUI/ScriptGUI." + _np[1];
+                                        }
                                         upd.runInstaller(np, [upd.getAppPath(), upd.getAppExec()], {});
                                         main_win.close()
 
                                     } else {
-throw error
+                                        throw error
                                     }
                                 }, manifest);
                             }
