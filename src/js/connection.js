@@ -195,6 +195,7 @@ jQuery.extend(true, SGI, {
                 regaObjects: {}
             };
             SGI.con_data = false;
+
             throw err
         }
     }

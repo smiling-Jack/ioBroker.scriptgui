@@ -16,7 +16,6 @@ module.exports = function (grunt) {
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-//        secret: grunt.file.readJSON('secret.json'),
         secret: grunt.file.readJSON("secret.json"),
 //----------------------------------------------------------------------------------------------------------------------
         clean:{

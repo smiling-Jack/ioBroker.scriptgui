@@ -27,9 +27,9 @@ html {
 }
 
 /*#prg_body::-webkit-scrollbar-thumb {*/
-    /*border-radius: 10px;*/
-    /*-webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);*/
-    /*background-image: none;*/
+/*border-radius: 10px;*/
+/*-webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);*/
+/*background-image: none;*/
 /*}*/
 
 .CodeMirror-scroll::-webkit-scrollbar-thumb {
@@ -63,7 +63,8 @@ body {
     background-image: url("dark-hive/images/ui-bg_loop_25_000000_21x21.png");
     background-repeat: round;
 }
-#body_wrap{
+
+#body_wrap {
     visibility: hidden;
 }
 
@@ -471,12 +472,12 @@ body {
     border: 1px solid #eee;
 
 }
-.CodeMirror-scroll {
-    margin-right: 5px!important;
-    padding-bottom: 0px!important;
-    height: calc(100% - 5px)!important;
-}
 
+.CodeMirror-scroll {
+    margin-right: 5px !important;
+    padding-bottom: 0px !important;
+    height: calc(100% - 5px) !important;
+}
 
 .ui-front {
     z-index: 100;
@@ -715,7 +716,7 @@ body {
     top: -5px !important;
     z-index: 1;
     margin-top: -10px !important;
-    width: 145px!important;
+    width: 145px !important;
 }
 
 .setup_inp {
@@ -1262,6 +1263,14 @@ body {
 
 }
 
+.btn_ccuobj_update {
+    height: 16px;
+    margin-top: 2px;
+    padding: -12px;
+    position: relative;
+    top: 3px;
+}
+
 .trig_info {
     height: 175px;
 }
@@ -1709,7 +1718,6 @@ body {
     background-image: none;
 }
 
-
 #btn_hmid_ok {
     position: absolute !important;
     width: 150px !important;
@@ -1841,8 +1849,8 @@ body {
 #ul_mode {
 }
 
-.error_box{
-    z-index: 9010!important;
+.error_box {
+    z-index: 9010 !important;
 }
 
 /*---------- Setup Dialog --------------------------------------------------------------------------------------------*/
@@ -2059,14 +2067,12 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
     /* justify-content: center; */
     /* align-items: center; */
     /* opacity: 0.8; */
-     display: none;
+    display: none;
 }
-
-
 
 .circle {
     background-color: rgba(0, 0, 0, 0);
-    border: 7px solid rgba(0, 183, 229, 1 );
+    border: 7px solid rgba(0, 183, 229, 1);
     /* opacity: 1; */
     border-right: 7px solid rgba(0, 0, 0, 0);
     border-left: 7px solid rgba(0, 0, 0, 0);
@@ -2103,21 +2109,21 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
 }
 
 /*@-webkit-keyframes spinPulse {*/
-    /*0% {*/
-        /*-webkit-transform: rotate(160deg);*/
-        /*opacity: 0;*/
-        /*box-shadow: 0 0 1px #2187e7;*/
-    /*}*/
+/*0% {*/
+/*-webkit-transform: rotate(160deg);*/
+/*opacity: 0;*/
+/*box-shadow: 0 0 1px #2187e7;*/
+/*}*/
 
-    /*50% {*/
-        /*-webkit-transform: rotate(145deg);*/
-        /*opacity: 1;*/
-    /*}*/
+/*50% {*/
+/*-webkit-transform: rotate(145deg);*/
+/*opacity: 1;*/
+/*}*/
 
-    /*100% {*/
-        /*-webkit-transform: rotate(-320deg);*/
-        /*opacity: 0;*/
-    /*}*/
+/*100% {*/
+/*-webkit-transform: rotate(-320deg);*/
+/*opacity: 0;*/
+/*}*/
 /*}*/
 
 @-webkit-keyframes spinoffPulse {

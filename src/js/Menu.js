@@ -1691,6 +1691,8 @@ jQuery.extend(true, SGI, {
         delete scope.mbs[$($this).data("nr")];
 
         scope.$apply();
+
+        out1 = parseInt(in1) / parseInt(in2);
     },
 
     del_selected: function () {
@@ -1907,7 +1909,7 @@ jQuery.extend(true, SGI, {
                     SGI.prg_store = path.dirname(filep);
                     SGI.file_name = path.basename(filep);
                     $("#m_file").text(SGI.file_name);
-                    scope.setup.last_file = SGI.prg_store;
+                    scope.setup.last_file = filep;
                     scope.$apply()
                 }
             });
@@ -1920,13 +1922,14 @@ jQuery.extend(true, SGI, {
             SGI.save_as_local()
         } else {
             var data = SGI.make_savedata();
+
             try {
-                fs.writeFile(SGI.prg_store, JSON.stringify(data), function (err) {
+                fs.writeFile(SGI.prg_store + "/" + SGI.file_name, JSON.stringify(data), function (err) {
                     if (err) {
                         throw err;
                     } else {
-                        scope.setup.last_file = SGI.prg_store;
-                        scope.$apply()
+
+
                     }
                 });
             } catch (err) {
@@ -1951,7 +1954,8 @@ jQuery.extend(true, SGI, {
                         SGI.clear();
                         SGI.load_prg(JSON.parse(data));
 
-                        SGI.file_name = path.basename(filep)
+                        SGI.prg_store = path.dirname(filep);
+                        SGI.file_name = path.basename(filep);
                         $("#m_file").text(SGI.file_name);
                         scope.setup.last_file = filep;
                         scope.$apply();
@@ -1982,7 +1986,7 @@ jQuery.extend(true, SGI, {
                     } else {
                         SGI.clear();
                         SGI.load_prg(JSON.parse(data));
-                        SGI.prg_store = scope.setup.last_file;
+                        SGI.prg_store = path.dirname(scope.setup.last_file);
                         SGI.file_name = path.basename(scope.setup.last_file);
                         $("#m_file").text(SGI.file_name);
                         $("#wait_div").hide();
@@ -2369,5 +2373,4 @@ jQuery.extend(true, SGI, {
         });
     }
 });
-
 

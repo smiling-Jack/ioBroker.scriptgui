@@ -444,45 +444,43 @@ var SGI = {
             .droppable({
                 accept: ".mbs , .fbs",
                 drop: function (ev, ui) {
-                    setTimeout(function(){
+                    setTimeout(function () {
 
 
+                        if ($(ui["draggable"][0]).hasClass("mbs")) {
+                            if (ui["draggable"] != ui["helper"] && ev.pageX > 150) {
+                                var data = {
+                                    type: $(ui["draggable"][0]).attr("id")
 
-                    if ($(ui["draggable"][0]).hasClass("mbs")) {
-                        if (ui["draggable"] != ui["helper"] && ev.pageX > 150) {
-                            var data = {
-                                type: $(ui["draggable"][0]).attr("id")
+                                };
+                                var top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top + 30) / SGI.zoom);
+                                var left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left + 42 ) / SGI.zoom);
+                                SGI.add_mbs_element(data, left, top);
+                            }
+                        } else {
 
-                            };
-                            var top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top + 30) / SGI.zoom);
-                            var left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left + 42 ) / SGI.zoom);
-                            SGI.add_mbs_element(data, left, top);
+                            if ($(ev.target).attr("id") == "prg_panel" && SGI.drop_block == false && scope.setup.fbs_wrap == true) {
+                                var data = {
+                                    type: "codebox"
+
+                                };
+                                var top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top + 30) / SGI.zoom);
+                                var left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left + 42 ) / SGI.zoom);
+                                SGI.add_mbs_element(data, left, top);
+
+
+                                data = {
+                                    parent: $("#prg_panel").children().last().children().last().attr("id"),
+                                    type: $(ui["draggable"][0]).attr("id")
+                                };
+
+
+                                SGI.add_fbs_element(data, 50 / SGI.zoom, 50 / SGI.zoom);
+
+                            }
+
                         }
-                    } else {
-
-                        if($(ev.target).attr("id") == "prg_panel" && SGI.drop_block == false && scope.setup.fbs_wrap == true ){
-                            var data = {
-                                type: "codebox"
-
-                            };
-                            var top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top + 30) / SGI.zoom);
-                            var left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left + 42 ) / SGI.zoom);
-                            SGI.add_mbs_element(data, left, top);
-
-
-
-                            data = {
-                                parent: $("#prg_panel").children().last().children().last().attr("id"),
-                                type: $(ui["draggable"][0]).attr("id")
-                            };
-
-
-                            SGI.add_fbs_element(data, 50/ SGI.zoom, 50/ SGI.zoom);
-
-                        }
-
-                    }
-                    },0);
+                    }, 0);
                 }
 
             });
@@ -520,10 +518,11 @@ var SGI = {
 
         main_win.focus();
         main_win.show();
-        try{
+        try {
             start_win.close();
         }
-       catch(err){}
+        catch (err) {
+        }
         console.log("Start finish");
 
 
@@ -2539,9 +2538,9 @@ var SGI = {
                 var top;
                 var left;
                 SGI.drop_block = true;
-                setTimeout(function(){
+                setTimeout(function () {
                     SGI.drop_block = false;
-                },500);
+                }, 500);
                 if (ui["draggable"].hasClass("fbs_exp_custom")) {
                     if (scope.setup.snap_grid) {
 
@@ -2861,7 +2860,7 @@ var SGI = {
                     value: editor.getValue(),
                     name: $('#exp_name').val()
                 };
-                $.contextMenu( 'destroy', '.CodeMirror' );
+                $.contextMenu('destroy', '.CodeMirror');
                 $("#dialog_code").remove();
                 return callback(data)
             }
@@ -2966,7 +2965,7 @@ var SGI = {
                 return  "UNGÜLTIGE ID !!!";
             } else {
 
-                try{
+                try {
                     if (homematic.regaObjects[hmid]["TypeName"] == "VARDP" || homematic.regaObjects[hmid]["TypeName"] == "PROGRAM") {
                         _name = homematic.regaObjects[hmid]["Name"].split(".").pop();
 
@@ -2980,7 +2979,7 @@ var SGI = {
                         _name = parent_data.Name + " > " + homematic.regaObjects[hmid]["Name"].split(".").pop();
                     }
                     return [_name];
-                }catch (err){
+                } catch (err) {
                     return  "UNGÜLTIGE ID !!!";
                 }
 
@@ -2988,25 +2987,54 @@ var SGI = {
         }
     },
 
-    get_lowest_obj_id: function () {
+    get_id_by_name: function (name) {
+ var id = 0;
+        console.log(name)
+        $.each(homematic.regaObjects, function (key) {
 
-        var last_id = 100000;
-
-        $.each(Object.keys(homematic.regaObjects).sort(), function () {
-
-            var id = parseInt(this);
-
-            if (id > 99999) {
-                if (id == last_id) {
-                    last_id++;
-                } else {
+            if (key > 99999) {
+                console.log(key);
+                console.log(this);
+                if (this.Name == name) {
+                    id = key
                     return false
                 }
             }
-
-
         });
-        return last_id
+
+        return id
+    },
+
+    get_lowest_obj_id: function (name,cb) {
+
+        if (SGI.con_data) {
+            var last_id = 100000;
+            var id_by_name = SGI.get_id_by_name(name);
+            console.log("by_name " + id_by_name)
+            if (id_by_name == 0) {
+                $.each(Object.keys(homematic.regaObjects).sort(), function () {
+
+                    var id = parseInt(this);
+                    if (id > 99999) {
+                        if (id == last_id) {
+                            last_id++;
+                        } else {
+                            return false
+                        }
+                    }
+                });
+
+                return cb(last_id)
+
+            }else{
+                return cb(id_by_name)
+            }
+
+        } else {
+            return cb("undefined")
+        }
+
+
     },
 
     find_border_position: function (data) {

@@ -32,7 +32,7 @@ SGI = $.extend(true, SGI, {
 
 
 //        PRG.mbs[data.mbs_id] = data; //todo Remove after ng
-        scope.mbs[ nr] = data;
+        scope.mbs[nr] = data;
 
 
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -56,7 +56,6 @@ SGI = $.extend(true, SGI, {
                 <div id="' + data.mbs_id + '" data-nr="' + nr + '" class="titel_body titel_body_2"></div>\
                 <div id="prg_' + data.mbs_id + '" class="prg_codebox"></div>\
             </div>');
-
 
 
             SGI.add_codebox_inst(data.mbs_id);
@@ -397,8 +396,8 @@ SGI = $.extend(true, SGI, {
                     <input type="checkbox" class="brake_delay_check" ng-model="mbs[' + nr + '].wert" id="' + data.mbs_id + '_delay_opt" title="' + SGI.translate("delay_check") + '"/>\
                 </div>\
                 <div id="left_' + nr + '" class="div_left">\
-                                  <div id="' + data.mbs_id + '_in1"  class="div_input ' + data.mbs_id + '_in"><a class="input_font">'+SGI.translate("Start")+'</a></div>\
-                                  <div id="' + data.mbs_id + '_in2"  class="div_input ' + data.mbs_id + '_in"><a class="input_font">'+SGI.translate("Abbruch")+'</a></div>\
+                                  <div id="' + data.mbs_id + '_in1"  class="div_input ' + data.mbs_id + '_in"><a class="input_font">' + SGI.translate("Start") + '</a></div>\
+                                  <div id="' + data.mbs_id + '_in2"  class="div_input ' + data.mbs_id + '_in"><a class="input_font">' + SGI.translate("Abbruch") + '</a></div>\
                 </div>\
                 <div id="right_' + nr + '" class="div_right_brake">\
                     <div id="' + data.mbs_id + '_out" class="div_output1 ' + data.mbs_id + '_out"><a class="output_font"></a></div>\
@@ -424,8 +423,8 @@ SGI = $.extend(true, SGI, {
                     <input type="text" class="brake_delay" ng-model="mbs[' + nr + '].val" id="' + data.mbs_id + '_delay" title="' + SGI.translate("Pause in Sekunden") + '" />\
                 </div>\
                 <div id="left_' + nr + '" class="div_left">\
-                                  <div id="' + data.mbs_id + '_in1"  class="div_input ' + data.mbs_id + '_in"><a class="input_font">'+SGI.translate("Start")+'</a></div>\
-                                  <div id="' + data.mbs_id + '_in2"  class="div_input ' + data.mbs_id + '_in"><a class="input_font">'+SGI.translate("Abbruch")+'</a></div>\
+                                  <div id="' + data.mbs_id + '_in1"  class="div_input ' + data.mbs_id + '_in"><a class="input_font">' + SGI.translate("Start") + '</a></div>\
+                                  <div id="' + data.mbs_id + '_in2"  class="div_input ' + data.mbs_id + '_in"><a class="input_font">' + SGI.translate("Abbruch") + '</a></div>\
                 </div>\
                 <div id="right_' + nr + '" class="div_right_brake">\
                     <div id="' + data.mbs_id + '_out" class="div_output1 ' + data.mbs_id + '_out"><a class="output_font"></a></div>\
@@ -463,7 +462,12 @@ SGI = $.extend(true, SGI, {
                 </div>\
             </div>');
 
-            $("#" + data.mbs_id + "_delay").numberMask({type: 'float', beforePoint: 5, afterPoint: 1, decimalMark: '.'});
+            $("#" + data.mbs_id + "_delay").numberMask({
+                type: 'float',
+                beforePoint: 5,
+                afterPoint: 1,
+                decimalMark: '.'
+            });
 
             $("#" + data.mbs_id + "_n").numberMask({type: 'int', beforePoint: 5})
 
@@ -490,11 +494,16 @@ SGI = $.extend(true, SGI, {
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         if (data.type == "ccuobj") {
             var id;
-            console.log(data.mbs_id)
             if (scope.mbs[nr]["hmid"].length == 0) {
-                id = SGI.get_lowest_obj_id();
-                scope.mbs[nr]["hmid"] = id;
-                homematic.regaObjects[id] = {"Name": "", "TypeName": "VARDP"}
+
+                SGI.get_lowest_obj_id("", function (id) {
+                    scope.mbs[nr]["hmid"] = id;
+                    if (id != "undefined") {
+                        homematic.regaObjects[id] = {"Name": "", "TypeName": "VARDP"}
+                    }
+                });
+
+
             } else {
                 id = scope.mbs[nr]["hmid"];
                 homematic.regaObjects[id] = {"Name": data.name, "TypeName": "VARDP"}
@@ -510,23 +519,64 @@ SGI = $.extend(true, SGI, {
                     <p class="head_font">CCU.IO Objekt</p>\
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_obj"/>\
                 </div>\
-                <div class="div_hmid_trigger" >\
-                    <label style="display:inline-block; font-size: 13px;color: #000000;width: 45px ">Name: </label><input class="inp_obj_name" ng-model="mbs[' + nr + '].name" id="name_' + data.mbs_id + '">\
+                <div class="div_hmid_trigger" style="text-align:left" >\
+                    <label style="display:inline-block; font-size: 13px;color: #000000;width: 45px "> Name: </label><input class="inp_obj_name" ng-model="mbs[' + nr + '].name" id="name_' + data.mbs_id + '" data-id="' + id + '"><br>\
+                    <label style="display:inline-block; font-size: 13px;color: #000000;width: 45px "> ID: </label><span style="min-width: 136px;color: black;display: inline-block;" id="hmid_' + data.mbs_id + '" class="ccuobj_id" ng-bind="mbs[' + nr + '].hmid" ></span><img data-id="' + id + '" id="hmid_ack_' + data.mbs_id + '" class="btn_ccuobj_update" src="img/icon/update.png"/>\
                 </div>\
             </div>');
 
             $("#name_" + data.mbs_id).change(function () {
-                homematic.regaObjects[id].Name = $(this).val()
+                var ack_id = $(this).data("id");
+
+                if (ack_id != "undefined") {
+                    homematic.regaObjects[ack_id].Name = $(this).val();
+                }
+                scope.mbs[nr]["name"] = $(this).val();
+                scope.$apply();
             });
+
+            $("#hmid_ack_" + data.mbs_id).click(function () {
+                var ack_id = $(this).data("id");
+                SGI.get_lowest_obj_id(scope.mbs[nr].name, function (id) {
+
+                    if (id != "undefined" && id != ack_id) {
+                        var del = true;
+                        $.each($(".ccuobj_id"), function () {
+                            if ($(this).text() == ack_id) {
+                                del = false;
+                            }
+                        });
+
+                        if (del) {
+                            delete homematic.regaObjects[ack_id];
+                        }
+
+                        homematic.regaObjects[id] = {"Name": scope.mbs[nr]["name"], "TypeName": "VARDP"};
+                    } else {
+                        homematic.regaObjects[id] = {"Name": scope.mbs[nr]["name"], "TypeName": "VARDP"};
+                    }
+                    $("#name_" + data.mbs_id).data("id", id);
+                    $("#hmid_ack_" + data.mbs_id).data("id", id);
+                    scope.mbs[nr]["hmid"] = id;
+                    scope.$apply();
+                });
+            });
+
 
         }
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         if (data.type == "ccuobjpersi") {
             var id;
             if (scope.mbs[nr]["hmid"].length == 0) {
-                id = SGI.get_lowest_obj_id();
-                scope.mbs[nr]["hmid"] = id;
-                homematic.regaObjects[id] = {"Name": "", "TypeName": "VARDP"}
+
+                SGI.get_lowest_obj_id("", function (id) {
+                    scope.mbs[nr]["hmid"] = id;
+                    if (id != "undefined") {
+                        homematic.regaObjects[id] = {"Name": "", "TypeName": "VARDP"}
+                    }
+                });
+
+
             } else {
                 id = scope.mbs[nr]["hmid"];
                 homematic.regaObjects[id] = {"Name": data.name, "TypeName": "VARDP"}
@@ -542,13 +592,48 @@ SGI = $.extend(true, SGI, {
                     <p style="color: #008000!important;"class="head_font">CCU.IO Objekt persistent</p>\
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_obj"/>\
                 </div>\
-                <div class="div_hmid_trigger" >\
-                    <label style="display:inline-block; font-size: 13px;color: #000000;width: 45px ">Name: </label><input class="inp_obj_name" ng-model="mbs[' + nr + '].name" id="name_' + data.mbs_id + '">\
+                 <div class="div_hmid_trigger" style="text-align:left" >\
+                    <label style="display:inline-block; font-size: 13px;color: #000000;width: 45px "> Name: </label><input class="inp_obj_name" ng-model="mbs[' + nr + '].name" id="name_' + data.mbs_id + '" data-id="' + id + '"><br>\
+                    <label style="display:inline-block; font-size: 13px;color: #000000;width: 45px "> ID: </label><span style="min-width: 136px;color: black;display: inline-block;" id="hmid_' + data.mbs_id + '" class="ccuobj_id" ng-bind="mbs[' + nr + '].hmid" ></span><img data-id="' + id + '" id="hmid_ack_' + data.mbs_id + '" class="btn_ccuobj_update" src="img/icon/update.png"/>\
                 </div>\
             </div>');
 
+
             $("#name_" + data.mbs_id).change(function () {
-                homematic.regaObjects[id].Name = $(this).val()
+                var ack_id = $(this).data("id");
+
+                if (ack_id != "undefined") {
+                    homematic.regaObjects[ack_id].Name = $(this).val();
+                }
+                scope.mbs[nr]["name"] = $(this).val();
+                scope.$apply();
+            });
+
+            $("#hmid_ack_" + data.mbs_id).click(function () {
+                var ack_id = $(this).data("id");
+                SGI.get_lowest_obj_id(scope.mbs[nr].name, function (id) {
+
+                    if (id != "undefined" && id != ack_id) {
+                        var del = true;
+                        $.each($(".ccuobj_id"), function () {
+                            if ($(this).text() == ack_id) {
+                                del = false;
+                            }
+                        });
+
+                        if (del) {
+                            delete homematic.regaObjects[ack_id];
+                        }
+
+                        homematic.regaObjects[id] = {"Name": scope.mbs[nr]["name"], "TypeName": "VARDP"};
+                    } else {
+                        homematic.regaObjects[id] = {"Name": scope.mbs[nr]["name"], "TypeName": "VARDP"};
+                    }
+                    $("#name_" + data.mbs_id).data("id", id);
+                    $("#hmid_ack_" + data.mbs_id).data("id", id);
+                    scope.mbs[nr]["hmid"] = id;
+                    scope.$apply();
+                });
             });
 
         }
@@ -558,7 +643,6 @@ SGI = $.extend(true, SGI, {
         SGI.add_mbs_endpoint(data);
         SGI.make_mbs_drag(data);
         SGI.make_mbs_drop();
-
 
 
     },
