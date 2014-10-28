@@ -46,6 +46,14 @@ CCU-IO.ScriptGUI ist ein Visueller Script builder auf Node-Webkit basis. Mit ihm
 
 
 ## Changelog
+### 0.72.
+* aktualisriung der Connectionauswahlliste nach erfolgreicher verbindung & anzeigen der offline flagge
+
+### 0.72.8
+* Bugfix overrite APP (Win)
+* Bugfix path (resolve)
+* CCU.IO Objeckt id aktualisierbar
+
 ### 0.72.7
 * Bugfix Save
 

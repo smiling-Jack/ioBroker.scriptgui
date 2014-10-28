@@ -15,7 +15,7 @@
         var options = {
             "title": "ScriptGUI",
             "icon": "img/cube256.png",
-            "toolbar": true,
+            "toolbar": false,
             "frame": true,
             "width": 800,
             "height": 600,

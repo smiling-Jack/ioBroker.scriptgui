@@ -310,7 +310,7 @@ SGI = $.extend(true, SGI, {
                 <div id="right_' + nr + '" class="div_right_string">\
                     <div id="' + data.fbs_id + '_out" class="div_io_out_string ' + data.fbs_id + '_out"></div>\
                 </div>\
-                <textarea class="inp_text"  id="var_' + nr + '" ng-model="fbs[' + nr + '].value"></textarea>\
+                <textarea class="inp_text"  style="width: '+data.style.width+'px" id="var_' + nr + '" ng-model="fbs[' + nr + '].value"></textarea>\
                 <div id="head_' + nr + '"  class="div_head_right_string " style="background-color: orange">\
                     <div class="head_font_io_string">Text</div>\
                 </div>\
@@ -324,6 +324,7 @@ SGI = $.extend(true, SGI, {
 
                 if (bind == false) {
                     $('#var_' + nr).bind("mouseup", function () {
+                        console.log(nr)
                         scope.fbs[nr].style.width = w;
                         scope.$apply();
                         $('#var_' + nr).unbind("mouseup");

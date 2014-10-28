@@ -251,7 +251,7 @@ jQuery.extend(true, SGI, {
 
             $("#endpoints").css({
                 left: 8 - left + "px",
-                top: 0 - top + "px",
+                top: -8 - top + "px",
                 position: "relative"
             });
 
@@ -274,6 +274,22 @@ jQuery.extend(true, SGI, {
             canvg();
             canvg();
 
+
+            //html2canvas(document.getElementById("photo")).then(function (canvas) {
+            //    $("body").append('<div style="text-align: center" id="dialog_photo"></div>');
+            //
+            //    $("#dialog_photo").dialog({
+            //        modal: true,
+            //        close: function () {
+            //            $("#dialog_photo").remove()
+            //        }
+            //    });
+            //
+            //    $("#dialog_photo").append(canvas)
+            //    console.log(canvas)
+            //});
+
+
             html2canvas(document.getElementById("photo"), {
                 background: undefined,
                 onrendered: function (canvas) {
@@ -287,14 +303,10 @@ jQuery.extend(true, SGI, {
                         }
                     });
 
-                    $("#dialog_photo").append(canvas)
-                    canvas.toBlob(function (blob) {
-                        saveAs(blob, type + ".png");
-                    });
-                    var data = scope.last_file
+                    $("#dialog_photo").append((Canvas2Image.convertToImage(canvas, $("#photo").width() , $("#photo").height(), "png")));
+                    fs.writeFile(nwDir + "/" + type + ".png", Canvas2Image.saveAsImage(canvas, $("#photo").width() , $("#photo").height(), "png"),"base64", function(){
 
-                    SGI.clear();
-                    SGI.load_prg(data);
+                    })
 
                 }
             });
@@ -740,19 +752,18 @@ jQuery.extend(true, SGI, {
 
 // Live Test
         $("#img_set_script_play").click(function () {
-                if(SGI.con_data){
+                if (SGI.con_data) {
                     simulate();
-                }else{
+                } else {
                     alert("Keine Online/Offline daten")
                 }
-
 
 
             }
         ).hover(
             function () {
-                if(SGI.con_data)
-                $(this).addClass("ui-state-focus");
+                if (SGI.con_data)
+                    $(this).addClass("ui-state-focus");
             }, function () {
                 $(this).removeClass("ui-state-focus");
             }
@@ -763,8 +774,8 @@ jQuery.extend(true, SGI, {
             }
         ).hover(
             function () {
-                if(SGI.con_data)
-                $(this).addClass("ui-state-focus");
+                if (SGI.con_data)
+                    $(this).addClass("ui-state-focus");
             }, function () {
                 $(this).removeClass("ui-state-focus");
             }
@@ -1488,7 +1499,11 @@ jQuery.extend(true, SGI, {
                                     $(".dot").remove();
                                     scope.con.mbs[SGI.con.id].connector.stub = [30, 30];
                                     scope.con.mbs[SGI.con.id].connector.midpoint = 0.5;
-                                    SGI.con.setConnector([ "Flowchart", { stub: [30, 30], alwaysRespectStubs: true, midpoint: 0.5}  ]);
+                                    SGI.con.setConnector(["Flowchart", {
+                                        stub: [30, 30],
+                                        alwaysRespectStubs: true,
+                                        midpoint: 0.5
+                                    }]);
                                     scope.$apply();
                                 }
                             }
@@ -1496,7 +1511,7 @@ jQuery.extend(true, SGI, {
                     }
                 }
 
-                return  {
+                return {
                     className: "ui-widget-content ui-corner-all",
                     items: {
                         "add_Force": {
@@ -1522,7 +1537,11 @@ jQuery.extend(true, SGI, {
                                 $(".dot").remove();
                                 scope.con.fbs[$trigger.parent().attr("id")][SGI.con.id].connector.stub = [30, 30];
                                 scope.con.fbs[$trigger.parent().attr("id")][SGI.con.id].connector.midpoint = 0.5;
-                                SGI.con.setConnector([ "Flowchart", { stub: [30, 30], alwaysRespectStubs: true, midpoint: 0.5}  ]);
+                                SGI.con.setConnector(["Flowchart", {
+                                    stub: [30, 30],
+                                    alwaysRespectStubs: true,
+                                    midpoint: 0.5
+                                }]);
                                 scope.$apply();
                             }
                         }
@@ -2025,8 +2044,8 @@ jQuery.extend(true, SGI, {
 
         } else {
             try {
-                var name = SGI.file_name.replace('.prg','.js');
-                SGI.socket.emit("writeRawFile", "scripts/" + name , script);
+                var name = SGI.file_name.replace('.prg', '.js');
+                SGI.socket.emit("writeRawFile", "scripts/" + name, script);
             } catch (err) {
                 alert("Keine Verbindung zu CCU.IO")
             }
@@ -2071,7 +2090,7 @@ jQuery.extend(true, SGI, {
         });
 
 
-        editor.setOption("value", js_beautify(data.toString(), { indent_size: 2 }));
+        editor.setOption("value", js_beautify(data.toString(), {indent_size: 2}));
 
     },
 

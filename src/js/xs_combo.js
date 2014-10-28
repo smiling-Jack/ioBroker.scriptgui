@@ -8,10 +8,21 @@
 
 
 (function ($) {
-    $.fn.xs_combo = function (_options,_newData) {
+    $.fn.xs_combo = function (_options, _newData) {
 
+        if (_newData) {
+            if (_options == "setData") {
+                var classes = $(this).find(".xs_list_box").first().attr("data-cssText");
+                $(this).find(".xs_liste").remove();
 
-        if (typeof _options == "string") {
+                var liste = "";
+                $.each(_newData, function () {
+                    liste += ('<p class="' + classes + ' xs_liste">' + this + '</p>')
+                });
+                $(this).find(".xs_list_box").append(liste.toString())
+            }
+
+        } else if (typeof _options == "string") {
             var text = $(this).children("span");
             $(text).text(_options);
             $(this).val(_options);
@@ -38,18 +49,18 @@
             var liste = "";
 
             var timer;
-            var readonly ="";
+            var readonly = "";
 
-            if (!o.combo){
+            if (!o.combo) {
                 readonly = "readonly";
             }
             $.each(o.data, function () {
-                liste += ('<p class="' + o.cssText + '">' + this + '</p>')
+                liste += ('<p class="' + o.cssText + ' xs_liste">' + this + '</p>')
             });
 
             this.addClass(o.cssButton);
-            this.append('<input '+readonly +' style="outline-color: transparent;border: none; background-color: transparent;padding-top: 0;padding-bottom: 0"  type="text" value="' + o.val + '" class="' + o.cssText + '"></input>');
-            this.append('<div class="' + o.cssMenu + '">' + liste.toString() + '</div>');
+            this.append('<input ' + readonly + ' style="outline-color: transparent;border: none; background-color: transparent;padding-top: 0;padding-bottom: 0"  type="text" value="' + o.val + '" class="' + o.cssText + '"></input>');
+            this.append('<div class="' + o.cssMenu + ' xs_list_box" data-cssText="' + o.cssText + '">' + liste.toString() + '</div>');
 
             this.find("div").hide();
             text = this.children("input");
@@ -93,11 +104,11 @@
             this.click(function () {
                 $(list).toggle();
             })
-                .keydown(function(){
+                .keydown(function () {
                     $(list).hide();
                 });
 
-            $(text).change(function(){
+            $(text).change(function () {
                 $($this).val($(this).val());
                 $($this).trigger("change");
             });

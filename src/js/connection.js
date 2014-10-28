@@ -116,8 +116,6 @@ jQuery.extend(true, SGI, {
             $.get(url + "/auth/auth.js", function (data) {
                 var socketSession_id = data.split('\'')[1];
 
-                console.log(data)
-
                 SGI.socket = io.connect(url + "?key=" + socketSession_id, {'force new connection': true});
 
                 SGI.socket.on("connect", function (err) {
@@ -140,7 +138,22 @@ jQuery.extend(true, SGI, {
                                     // TODO Ist da hier wirklich richtig oder doch eher direkt nach dem laden ?
                                     var name = $("#inp_con_ip").val().replace(":", "port");
                                     fs.writeFile(nwDir + '/datastore/connections/' + name + '.json', JSON.stringify(homematic), function (err) {
-                                        if (err) throw err;
+                                        if (err){
+                                            throw err;
+                                        }else{
+                                            SGI.con_files = [];
+                                            try {
+                                                $.each(fs.readdirSync(nwDir + '/datastore/connections/'), function () {
+                                                    var con_name = this.split(".json")[0];
+                                                    con_name = con_name.replace("port", ":");
+                                                    SGI.con_files.push(con_name)
+                                                });
+                                            }
+                                            catch (e) {
+                                            }
+                                            $("#inp_con_ip").xs_combo("setData", SGI.con_files);
+                                            $("#btn_con_offline").parent().show()
+                                        }
                                     });
 
                                     SGI.socket.on('event', function (obj) {
@@ -155,6 +168,7 @@ jQuery.extend(true, SGI, {
 
                                     SGI.con_data = true;
                                     $("#img_con_state").attr("src", "img/icon/flag-green.png");
+
                                 });
                             });
                         });
