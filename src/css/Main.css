@@ -432,6 +432,8 @@ body {
 
 ._jsPlumb_endpoint {
     z-index: 3 !important;
+    border-radius: 7px;
+    overflow: hidden;
 }
 
 ._jsPlumb_connector {
@@ -1151,7 +1153,7 @@ body {
     text-align: center;
     background-color: #ffffff;
     border: 1px solid #00ffff;
-    border-radius: 7px;
+    border-radius: 9px;
 
     z-index: 50;
     overflow: visible;
@@ -2144,4 +2146,37 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
     100% {
         -webkit-transform: rotate(0deg);
     }
+}
+
+
+
+/*______________________________________*/
+
+.fbs_element:before {
+    /* background: red; */
+    content: "";
+    display: inline-block;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: -1px;
+    top: -1px;
+    border-radius: 7px;
+    box-shadow: 1px 1px 0px rgba(0, 0, 0, 1),inset 0px -1px 14px rgba(0, 0, 0, 0.9);
+    border: 1px solid rgb(65, 65, 65);
+}
+
+._jsPlumb_endpoint:before {
+    /* background: red; */
+    content: "";
+    display: inline-block;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0px;
+    top: 0px;
+    border-radius: 1px;
+    box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.9);
+    /* border: 1px solid rgb(65, 65, 65); */
+    z-index: 1;
 }
