@@ -166,7 +166,7 @@ body {
 
 .xs_focus_toolbox {
     font-weight: 700 !important;
-    border-radius: 7px;
+    border-radius: 8px;
 }
 
 .xs_button_con {
@@ -192,7 +192,7 @@ body {
 
 .xs_focus_con {
     font-weight: 700 !important;
-    border-radius: 7px;
+    border-radius: 8px;
     font-size: 14px !important;
 }
 
@@ -432,7 +432,7 @@ body {
 
 ._jsPlumb_endpoint {
     z-index: 3 !important;
-    border-radius: 7px;
+    border-radius: 2px;
     overflow: hidden;
 }
 
@@ -654,8 +654,8 @@ body {
     margin: auto;
     text-align: center;
     background-color: #ffffff;
-    border: 1px solid #00ffff;
-    border-radius: 7px;
+    /*border: 1px solid rgb(65, 65, 65);*/
+    border-radius: 8px;
 
     z-index: 50;
 }
@@ -854,7 +854,7 @@ body {
     min-height: 0px !important;
     width: auto;
     height: auto;
-    border-radius: 7px;
+    border-radius: 8px;
     background-color: yellow;
     cursor: move;
 
@@ -895,7 +895,7 @@ body {
 .delay {
     background-color: red;
     border: dashed 0px;
-    border-radius: 7px;
+    border-radius: 8px;
     text-align: center;
 }
 
@@ -951,7 +951,7 @@ body {
     /* TODO box shadow anpassen*/
     box-shadow: 0 0 15px cyan;
     border: 2px solid cyan;
-    border-radius: 7px;
+    border-radius: 8px;
 }
 
 .div_right_filter {
@@ -1152,7 +1152,7 @@ body {
     margin: auto;
     text-align: center;
     background-color: #ffffff;
-    border: 1px solid #00ffff;
+    /*border: 1px solid black;*/
     border-radius: 9px;
 
     z-index: 50;
@@ -1229,6 +1229,8 @@ body {
     font-weight: bold;
     color: black !important;
     font-size: 11px;
+    z-index: 2;
+    position: relative;
 }
 
 .fbs_element_tr {
@@ -1281,10 +1283,11 @@ body {
     font-weight: bold;
     color: black !important;
     font-size: 11px;
-
     display: flex;
     margin-top: -10px;
     margin: 0;
+    position: relative;
+    z-index: 2;
 
 }
 
@@ -1305,6 +1308,9 @@ body {
     justify-content: center;
     align-items: center;
     height: 100%;
+    z-index: 0;
+    position: relative;
+    box-shadow: 1px 1px 0px rgba(0, 0, 0, 1),inset -2px -5px 14px rgba(0, 0, 0, 0.8),inset 0px 5px 14px rgba(255, 255, 255, 1);
 }
 
 .div_head_right_string {
@@ -1468,12 +1474,12 @@ body {
     font-size: 10px;
     white-space: nowrap;
     clear: both;
+    padding-top: 2px;
+    padding-right: 5px;
     padding-bottom: 2px;
     padding-left: 5px;
-    padding-right: 5px;
-    padding-top: 2px;
-    padding: 0 5px;
     align-items: center;
+    z-index: 2;
 }
 
 .div_konst {
@@ -1484,6 +1490,7 @@ body {
     align-content: center;
     min-width: 35px;
     padding: 0 3px;
+    z-index: 1;
 
 }
 
@@ -1812,17 +1819,18 @@ body {
     text-align: center;
     width: 50px;
     z-index: 10;
+    background-color: transparent;
 }
 
 .dot {
     position: absolute;
     z-index: 10000;
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
     border-radius: 10px;
     background-color: red;
-    border: 1px solid red;
-    box-shadow: 0 0 7px red;
+    /* border: 1px solid rgba(255, 0, 0, 0); */
+    box-shadow: 0 0 6px 0px rgba(255, 0, 0, 1),inset -3px -3px 9px 0px rgba(0, 0, 0, 0.85),inset 3px 3px 8px -1px rgba(255, 255, 255, 0.8);
 }
 
 .item_font {
@@ -2162,8 +2170,22 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
     left: -1px;
     top: -1px;
     border-radius: 7px;
-    box-shadow: 1px 1px 0px rgba(0, 0, 0, 1),inset 0px -1px 14px rgba(0, 0, 0, 0.9);
-    border: 1px solid rgb(65, 65, 65);
+    box-shadow: 1px 1px 0px rgba(0, 0, 0, 1),inset -3px -5px 14px rgba(0, 0, 0, 0.8),inset 3px 5px 14px rgba(255, 255, 255, 1);
+    /*border: 1px solid rgb(65, 65, 65);*/
+}
+
+.mbs_element:not(.mbs_element_codebox):before {
+    /* background: red; */
+    content: "";
+    display: inline-block;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: -1px;
+    top: -1px;
+    border-radius: 7px;
+    box-shadow: 1px 1px 0px rgba(0, 0, 0, 1),inset -3px -5px 14px rgba(0, 0, 0, 0.8),inset 3px 5px 14px rgba(255, 255, 255, 1);
+   /**/ border: 1px solid rgb(65, 65, 65);
 }
 
 ._jsPlumb_endpoint:before {
@@ -2175,8 +2197,7 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
     width: 100%;
     left: 0px;
     top: 0px;
-    border-radius: 1px;
-    box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.9);
+    box-shadow: inset 4px 4px 4px rgba(255, 255, 255, 0.4),inset -4px -4px 4px rgba(0, 0, 0, 0.4);
     /* border: 1px solid rgb(65, 65, 65); */
     z-index: 1;
 }
