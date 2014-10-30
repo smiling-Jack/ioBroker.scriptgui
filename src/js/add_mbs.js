@@ -53,7 +53,7 @@ SGI = $.extend(true, SGI, {
                 <div mbs_id="' + data.mbs_id + '" data-nr="' + nr + '" class="titel_body">\
                     <input style="position: relative; margin-top: -12px" ng-model="mbs[' + nr + '].titel" type="text" id="titel_' + data.mbs_id + '" class="titel_codebox item_font">\
                 </div>\
-                <div id="' + data.mbs_id + '" data-nr="' + nr + '" class="titel_body titel_body_2"></div>\
+                <div data-nr="' + nr + '" class="titel_body titel_body_2"></div>\
                 <div id="prg_' + data.mbs_id + '" class="prg_codebox"></div>\
             </div>');
 
@@ -140,7 +140,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#prg_panel"), '\
             <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_trigger tr_singel">\
-                <div id="head_' + nr + '" class="div_head" style="background-color: red">\
+                <div    class="div_head" style="background-color: red">\
                     <p class="head_font">Trigger -- &nbsp</p>\
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_trigger"/>\
                 </div>\
@@ -155,7 +155,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#prg_panel"), '\
             <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_trigger tr_singel">\
-                <div id="head_' + nr + '" class="div_head" style="background-color: red">\
+                <div    class="div_head" style="background-color: red">\
                     <p class="head_font">Trigger ' + data.type.split("_")[1] + ' &nbsp</p>\
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_trigger"/>\
                 </div>\
@@ -170,7 +170,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#prg_panel"), '\
             <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_trigger tr_singel">\
-                <div id="head_' + nr + '" class="div_head" style="background-color: red">\
+                <div    class="div_head" style="background-color: red">\
                     <p class="head_font">Trigger ' + data.type.split("_")[1] + ' &nbsp</p>\
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_trigger"/>\
                 </div>\
@@ -185,7 +185,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#prg_panel"), '\
             <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_trigger tr_singel">\
-                <div id="head_' + nr + '" class="div_head" style="background-color: red">\
+                <div    class="div_head" style="background-color: red">\
                     <p class="head_font">Trigger ' + data.type.split("_")[1] + ' &nbsp</p>\
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_trigger"/>\
                 </div>\
@@ -200,7 +200,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#prg_panel"), '\
             <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_trigger tr_singel">\
-                <div id="head_' + nr + '" class="div_head" style="background-color: red">\
+                <div    class="div_head" style="background-color: red">\
                     <p class="head_font">Trigger ' + data.type.split("_")[1] + ' &nbsp</p>\
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_trigger"/>\
                 </div>\
@@ -215,7 +215,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#prg_panel"), '\
             <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_trigger tr_singel">\
-                <div id="head_' + nr + '" class="div_head" style="background-color: red">\
+                <div    class="div_head" style="background-color: red">\
                     <p class="head_font">Trigger ' + data.type.split("_")[1] + ' &nbsp</p>\
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_trigger"/>\
                 </div>\
@@ -230,7 +230,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#prg_panel"), '\
             <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_trigger tr_singel">\
-                <div id="head_' + nr + '" class="div_head" style="background-color: red">\
+                <div    class="div_head" style="background-color: red">\
                     <p class="head_font">Trigger ' + data.type.split("_")[1] + ' &nbsp</p>\
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_trigger"/>\
                 </div>\
@@ -245,7 +245,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#prg_panel"), '\
             <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_trigger tr_simpel">\
-                <div id="head_' + nr + '" class="div_head" style="background-color: red">\
+                <div    class="div_head" style="background-color: red">\
                     <p class="head_font">Trigger Start</p>\
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_trigger"/>\
                 </div>\
@@ -260,7 +260,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#prg_panel"), '\
             <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_trigger tr_simpel">\
-                <div id="head_' + nr + '" class="div_head" style="background-color: red">\
+                <div    class="div_head" style="background-color: red">\
                     <p class="head_font">Trigger</p>\
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_trigger"/>\
                 </div>\
@@ -274,7 +274,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#prg_panel"), '\
             <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_trigger tr_simpel">\
-                <div id="head_' + nr + '" class="div_head" style="background-color: red">\
+                <div    class="div_head" style="background-color: red">\
                     <p class="head_font">Trigger</p>\
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_trigger"/>\
                 </div>\
@@ -287,7 +287,7 @@ SGI = $.extend(true, SGI, {
         if (data.type == "trigger_time") {
             scope.append($("#prg_panel"), '\
             <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_trigger tr_time">\
-                <div id="head_' + nr + '" class="div_head" style="background-color: red">\
+                <div    class="div_head" style="background-color: red">\
                   <p class="head_font">Trigger Time</p>\
                   <img src="img/icon/bullet_toggle_minus.png" class="btn_min_trigger"/>\
                 </div>\
@@ -302,7 +302,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#prg_panel"), '\
             <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_trigger tr_vartime">\
-                <div id="head_' + nr + '" class="div_head" style="background-color: red">\
+                <div    class="div_head" style="background-color: red">\
                                     <p class="head_font">Trigger var Time &nbsp  &nbsp</p>\
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_trigger"/>\
                 </div>\
@@ -316,7 +316,7 @@ SGI = $.extend(true, SGI, {
         if (data.type == "trigger_astro") {
             scope.append($("#prg_panel"), '\
             <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_trigger tr_astro">\
-                <div id="head_' + nr + '" class="div_head" style="background-color: red">\
+                <div    class="div_head" style="background-color: red">\
                   <p class="head_font">Trigger Astro</p>\
                   <img src="img/icon/bullet_toggle_minus.png" class="btn_min_trigger"/>\
                 </div>\
@@ -333,19 +333,19 @@ SGI = $.extend(true, SGI, {
             }
             scope.append($("#prg_panel"), '\
             <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_trigger tr_simpel">\
-                <div id="head_' + nr + '" class="div_head" style="background-color: red">\
+                <div    class="div_head" style="background-color: red">\
                     <p class="head_font">Trigger Zyklus M &nbsp&nbsp&nbsp</p>\
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_trigger"/>\
                 </div>\
                 <div class="div_hmid_trigger" >\
                     <div id="tr_ch_body_' + nr + '" class="tr_ch_body">\
-                        <input class="inp_peri" ng-model="mbs[' + nr + '].time" id="var_' + nr + '">\
-                        <a style="margin-left: 4px; font-size: 13px;color: #676767">Minutes</a> \
+                        <input class="inp_peri" ng-model="mbs[' + nr + '].time" id="zykm_var_' + nr + '">\
+                        <a style="position: relative;z-index: 1; background-color: transparent;margin-left: 4px; font-size: 13px;color: #676767">Minutes</a> \
                     </div>\
                 </div>\
             </div>');
 
-            $('#var_' + nr).numberMask({type: 'float', beforePoint: 3, afterPoint: 2, decimalMark: '.'});
+            $('#zykm_var_' + nr).numberMask({type: 'float', beforePoint: 3, afterPoint: 2, decimalMark: '.'});
 
         }
 //    //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -353,7 +353,7 @@ SGI = $.extend(true, SGI, {
 //
 //      scope.append($("#prg_panel"), '\
 //            <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_trigger tr_singel">\
-//              <div id="head_' + nr + '" class="div_head" style="background-color: red">\
+//              <div    class="div_head" style="background-color: red">\
 //                  <p class="head_font">Trigger ' + data.type.split("_")[1] + '</p>\
 //                  <img src="img/icon/bullet_toggle_minus.png" class="btn_min_trigger"/>\
 //              </div>\
@@ -368,7 +368,7 @@ SGI = $.extend(true, SGI, {
         if (data.type == "trigger_val") {
             scope.append($("#prg_panel"), '\
             <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_trigger tr_val">\
-                <div id="head_' + nr + '" class="div_head" style="background-color: red">\
+                <div    class="div_head" style="background-color: red">\
                     <p class="head_font">Trigger Value</p>\
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_trigger"/>\
                 </div>\
@@ -481,12 +481,12 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#prg_panel"), '\
             <div style="min-width:195px " ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" id="' + data.mbs_id + '" class="mbs_element mbs_element_trigger tr_simpel">\
-                <div id="head_' + nr + '" class="div_head" style="background-color: yellow">\
+                <div    class="div_head" style="background-color: yellow">\
                     <p style="color: red!important;" class="head_font">Script Objekt</p>\
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_obj"/>\
                 </div>\
                 <div class="div_hmid_trigger" >\
-                    <label style="display:inline-block; font-size: 13px;color: #000000;width: 45px ">Name: </label><input class="inp_obj_name" ng-model="mbs[' + nr + '].name" id="name_' + data.mbs_id + '">\
+                    <label style="position: relative;z-index: 1; background-color: transparent;display:inline-block; font-size: 13px;color: #000000;width: 45px ">Name: </label><input class="inp_obj_name" ng-model="mbs[' + nr + '].name" id="name_' + data.mbs_id + '">\
                 </div>\
             </div>');
 
@@ -515,13 +515,13 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#prg_panel"), '\
             <div style="min-width:195px"  ng-style="mbs[' + nr + '].style" data-nr="' + nr + '"  id="' + data.mbs_id + '" class="mbs_element mbs_element_trigger tr_simpel">\
-                <div id="head_' + nr + '" class="div_head" style="background-color: yellow">\
+                <div    class="div_head" style="background-color: yellow">\
                     <p class="head_font">CCU.IO Objekt</p>\
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_obj"/>\
                 </div>\
                 <div class="div_hmid_trigger" style="text-align:left" >\
-                    <label style="display:inline-block; font-size: 13px;color: #000000;width: 45px "> Name: </label><input class="inp_obj_name" ng-model="mbs[' + nr + '].name" id="name_' + data.mbs_id + '" data-id="' + id + '"><br>\
-                    <label style="display:inline-block; font-size: 13px;color: #000000;width: 45px "> ID: </label><span style="min-width: 136px;color: black;display: inline-block;" id="hmid_' + data.mbs_id + '" class="ccuobj_id" ng-bind="mbs[' + nr + '].hmid" ></span><img data-id="' + id + '" id="hmid_ack_' + data.mbs_id + '" class="btn_ccuobj_update" src="img/icon/update.png"/>\
+                    <label style="position: relative;z-index: 1; background-color: transparent;display:inline-block; font-size: 13px;color: #000000;width: 45px "> Name: </label><input class="inp_obj_name" ng-model="mbs[' + nr + '].name" id="name_' + data.mbs_id + '" data-id="' + id + '"><br>\
+                    <label style="position: relative;z-index: 1; background-color: transparent;display:inline-block; font-size: 13px;color: #000000;width: 45px "> ID: </label><span style="min-width: 136px;color: black;display: inline-block;" id="hmid_' + data.mbs_id + '" class="ccuobj_id" ng-bind="mbs[' + nr + '].hmid" ></span><img data-id="' + id + '" id="hmid_ack_' + data.mbs_id + '" class="btn_ccuobj_update" src="img/icon/update.png"/>\
                 </div>\
             </div>');
 
@@ -588,13 +588,13 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#prg_panel"), '\
             <div style="min-width:195px " ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" id="' + data.mbs_id + '" class="mbs_element mbs_element_trigger tr_simpel">\
-                <div id="head_' + nr + '" class="div_head" style="background-color: yellow">\
+                <div    class="div_head" style="background-color: yellow">\
                     <p style="color: #008000!important;"class="head_font">CCU.IO Objekt persistent</p>\
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_obj"/>\
                 </div>\
                  <div class="div_hmid_trigger" style="text-align:left" >\
-                    <label style="display:inline-block; font-size: 13px;color: #000000;width: 45px "> Name: </label><input class="inp_obj_name" ng-model="mbs[' + nr + '].name" id="name_' + data.mbs_id + '" data-id="' + id + '"><br>\
-                    <label style="display:inline-block; font-size: 13px;color: #000000;width: 45px "> ID: </label><span style="min-width: 136px;color: black;display: inline-block;" id="hmid_' + data.mbs_id + '" class="ccuobj_id" ng-bind="mbs[' + nr + '].hmid" ></span><img data-id="' + id + '" id="hmid_ack_' + data.mbs_id + '" class="btn_ccuobj_update" src="img/icon/update.png"/>\
+                    <label style="position: relative;z-index: 1; background-color: transparent;display:inline-block; font-size: 13px;color: #000000;width: 45px "> Name: </label><input class="inp_obj_name" ng-model="mbs[' + nr + '].name" id="name_' + data.mbs_id + '" data-id="' + id + '"><br>\
+                    <label style="position: relative;z-index: 1; background-color: transparent;display:inline-block; font-size: 13px;color: #000000;width: 45px "> ID: </label><span style="min-width: 136px;color: black;display: inline-block;" id="hmid_' + data.mbs_id + '" class="ccuobj_id" ng-bind="mbs[' + nr + '].hmid" ></span><img data-id="' + id + '" id="hmid_ack_' + data.mbs_id + '" class="btn_ccuobj_update" src="img/icon/update.png"/>\
                 </div>\
             </div>');
 
@@ -645,6 +645,6 @@ SGI = $.extend(true, SGI, {
         SGI.make_mbs_drop();
 
 
-    },
+    }
 
 });

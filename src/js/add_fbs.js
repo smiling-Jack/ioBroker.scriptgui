@@ -54,7 +54,7 @@ SGI = $.extend(true, SGI, {
             }
             scope.append($("#" + data.parent), '\
             <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_varinput">\
-                <div id="head_' + nr + '"  class="div_head" style="background-color: green">\
+                <div   class="div_head" style="background-color: green">\
                     <a class="head_font">and</a>\
                 </div>\
                 <div id="left_' + nr + '" class="div_left">\
@@ -73,7 +73,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#" + data.parent), '\
             <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_varinput">\
-                <div id="head_' + nr + '"  class="div_head" style="background-color: green">\
+                <div   class="div_head" style="background-color: green">\
                     <a class="head_font">or</a>\
                 </div>\
                 <div id="left_' + nr + '" class="div_left">\
@@ -90,7 +90,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#" + data.parent), '\
             <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_simpel ">\
-                <div id="head_' + nr + '"  class="div_head" style="background-color: green">\
+                <div   class="div_head" style="background-color: green">\
                     <a class="head_font">not</a>\
                 </div>\
                 <div id="left_' + nr + '" class="div_left">\
@@ -111,7 +111,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#" + data.parent), '\
             <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_simpel">\
-                <div id="head_' + nr + '"  class="div_head" style="background-color: green">\
+                <div   class="div_head" style="background-color: green">\
                     <a class="head_font">IF</a>\
                 </div>\
                 <select id="val_' + data.fbs_id + '"  ng-model="fbs[' + nr + '].value"  class="inp_if" title="' + SGI.translate("Vergleichsoperator") + '">\
@@ -137,7 +137,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#" + data.parent), '\
             <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_simpel">\
-                <div id="head_' + nr + '"  class="div_head" style="background-color: green">\
+                <div   class="div_head" style="background-color: green">\
                     <a style="font-size: 12px" class="head_font">Timespan</a>\
                 </div>\
                 <div id="left_' + nr + '" class="div_left">\
@@ -158,7 +158,7 @@ SGI = $.extend(true, SGI, {
             }
             scope.append($("#" + data.parent), '\
             <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_varinput">\
-                <div id="head_' + nr + '"  class="div_head" style="background-color: orange">\
+                <div   class="div_head" style="background-color: orange">\
                     <a class="head_font">Concate</a>\
                 </div>\
                 <div id="left_' + nr + '" class="div_left">\
@@ -178,7 +178,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_hmid" ng-bind="fbs[' + nr + '].name"></div>\
-                <div id="head_' + nr + '"  class="div_head_right " style="background-color: yellow">\
+                <div   class="div_head_right " style="background-color: yellow">\
                     <p class="head_font_io">Get</p>\
                 </div>\
              </div>');
@@ -191,7 +191,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_hmid" ng-bind="fbs[' + nr + '].name"></div>\
-                <div id="head_' + nr + '"  class="div_head_right " style="background-color: yellow">\
+                <div   class="div_head_right " style="background-color: yellow">\
                     <p style="color: #660066!important;" class="head_font_io">List</p>\
                 </div>\
             </div>');
@@ -207,7 +207,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_hmid" ng-bind="fbs[' + nr + '].name"></div>\
-                <div id="head_' + nr + '"  class="div_head_right " style="background-color: yellow">\
+                <div   class="div_head_right " style="background-color: yellow">\
                     <p style="color: red!important;" class="head_font_io">Local</p>\
                 </div>\
             </div>');
@@ -221,7 +221,7 @@ SGI = $.extend(true, SGI, {
                    <div id="' + data.fbs_id + '_in" class="div_io_out ' + data.fbs_id + '_in"></div>\
                 </div>\
                 <div  id="right_' + nr + '" class="div_right_io"></div>\
-                <div id="head_' + nr + '"  class="div_head_left " style="background-color: yellow">\
+                <div   class="div_head_left " style="background-color: yellow">\
                     <p class="head_font_io">Set</p>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_hmid" ng-bind="fbs[' + nr + '].name"></div>\
@@ -237,7 +237,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_in" class="div_io_out ' + data.fbs_id + '_in"></div>\
                 </div>\
                 <div  id="right_' + nr + '" class="div_right_io"></div>\
-                <div id="head_' + nr + '"  class="div_head_left " style="background-color: yellow">\
+                <div   class="div_head_left " style="background-color: yellow">\
                     <p style="color: red!important;" class="head_font_io">Local</p>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_hmid" ng-bind="fbs[' + nr + '].name"></div>\
@@ -253,7 +253,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_konst">true</div>\
-                <div id="head_' + nr + '"  class="div_head_right " style="background-color: orange">\
+                <div   class="div_head_right " style="background-color: orange">\
                         <p class="head_font_io">1</p>\
                 </div>\
             </div>');
@@ -267,7 +267,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_konst">false</div>\
-                <div id="head_' + nr + '"  class="div_head_right " style="background-color: orange">\
+                <div   class="div_head_right " style="background-color: orange">\
                         <p class="head_font_io">0</p>\
                 </div>\
             </div>');
@@ -280,13 +280,13 @@ SGI = $.extend(true, SGI, {
                 <div id="right_' + nr + '" class="div_right_io">\
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
-                <input class="inp_var" type=int ng-model="fbs[' + nr + '].value" id="var_' + nr + '">\
-                 <div id="head_' + nr + '"  class="div_head_right " style="background-color: orange" title="' + SGI.translate("no") + '">\
+                <input class="inp_var" type=int ng-model="fbs[' + nr + '].value" id="zahl_var_' + nr + '">\
+                 <div   class="div_head_right " style="background-color: orange" title="' + SGI.translate("no") + '">\
                         <p class="head_font_io" >No.</p>\
                 </div>\
             </div>');
 
-            $('#var_' + nr).numberMask({pattern: /^[-+]?\d*\.?\d*$/});
+            $('#zahl_var_' + nr).numberMask({pattern: /^[-+]?\d*\.?\d*$/});
 
 
         }
@@ -310,24 +310,24 @@ SGI = $.extend(true, SGI, {
                 <div id="right_' + nr + '" class="div_right_string">\
                     <div id="' + data.fbs_id + '_out" class="div_io_out_string ' + data.fbs_id + '_out"></div>\
                 </div>\
-                <textarea class="inp_text"  style="width: '+data.style.width+'px" id="var_' + nr + '" ng-model="fbs[' + nr + '].value"></textarea>\
-                <div id="head_' + nr + '"  class="div_head_right_string " style="background-color: orange">\
+                <textarea class="inp_text"  style="width: '+data.style.width+'px" id="string_var_' + nr + '" ng-model="fbs[' + nr + '].value"></textarea>\
+                <div   class="div_head_right_string " style="background-color: orange">\
                     <div class="head_font_io_string">Text</div>\
                 </div>\
             </div>');
 
 
-            $('#var_' + nr).autosize();
+            $('#string_var_' + nr).autosize();
 
             var bind = false;
-            $('#var_' + nr).resize(function (ui, w, h) {
+            $('#string_var_' + nr).resize(function (ui, w, h) {
 
                 if (bind == false) {
-                    $('#var_' + nr).bind("mouseup", function () {
+                    $('#string_var_' + nr).bind("mouseup", function () {
                         console.log(nr)
                         scope.fbs[nr].style.width = w;
                         scope.$apply();
-                        $('#var_' + nr).unbind("mouseup");
+                        $('#string_var_' + nr).unbind("mouseup");
                         bind = false;
                     });
                     bind = true;
@@ -362,7 +362,7 @@ SGI = $.extend(true, SGI, {
                     <option value="MM">' + SGI.translate("Monat_text") + '</option>\
                     <option value="roh">' + SGI.translate("roh") + '</option>\
                 </select>\
-                <div id="head_' + nr + '"  class="div_head_right_string " style="background-color: orange">\
+                <div   class="div_head_right_string " style="background-color: orange">\
                     <div  class="head_font_io_string">Time</div>\
                 </div>\
             </div>');
@@ -372,7 +372,7 @@ SGI = $.extend(true, SGI, {
         if (data.type == "mail") {
             scope.append($("#" + data.parent), '\
             <div id="mail_' + nr + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_varinput fbs_out">\
-               <div id="head_' + nr + '"  class="div_head" style="background-color: yellow">\
+               <div   class="div_head" style="background-color: yellow">\
                    <a class="head_font">Mail</a>\
                </div>\
                <div id="left_' + nr + '" class="div_left">\
@@ -393,7 +393,7 @@ SGI = $.extend(true, SGI, {
                    <div id="' + data.fbs_id + '_in" class="div_io_out debugout_' + nr + '_in"></div>\
                 </div>\
                 <div  id="right_' + nr + '" class="div_right_io"></div>\
-                 <div id="head_' + nr + '"  class="div_head_left " style="background-color: yellow">\
+                 <div   class="div_head_left " style="background-color: yellow">\
                         <p class="head_font_io">LOG</p>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_hmid">CCU.IO LOG</div>\
@@ -409,7 +409,7 @@ SGI = $.extend(true, SGI, {
                    <div id="' + data.fbs_id + '_in" class="div_io_out pushover_' + nr + '_in"></div>\
                 </div>\
                 <div  id="right_' + nr + '" class="div_right_io"></div>\
-                 <div id="head_' + nr + '"  class="div_head_left " style="background-color: yellow">\
+                 <div   class="div_head_left " style="background-color: yellow">\
                         <p class="head_font_io">Send</p>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_hmid">Pushover</div>\
@@ -419,7 +419,7 @@ SGI = $.extend(true, SGI, {
         if (data.type == "inc") {
             scope.append($("#" + data.parent), '\
             <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_simpel ">\
-               <div id="head_' + nr + '"  class="div_head" style="background-color: green">\
+               <div   class="div_head" style="background-color: green">\
                    <a class="head_font">+1</a>\
                </div>\
                <div id="left_' + nr + '" class="div_left">\
@@ -580,7 +580,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_konst">Value</div>\
-                <div id="head_' + nr + '"  class="div_head_right " style="background-color: red">\
+                <div   class="div_head_right " style="background-color: red">\
                         <p class="head_font_io">Tr.</p>\
                 </div>\
             </div>');
@@ -594,7 +594,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_konst">Time</div>\
-                <div id="head_' + nr + '"  class="div_head_right " style="background-color: red">\
+                <div   class="div_head_right " style="background-color: red">\
                     <p class="head_font_io">Tr.</p>\
                 </div>\
             </div>');
@@ -609,7 +609,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_konst">old Value</div>\
-                 <div id="head_' + nr + '"  class="div_head_right " style="background-color: red">\
+                 <div   class="div_head_right " style="background-color: red">\
                         <p class="head_font_io">Tr.</p>\
                 </div>\
             </div>');
@@ -623,7 +623,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_konst">old Time</div>\
-                 <div id="head_' + nr + '"  class="div_head_right " style="background-color: red">\
+                 <div   class="div_head_right " style="background-color: red">\
                         <p class="head_font_io">Tr.</p>\
                 </div>\
             </div>');
@@ -637,7 +637,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_konst"> ID </div>\
-                 <div id="head_' + nr + '"  class="div_head_right " style="background-color: red">\
+                 <div   class="div_head_right " style="background-color: red">\
                         <p class="head_font_io">Tr.</p>\
                 </div>\
             </div>');
@@ -651,7 +651,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_konst">Name</div>\
-                 <div id="head_' + nr + '"  class="div_head_right " style="background-color: red">\
+                 <div   class="div_head_right " style="background-color: red">\
                         <p class="head_font_io">Tr.</p>\
                 </div>\
             </div>');
@@ -665,7 +665,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_konst">Channel ID</div>\
-                 <div id="head_' + nr + '"  class="div_head_right " style="background-color: red">\
+                 <div   class="div_head_right " style="background-color: red">\
                         <p class="head_font_io">Tr.</p>\
                 </div>\
             </div>');
@@ -679,7 +679,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_konst">Channel Name</div>\
-                 <div id="head_' + nr + '"  class="div_head_right " style="background-color: red">\
+                 <div   class="div_head_right " style="background-color: red">\
                         <p class="head_font_io">Tr.</p>\
                 </div>\
             </div>');
@@ -693,7 +693,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_konst">Channel Type</div>\
-                 <div id="head_' + nr + '"  class="div_head_right " style="background-color: red">\
+                 <div   class="div_head_right " style="background-color: red">\
                         <p class="head_font_io">Tr.</p>\
                 </div>\
             </div>');
@@ -707,7 +707,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_konst">Channel Gewerk IDs</div>\
-                 <div id="head_' + nr + '"  class="div_head_right " style="background-color: red">\
+                 <div   class="div_head_right " style="background-color: red">\
                         <p class="head_font_io">Tr.</p>\
                 </div>\
             </div>');
@@ -721,7 +721,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_konst">Channel room IDs</div>\
-                 <div id="head_' + nr + '"  class="div_head_right " style="background-color: red">\
+                 <div   class="div_head_right " style="background-color: red">\
                         <p class="head_font_io">Tr.</p>\
                 </div>\
             </div>');
@@ -735,7 +735,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_konst">Channel Gewerk names</div>\
-                 <div id="head_' + nr + '"  class="div_head_right " style="background-color: red">\
+                 <div   class="div_head_right " style="background-color: red">\
                         <p class="head_font_io">Tr.</p>\
                 </div>\
             </div>');
@@ -749,7 +749,7 @@ SGI = $.extend(true, SGI, {
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <div id="div_hmid_' + nr + '" class="div_konst">Channel room names</div>\
-                <div id="head_' + nr + '"  class="div_head_right " style="background-color: red">\
+                <div   class="div_head_right " style="background-color: red">\
                     <p class="head_font_io">Tr.</p>\
                 </div>\
             </div>');
@@ -856,7 +856,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#" + data.parent), '\
             <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_simpel fbs_element_fstate ">\
-               <div id="head_' + nr + '"  class="div_head" style="background-color: #990099">\
+               <div   class="div_head" style="background-color: #990099">\
                    <a class="head_font">Value</a>\
                </div>\
                <div id="left_' + nr + '" class="div_left_filter">\
@@ -870,7 +870,7 @@ SGI = $.extend(true, SGI, {
                <div>\
                    <div style="" id="opt_' + data.fbs_id + '" >\
                    </div>\
-                   <input id="var_' + data.fbs_id + '" ng-model="fbs[' + nr + '].value"  class="inp_filter_val" >\
+                   <input id="lfwert_var_' + data.fbs_id + '" ng-model="fbs[' + nr + '].value"  class="inp_filter_val" >\
                    <div id="opt3_' + data.fbs_id + '">\
                    </div>\
                </div>\
@@ -912,8 +912,8 @@ SGI = $.extend(true, SGI, {
                 ]
             });
 
-            $('#var_' + data.fbs_id)
-                .numberMask({type: 'float', beforePoint: 5, afterPoint: 0, decimalMark: '.'})
+            $('#lfwert_var_' + data.fbs_id)
+                //.numberMask({type: 'float', beforePoint: 5, afterPoint: 0, decimalMark: '.'})
                 .val(scope.fbs[nr]["opt2"]);
 
 
@@ -938,7 +938,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#" + data.parent), '\
                              <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fdevice fbs_element fbs_element_simpel ">\
-                                <div id="head_' + nr + '"  class="div_head" style="background-color: #990099">\
+                                <div   class="div_head" style="background-color: #990099">\
                                     <a class="head_font">Device</a>\
                                 </div>\
                                 <div id="left_' + nr + '" class="div_left_filter">\
@@ -959,7 +959,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#" + data.parent), '\
                              <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fdevice fbs_element fbs_element_simpel ">\
-                                <div id="head_' + nr + '"  class="div_head" style="background-color: #990099">\
+                                <div   class="div_head" style="background-color: #990099">\
                                     <a class="head_font">Channel</a>\
                                 </div>\
                                 <div id="left_' + nr + '" class="div_left_filter">\
@@ -984,7 +984,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#" + data.parent), '\
                              <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fdevice fbs_element fbs_element_simpel ">\
-                                <div id="head_' + nr + '"  class="div_head" style="background-color: #990099">\
+                                <div   class="div_head" style="background-color: #990099">\
                                     <a class="head_font">Data point</a>\
                                 </div>\
                                 <div id="left_' + nr + '" class="div_left_filter">\
@@ -1013,7 +1013,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#" + data.parent), '\
                              <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_exp ">\
-                                <div id="head_' + nr + '"  class="div_head" style="background-color: gray">\
+                                <div   class="div_head" style="background-color: gray">\
                                     <span style="background-color:transparent; border:none; width: 56px; text-align: center;" class="head_font">{{fbs[' + nr + '].opt}}</span>\
                                 </div>\
                                 <div id="left_' + data.fbs_id + '" class="div_left_exp">\
@@ -1104,7 +1104,7 @@ SGI = $.extend(true, SGI, {
 
             scope.append($("#" + data.parent), '\
                              <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_exp ">\
-                                <div id="head_' + nr + '"  class="div_head" style="background-color: gray">\
+                                <div   class="div_head" style="background-color: gray">\
                                     <span style="background-color:transparent; border:none; width: 56px; text-align: center;" class="head_font">{{fbs[' + nr + '].opt}}</span>\
                                 </div>\
                                 <div id="left_' + data.fbs_id + '" class="div_left_exp">\

@@ -144,7 +144,7 @@ body {
     width: 150px;
     top: 30px;
     height: calc(100% - 36px);
-    overflow-y: overlay;
+    overflow-y: scroll;
     overflow-x: hidden;
 }
 
@@ -552,12 +552,21 @@ body {
     width: 100%;
     border-bottom-right-radius: 7px;
     border-bottom-left-radius: 7px;
-    background: #808080;
+
     border: medium none;
     font-weight: bold;
     padding-bottom: 2px;
     bottom: 0;
+    background-color: transparent;
 
+}
+.btn_exp::after{
+    position: absolute;
+    height: 18px;
+    width: 100px;
+    background: #808080;
+    bottom: 0;
+    left: 0;
 }
 
 .inp_exp_val_in {
@@ -745,6 +754,10 @@ body {
 }
 
 .inp_time {
+    position: relative;
+    z-index: 2;
+    background-color: transparent;
+
     width: 65px;
     font-weight: bolder;
     font-size: 12px;
@@ -757,17 +770,22 @@ body {
 }
 
 .inp_astro {
+    position: relative;
+    z-index: 1;
+    background-color: transparent;
     font-size: 12px;
     border: none;
 
 }
 
 .inp_day {
-
+position: relative;
+    z-index: 3;
+    background-color: transparent;
     border-bottom: none;
     display: inline-block;
     height: 18px;
-    border-left: solid 1px cyan;
+    /*border-left: solid 1px cyan;*/
     border-left-style: solid;
     border-left-width: 1px;
     border-top: none;
@@ -789,6 +807,9 @@ body {
 }
 
 .inp_min {
+    position: relative;
+    z-index: 1;
+    background-color: transparent;
     display: flex;
     width: 40px;
     font-weight: bolder;
@@ -817,6 +838,9 @@ body {
 }
 
 .inp_peri {
+    position: relative;
+    z-index: 1;
+    background-color: transparent;
     display: flex;
     height: 17px;
     min-width: 60px;
@@ -824,13 +848,7 @@ body {
     font-weight: bolder;
     font-size: 11px;
     text-align: center;
-    border: none;
-    border-color: #00FFFF !important;
-    border-right: none;
-    border-style: solid;
-    border-top: medium none;
-    border-width: 0px 1px 0px 0px;
-    border-image: none;
+ border:none;
 
 }
 
@@ -839,12 +857,17 @@ body {
 }
 
 .inp_if {
+    position: relative;
+    z-index: 1;
+    background-color: transparent;
     font-size: 12px;
     text-align: center;
-    width: 60px;
+    width: 50px;
     max-width: 60px;
     font-weight: bolder;
     height: 18px;
+    border:none;
+
 }
 
 .mbs_element_kommentar {
@@ -1054,6 +1077,9 @@ body {
 }
 
 .inp_filter_val {
+    position: relative;
+    z-index: 1;
+    background-color: transparent;
     padding: 0;
     width: 60px;
     text-align: center;
@@ -1061,7 +1087,8 @@ body {
     font-size: 11px;
     font-weight: bold;
     height: 18px;
-    border-bottom: 1px solid cyan;
+    border-bottom: 1px solid #4e4e4e;
+
 
 }
 
@@ -1093,9 +1120,18 @@ body {
     color: black;
     height: 18px !important;
     position: relative;
-    z-index: auto;
-    border-bottom: 1px solid #00FFFF;
+    border-bottom: 1px solid transparent;
     margin-top: -1px;
+
+}
+
+.xs_button_fbs:before{
+    color: black;
+    height: 18px !important;
+    position: relative;
+    border-bottom: 1px solid #4e4e4e;
+    margin-top: -1px;
+    z-index: 100;
 }
 
 .xs_button_fbs_bottom {
@@ -1103,7 +1139,7 @@ body {
     height: 18px !important;
     position: relative;
     z-index: 50;
-    border-bottom: 1px solid #00FFFF;
+    border-bottom: 0px solid #4e4e4e;
     margin-top: -1px;
     border-bottom-right-radius: 7px;
 
@@ -1123,7 +1159,7 @@ body {
 }
 
 .xs_focus_fbs {
-    border-radius: 7 !important;
+    border-radius: 8px !important;
     /*height: 16px!important;*/
     line-height: 16px !important;
     padding: 0;
@@ -1135,7 +1171,6 @@ body {
 
 .xs_text_fbs {
     margin: 0;
-    font: lighter;
     font-family: 'Comic Sans MS', monospace;
     font-weight: bold;
     line-height: 18px;
@@ -1643,7 +1678,7 @@ body {
 /*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*/
 
 .text_save {
-    size: 250px;
+
 }
 
 #txt_save {
@@ -1784,11 +1819,17 @@ body {
 }
 
 .brake_delay_check {
+    position: relative;
+    z-index: 1;
+    background-color: transparent;
     margin: 1px 0 0 5px;
 
 }
 
 .brake_delay {
+    position: relative;
+    z-index: 1;
+    background-color: transparent;
     border: medium none;
     display: inline;
     margin: 0;
@@ -1963,7 +2004,7 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
 
 .err_text {
     -webkit-user-select: auto;
-    user-select: auto;
+    user-select: text;
     font-size: 9px;
     width: 100%;
     text-align: left;
@@ -2170,7 +2211,7 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
     left: -1px;
     top: -1px;
     border-radius: 7px;
-    box-shadow: 1px 1px 0px rgba(0, 0, 0, 1),inset -3px -5px 14px rgba(0, 0, 0, 0.8),inset 3px 5px 14px rgba(255, 255, 255, 1);
+    box-shadow: 1px 1px 0px rgba(0, 0, 0, 1),inset -3px -4px 14px rgba(0, 0, 0, 0.7),inset 3px 5px 14px rgba(255, 255, 255, 0.8);
     /*border: 1px solid rgb(65, 65, 65);*/
 }
 
@@ -2184,7 +2225,7 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
     left: -1px;
     top: -1px;
     border-radius: 7px;
-    box-shadow: 1px 1px 0px rgba(0, 0, 0, 1),inset -3px -5px 14px rgba(0, 0, 0, 0.8),inset 3px 5px 14px rgba(255, 255, 255, 1);
+    box-shadow: 1px 1px 0px rgba(0, 0, 0, 1),inset -3px -4px 14px rgba(0, 0, 0, 0.75),inset 3px 5px 14px rgba(255, 255, 255, 0.8);
    /**/ border: 1px solid rgb(65, 65, 65);
 }
 
