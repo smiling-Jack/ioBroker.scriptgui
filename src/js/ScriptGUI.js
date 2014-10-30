@@ -633,7 +633,10 @@ var SGI = {
             Scope: "singel"
         });
 
+        var mbs_dot;
         SGI.plumb_inst.inst_mbs.bind("click", function (c) {
+             mbs_dot = setTimeout(function(){
+
             var id = c.id;
             var connector_data;
             var dot1_x;
@@ -914,15 +917,17 @@ var SGI = {
                 }
             }
 
-            make_dot();
+                 if(scope.con.mbs[id]){
+                     make_dot();
+                 }
+
+            },300)
         });
 
         SGI.plumb_inst.inst_mbs.bind("dblclick", function (c) {
             if (SGI.klick.target.tagName == "path") {
                 $(".dot").remove();
-
                 SGI.plumb_inst.inst_mbs.detach(c);
-
             }
         });
 
