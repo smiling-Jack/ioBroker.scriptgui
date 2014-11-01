@@ -345,9 +345,9 @@ SGI = $.extend(true, SGI, {
             }
 
             scope.append($("#" + data.parent), '\
-            <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_string fbs_element_simpel">\
-                <div id="right_' + nr + '" class="div_right_string">\
-                    <div id="' + data.fbs_id + '_out" class="div_io_out_string ' + data.fbs_id + '_out"></div>\
+            <div id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_io_fix fbs_element_simpel">\
+                <div id="right_' + nr + '" class="div_right_io">\
+                    <div id="' + data.fbs_id + '_out" class="div_right_io ' + data.fbs_id + '_out"></div>\
                 </div>\
                 <select id="time_' + data.fbs_id + '" ng-model="fbs[' + nr + '].value" class="inp_vartime">\
                     <option value="zeit_k">hh:mm</option>\

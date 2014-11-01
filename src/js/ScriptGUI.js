@@ -2444,7 +2444,7 @@ var SGI = {
                         $(this).css({
 
                             top: (Math.min(dd.limit.bottom - (off.top), Math.max(dd.limit.top - (off.top), Math.round((dd.offsetY - (off.top)) / SGI.grid) * SGI.grid))) / SGI.zoom,
-                            left: (Math.min(dd.limit.right - (off.left), Math.max(dd.limit.left - (off.left), Math.round((dd.offsetX - (off.left)) / SGI.grid) * SGI.grid)))
+                            left: (Math.min(dd.limit.right - (off.left), Math.max(dd.limit.left - (off.left), Math.round((dd.offsetX - (off.left)) / SGI.grid) * SGI.grid)))/ SGI.zoom
                         });
 
                     } else {
@@ -2460,8 +2460,8 @@ var SGI = {
 
             .drag("end", function () {
                 var nr = $(this).data("nr");
-                scope.fbs[nr].style.top = $(this).position().top + "px";
-                scope.fbs[nr].style.left = $(this).position().left + "px";
+                scope.fbs[nr].style.top = $(this).position().top/ SGI.zoom + "px";
+                scope.fbs[nr].style.left = $(this).position().left/ SGI.zoom + "px";
 
                 scope.$apply();
                 if ($.isArray(ep_fbs) == true) {

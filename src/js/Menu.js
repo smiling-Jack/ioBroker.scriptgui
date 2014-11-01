@@ -1711,7 +1711,6 @@ jQuery.extend(true, SGI, {
 
         scope.$apply();
 
-        out1 = parseInt(in1) / parseInt(in2);
     },
 
     del_selected: function () {
