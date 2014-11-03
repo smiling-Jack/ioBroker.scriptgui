@@ -897,6 +897,8 @@ position: relative;
 }
 
 .komex {
+    position: relative;
+    z-index: 1;
     margin: 5px;
     min-height: 15px !important;
     height: 15px;
