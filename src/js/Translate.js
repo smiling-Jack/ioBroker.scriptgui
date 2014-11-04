@@ -77,17 +77,23 @@ SGI = $.extend(true, SGI, {
         'Editor'                : {'de': 'Editor',                   'en': 'Editor',                      'ru': ''},//ToDo RU
         'GUI'                   : {'de': 'GUI',                      'en': 'GUI',                         'ru': ''},//ToDo RU
         'Update'                : {'de': 'Update',                   'en': 'Update',                      'ru': ''},//ToDo RU
-        'Version ist:'          : {'de': 'Installierte Version:',    'en': 'Installed version:',            'ru': ''},//ToDo RU
+        'Version ist:'          : {'de': 'Installierte Version:',    'en': 'Installed version:',          'ru': ''},//ToDo RU
         'Neuste Version:'       : {'de': 'Neuste Version:',          'en': 'Latest version:',             'ru': ''},//ToDo RU
         'register'              : {'de': 'Senden',                   'en': 'Send',                        'ru': ''},//ToDo RU
-        'erstellung'            : {'de': 'Build: ',                   'en': 'Build: ',                     'ru': ''},//ToDo RU
-        'register_info'       : {'de': 'Bitte registrieren Sie Ihre Version<br>und<br>helfen sie mit ScriptGUI zu verbessern',
-                                 'en': 'Please register your copy<br>and<br>help you to improve ScriptGUI',
-                                 'ru': ''},//ToDo RU
+        'erstellung'            : {'de': 'Build: ',                  'en': 'Build: ',                     'ru': ''},//ToDo RU
+        'ok'                    : {'de': 'ok',                       'en': 'ok',                          'ru': ''},//ToDo RU
+        'path'                  : {'de': 'Pfad: ',                 'en': 'path: ',                      'ru': 'пластырь:'},//ToDo RU
+        'select_datastore'      : {'de': 'Bitte Wählen sie das Verzeichnis in dem der ScriptGUI_Datastore enthalten ist bzw. erstellt werden soll.',
+                                   'en': 'Build: ',
+                                   'ru': ''},//ToDo RU
+        'register_info'         : {'de': 'Bitte registrieren Sie Ihre Version<br>und<br>helfen sie mit ScriptGUI zu verbessern',
+                                   'en': 'Please register your copy<br>and<br>help you to improve ScriptGUI',
+                                   'ru': ''},//ToDo RU
+
 
 // Setup Dialog
-        'Auto update'            : {'de': 'Neue Version suchen',                   'en': 'Search new version',                     'ru': ''},//ToDo RU
-        'Auto Codebox'            : {'de': 'Auto Codebox',                   'en': 'Auto Codebox',                     'ru': ''},//ToDo RU
+        'Auto update'           : {'de': 'Neue Version suchen',     'en': 'Search new version',            'ru': ''},//ToDo RU
+        'Auto Codebox'          : {'de': 'Auto Codebox',            'en': 'Auto Codebox',                  'ru': ''},//ToDo RU
 
 
 // Shortcut

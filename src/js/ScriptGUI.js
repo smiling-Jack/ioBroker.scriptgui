@@ -115,29 +115,10 @@ var SGI = {
 
 
 
-console.log(nwDir)
-        SGI.prgDir = path.resolve(nwDir.split() + "/datastore/programms/");
 
-        try {
-            if (!fs.existsSync(path.resolve(nwDir + '/datastore'))) {
-                fs.mkdirSync(path.resolve(nwDir + '/datastore'));
-            }
-            if (!fs.existsSync(path.resolve(nwDir + '/datastore/programms'))) {
-                fs.mkdirSync(path.resolve(nwDir + '/datastore/programms'));
-            }
-            if (!fs.existsSync(path.resolve(nwDir + '/datastore/connections'))) {
-                fs.mkdirSync(path.resolve(nwDir + '/datastore/connections'));
-            }
-            if (!fs.existsSync(path.resolve(nwDir + '/datastore/experts'))) {
-                fs.mkdirSync(path.resolve(nwDir + '/datastore/experts'));
-            }
-        }
-        catch (e) {
-            console.log(e)
-        }
 
-        $("#prgopen").attr("nwworkingdir", SGI.prgDir);
-        $("#prgsaveas").attr("nwworkingdir", SGI.prgDir);
+        $("#prgopen").attr("nwworkingdir", path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/"));
+        $("#prgsaveas").attr("nwworkingdir", path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/"));
 
         scope = angular.element($('body')).scope();
         scope.$apply();
@@ -201,7 +182,7 @@ console.log(nwDir)
             time: 750,
             combo: true,
             val: SGI.con_files[0],
-            data: SGI.con_files,
+            data: SGI.con_files
         });
 
         if (SGI.con_files.length == 0) {
@@ -505,7 +486,10 @@ console.log(nwDir)
         SGI.select_fbs();
         SGI.setup_socket();
         SGI.global_event();
-        SGI.read_experts();
+
+
+        SGI.check_fs();
+//        SGI.read_experts();
 
 
 // SETUP ___________________________________________________________________________________________________________
@@ -3174,7 +3158,7 @@ console.log(nwDir)
             return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
         }
 
-        fs.readdir(nwDir + "/datastore/experts/", function (err, _files) {
+        fs.readdir(scope.setup.datastore + '/ScriptGUI_Data/experts/', function (err, _files) {
             if (err) {
                 throw err;
             } else {
@@ -3188,7 +3172,7 @@ console.log(nwDir)
                 $.each(files, function () {
                     var file = this.toString();
                     try {
-                        fs.readFile(nwDir + "/datastore/experts/" + file, function (err, data) {
+                        fs.readFile(scope.setup.datastore + '/ScriptGUI_Data/experts/' + file, function (err, data) {
                             if (err) {
                                 throw err;
                             } else {
@@ -3251,6 +3235,70 @@ console.log(nwDir)
             }
         })
     },
+
+    check_fs: function(then){
+
+
+        if(scope.setup.datastore == ""){
+            $("body").append('\
+                <div id="dialog_datastore" style="text-align: center" title="Datastore">\
+                <img src="./img/logo.png" style="width: 300px"/><br><br><br>\
+                <div style="font-size: 16px; font-weight: 900;">' + SGI.translate("select_datastore") + '</div><br><br>\
+                <input style="display:none" id="datastore_patch" type="file"  nwdirectory />\
+                <div style="display: inline">'+SGI.translate("path")+'</div><input type="text" style="width: 450px" id="inp_datastore" value="'+nwDir+'"/><button style="height: 27px;margin-top: -3px;" id="btn_datastore_chose">...</button><br><br><br>\
+                <button id="btn_datastore_ok">' + SGI.translate("ok") + '</button>\
+                </div>');
+
+            $("#dialog_datastore").dialog({
+                width: "600px",
+                height: 400,
+                dialogClass: "update",
+                modal: true,
+                close: function () {
+                    $("#dialog_datastore").remove();
+                }
+            });
+
+            $("#btn_datastore_ok").button().click(function () {
+                scope.setup.datastore =  path.resolve($("#inp_datastore").val());
+                scope.$apply();
+                SGI.save_setup();
+                $("#dialog_datastore").dialog( "close" )
+            });
+            $("#btn_datastore_chose").button().click(function () {
+                var chooser = $("#datastore_patch");
+                chooser.change(function (evt) {
+                    if($(this).val() != ""){
+                        $("#inp_datastore").val($(this).val());
+                    }
+                });
+
+                chooser.attr("nwworkingdir",$("#inp_datastore").val());
+                chooser.trigger('click');
+            });
+        }
+
+
+
+        try {
+            if (!fs.existsSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data'))) {
+                fs.mkdirSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data'));
+            }
+            if (!fs.existsSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/programms'))) {
+                fs.mkdirSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/programms'));
+            }
+            if (!fs.existsSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/connections'))) {
+                fs.mkdirSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/connections'));
+            }
+            if (!fs.existsSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/experts'))) {
+                fs.mkdirSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/experts'));
+            }
+        }
+        catch (e) {
+            console.log(e)
+        }
+        return then
+},
 
     register: function () {
         try {

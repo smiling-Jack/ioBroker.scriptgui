@@ -10,9 +10,10 @@ angular.module('tutorialApp', [])
             "LT_open": false,
             "last_file": "",
             "last_open": "",
-            "update": true,
+            "update": false,
             "user_name": "",
-            "user_mail": ""
+            "user_mail": "",
+            "datastore":"",
         };
 
 
@@ -20,23 +21,23 @@ angular.module('tutorialApp', [])
             fs.readFile(nwDir + '/setup.json', "utf8", function (err, data) {
                 if (!err) {
                     $scope.setup = JSON.parse(data.split("}")[0] + "}");
-                    hallo()
+                    angular_init()
                 } else {
                     fs.writeFile(nwDir + '/setup.json', JSON.stringify(setup_default), function (err) {
                         $scope.setup = setup_default;
-                        hallo()
+                        angular_init()
                     });
                 }
             });
         } catch (err) {
             fs.writeFile(nwDir + '/setup.json', JSON.stringify(setup_default), function (err) {
                 $scope.setup = setup_default;
-                hallo()
+                angular_init()
             });
         }
 
 
-        function hallo() {
+        function angular_init() {
 
             $scope.mbs = {};
             $scope.fbs = {};

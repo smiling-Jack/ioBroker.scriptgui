@@ -1893,7 +1893,7 @@ jQuery.extend(true, SGI, {
             out: scope.fbs[nr]["exp_out"]
         };
 
-        fs.writeFile(nwDir + "/datastore/experts/expert_" + data.name + ".json", JSON.stringify(data), function (err) {
+        fs.writeFile(scope.setup.datastore + '/ScriptGUI_Data/experts/expert_' + data.name + '.json', JSON.stringify(data), function (err) {
             if (err) {
                 throw err;
             } else {
@@ -1905,7 +1905,7 @@ jQuery.extend(true, SGI, {
 
     expert_del: function (opt) {
         var name = $(opt.$trigger).attr("id");
-        fs.unlink(nwDir + "/datastore/experts/" + name + ".json", function (err) {
+        fs.unlink(scope.setup.datastore + '/ScriptGUI_Data/experts/' + name + ".json", function (err) {
             if (err) {
                 throw err;
             } else {
@@ -1942,7 +1942,7 @@ jQuery.extend(true, SGI, {
             var data = SGI.make_savedata();
 
             try {
-                fs.writeFile(SGI.prg_store + "/" + SGI.file_name, JSON.stringify(data), function (err) {
+                fs.writeFile(path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/" + SGI.file_name), JSON.stringify(data), function (err) {
                     if (err) {
                         throw err;
                     } else {
