@@ -113,17 +113,11 @@ var SGI = {
 
     Setup: function () {
 
-
-
-
-
-        $("#prgopen").attr("nwworkingdir", path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/"));
-        $("#prgsaveas").attr("nwworkingdir", path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/"));
-
         scope = angular.element($('body')).scope();
         scope.$apply();
 
-
+        $("#prgopen").attr("nwworkingdir", path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/"));
+        $("#prgsaveas").attr("nwworkingdir", path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/"));
 // Setze Sprache
         SGI.language = scope.setup.lang;
 
@@ -159,90 +153,7 @@ var SGI = {
         $("#sim_output").prepend("<tr><td style='width: 100px'>Script Log</td><td></td></tr>");
 
 
-        // Connect XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-
-        SGI.con_files = [];
-        try {
-            $.each(fs.readdirSync(nwDir + '/datastore/connections/'), function () {
-                var con_name = this.split(".json")[0];
-                con_name = con_name.replace("port", ":");
-                SGI.con_files.push(con_name)
-            });
-        }
-        catch (e) {
-        }
-
-
-        $("#inp_con_ip").xs_combo({
-            addcssButton: "xs_button_con frame_color ",
-            addcssMenu: "xs_menu_con",
-            addcssFocus: "xs_focus_con",
-            cssText: "xs_text_con item_font",
-            time: 750,
-            combo: true,
-            val: SGI.con_files[0],
-            data: SGI.con_files
-        });
-
-        if (SGI.con_files.length == 0) {
-            $("#btn_con_offline").parent().hide()
-        }
-
-
-        $("#inp_con_ip").bind("change", function () {
-            SGI.disconnect();
-
-            if (SGI.con_files.indexOf($(this).val()) == -1) {
-                $("#btn_con_offline").parent().hide()
-            } else {
-                $("#btn_con_offline").parent().show()
-            }
-
-        });
-
-        $("#inp_con_ip").bind("keyup", function (e) {
-
-            if (SGI.con_data) {
-                SGI.disconnect();
-            }
-            if (SGI.con_files.indexOf($(this).children().first().val()) == -1) {
-                $("#btn_con_offline").parent().hide()
-            } else {
-                $("#btn_con_offline").parent().show()
-            }
-
-        });
-
-
-        var movementTimer = null;
-        var panel_open = false;
-        $("#inp_con_ip").mousemove(function (e, x) {
-            clearTimeout(movementTimer);
-            movementTimer = setTimeout(function () {
-                if (!panel_open) {
-                    panel_open = true;
-                    $("#con_panel").stop(true, false).slideDown(300)
-                }
-
-            }, 150);
-        });
-
-        $("#inp_con_ip").mouseout(function (e) {
-            clearTimeout(movementTimer);
-        });
-
-        $("#con_panel_wrap").hover(function () {
-
-        }, function (e) {
-
-            if ($(e.toElement).attr("id") != "inp_con_ip") {
-                if ($(e.target).attr("id") == "con_panel_wrap") {
-                    panel_open = false;
-                    $("#con_panel").stop(true, false).slideUp(700)
-                }
-            }
-        });
 
 
         // Toolbox XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -488,8 +399,11 @@ var SGI = {
         SGI.global_event();
 
 
-        SGI.check_fs();
-//        SGI.read_experts();
+        SGI.check_fs(function(){
+            SGI.read_experts();
+            SGI.make_conpanel();
+        });
+
 
 
 // SETUP ___________________________________________________________________________________________________________
@@ -510,10 +424,7 @@ var SGI = {
             }
         });
 
-//        $("#setup_dialog").dialog("close");
-
-
-
+//      $("#setup_dialog").dialog("close");
 
         scope.save_scope_watchers();
 
@@ -634,9 +545,9 @@ var SGI = {
     save_setup: function () {
         console.log("setup save");
         fs.writeFile(nwDir + '/setup.json', JSON.stringify(scope.setup), function (err) {
-            if(!err){
+            if (!err) {
                 console.log("save")
-            }else{
+            } else {
                 console.log(err)
             }
         });
@@ -2875,6 +2786,91 @@ var SGI = {
 
     },
 
+    make_conpanel: function(){
+
+        SGI.con_files = [];
+        try {
+            $.each(fs.readdirSync(path.resolve(scope.setup.datastore  + '/ScriptGUI_Data/connections/')), function () {
+                var con_name = this.split(".json")[0];
+                con_name = con_name.replace("port", ":");
+                SGI.con_files.push(con_name)
+            });
+        }
+        catch (e) {
+        }
+
+
+        $("#inp_con_ip").xs_combo({
+            addcssButton: "xs_button_con frame_color ",
+            addcssMenu: "xs_menu_con",
+            addcssFocus: "xs_focus_con",
+            cssText: "xs_text_con item_font",
+            time: 750,
+            combo: true,
+            val: SGI.con_files[0],
+            data: SGI.con_files
+        });
+
+        if (SGI.con_files.length == 0) {
+            $("#btn_con_offline").parent().hide()
+        }
+
+
+        $("#inp_con_ip").bind("change", function () {
+            SGI.disconnect();
+
+            if (SGI.con_files.indexOf($(this).val()) == -1) {
+                $("#btn_con_offline").parent().hide()
+            } else {
+                $("#btn_con_offline").parent().show()
+            }
+
+        });
+
+        $("#inp_con_ip").bind("keyup", function (e) {
+
+            if (SGI.con_data) {
+                SGI.disconnect();
+            }
+            if (SGI.con_files.indexOf($(this).children().first().val()) == -1) {
+                $("#btn_con_offline").parent().hide()
+            } else {
+                $("#btn_con_offline").parent().show()
+            }
+
+        });
+
+
+        var movementTimer = null;
+        var panel_open = false;
+        $("#inp_con_ip").mousemove(function (e, x) {
+            clearTimeout(movementTimer);
+            movementTimer = setTimeout(function () {
+                if (!panel_open) {
+                    panel_open = true;
+                    $("#con_panel").stop(true, false).slideDown(300)
+                }
+
+            }, 150);
+        });
+
+        $("#inp_con_ip").mouseout(function (e) {
+            clearTimeout(movementTimer);
+        });
+
+        $("#con_panel_wrap").hover(function () {
+
+        }, function (e) {
+
+            if ($(e.toElement).attr("id") != "inp_con_ip") {
+                if ($(e.target).attr("id") == "con_panel_wrap") {
+                    panel_open = false;
+                    $("#con_panel").stop(true, false).slideUp(700)
+                }
+            }
+        });
+    },
+
     copy_selected: function () {
 
         SGI.copy_data = [];
@@ -3156,12 +3152,14 @@ var SGI = {
             var aName = a.toString();
             var bName = b.toString();
             return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
-        }
+        };
 
         fs.readdir(scope.setup.datastore + '/ScriptGUI_Data/experts/', function (err, _files) {
             if (err) {
+                console.log(err);
                 throw err;
             } else {
+                console.log("read expert")
                 var files = _files;
                 SGI.experts = {};
                 $(".fbs_exp_custom").remove();
@@ -3236,16 +3234,39 @@ var SGI = {
         })
     },
 
-    check_fs: function(then){
+    check_fs: function (cb) {
+
+        function check_dir() {
+
+            try {
+                if (!fs.existsSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data'))) {
+                    fs.mkdirSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data'));
+                }
+                if (!fs.existsSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/programms'))) {
+                    fs.mkdirSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/programms'));
+                }
+                if (!fs.existsSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/connections'))) {
+                    fs.mkdirSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/connections'));
+                }
+                if (!fs.existsSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/experts'))) {
+                    fs.mkdirSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/experts'));
+                }
+                cb()
+            }
+            catch (e) {
 
 
-        if(scope.setup.datastore == ""){
+            }
+
+        }
+
+        if (scope.setup.datastore == "" || !fs.existsSync(path.resolve(scope.setup.datastore)) ) {
             $("body").append('\
                 <div id="dialog_datastore" style="text-align: center" title="Datastore">\
                 <img src="./img/logo.png" style="width: 300px"/><br><br><br>\
                 <div style="font-size: 16px; font-weight: 900;">' + SGI.translate("select_datastore") + '</div><br><br>\
                 <input style="display:none" id="datastore_patch" type="file"  nwdirectory />\
-                <div style="display: inline">'+SGI.translate("path")+'</div><input type="text" style="width: 450px" id="inp_datastore" value="'+nwDir+'"/><button style="height: 27px;margin-top: -3px;" id="btn_datastore_chose">...</button><br><br><br>\
+                <div style="display: inline">' + SGI.translate("path") + '</div><input type="text" style="width: 450px" id="inp_datastore" value="' + nwDir + '"/><button style="height: 27px;margin-top: -3px;" id="btn_datastore_chose">...</button><br><br><br>\
                 <button id="btn_datastore_ok">' + SGI.translate("ok") + '</button>\
                 </div>');
 
@@ -3256,49 +3277,40 @@ var SGI = {
                 modal: true,
                 close: function () {
                     $("#dialog_datastore").remove();
+                    check_dir()
                 }
             });
 
             $("#btn_datastore_ok").button().click(function () {
-                scope.setup.datastore =  path.resolve($("#inp_datastore").val());
-                scope.$apply();
-                SGI.save_setup();
-                $("#dialog_datastore").dialog( "close" )
+                if (fs.existsSync(path.resolve($("#inp_datastore").val()))) {
+
+                    scope.setup.datastore = path.resolve($("#inp_datastore").val());
+                    scope.$apply();
+                    SGI.save_setup();
+                    $("#dialog_datastore").dialog("close")
+
+                } else {
+                    alert("Path not exist")
+                }
             });
+
             $("#btn_datastore_chose").button().click(function () {
                 var chooser = $("#datastore_patch");
                 chooser.change(function (evt) {
-                    if($(this).val() != ""){
+                    if ($(this).val() != "") {
                         $("#inp_datastore").val($(this).val());
                     }
                 });
 
-                chooser.attr("nwworkingdir",$("#inp_datastore").val());
+                chooser.attr("nwworkingdir", $("#inp_datastore").val());
                 chooser.trigger('click');
             });
+        } else {
+            check_dir()
         }
 
 
-
-        try {
-            if (!fs.existsSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data'))) {
-                fs.mkdirSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data'));
-            }
-            if (!fs.existsSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/programms'))) {
-                fs.mkdirSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/programms'));
-            }
-            if (!fs.existsSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/connections'))) {
-                fs.mkdirSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/connections'));
-            }
-            if (!fs.existsSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/experts'))) {
-                fs.mkdirSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/experts'));
-            }
-        }
-        catch (e) {
-            console.log(e)
-        }
-        return then
-},
+    },
 
     register: function () {
         try {

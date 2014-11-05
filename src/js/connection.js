@@ -41,7 +41,7 @@ jQuery.extend(true, SGI, {
 
             var name = $("#inp_con_ip").val().replace(":", "port");
 
-            fs.readFile(nwDir + '/datastore/connections/' + name + '.json', function (err, data) {
+            fs.readFile(scope.setup.datastore + '/ScriptGUI_Data/connections/' + name + '.json', function (err, data) {
                 if (!err) {
 
                     homematic = JSON.parse(data);
@@ -135,15 +135,15 @@ jQuery.extend(true, SGI, {
                                         homematic.uiState["_" + dp] = { Value: data[dp][0], Timestamp: data[dp][1], LastChange: data[dp][3]};
                                     }
 
-                                    // TODO Ist da hier wirklich richtig oder doch eher direkt nach dem laden ?
+                                    // TODO Ist das hier wirklich richtig oder doch eher direkt nach dem laden ?
                                     var name = $("#inp_con_ip").val().replace(":", "port");
-                                    fs.writeFile(nwDir + '/datastore/connections/' + name + '.json', JSON.stringify(homematic), function (err) {
+                                    fs.writeFile(scope.setup.datastore + '/ScriptGUI_Data/connections/' + name + '.json', JSON.stringify(homematic), function (err) {
                                         if (err){
                                             throw err;
                                         }else{
                                             SGI.con_files = [];
                                             try {
-                                                $.each(fs.readdirSync(nwDir + '/datastore/connections/'), function () {
+                                                $.each(fs.readdirSync(scope.setup.datastore + '/ScriptGUI_Data/connections/'), function () {
                                                     var con_name = this.split(".json")[0];
                                                     con_name = con_name.replace("port", ":");
                                                     SGI.con_files.push(con_name)

@@ -303,8 +303,8 @@ jQuery.extend(true, SGI, {
                         }
                     });
 
-                    $("#dialog_photo").append((Canvas2Image.convertToImage(canvas, $("#photo").width() , $("#photo").height(), "png")));
-                    fs.writeFile(nwDir + "/" + type + ".png", Canvas2Image.saveAsImage(canvas, $("#photo").width() , $("#photo").height(), "png"),"base64", function(){
+                    $("#dialog_photo").append((Canvas2Image.convertToImage(canvas, $("#photo").width(), $("#photo").height(), "png")));
+                    fs.writeFile(nwDir + "/" + type + ".png", Canvas2Image.saveAsImage(canvas, $("#photo").width(), $("#photo").height(), "png"), "base64", function () {
 
                     })
 
@@ -677,16 +677,25 @@ jQuery.extend(true, SGI, {
                 $(this).removeClass("ui-state-focus");
             }
         );
+
+        var script_engine_lock = false;
         $("#img_set_script_engine").click(function () {
-            try {
-//                a.length(); //todo ich bin nur ein test fehler
-                SGI.socket.emit("reloadScriptEngine");
-            } catch (err) {
-                alert("Keine Verbindung zu CCU.IO");
+            if (!script_engine_lock) {
+                try {
+
+//                    SGI.socket.emit("reloadScriptEngine");
+
+
+                } catch (err) {
+                    alert("Keine Verbindung zu CCU.IO");
+                }
+
+                script_engine_lock = true;
+                $(this).stop(true, true).effect("highlight", "linear", 6000, function () {
+                    script_engine_lock = false;
+                })
+
             }
-
-
-            $(this).stop(true, true).effect("highlight")
         }).hover(
             function () {
                 $(this).addClass("ui-state-focus");

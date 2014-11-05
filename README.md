@@ -53,6 +53,7 @@ CCU-IO.ScriptGUI ist ein Visueller Script builder auf Node-Webkit basis. Mit ihm
 * Bugfix FBS Drag on Zoom
 * Bugfix delete Codebox
 * Bugfix save settings (setup.json vom datastore ins nwDir verschoben)
+* Scriptengie restart butten wird nach betätigung für 6 sekunden gespärt
 
 ### 0.72.8
 * Bugfix overrite APP (Win)

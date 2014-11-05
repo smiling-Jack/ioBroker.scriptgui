@@ -1,52 +1,54 @@
-{"main": "start.html",
-    "name": "ScriptGUI",
-    "version": "0.72.8",
-    "description": "Script GUI",
-    "keywords": [],
-    "window": {
-        "title": "ScriptGUI",
-        "icon": "img/cube256.png",
-        "toolbar": false,
-        "frame": false,
-        "width": 370,
-        "height": 245,
-        "resizable": false,
-        "show": false
-    },
-    "webkit": {
-        "plugin": true
-    },
-    "maintainers": [
-        {
-            "name": "Steffen Schorling",
-            "email": "Steffen@ccu.io",
-            "web": "http://www.scriptgui.info"
-        }
-    ]
+{"main": "index.html",
+"name": "ScriptGUI",
+"version": "0.72.8",
+"description": "Script GUI",
+"keywords": [],
+"window": {
+"title": "ScriptGUI",
+"icon": "img/cube256.png",
+"toolbar": false,
+"frame": true,
+"width": 800,
+"height": 600,
+"resizable": false,
+"show": false
+},
+"webkit": {
+"plugin": true
+},
+"maintainers": [
+{
+"name": "Steffen Schorling",
+"email": "Steffen@ccu.io",
+"web": "http://www.scriptgui.info"
 }
-//{"main": "index.html",
-//"name": "ScriptGUI",
-//"version": "0.72.8",
-//"description": "Script GUI",
-//"keywords": [],
-//"window": {
-//"title": "ScriptGUI",
-//"icon": "img/cube256.png",
-//"toolbar": false,
-//"frame": true,
-//"width": 800,
-//"height": 600,
-//"resizable": false,
-//"show": false
-//},
-//"webkit": {
-//"plugin": true
-//},
-//"maintainers": [
-//{
-//"name": "Steffen Schorling",
-//"email": "Steffen@ccu.io",
-//"web": "http://www.scriptgui.info"
+]
+}
+
+//{"main": "start.html",
+//    "name": "ScriptGUI",
+//    "version": "0.72.8",
+//    "description": "Script GUI",
+//    "keywords": [],
+//    "window": {
+//        "title": "ScriptGUI",
+//        "icon": "img/cube256.png",
+//        "toolbar": false,
+//        "frame": false,
+//        "width": 370,
+//        "height": 245,
+//        "resizable": false,
+//        "show": false
+//    },
+//    "webkit": {
+//        "plugin": true
+//    },
+//    "maintainers": [
+//        {
+//            "name": "Steffen Schorling",
+//            "email": "Steffen@ccu.io",
+//            "web": "http://www.scriptgui.info"
+//        }
+//    ]
 //}
-//]
-//}
+
