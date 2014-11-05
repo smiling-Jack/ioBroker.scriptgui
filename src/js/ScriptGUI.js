@@ -3159,7 +3159,7 @@ var SGI = {
                 console.log(err);
                 throw err;
             } else {
-                console.log("read expert")
+
                 var files = _files;
                 SGI.experts = {};
                 $(".fbs_exp_custom").remove();
@@ -3190,7 +3190,7 @@ var SGI = {
                                 <label class="lab_exp_out">Outputs</label>\
                                 <a style="color: #000000" id="var_in_' + data.name + '" class="inp_exp_val_in" >' + data.in + '</a>\
                                 <a style="color: #000000" id="var_out_' + data.name + '" class="inp_exp_val_out" >' + data.out + '</a>\
-                                <button type="button" id="btn_' + data.name + '" class="btn_exp">Edit</button> \
+                                <button type="button" style="z-index: 2" id="btn_' + data.name + '" class="btn_exp">Edit</button> \
                                 </div> \
                              </div><br class="expert_br">');
 

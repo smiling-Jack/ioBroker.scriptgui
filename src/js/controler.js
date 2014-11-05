@@ -14,6 +14,7 @@ angular.module('tutorialApp', [])
             "user_name": "",
             "user_mail": "",
             "datastore":"",
+            "last_start":"",
         };
 
 
