@@ -2104,7 +2104,7 @@ jQuery.extend(true, SGI, {
 
     error_box: function (data) {
 
-        var _data = data.split("\n").join("<br />").replace("file:*ScriptGUI", "");
+        var _data = data.split("\n").join("<br>").replace(/file:\/\/\//g, "").replace(/at HTMLDocument./g, "");
 
         var mail = "";
         if (scope.setup.user_mail.split("@").length > 1) {
@@ -2129,12 +2129,9 @@ jQuery.extend(true, SGI, {
         </div>');
 
         $("#dialog_info").dialog({
-//            modal: true,
             dialogClass: "error_box",
             maxWidth: "90%",
             width: "auto",
-
-
             close: function () {
                 $("#dialog_info").remove();
             }
@@ -2144,50 +2141,7 @@ jQuery.extend(true, SGI, {
         });
 
         $("#btn_info_send").button().click(function () {
-            var send_data = {
-                typ: "error",
-                error: _data,
-                user: scope.user_name,
-                mail: $("#inp_error_mail").val(),
-                komment: $("#txt_error_comment").val(),
-                prg_data: "nicht mitgesendet",
-                datapoints: "nicht mitgesendet",
-                os: SGI.os
-            };
-
-            if (send_data.mail == "") {
-                send_data.mail = scope.user_mail;
-            }
-
-
-            if ($("#inp_prg_data").val() == true || $("#inp_prg_data").val() == "true") {
-                send_data.prg_data = JSON.stringify({
-                    version: main_manifest.version,
-                    mbs: scope.mbs,
-                    fbs: scope.fbs,
-                    con: scope.con
-                });
-
-                send_data.datapoints = JSON.stringify(homematic);
-            }
-
-
-            var client = new net.Socket();
-            client.connect(SGI.HOST_PORT, SGI.HOST, function () {
-                client.write(JSON.stringify(send_data));
-                client.end()
-            });
-
-            client.on('data', function (data) {
-                if (data != "error") {
-                    alert("Ticketnummer: " + data)
-                } else {
-                    alert("Daten konnten nicht gesendet werden")
-                }
-                client.destroy();
-            });
-
-
+            SGI.server_error(_data);
             $("#dialog_info").remove();
         });
     },

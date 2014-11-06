@@ -452,11 +452,11 @@ var SGI = {
 
         // todo Register mit Homepage verbinden
 //        setTimeout(function () {
-//            SGI.register()
+//            SGI.server_register()
 //        }, 5000);
 
 //        setTimeout(function () {
-//            SGI.homecall()
+//            SGI.server_homecall()
 //        }, 6000);
 
     },
@@ -3312,74 +3312,7 @@ var SGI = {
 
     },
 
-    register: function () {
-        try {
-            if (scope.setup.user_mail == "" || scope.setup.user_mail == undefined) {
-                $("body").append('\
-                <div id="dialog_register" style="text-align: center" title="' + SGI.translate("Register") + '">\
-                <img src="./img/logo.png" style="width: 300px"/><br><br>\
-                <div style="font-size: 20px; font-weight: 900;">' + SGI.translate("register_info") + '</div><br><br>\
-                <div style="width: 80px; display: inline-block;text-align: left">' + SGI.translate("Name:") + '  </div><input id="inp_register_name" style="width: 300px" type="text"/><br>\
-                <div style="width: 80px; display: inline-block;text-align: left">' + SGI.translate("E-Mail:") + '</div><input id="inp_register_mail" style="width: 300px" type="text"/><br><br>\
-                <button id="btn_register">' + SGI.translate("register") + '</button>\
-                   </div>');
 
-                $("#dialog_register").dialog({
-                    width: "auto",
-                    dialogClass: "update",
-                    modal: true,
-                    close: function () {
-                        $("#dialog_register").remove();
-                    }
-                });
-
-                $("#btn_register").button().click(function () {
-
-                    var send_data = {
-                        typ: "register",
-                        data: {
-                            name: $("#inp_register_name").val(),
-                            mail: $("#inp_register_mail").val(),
-                            os: SGI.os
-                        }
-                    };
-
-                    function send_to_server(data) {
-
-                        var client = new net.Socket();
-                        client.connect(SGI.HOST_PORT, SGI.HOST, function () {
-                            client.write(JSON.stringify(send_data));
-                        });
-
-                        client.on('data', function (data) {
-                            if (data != "error") {
-                                scope.setup.user_name = send_data.data.name;
-                                scope.setup.user_mail = send_data.data.mail;
-                                scope.$apply();
-                                $("#dialog_register").dialog("close")
-                            } else {
-                                alert("Daten konnten nicht gesendet werden. Bitte überprüfen sie ihre Internetverbindung")
-                            }
-                            client.destroy();
-                        });
-                    }
-
-                    if (send_data.data.mail == "" || send_data.data.mail == undefined) {
-                        getmac.getMac(function (err, macAddress) {
-                            if (err)  throw err;
-                            send_data.data.mail = macAddress;
-                            send_to_server(send_data)
-                        })
-                    } else {
-                        send_to_server(send_data)
-                    }
-                });
-            }
-        } catch (err) {
-            console.log("register nicht möglich");
-            console.log(err)
-        }
-    }
 };
 
 window.timeoutList = [];
