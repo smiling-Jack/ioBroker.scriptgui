@@ -2,6 +2,7 @@ angular.module('tutorialApp', [])
     .controller('GUICtrl', function ($scope, $compile) {
 
         var setup_default = {
+            "user_id": (new Date).valueOf().toString('36'),
             "lang": "de",
             "theme": "dark-hive",
             "snap_grid": "",

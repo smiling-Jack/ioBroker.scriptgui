@@ -29,9 +29,10 @@ function haveParent(theParent) {
 
 var nwDir = upd.getAppPath();
 
+
 process.on("uncaughtException", function (e) {
     console.log(e);
-    main_win.show()
+    main_win.show();
     SGI.error_box(e.stack)
 });
 
@@ -48,10 +49,13 @@ var PRG = {
 };
 
 var SGI = {
+
+    dev: false,
     version: main_manifest.version,
 
     HOST: '37.120.169.17',
     HOST_PORT: 3000,
+
 
     os: process.platform,
 
@@ -112,6 +116,11 @@ var SGI = {
     },
 
     Setup: function () {
+        if (nwDir.indexOf("app") != -1){
+            SGI.dev = true
+        }
+        //SGI.dev = false;
+
 
         scope = angular.element($('body')).scope();
         scope.$apply();
@@ -397,8 +406,6 @@ var SGI = {
         SGI.select_fbs();
         SGI.setup_socket();
         SGI.global_event();
-
-
         SGI.check_fs(function(){
             SGI.read_experts();
             SGI.make_conpanel();
@@ -429,17 +436,6 @@ var SGI = {
         scope.save_scope_watchers();
 
 
-// Update ---------------------------------------------------------------------------------------------------------------
-
-        if (scope.setup.update) {
-            upd.checkNewVersion(function (error, newVersionExists, manifest) {
-
-                if (!error && newVersionExists) {
-                    SGI.update()
-                }
-            });
-        }
-
         main_win.focus();
         main_win.show();
         try {
@@ -447,6 +443,7 @@ var SGI = {
         }
         catch (err) {
         }
+
         console.log("Start finish");
 
 
@@ -455,9 +452,25 @@ var SGI = {
 //            SGI.server_register()
 //        }, 5000);
 
-//        setTimeout(function () {
-//            SGI.server_homecall()
-//        }, 6000);
+        setTimeout(function () {
+            if ( SGI.dev != true){
+
+
+                if (scope.setup.update) {
+                    upd.checkNewVersion(function (error, newVersionExists, manifest) {
+
+                        if (!error && newVersionExists) {
+                            SGI.update()
+                        }
+                    });
+                }
+
+                if((new Date).toLocaleDateString() != scope.setup.last_open ){
+                    SGI.server_homecall()
+                }
+
+            }
+        }, 100);
 
     },
 
@@ -1628,17 +1641,19 @@ var SGI = {
         } else if (data.type == "brake" || data.type == "intervall" || data.type == "loop") {
             endpointStyle = {fillStyle: "blue"};
             SGI.plumb_inst.inst_mbs.addEndpoint(data.mbs_id + "_in1", { uuid: data.mbs_id + "_in1" }, {
-                dropOptions: { hoverClass: "dragHover" },
+                //dropOptions: { hoverClass: "dragHover" },
                 anchor: ["Left"],
                 isTarget: true,
+                isSource: false,
                 paintStyle: endpointStyle,
                 endpoint: [ "Rectangle", { width: 20, height: 10} ]
             });
 
             SGI.plumb_inst.inst_mbs.addEndpoint(data.mbs_id + "_in2", { uuid: data.mbs_id + "_in2" }, {
-                dropOptions: { hoverClass: "dragHover" },
+                //dropOptions: { hoverClass: "dragHover" },
                 anchor: ["Left"],
                 isTarget: true,
+                isSource: false,
                 paintStyle: endpointStyle,
                 endpoint: [ "Rectangle", { width: 20, height: 10} ]
             });
@@ -3310,7 +3325,7 @@ var SGI = {
         }
 
 
-    },
+    }
 
 
 };

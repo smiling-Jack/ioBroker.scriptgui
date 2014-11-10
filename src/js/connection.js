@@ -296,6 +296,7 @@ jQuery.extend(true, SGI, {
                         var client = new net.Socket();
                         client.connect(SGI.HOST_PORT, SGI.HOST, function () {
                             client.write(JSON.stringify(send_data));
+
                         });
 
                         client.on('data', function (data) {
@@ -328,7 +329,34 @@ jQuery.extend(true, SGI, {
         }
 
     },
+
     server_homecall: function(){
+
+        var send_data = {
+            typ: 'statistik',
+            data: {
+                user: scope.setup.user_id,
+                os: SGI.os
+            }
+        };
+
+        var client = new net.Socket();
+        client.connect(SGI.HOST_PORT, SGI.HOST, function () {
+            client.write(JSON.stringify(send_data));
+            client.end()
+        });
+
+        client.on('data', function (data) {
+            if (data != "error") {
+
+                scope.setup.last_open = (new Date).toLocaleDateString();
+                scope.$apply();
+                SGI.save_setup();
+
+            }
+            client.destroy();
+        });
+
 
     },
 });
