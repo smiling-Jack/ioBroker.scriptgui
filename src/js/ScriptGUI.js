@@ -482,6 +482,7 @@ var SGI = {
             if (!$(event.target).hasClass("dot") && $(event.target).parent().prop("tagName") != "svg") {
                 $(".dot").remove();
             }
+
         });
 
         //todo umstellung auf node-webkit shortcuts
@@ -524,10 +525,10 @@ var SGI = {
 
             if (SGI.key == 46) {
                 SGI.del_selected()
-            } else if (SGI.key == 67 && event.altKey == true) {
+            } else if (SGI.key == 67 && event.ctrlKey == true) {
                 SGI.copy_selected();
                 $("body").css({cursor: "default"});
-            } else if (SGI.key == 86 && event.altKey == true) {
+            } else if (SGI.key == 86 && event.ctrlKey == true) {
                 SGI.paste_selected();
                 $("body").css({cursor: "default"});
             } else if (SGI.key == 68 && event.altKey == true) {
@@ -539,11 +540,41 @@ var SGI = {
                 main_win.reload();
             } else if (SGI.key == 70 && event.altKey == true) {
                 var test = test_fehler;
-            } else if (SGI.key == 17 || SGI.key == 91 || SGI.key == 93 || event.ctrlKey == true) {
+            } else if (SGI.key == 18 || SGI.key == 91 || SGI.key == 93 || event.alt == true) {
                 $("body").css({cursor: "help"});
                 SGI.key = 17;
             }
 
+        });
+
+        $(document).on('click',".fbs_element",function(target){
+            if(SGI.key == 16 ) {
+                if ($(this).hasClass("fbs_element")) {
+                    $(this).toggleClass("fbs_selected");
+                } else {
+                    $.each($(target.target).parents(), function () {
+                        console.log($(this))
+                        if ($(this).hasClass("fbs_element")) {
+                            $(this).toggleClass("fbs_selected");
+                        }
+                    });
+                }
+            }
+        });
+
+        $(document).on('click',".mbs_element",function(target){
+            if(SGI.key == 16 ) {
+                if ($(this).hasClass("mbs_element")) {
+                    $(this).toggleClass("mbs_selected");
+                } else {
+                    $.each($(target.target).parents(), function () {
+                        console.log($(this))
+                        if ($(this).hasClass("mbs_element")) {
+                            $(this).toggleClass("mbs_selected");
+                        }
+                    });
+                }
+            }
         });
 
         $(document).keyup(function () {

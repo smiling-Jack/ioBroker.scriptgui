@@ -983,7 +983,7 @@ body {
 
 .codebox_active {
     /* TODO box shadow anpassen*/
-    box-shadow: 0 0 15px cyan;
+    /*box-shadow: 0 0 15px cyan;*/
     border: 2px solid cyan;
     border-radius: 8px;
 }
