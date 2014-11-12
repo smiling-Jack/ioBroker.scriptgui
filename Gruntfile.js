@@ -16,11 +16,11 @@ module.exports = function (grunt) {
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-//        secret: grunt.file.readJSON("secret.json"),
-        secret: "",
+        secret: grunt.file.readJSON("secret.json"),
+
 //----------------------------------------------------------------------------------------------------------------------
         clean:{
-            build:["build","cache/win/setup.json"],
+            build:["build","cache/win/setup.json","cache/win/locales","cache/win/ScriptGUI_Data"],
             after_win:["build/win/ScriptGUI/nw.exe","build/win/ScriptGUI/nwsnapshot.exe","build/win/ScriptGUI/sg.nw"]
 
         },

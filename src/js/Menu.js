@@ -127,7 +127,7 @@ jQuery.extend(true, SGI, {
 
         });
         $("#m_update").click(function () {
-            SGI.update();
+            SGI.update(true);
 
         });
 
@@ -2146,12 +2146,12 @@ jQuery.extend(true, SGI, {
         });
     },
 
-    update: function () {
+    update: function (show) {
         $("#dialog_update").remove();
 
         upd.checkNewVersion(function (error, newVersionExists, manifest) {
 
-            if (!error && newVersionExists) {
+            if (!error && newVersionExists || show) {
 
 
                 $("body").append('\
@@ -2208,6 +2208,11 @@ jQuery.extend(true, SGI, {
                             }
                         }, manifest);
                     });
+
+
+                if (!newVersionExists){
+                   $("#btn_update").button( "disable" )
+                }
             }
         });
     },

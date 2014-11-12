@@ -46,6 +46,9 @@ CCU-IO.ScriptGUI ist ein Visueller Script builder auf Node-Webkit basis. Mit ihm
 
 
 ## Changelog
+### 0.72.10
+* Bugfix Select fbs & mbs
+
 ### 0.72.9
 * aktualisriung der Connectionauswahlliste nach erfolgreicher verbindung & anzeigen der offline flagge
 * FBS & MBS 3D look
@@ -54,6 +57,8 @@ CCU-IO.ScriptGUI ist ein Visueller Script builder auf Node-Webkit basis. Mit ihm
 * Bugfix delete Codebox
 * Bugfix save settings (setup.json vom datastore ins nwDir verschoben)
 * Scriptengie restart butten wird nach betätigung für 6 sekunden gespärt
+* Bugfix Codebox Name (OSX)
+* Bugfix manuel Updatedialog (öffnet jetzt auch wenn kein Update möglich ist)
 
 ### 0.72.8
 * Bugfix overrite APP (Win)
