@@ -12,6 +12,7 @@
         var copyPath;
         var execPath;
 
+
         var options = {
             "title": "ScriptGUI",
             "icon": "img/cube256.png",

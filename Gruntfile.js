@@ -5,6 +5,7 @@
 
 module.exports = function (grunt) {
     var ops = grunt.file.readJSON("package.json");
+    var _dir = process.cwd()
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-rename');
@@ -20,61 +21,106 @@ module.exports = function (grunt) {
 
 //----------------------------------------------------------------------------------------------------------------------
         clean:{
-            build:["build","cache/win/setup.json","cache/win/locales","cache/win/ScriptGUI_Data"],
-            after_win:["build/win/ScriptGUI/nw.exe","build/win/ScriptGUI/nwsnapshot.exe","build/win/ScriptGUI/sg.nw"]
+            build:["build","cache/win_32/setup.json","cache/win_64/setup.json"],
+            after_win32:["build/win_32/ScriptGUI/nw.exe","build/win_32/ScriptGUI/nwsnapshot.exe","build/win_32/ScriptGUI/sg.nw"],
+            after_win64:["build/win_64/ScriptGUI/nw.exe","build/win_64/ScriptGUI/nwsnapshot.exe","build/win_64/ScriptGUI/sg.nw"]
 
         },
 
 //----------------------------------------------------------------------------------------------------------------------
         copy: {
-            win_webkit: {
+            win32_webkit: {
                 files: [
-                    {expand: true,cwd: 'cache/win/', src: ['*'], dest: 'build/win/ScriptGUI', filter: 'isFile'},
-                ],
+                    {expand: true,cwd: 'cache/win_32/', src: ['*'], dest: 'build/win_32/ScriptGUI', filter: 'isFile'},
+                ]
             },
-            osx_webkit: {
+            win64_webkit: {
                 files: [
-                    {expand: true,cwd: 'cache/osx/', src: ['node-webkit.app/**'], dest: 'build/osx/ScriptGUI'},
-                ],
+                    {expand: true,cwd: 'cache/win_64/', src: ['*'], dest: 'build/win_64/ScriptGUI', filter: 'isFile'},
+                ]
             },
-            osx_src: {
+            osx32_webkit: {
                 files: [
-                    {expand: true,cwd: 'src', src: ['**'], dest: 'build/osx/ScriptGUI/node-webkit.app/Contents/Resources/app.nw/'},
-                ],
+                    {expand: true,cwd: 'cache/osx_32/', src: ['node-webkit.app/**'], dest: 'build/osx_32/ScriptGUI'},
+                ]
             },
+            osx64_webkit: {
+                files: [
+                    {expand: true,cwd: 'cache/osx_64/', src: ['node-webkit.app/**'], dest: 'build/osx_64/ScriptGUI'},
+                ]
+            },
+            osx32_src: {
+                files: [
+                    {expand: true,cwd: 'src', src: ['**'], dest: 'build/osx_32/ScriptGUI/node-webkit.app/Contents/Resources/app.nw/'},
+                ]
+            },
+            osx64_src: {
+                files: [
+                    {expand: true,cwd: 'src', src: ['**'], dest: 'build/osx_64/ScriptGUI/node-webkit.app/Contents/Resources/app.nw/'},
+                ]
+            }
         },
 //----------------------------------------------------------------------------------------------------------------------
 
 
         rename: {
-           'osx.app': {
+           'osx32.app': {
                 files: [
-                    {src: ['build/osx/ScriptGUI/node-webkit.app'], dest: 'build/osx/ScriptGUI/ScriptGUI.app'},
+                    {src: ['build/osx_32/ScriptGUI/node-webkit.app'], dest: 'build/osx_32/ScriptGUI/ScriptGUI.app'},
+                ]
+            },
+            'osx64.app': {
+                files: [
+                    {src: ['build/osx_64/ScriptGUI/node-webkit.app'], dest: 'build/osx_64/ScriptGUI/ScriptGUI.app'},
                 ]
             },
         },
 
         zip: {
-            'zip-win': {
-                cwd: 'build/win',
-                src: ['build/win/**'],
-                dest: 'build/ScriptGUI_win.zip',
+            'zip-win32': {
+                cwd: 'build/win_32',
+                src: ['build/win_32/**'],
+                dest: 'build/ScriptGUI_win32.zip',
 //                compression: 'DEFLATE',
 //                base64: true,
 //                dot: true
             },
-            'zip-osx': {
-                cwd: 'build/osx/ScriptGUI',
-                src: ['build/osx/ScriptGUI/**'],
-                dest: 'build/ScriptGUI_osx.zip',
+            'zip-win64': {
+                cwd: 'build/win_64',
+                src: ['build/win_64/**'],
+                dest: 'build/ScriptGUI_win64.zip',
+//                compression: 'DEFLATE',
+//                base64: true,
+//                dot: true
+            },
+            'zip-osx32': {
+                cwd: 'build/osx_32/ScriptGUI',
+                src: ['build/osx_32/ScriptGUI/**'],
+                dest: 'build/ScriptGUI_osx32.zip',
                 compression: 'DEFLATE',
                 base64: true,
                 dot: true
             },
-            'win_nw_pack': {
+            'zip-osx64': {
+                cwd: 'build/osx_64/ScriptGUI',
+                src: ['build/osx_64/ScriptGUI/**'],
+                dest: 'build/ScriptGUI_osx64.zip',
+                compression: 'DEFLATE',
+                base64: true,
+                dot: true
+            },
+            'win32_nw_pack': {
                 cwd: 'src/',
                 src: ['src/**'],
-                dest: 'build/win/Scriptgui/sg.nw',
+                dest: 'build/win_32/ScriptGUI/sg.nw',
+//                compression: 'DEFLATE',
+//                base64: true,
+//                dot: true
+            },
+            'win64_nw_pack': {
+                cwd: 'src/',
+                src: ['src/**'],
+                dest: 'build/win_64/ScriptGUI/sg.nw',
 //                compression: 'DEFLATE',
 //                base64: true,
 //                dot: true
@@ -112,8 +158,12 @@ module.exports = function (grunt) {
         },
         //----------------------------------------------------------------------------------------------------------------------
         exec: {
-            win_copy_b: {
-                cwd: "E:/Home_Programming/ScriptGUI.app/build/win/ScriptGUI/",
+            win32_copy_b: {
+                cwd: _dir + "/build/win_32/ScriptGUI/",
+                command: "copy /b nw.exe+sg.nw ScriptGUI.exe"
+            },
+            win64_copy_b: {
+                cwd:  _dir + "/build/win_64/ScriptGUI/",
                 command: "copy /b nw.exe+sg.nw ScriptGUI.exe"
             }
         }
@@ -131,11 +181,17 @@ module.exports = function (grunt) {
             "build_date": d.getDate() + "." + parseInt(d.getMonth() + 1) + "." + d.getFullYear(),
             "manifestUrl": "http://37.120.169.17/jdownloads/ScriptGUI/update.json",
             "packages": {
-                "mac": {
-                    "url": "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_osx.zip"
+                "mac32": {
+                    "url": "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_osx32.zip"
                 },
-                "win": {
-                    "url": "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_win.zip"
+                "mac64": {
+                    "url": "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_osx64.zip"
+                },
+                "win32": {
+                    "url": "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_win32.zip"
+                },
+                "win64": {
+                    "url": "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_win64.zip"
                 },
                 "linux32": {
                     "url": "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_linux.tar.gz"
@@ -145,27 +201,74 @@ module.exports = function (grunt) {
         grunt.file.write("src/update.json", JSON.stringify(update));
     });
 
-    grunt.registerTask('build_win', function () {
-        grunt.file.mkdir("build/win/ScriptGUI/");
-        grunt.task.run(["copy:win_webkit"]);
-        grunt.task.run(["zip:win_nw_pack"]);
-        grunt.task.run(["exec:win_copy_b"]);
-        grunt.task.run(["clean:after_win"]);
-
-
+    grunt.registerTask('build_win32', function () {
+        grunt.file.mkdir("build/win_32/ScriptGUI/");
+        grunt.task.run(["copy:win32_webkit"]);
+        grunt.task.run(["zip:win32_nw_pack"]);
+        grunt.task.run(["exec:win32_copy_b"]);
+        grunt.task.run(["clean:after_win32"]);
+    });
+    grunt.registerTask('build_win64', function () {
+        grunt.file.mkdir("build/win_64/ScriptGUI/");
+        grunt.task.run(["copy:win64_webkit"]);
+        grunt.task.run(["zip:win64_nw_pack"]);
+        grunt.task.run(["exec:win64_copy_b"]);
+        grunt.task.run(["clean:after_win64"]);
     });
 
-    grunt.registerTask('build_osx', function () {
-        grunt.file.mkdir("build/osx/ScriptGUI/");
-        grunt.task.run(["copy:osx_webkit"]);
-        grunt.task.run(["copy:osx_src"]);
-        grunt.task.run(["rename:osx.app"]);
+    grunt.registerTask('build_osx32', function () {
+        grunt.file.mkdir("build/osx_32/ScriptGUI/");
+        grunt.task.run(["copy:osx32_webkit"]);
+        grunt.task.run(["copy:osx32_src"]);
+        grunt.task.run(["rename:osx_32.app"]);
+    });
+    grunt.registerTask('build_osx64', function () {
+        grunt.file.mkdir("build/osx_64/ScriptGUI/");
+        grunt.task.run(["copy:osx64_webkit"]);
+        grunt.task.run(["copy:osx64_src"]);
+        grunt.task.run(["rename:osx64.app"]);
     });
 
 
-    grunt.registerTask('Build_ZIP_UP', ['clean','make_build_data','build_win','build_osx',"clean:after_win",'zip:zip-win','zip:zip-osx','sftp']);
-    grunt.registerTask('Build_ZIP', ['clean','make_build_data','build_win','build_osx','zip:zip-win','zip:zip-osx']);
-    grunt.registerTask('Build',['clean','make_build_data','build_win','build_osx']);
+    grunt.registerTask('Build_ZIP_UP', [
+        'clean',
+        'make_build_data',
+        'build_win32',
+        'build_win64',
+        'build_osx32',
+        'build_osx64',
+        "clean:after_win32",
+        "clean:after_win64",
+        'zip:zip-win32',
+        'zip:zip-win64',
+        'zip:zip-osx32',
+        'zip:zip-osx64',
+        'sftp'
+    ]);
+    grunt.registerTask('Build_ZIP', [
+        'clean',
+        'make_build_data',
+        'build_win32',
+        'build_win64',
+        'build_osx32',
+        'build_osx64',
+        "clean:after_win32",
+        "clean:after_win64",
+        'zip:zip-win32',
+        'zip:zip-win64',
+        'zip:zip-osx32',
+        'zip:zip-osx64',
+    ]);
+    grunt.registerTask('Build',[
+        'clean',
+        'make_build_data',
+        'build_win32',
+        'build_win64',
+        'build_osx32',
+        'build_osx64',
+        "clean:after_win32",
+        "clean:after_win64",
+    ]);
 
 
 

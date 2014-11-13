@@ -3,7 +3,7 @@
  * Lizenz: [CC BY-NC 3.0](http://creativecommons.org/licenses/by-nc/3.0/de/)
  */
 "use strict";
-
+var os = require('os');
 var net = require('net');
 var path = require('path');
 var fs = require('fs');
@@ -56,8 +56,7 @@ var SGI = {
     HOST: '37.120.169.17',
     HOST_PORT: 3000,
 
-
-    os: process.platform,
+    os: (os.type()== "Windows_NT" ? "win" : os.type()== "darwin" ? "osx" : os.type()) + "_" + os.arch().replace(/[a-z]+/,""),
 
     socket: {},
     con_files: [],
@@ -116,11 +115,10 @@ var SGI = {
     },
 
     Setup: function () {
-        if (nwDir.indexOf("app") != -1){
+        if (nwDir.indexOf("ScriptGUI.app") != -1 && SGI.os.indexOf("win") != -1 ){
             SGI.dev = true
         }
         //SGI.dev = false;
-
 
         scope = angular.element($('body')).scope();
         scope.$apply();
