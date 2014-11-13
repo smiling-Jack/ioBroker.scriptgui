@@ -520,8 +520,8 @@ SGI = $.extend(true, SGI, {
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_obj"/>\
                 </div>\
                 <div class="div_hmid_trigger" style="text-align:left" >\
-                    <label style="position: relative;z-index: 1; background-color: transparent;display:inline-block; font-size: 13px;color: #000000;width: 45px "> Name: </label><input class="inp_obj_name" ng-model="mbs[' + nr + '].name" id="name_' + data.mbs_id + '" data-id="' + id + '"><br>\
-                    <label style="position: relative;z-index: 1; background-color: transparent;display:inline-block; font-size: 13px;color: #000000;width: 45px "> ID: </label><span style="min-width: 136px;color: black;display: inline-block;" id="hmid_' + data.mbs_id + '" class="ccuobj_id" ng-bind="mbs[' + nr + '].hmid" ></span><img data-id="' + id + '" id="hmid_ack_' + data.mbs_id + '" class="btn_ccuobj_update" src="img/icon/update.png"/>\
+                    <label style="position: relative;z-index: 1; background-color: transparent;display:inline-block; font-size: 13px;color: #000000;width: 45px; margin-left: 4px; "> Name: </label><input class="inp_obj_name" ng-model="mbs[' + nr + '].name" id="name_' + data.mbs_id + '" data-id="' + id + '"><br>\
+                    <label style="position: relative;z-index: 1; background-color: transparent;display:inline-block; font-size: 13px;color: #000000;width: 45px; margin-left: 4px; "> ID: </label><span style="min-width: 136px;color: black;display: inline-block;" id="hmid_' + data.mbs_id + '" class="ccuobj_id" ng-bind="mbs[' + nr + '].hmid" ></span><img data-id="' + id + '" id="hmid_ack_' + data.mbs_id + '" class="btn_ccuobj_update" src="img/icon/update.png"/>\
                 </div>\
             </div>');
 
@@ -593,8 +593,8 @@ SGI = $.extend(true, SGI, {
                     <img src="img/icon/bullet_toggle_minus.png" class="btn_min_obj"/>\
                 </div>\
                  <div class="div_hmid_trigger" style="text-align:left" >\
-                    <label style="position: relative;z-index: 1; background-color: transparent;display:inline-block; font-size: 13px;color: #000000;width: 45px "> Name: </label><input class="inp_obj_name" ng-model="mbs[' + nr + '].name" id="name_' + data.mbs_id + '" data-id="' + id + '"><br>\
-                    <label style="position: relative;z-index: 1; background-color: transparent;display:inline-block; font-size: 13px;color: #000000;width: 45px "> ID: </label><span style="min-width: 136px;color: black;display: inline-block;" id="hmid_' + data.mbs_id + '" class="ccuobj_id" ng-bind="mbs[' + nr + '].hmid" ></span><img data-id="' + id + '" id="hmid_ack_' + data.mbs_id + '" class="btn_ccuobj_update" src="img/icon/update.png"/>\
+                    <label style="position: relative;z-index: 1; background-color: transparent;display:inline-block; font-size: 13px;color: #000000;width: 45px; margin-left: 4px;  "> Name: </label><input class="inp_obj_name" ng-model="mbs[' + nr + '].name" id="name_' + data.mbs_id + '" data-id="' + id + '"><br>\
+                    <label style="position: relative;z-index: 1; background-color: transparent;display:inline-block; font-size: 13px;color: #000000;width: 45px; margin-left: 4px;  "> ID: </label><span style="min-width: 136px;color: black;display: inline-block;" id="hmid_' + data.mbs_id + '" class="ccuobj_id" ng-bind="mbs[' + nr + '].hmid" ></span><img data-id="' + id + '" id="hmid_ack_' + data.mbs_id + '" class="btn_ccuobj_update" src="img/icon/update.png"/>\
                 </div>\
             </div>');
 

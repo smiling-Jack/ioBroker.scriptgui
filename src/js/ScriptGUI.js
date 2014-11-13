@@ -160,9 +160,6 @@ var SGI = {
         $("#sim_output").prepend("<tr><td style='width: 100px'>Script Log</td><td></td></tr>");
 
 
-
-
-
         // Toolbox XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         $(".toolbox").hide();
 
@@ -1542,7 +1539,7 @@ var SGI = {
                 });
             }
             if (type == "output") {
-                endpointStyle = {fillStyle: "#660066"};
+                endpointStyle = {fillStyle: "#882288"};
                 SGI.plumb_inst["inst_" + codebox].addEndpoint(id.toString(), { uuid: id.toString() }, {
                     anchor: [1, 0.5, 1, 0, 0, 0],
                     isSource: true,
@@ -1569,7 +1566,7 @@ var SGI = {
                 });
             }
             if (type == "output") {
-                endpointStyle = {fillStyle: "#bb55bb"};
+                endpointStyle = {fillStyle: "#ff99ff"};
                 SGI.plumb_inst["inst_" + codebox].addEndpoint(id.toString(), { uuid: id.toString() }, {
                     anchor: [1, 0.5, 1, 0, 0, 0],
                     isSource: true,
@@ -1585,7 +1582,7 @@ var SGI = {
         if (scope == "liste_val") {
 
             if (type == "input") {
-                endpointStyle = {fillStyle: "#bb55bb"};
+                endpointStyle = {fillStyle: "#ff77ff"};
                 SGI.plumb_inst["inst_" + codebox].addEndpoint(id.toString(), { uuid: id.toString() }, {
                     anchor: ["Left"],
                     isTarget: true,

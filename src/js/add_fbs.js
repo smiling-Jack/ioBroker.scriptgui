@@ -362,8 +362,8 @@ SGI = $.extend(true, SGI, {
                     <option value="MM">' + SGI.translate("Monat_text") + '</option>\
                     <option value="roh">' + SGI.translate("roh") + '</option>\
                 </select>\
-                <div   class="div_head_right_string " style="background-color: orange">\
-                    <div  class="head_font_io_string">Time</div>\
+                <div   class="div_head_right " style="background-color: orange">\
+                    <div  class="head_font_io">Time</div>\
                 </div>\
             </div>');
         }
@@ -462,7 +462,7 @@ SGI = $.extend(true, SGI, {
                <div id="right_' + data.fbs_id + '" class="div_right">\
                    <div id="' + data.fbs_id + '_out" class="div_output1 ' + data.fbs_id + '_out"><a class="output_font">OUT</a></div>\
                </div>\
-            /div>');
+            </div>');
 
         }
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

@@ -597,9 +597,9 @@ body {
     background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
 
     border-bottom: none;
-    border-left: 1px solid #919191;
+    border-left: 1px solid rgb(166,166,166);
     border-right: none;
-    border-top: 1px solid #919191;
+    border-top: 1px solid rgb(166,166,166);
 }
 
 .inp_exp_val_out {
@@ -612,10 +612,10 @@ body {
     text-align: center;
     background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
 
-    border-bottom: 1px solid #919191;
-    border-left: 1px solid #919191;
+    border-bottom: 1px solid rgb(166,166,166);
+    border-left: 1px solid rgb(166,166,166);
     border-right: none;
-    border-top: 1px solid #919191;
+    border-top: 1px solid rgb(166,166,166);
 
 }
 
@@ -623,7 +623,7 @@ body {
     border-bottom: none;
     border-left: none;
     border-right: none;
-    border-top: 1px solid #919191;
+    border-top: 1px solid rgb(166,166,166);
     background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
     color: black;
     left: 0;
@@ -637,10 +637,10 @@ body {
 
 .lab_exp_out {
     background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
-    border-bottom: 1px solid #919191;
+    border-bottom: 1px solid rgb(166,166,166);
     border-left: none;
     border-right: none;
-    border-top: 1px solid #919191;
+    border-top: 1px solid rgb(166,166,166);
     bottom: 0;
     color: black;
     height: 17px;
@@ -673,7 +673,10 @@ body {
     margin: auto;
     text-align: center;
     background-color: #ffffff;
-    /*border: 1px solid rgb(65, 65, 65);*/
+    border-right: 1px solid rgb(99,99,99);
+    border-bottom: 1px solid rgb(99,99,99);
+    border-top: 1px solid rgb(220,220,220);
+    border-left: 1px solid rgb(220,220,220);
     border-radius: 8px;
 
     z-index: 50;
@@ -753,7 +756,6 @@ body {
 }
 
 .tr_ch_body {
-    border-bottom: 1px solid #00FFFF;
     display: flex;
     height: 17px !important;
     overflow: hidden;
@@ -812,7 +814,7 @@ body {
 
 .div_hmid_trigger {
     height: auto;
-
+    padding-bottom: 2px;
 }
 
 .inp_min {
@@ -991,7 +993,7 @@ body {
 .div_right_filter {
     bottom: 0;
     height: calc(100% - 18px);
-    right: 0;
+    right: -3px;
     position: absolute;
     width: 20px;
     display: flex;
@@ -1016,6 +1018,8 @@ body {
 
 .div_hmid_filter {
     width: auto;
+    z-index: 1;
+    position: relative;
 
 }
 
@@ -1197,7 +1201,10 @@ body {
     margin: auto;
     text-align: center;
     background-color: #ffffff;
-    border: 1px solid #919191;
+    border-right: 1px solid rgb(99,99,99);
+    border-bottom: 1px solid rgb(99,99,99);
+    border-top: 1px solid rgb(220,220,220);
+    border-left: 1px solid rgb(220,220,220);
     border-radius: 9px;
 
     z-index: 50;
@@ -1254,6 +1261,12 @@ body {
 .inp_obj_name {
     height: 16px;
     padding: 0;
+position: relative;
+    z-index: 1;
+    background-color: transparent;
+    border: 1px solid rgb(166, 166, 166);
+    padding-right: 1px;
+   margin: 4px
 
 }
 
@@ -1312,11 +1325,12 @@ body {
 }
 
 .btn_ccuobj_update {
-    height: 16px;
+    height: 14px;
     margin-top: 2px;
-    padding: -12px;
     position: relative;
-    top: 3px;
+    top: 0px;
+    float: right;
+    left: -7px;
 }
 
 .update {
@@ -1365,8 +1379,8 @@ body {
 .div_head_right_string {
     width: 35px;
     cursor: move;
-    border-bottom-right-radius: 6px;
-    border-top-right-radius: 6px;
+    border-bottom-right-radius: 8px;
+    border-top-right-radius: 8px;
     align-items: center;
     display: flex;
     justify-content: center;
@@ -1376,8 +1390,8 @@ body {
     display: flex;
     width: 30px;
     cursor: move;
-    border-top-left-radius: 6px;
-    border-bottom-left-radius: 6px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
 
     align-items: center;
     justify-content: center;
@@ -1387,8 +1401,8 @@ body {
 .div_head {
     height: 18px !important;
     border-bottom: 0 solid #00FFFF;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
     width: 100%;
     overflow: hidden;
 
@@ -1480,9 +1494,9 @@ body {
 .head_font {
     font-weight: bold;
     color: #000000 !important;
-    font-size: 13px;
+    font-size: 12px;
     position: relative;
-    top: 0px;
+    top: 2px;
     margin: 0;
 }
 
@@ -1528,6 +1542,7 @@ body {
     padding-left: 5px;
     align-items: center;
     z-index: 2;
+    position: relative;
 }
 
 .div_konst {
@@ -1611,7 +1626,8 @@ body {
     white-space: nowrap;
     clear: both;
     border: 1px dashed transparent;
-
+    z-index: 1;
+    position: relative;
 }
 
 .div_input {
@@ -2242,7 +2258,7 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
     left: -1px;
     top: -1px;
     border-radius: 8px;
-    box-shadow: inset 4px 4px 4px rgba(255, 255, 255, 0.4), inset -4px -4px 4px rgba(0, 0, 0, 0.4);
+    box-shadow: inset -3px -4px 14px rgba(0, 0, 0, 0.7), inset 3px 5px 14px rgba(255, 255, 255, 0.8);
     /* border: 1px solid rgb(65, 65, 65);*/
 }
 
