@@ -10,3 +10,4 @@ node_modules/grunt-node-webkit-builder
 cache/win/datastore
 cache/win/locales
 cache/win/datastore/connections/192.168.2.105.json
+ablage

@@ -851,7 +851,7 @@
             var first_id = 805371904;
             var _gridlist = [];
             $.each(scope.mbs, function (id) {
-                if (id.split("_")[0] == "scriptobj") {
+                if (this.type == "scriptobj") {
                     _gridlist.push({Name: this.name, Type: "", ROOM: "", GEWERK: "", FAVORITE: "", ID: this.name, level: 1, parent: [0], expanded: true, loaded: true, isLeaf: true});
                     first_id++;
 

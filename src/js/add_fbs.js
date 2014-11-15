@@ -14,7 +14,7 @@ SGI = $.extend(true, SGI, {
             fbs_id: _data.type + "_" + nr,
             type: _data.type,
             hmid: _data.hmid || [],
-            name: SGI.get_name(_data.hmid),
+            name: _data.name || SGI.get_name(_data.hmid) ,
             value: _data.value || 0,
             input_n: _data.input_n || 2,
             width: _data.width,
@@ -35,6 +35,7 @@ SGI = $.extend(true, SGI, {
                 "top": top + "px"
             }
         };
+
 
         if (copy) {
             data.left = data.left + 18;

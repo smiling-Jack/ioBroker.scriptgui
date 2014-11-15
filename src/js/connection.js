@@ -163,8 +163,12 @@ jQuery.extend(true, SGI, {
                                             o["_" + obj[0] + ".Timestamp"] = obj[2];
                                             o["_" + obj[0] + ".Certain"] = obj[3];
                                             homematic.uiState["_" + obj[0]] = o;
+
                                         }
+                                        $(document).triggerHandler("new_data",{id:obj[0],value:obj[1],timestamp:obj[2],certain:obj[3],lasttimestamp:obj[4]});
+
                                     });
+
 
                                     SGI.con_data = true;
                                     $("#img_con_state").attr("src", "img/icon/flag-green.png");

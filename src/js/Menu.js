@@ -315,11 +315,12 @@ jQuery.extend(true, SGI, {
 
         $("#m_show_debugscript").click(function () {
 
-            if ($("body").find(".ui-dialog:not(.quick-help)").length == 0) {
+
 
                 var script = Compiler.make_prg(true);
+                console.log(script)
                 SGI.show_Script(script)
-            }
+
         });
 
 // Icon Bar XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -762,7 +763,7 @@ jQuery.extend(true, SGI, {
 // Live Test
         $("#img_set_script_play").click(function () {
                 if (SGI.con_data) {
-                    simulate();
+                    sim.simulate();
                 } else {
                     alert("Keine Online/Offline daten")
                 }
@@ -779,7 +780,7 @@ jQuery.extend(true, SGI, {
         );
 
         $("#img_set_script_stop").click(function () {
-                stopsim();
+                sim.stopsim();
             }
         ).hover(
             function () {

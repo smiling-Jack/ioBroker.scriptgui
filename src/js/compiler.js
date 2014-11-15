@@ -22,7 +22,10 @@ var Compiler = {
         $.each(PRG.struck.trigger, function () {
 
             var nr = this.mbs_id.split("_").pop();
-
+            var mbs_nr = ", [" + nr+"]";
+            if (!sim) {
+                mbs_nr = "";
+            }
             var targets = "";
             $.each(this.target, function () {
 //                if (this[1] == 0) {
@@ -33,55 +36,55 @@ var Compiler = {
 
             if (PRG._scope.mbs[nr].type == "trigger_valNe") {
                 $.each(PRG._scope.mbs[nr].hmid, function () {
-                    Compiler.trigger = 'subscribe({id: ' + this + ' , valNe:false}, function (data){' + targets + ' }); ' + Compiler.script;
+                    Compiler.trigger = 'subscribe({id: ' + this + ' , valNe:false}, function (data){' + targets + ' }' + mbs_nr + '); ' + Compiler.script;
                 });
             }
             if (PRG._scope.mbs[nr].type == "trigger_event") {
 
                 $.each(PRG._scope.mbs[nr].hmid, function () {
-                    Compiler.trigger += 'subscribe({id: ' + this + '}, function (data){' + targets + ' }); '
+                    Compiler.trigger += 'subscribe({id: ' + this + '}, function (data){' + targets + ' }' + mbs_nr + '); '
                 });
             }
             if (PRG._scope.mbs[nr].type == "trigger_EQ") {
 
                 $.each(PRG._scope.mbs[nr].hmid, function () {
-                    Compiler.trigger += 'subscribe({id: ' + this + ' , change:"eq"}, function (data){' + targets + ' }); '
+                    Compiler.trigger += 'subscribe({id: ' + this + ' , change:"eq"}, function (data){' + targets + ' }' + mbs_nr + '); '
                 });
             }
             if (PRG._scope.mbs[nr].type == "trigger_NE") {
 
                 $.each(PRG._scope.mbs[nr].hmid, function () {
-                    Compiler.trigger += 'subscribe({id: ' + this + ' , change:"ne"}, function (data){' + targets + ' }); '
+                    Compiler.trigger += 'subscribe({id: ' + this + ' , change:"ne"}, function (data){' + targets + ' }' + mbs_nr + '); '
                 });
             }
             if (PRG._scope.mbs[nr].type == "trigger_GT") {
 
                 $.each(PRG._scope.mbs[nr].hmid, function () {
-                    Compiler.trigger += 'subscribe({id: ' + this + ' , change:"gt"}, function (data){' + targets + ' }); '
+                    Compiler.trigger += 'subscribe({id: ' + this + ' , change:"gt"}, function (data){' + targets + ' }' + mbs_nr + '); '
                 });
             }
             if (PRG._scope.mbs[nr].type == "trigger_GE") {
 
                 $.each(PRG._scope.mbs[nr].hmid, function () {
-                    Compiler.trigger += 'subscribe({id: ' + this + ' , change:"ge"}, function (data){' + targets + ' }); '
+                    Compiler.trigger += 'subscribe({id: ' + this + ' , change:"ge"}, function (data){' + targets + ' }' + mbs_nr + '); '
                 });
             }
             if (PRG._scope.mbs[nr].type == "trigger_LT") {
 
                 $.each(PRG._scope.mbs[nr].hmid, function () {
-                    Compiler.trigger += 'subscribe({id: ' + this + ' , change:"lt"}, function (data){' + targets + ' }); '
+                    Compiler.trigger += 'subscribe({id: ' + this + ' , change:"lt"}, function (data){' + targets + ' }' + mbs_nr + '); '
                 });
             }
             if (PRG._scope.mbs[nr].type == "trigger_LE") {
 
                 $.each(PRG._scope.mbs[nr].hmid, function () {
-                    Compiler.trigger += 'subscribe({id: ' + this + ' , change:"le"}, function (data){' + targets + ' }); '
+                    Compiler.trigger += 'subscribe({id: ' + this + ' , change:"le"}, function (data){' + targets + ' }' + mbs_nr + '); '
                 });
             }
             if (PRG._scope.mbs[nr].type == "trigger_val") {
 
                 $.each(PRG._scope.mbs[nr].hmid, function (index) {
-                    Compiler.trigger += 'subscribe({id: ' + this + ' , ' + PRG._scope.mbs[nr]["val"][index] + ':' + PRG._scope.mbs[nr]["wert"][index] + '}, function (data){' + targets + ' }); '
+                    Compiler.trigger += 'subscribe({id: ' + this + ' , ' + PRG._scope.mbs[nr]["val"][index] + ':' + PRG._scope.mbs[nr]["wert"][index] + '}, function (data){' + targets + ' }' + mbs_nr + '); '
                 });
             }
             if (PRG._scope.mbs[nr].type == "trigger_time") {
@@ -128,7 +131,7 @@ var Compiler = {
                             break;
 
                     }
-                    Compiler.trigger += 'schedule("' + m + ' ' + h + ' * * ' + day + '", function (data){' + targets + ' }); '
+                    Compiler.trigger += 'schedule("' + m + ' ' + h + ' * * ' + day + '", function (data){' + targets + ' }' + mbs_nr + '); '
                 });
             }
             if (PRG._scope.mbs[nr].type == "trigger_astro") {
@@ -140,7 +143,7 @@ var Compiler = {
             }
             if (PRG._scope.mbs[nr].type == "trigger_zykm") {
 
-                Compiler.trigger += 'schedule(" */' + PRG._scope.mbs[nr].time + ' * * * * ", function (data){' + targets + ' }); '
+                Compiler.trigger += 'schedule(" */' + PRG._scope.mbs[nr].time + ' * * * * ", function (data){' + targets + ' }' + mbs_nr + '); '
 
             }
             if (PRG._scope.mbs[nr].type == "trigger_vartime") {
@@ -163,12 +166,12 @@ var Compiler = {
             }
             if (PRG._scope.mbs[nr].type == "trigger_yearly") {
 
-                Compiler.trigger += 'schedule("@yearly", function (data){' + targets + ' }); '
+                Compiler.trigger += 'schedule("@yearly", function (data){' + targets + ' }' + mbs_nr + '); '
 
             }
             if (PRG._scope.mbs[nr].type == "trigger_monthly") {
 
-                Compiler.trigger += 'schedule("@monthly", function (data){' + targets + ' }); '
+                Compiler.trigger += 'schedule("@monthly", function (data){' + targets + ' }' + mbs_nr + '); '
 
             }
             if (PRG._scope.mbs[nr].type == "scriptobj") {
