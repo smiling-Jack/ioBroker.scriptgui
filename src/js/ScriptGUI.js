@@ -247,7 +247,7 @@ var SGI = {
 
 
         var start_h;
-        var log_h = 100;
+        var log_h = 130;
         $("#sim_log_head")
             .hover(
             function () {
@@ -257,14 +257,14 @@ var SGI = {
             })
             .dblclick(function () {
 
-                if ($("#sim_log").height() > 99) {
+                if ($("#sim_log").height() > 129) {
                     log_h = $("#sim_log").height();
 
                     $("#sim_log").css({height: "10px",
                         "min-height": "10px"});
                     $("#main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
                 } else {
-                    $("#sim_log").css({height: log_h + "px"});
+                    $("#sim_log").css({height: ""+log_h+"px"});
                     $("#main").css({height: 'calc(100% - ' + (58 + log_h) + 'px)'});
                 }
             })
@@ -278,9 +278,9 @@ var SGI = {
             })
 
             .drag(function (ev, dd) {
-                if (start_h - dd.deltaY < 100) {
-                    $("#sim_log").css({height: "100px"});
-                    $("#main").css({height: 'calc(100% - ' + (58 + 100) + 'px)'});
+                if (start_h - dd.deltaY < 130) {
+                    $("#sim_log").css({height: "130px"});
+                    $("#main").css({height: 'calc(100% - ' + (58 + 130) + 'px)'});
                 } else {
                     $("#sim_log").css({height: start_h - dd.deltaY + "px"});
                     $("#main").css({height: 'calc(100% - ' + (58 + start_h - dd.deltaY) + 'px)'});
@@ -289,13 +289,11 @@ var SGI = {
             });
 
         if (scope.setup.LT_open == false) {
-            log_h = $("#sim_log").height();
-
             $("#sim_log").css({height: "10px",
                 "min-height": "10px"});
             $("#main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
-
         }
+
 
 
         //      Make element draggable

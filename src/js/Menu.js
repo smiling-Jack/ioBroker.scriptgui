@@ -317,7 +317,7 @@ jQuery.extend(true, SGI, {
 
 
 
-                var script = Compiler.make_prg(true);
+                var script = Compiler.make_prg(sim.run_type);
                 console.log(script)
                 SGI.show_Script(script)
 
@@ -735,6 +735,7 @@ jQuery.extend(true, SGI, {
             if ($(this).parent().hasClass("div_img_glass_on")) {
                 SGI.disconnect()
             } else {
+                SGI.disconnect()
                 SGI.offline()
             }
         }).hover(
@@ -749,6 +750,7 @@ jQuery.extend(true, SGI, {
             if ($(this).parent().hasClass("div_img_glass_on")) {
                 SGI.disconnect()
             } else {
+                SGI.disconnect()
                 SGI.online()
             }
 
@@ -761,35 +763,40 @@ jQuery.extend(true, SGI, {
         );
 
 // Live Test
-        $("#img_set_script_play").click(function () {
+        $("#img_set_script_play").button().click(function () {
                 if (SGI.con_data) {
                     sim.simulate();
                 } else {
                     alert("Keine Online/Offline daten")
                 }
-
-
             }
         ).hover(
             function () {
-                if (SGI.con_data)
                     $(this).addClass("ui-state-focus");
             }, function () {
                 $(this).removeClass("ui-state-focus");
             }
         );
 
-        $("#img_set_script_stop").click(function () {
+        $("#img_set_script_stop").button().click(function () {
                 sim.stopsim();
             }
         ).hover(
             function () {
-                if (SGI.con_data)
                     $(this).addClass("ui-state-focus");
             }, function () {
                 $(this).removeClass("ui-state-focus");
             }
         );
+
+
+        $( "#run_type" ).buttonset();
+
+
+
+        $('.run_type').click(function(){
+              sim.run_type = $(".run_type:checked").data("info");
+        });
 
 
         $("#prg_panel").on("click", ".btn_min_trigger", function () {

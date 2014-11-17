@@ -97,7 +97,9 @@ body {
     font-weight: bold;
     height: 38px;
     padding: 2px;
-    width: 80px;
+    width: 81px;
+    position: relative;
+    left: 144px;
 
 }
 
@@ -142,7 +144,7 @@ body {
     width: calc(100% - 2px);
     margin: 0 !important;
     min-height: 142px;
-    height: calc(100% - 158px);
+    height: calc(100% - 188px);
 }
 
 .toolbox_body {
@@ -230,7 +232,7 @@ body {
     display: flex;
     width: 100%;
     justify-content: flex-start;
-
+ margin-left: 10px;
 }
 
 .xs_text_toolbox {
@@ -311,7 +313,7 @@ body {
     width: 100%;
     background-color: white;
     margin-bottom: 1px;
-    height: 100px;
+    height: 130px;
     min-height: 100px;
     align-self: flex-end;
     display: block;
@@ -333,7 +335,7 @@ body {
     height: calc(100% - 12px);
     padding: 0;
     resize: none;
-    width: calc(100% - 200px);
+    width: calc(100% - 340px);
     overflow: hidden;
     position: relative;
     background-color: white;
@@ -342,7 +344,7 @@ body {
 
 .div_sim_controll {
     height: calc(100% - 10px);
-    width: 200px;
+    width: 340px;
     display: flex;
     float: left;
     align-items: center;

@@ -22,11 +22,16 @@ var Compiler = {
         $.each(PRG.struck.trigger, function () {
 
             var nr = this.mbs_id.split("_").pop();
-            var mbs_nr = ", [" + nr+"]";
-            if (!sim) {
-                mbs_nr = "";
-            }
+            var mbs_nr;
             var targets = "";
+
+
+            if (sim == "trigger" || sim== "hotrun") {
+               mbs_nr = ", [" + nr+"]";
+            }else{
+               mbs_nr = "";
+            }
+
             $.each(this.target, function () {
 //                if (this[1] == 0) {
                 targets += this + "(data);"
@@ -289,7 +294,7 @@ var Compiler = {
             $.each(this[0], function () {
                 var nr = this.fbs_id.split("_").pop();
                 Compiler.last_fbs = this.fbs_id;
-                if (sim) {
+                if (sim != false) {
                     Compiler.script += '\n\n// xxxxxxxxxxxxxxxxxxxx ' + this.fbs_id + ' xxxxxxxxxxxxxxxxxxxx \n';
                 }
                 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -807,12 +812,12 @@ var Compiler = {
 
                 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-                if (sim && this.output.length > 0) {
+                if (sim != false && this.output.length > 0) {
                     $.each(this.output, function () {
                         Compiler.script += 'simout("' + this.ausgang + '",' + this.ausgang + ');';
                     });
                 }
-                if (sim && this.output.length > 0 && this.force != undefined) {
+                if (sim != false && this.output.length > 0 && this.force != undefined) {
                     var force = this.force;
                     $.each(this.output, function () {
 
@@ -833,7 +838,7 @@ var Compiler = {
                         }
                     });
                 }
-                if (sim && this.output.length > 0 && ( this.force == undefined || this.force == NaN  )) {
+                if (sim != false && this.output.length > 0 && ( this.force == undefined || this.force == NaN  )) {
                     $.each(this.output, function () {
                         Compiler.force += 'var ' + this.ausgang + '_force = undefined ;';
                         Compiler.script += this.ausgang + ' = ' + this.ausgang + '_force || ' + this.ausgang + ';';

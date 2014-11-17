@@ -525,13 +525,19 @@
             Live Test
         </div>
         <div class="div_sim_controll_icons">
-            <img alt="" style="height: 30px; width: 30px" src="img/icon/play.png"
+            <button style="height: 34px; width: 34px; background-image:url('img/icon/play.png'); background-color: transparent; background-repeat: no-repeat; background-size: contain;"
                  class="img_iconbar script_engine set_script title_translate" id="img_set_script_play"
-                 title="Teste Script"/>
-            <img alt="" style="height: 30px; width: 30px" src="img/icon/stop.png"
+                 title="Teste Script" disabled></button>
+            <button style="margin-left: 15px; height: 34px; width: 34px; background-image:url('img/icon/stop.png'); background-color: transparent; background-repeat: no-repeat; background-size: contain;"
                  class="img_iconbar script_engine set_script title_translate" id="img_set_script_stop"
-                 title="Stop"/>
+                 title="Stop" disabled></button>
             <button class="translate" id="clear_force">Force entfernen</button>
+        </div>
+        <div id="run_type" style="margin-top: 5px; width: 100%; margin-left: 10px;">
+            <input class="run_type" type="radio" id="run_type0" disabled data-info="step" name="radio">                   <label style="width: 81px" id="lba_run_type0" for="run_type0">Step</label>
+            <input class="run_type" type="radio" id="run_type1" disabled data-info="sim" name="radio"checked="checked">  <label style="width: 81px" id="lba_run_type1" for="run_type1">Sim</label>
+            <input class="run_type" type="radio" id="run_type2" disabled data-info="trigger" name="radio">                  <label style="width: 81px" id="lba_run_type2" for="run_type2">Trigger</label>
+            <input class="run_type" type="radio" id="run_type3" disabled data-info="hotrun" name="radio">          <label style="width: 81px" id="lba_run_type3" for="run_type3">Hotrun</label>
         </div>
 
     </div>

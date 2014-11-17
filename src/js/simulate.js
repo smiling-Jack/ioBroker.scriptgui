@@ -4,15 +4,15 @@
  */
 
 var sim = {
+    run_type: "sim",
     regaObjects: [],
     regaIndex: [],
     datapoints: [],
-    util:           require('util'),
-    scheduler:      require('node-schedule'),
-    suncalc:        require('suncalc'),
+    util: require('util'),
+    scheduler: require('node-schedule'),
+    suncalc: require('suncalc'),
     subscribers: [],
     schedules: [],
-
 
 
     gettime: function () {
@@ -69,15 +69,18 @@ var sim = {
             $("#img_set_script_play").attr("src", "img/icon/play.png");
 
             $(".btn_min_trigger").unbind("click");
+            $(document).unbind("new_data");
+
             $(".btn_min_trigger").attr("src", "img/icon/bullet_toggle_minus.png");
             $(".btn_min_trigger").css({
                 height: "10px",
                 top: 3,
                 width: "10px"
             });
-            $(document).unbind("new_data");
+
             $(".fbs, .mbs").show();
         }
+
     },
 
     simulate: function (target) {
@@ -89,126 +92,126 @@ var sim = {
             sim.regaIndex = homematic.regaIndex;
             sim.datapoints = homematic.uiState;
 
+            if (sim.run_type == "trigger" || sim.run_type == "hotrun") {
+                $(document).bind("new_data", function (event, data) {
+                    var obj = [data.id, data.value, data.timestamp, data.certain, data.lasttimestamp];
 
-            $(document).bind("new_data", function (event, data) {
-                var obj = [data.id, data.value, data.timestamp, data.certain, data.lasttimestamp];
-
-                var o = {};
-                o["_" + data.id + ".Value"] = data.value;
-                o["_" + data.id + ".Timestamp"] = data.timestamp;
-                o["_" + data.id + ".Certain"] = data.certain;
-                sim.datapoints["_" + data.id] = o;
-
-
-                if (!obj) {
-                    return;
-                }
-                var id = obj[0];
-
-                var name,
-                    parent,
-                    channelName,
-                    deviceName,
-                    channelType,
-                    deviceType,
-                    rooms = [],
-                    funcs = [],
-                    roomNames = [],
-                    funcNames = [];
+                    var o = {
+                        Value: data.value,
+                        Timestamp: data.timestamp,
+                        Certain: data.certain,
+                    };
+                    console.log(o)
+                    sim.datapoints["_" + data.id] = o;
 
 
-                if (sim.regaObjects[id]) {
-                    name = sim.regaObjects[id].Name;
-                    parent = sim.regaObjects[id].Parent;
-                }
+                    if (!obj) {
+                        return;
+                    }
+                    var id = obj[0];
 
-                if (parent) {
+                    var name,
+                        parent,
+                        channelName,
+                        deviceName,
+                        channelType,
+                        deviceType,
+                        rooms = [],
+                        funcs = [],
+                        roomNames = [],
+                        funcNames = [];
 
-                    channelName = sim.regaObjects[parent].Name;
-                    channelType = sim.regaObjects[parent].HssType;
 
-                    // Räume finden
-                    var roomIndex = sim.regaIndex.ENUM_ROOMS;
-                    for (var i = 0; i < roomIndex.length; i++) {
-                        var room = roomIndex[i];
-                        if (sim.regaObjects[room].Channels.indexOf(parent) != -1) {
-                            rooms.push(room);
-                            roomNames.push(sim.regaObjects[room].Name);
+                    if (sim.regaObjects[id]) {
+                        name = sim.regaObjects[id].Name;
+                        parent = sim.regaObjects[id].Parent;
+                    }
+
+                    if (parent) {
+
+                        channelName = sim.regaObjects[parent].Name;
+                        channelType = sim.regaObjects[parent].HssType;
+
+                        // Räume finden
+                        var roomIndex = sim.regaIndex.ENUM_ROOMS;
+                        for (var i = 0; i < roomIndex.length; i++) {
+                            var room = roomIndex[i];
+                            if (sim.regaObjects[room].Channels.indexOf(parent) != -1) {
+                                rooms.push(room);
+                                roomNames.push(sim.regaObjects[room].Name);
+                            }
+                        }
+
+                        // Gewerke finden
+                        var funcIndex = sim.regaIndex.ENUM_FUNCTIONS;
+                        for (var i = 0; i < funcIndex.length; i++) {
+                            var func = funcIndex[i];
+                            if (sim.regaObjects[func].Channels.indexOf(parent) != -1) {
+                                funcs.push(func);
+                                funcNames.push(sim.regaObjects[func].Name);
+                            }
+                        }
+
+                        // Gerät
+                        var device = sim.regaObjects[parent].Parent;
+                        deviceName = (sim.regaObjects[device] ? sim.regaObjects[device].Name : undefined);
+                        deviceType = (sim.regaObjects[device] ? sim.regaObjects[device].HssType : undefined);
+
+                    }
+
+
+                    var oldObj = sim.datapoints[id];
+
+                    if (!oldObj) {
+                        oldObj = [];
+                    }
+
+                    sim.datapoints[id] = [obj[1], obj[2], obj[3], obj[4]];
+
+                    var eventObj = {
+                        id: id,
+                        name: name,
+                        newState: {
+                            value: obj[1],
+                            timestamp: obj[2],
+                            ack: obj[3],
+                            lastchange: obj[4]
+                        },
+                        oldState: {
+                            value: oldObj[0],
+                            timestamp: oldObj[1],
+                            ack: oldObj[2],
+                            lastchange: oldObj[3]
+                        },
+                        channel: {
+                            id: parent,
+                            name: channelName,
+                            type: channelType,
+                            funcIds: funcs,
+                            roomIds: rooms,
+                            funcNames: funcNames,
+                            roomNames: roomNames
+                        },
+                        device: {
+                            id: device,
+                            name: deviceName,
+                            type: deviceType
+                        }
+
+                    };
+
+
+                    var length = that.subscribers.length;
+
+                    for (var i = 0; i < length; i++) {
+
+                        if (patternMatching(eventObj, sim.subscribers[i].pattern)) {
+                            $("#" + scope.mbs[sim.subscribers[i].mbs_nr].mbs_id).children().effect("highlight", {color: "green"}, 800);
+                            sim.subscribers[i].callback(eventObj);
                         }
                     }
-
-                    // Gewerke finden
-                    var funcIndex = sim.regaIndex.ENUM_FUNCTIONS;
-                    for (var i = 0; i < funcIndex.length; i++) {
-                        var func = funcIndex[i];
-                        if (sim.regaObjects[func].Channels.indexOf(parent) != -1) {
-                            funcs.push(func);
-                            funcNames.push(sim.regaObjects[func].Name);
-                        }
-                    }
-
-                    // Gerät
-                    var device = sim.regaObjects[parent].Parent;
-                    deviceName = (sim.regaObjects[device] ? sim.regaObjects[device].Name : undefined);
-                    deviceType = (sim.regaObjects[device] ? sim.regaObjects[device].HssType : undefined);
-
-                }
-
-
-                var oldObj = sim.datapoints[id];
-
-                if (!oldObj) {
-                    oldObj = [];
-                }
-
-                sim.datapoints[id] = [obj[1], obj[2], obj[3], obj[4]];
-
-                var eventObj = {
-                    id: id,
-                    name: name,
-                    newState: {
-                        value: obj[1],
-                        timestamp: obj[2],
-                        ack: obj[3],
-                        lastchange: obj[4]
-                    },
-                    oldState: {
-                        value: oldObj[0],
-                        timestamp: oldObj[1],
-                        ack: oldObj[2],
-                        lastchange: oldObj[3]
-                    },
-                    channel: {
-                        id: parent,
-                        name: channelName,
-                        type: channelType,
-                        funcIds: funcs,
-                        roomIds: rooms,
-                        funcNames: funcNames,
-                        roomNames: roomNames
-                    },
-                    device: {
-                        id: device,
-                        name: deviceName,
-                        type: deviceType
-                    }
-
-                };
-
-
-                var length = that.subscribers.length;
-
-                for (var i = 0; i < length; i++) {
-
-                    if (patternMatching(eventObj, sim.subscribers[i].pattern)) {
-                        console.log("x")
-                        //$("#" + scope.mbs[sim.subscribers[i].mbs_nr].mbs_id).children().effect("highlight", {color: "green"}, 800);
-                        sim.subscribers[i].callback(eventObj);
-                    }
-
-                }
-
-            });
+                });
+            }
 
             $(".fbs, .mbs").hide();
             $("#img_set_script_play").attr("src", "img/icon/playing.png");
@@ -910,17 +913,19 @@ var sim = {
             }
 
             function getState(id) {
-                if (sim.datapoints["_" + id]["Value"] != undefined) {
-                    return sim.datapoints["_" + id]["Value"]
-
-                } else {
-
-                }
-
+                return sim.datapoints["_" + id]["Value"]
             }
 
-            function setState(id, data) {
-                sim.datapoints["_" + id]["Value"] = data;
+            function setState(id, val, callback) {
+                if (sim.run_type == "trigger" || sim.run_type == "hotrun") {
+                    SGI.socket.emit("setState", [id, val], function () {
+                        if (callback) {
+                            callback();
+                        }
+                    });
+                } else {
+                    sim.datapoints["_" + id]["Value"] = val;
+                }
             }
 
             function setObject(id, data) {
@@ -934,38 +939,39 @@ var sim = {
 
             function subscribe(pattern, callbackOrId, value, mbs) {
 
-                if (typeof pattern != "object") {
-                    pattern = {id: pattern, change: "ne"};
-                }
-                // enable calls like: on("ADAPTER.LIGHT.SWITCH.STATE", "ADAPTER.LIGHT.RELAY.STATE"); // Set state of SWITCH to RELAY if state of SWITCH changes
-                // and
-                // on("ADAPTER.LIGHT.SWITCH.STATE", "ADAPTER.LIGHT.RELAY.STATE", 1); // Set 1 to RELAY if state of SWITCH changes
-                var callb = null;
-                if (typeof callbackOrId != "function") {
-                    if (typeof value != 'undefined') {
-                        callb = function (obj) {
-                            setState(callbackOrId, value);
+                if (sim.run_type == "trigger" || sim.run_type == "hotrun") {
+                    if (typeof pattern != "object") {
+                        pattern = {id: pattern, change: "ne"};
+                    }
+                    // enable calls like: on("ADAPTER.LIGHT.SWITCH.STATE", "ADAPTER.LIGHT.RELAY.STATE"); // Set state of SWITCH to RELAY if state of SWITCH changes
+                    // and
+                    // on("ADAPTER.LIGHT.SWITCH.STATE", "ADAPTER.LIGHT.RELAY.STATE", 1); // Set 1 to RELAY if state of SWITCH changes
+                    var callb = null;
+                    if (typeof callbackOrId != "function") {
+                        if (typeof value != 'undefined') {
+                            callb = function (obj) {
+                                setState(callbackOrId, value);
+                            }
+                        } else {
+                            callb = function (obj) {
+                                setState(callbackOrId, getState(obj.id));
+                            }
                         }
                     } else {
-                        callb = function (obj) {
-                            setState(callbackOrId, getState(obj.id));
-                        }
+                        callb = callbackOrId;
                     }
-                } else {
-                    callb = callbackOrId;
+                    var mbs_nr;
+                    if ($.isArray(value)) {
+                        mbs_nr = value[0];
+                    } else {
+                        mbs_nr = mbs[0];
+                    }
+                    sim.subscribers.push({
+                        pattern: pattern,
+                        callback: callb,
+                        mbs_nr: mbs_nr,
+                    });
                 }
-                var mbs_nr;
-                console.log(typeof value)
-                if ($.isArray(value)){
-                    mbs_nr = value[0];
-                }else{
-                    mbs_nr = mbs[0];
-                }
-                sim.subscribers.push({
-                    pattern: pattern,
-                    callback: callb,
-                    mbs_nr:mbs_nr,
-                });
             }
 
             function execCmd(data) {
@@ -1048,7 +1054,7 @@ var sim = {
 
             try {
 
-                var sim_script = js_beautify(Compiler.make_prg(true).toString());
+                var sim_script = js_beautify(Compiler.make_prg(sim.run_type).toString());
             }
             catch (err) {
                 var err_text = "";
