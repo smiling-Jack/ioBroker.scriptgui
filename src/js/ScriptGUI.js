@@ -56,7 +56,7 @@ var SGI = {
     HOST: '37.120.169.17',
     HOST_PORT: 3000,
 
-    os: (os.type()== "Windows_NT" ? "win" : os.type()== "darwin" ? "osx" : os.type()) + "_" + os.arch().replace(/[a-z]+/,""),
+    os: (os.type() == "Windows_NT" ? "win" : os.type() == "darwin" ? "osx" : os.type()) + "_" + os.arch().replace(/[a-z]+/, ""),
 
     socket: {},
     con_files: [],
@@ -115,7 +115,7 @@ var SGI = {
     },
 
     Setup: function () {
-        if (nwDir.indexOf("ScriptGUI.app") != -1 && SGI.os.indexOf("win") != -1 ){
+        if (nwDir.indexOf("ScriptGUI.app") != -1 && SGI.os.indexOf("win") != -1) {
             SGI.dev = true
         }
         //SGI.dev = false;
@@ -264,7 +264,7 @@ var SGI = {
                         "min-height": "10px"});
                     $("#main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
                 } else {
-                    $("#sim_log").css({height: ""+log_h+"px"});
+                    $("#sim_log").css({height: "" + log_h + "px"});
                     $("#main").css({height: 'calc(100% - ' + (58 + log_h) + 'px)'});
                 }
             })
@@ -293,7 +293,6 @@ var SGI = {
                 "min-height": "10px"});
             $("#main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
         }
-
 
 
         //      Make element draggable
@@ -399,11 +398,10 @@ var SGI = {
         SGI.select_fbs();
         SGI.setup_socket();
         SGI.global_event();
-        SGI.check_fs(function(){
+        SGI.check_fs(function () {
             SGI.read_experts();
             SGI.make_conpanel();
         });
-
 
 
 // SETUP ___________________________________________________________________________________________________________
@@ -446,7 +444,7 @@ var SGI = {
 //        }, 5000);
 
         setTimeout(function () {
-            if ( SGI.dev != true){
+            if (SGI.dev != true) {
 
 
                 if (scope.setup.update) {
@@ -458,7 +456,7 @@ var SGI = {
                     });
                 }
 
-                if((new Date).toLocaleDateString() != scope.setup.last_open ){
+                if ((new Date).toLocaleDateString() != scope.setup.last_open) {
                     SGI.server_homecall()
                 }
 
@@ -540,23 +538,34 @@ var SGI = {
 
         });
 
-        $(document).on('click',".fbs_element",function(target){
-            if(SGI.key == 16 ) {
+        $(document).on('click', ".fbs_element", function (target) {
+            if (SGI.key == 16) {
                 if ($(this).hasClass("fbs_element")) {
-                    $(this).toggleClass("fbs_selected");
+
+                    if ($(this).hasClass("jsplumb-drag-selected")) {
+                        SGI.plumb_inst["inst_" + $(this).parent().parent().attr("id")].removeFromDragSelection($(this));
+                    } else {
+                        SGI.plumb_inst["inst_" + $(this).parent().parent().attr("id")].addToDragSelection($(this));
+                    }
+
                 } else {
                     $.each($(target.target).parents(), function () {
-                        console.log($(this))
+
                         if ($(this).hasClass("fbs_element")) {
-                            $(this).toggleClass("fbs_selected");
+                            if ($(this).hasClass("jsplumb-drag-selected")) {
+                                SGI.plumb_inst["inst_" + $(this).parent().parent().attr("id")].removeFromDragSelection($(this));
+                            } else {
+                                SGI.plumb_inst["inst_" + $(this).parent().parent().attr("id")].addToDragSelection($(this));
+                            }
                         }
+
                     });
                 }
             }
         });
 
-        $(document).on('click',".mbs_element",function(target){
-            if(SGI.key == 16 ) {
+        $(document).on('click', ".mbs_element", function (target) {
+            if (SGI.key == 16) {
                 if ($(this).hasClass("mbs_element")) {
                     $(this).toggleClass("mbs_selected");
                 } else {
@@ -969,8 +978,11 @@ var SGI = {
         $('#prg_body,#selection').mousemove(function (e) {
             if (selection_mbs) {
                 if (!selection_start) {
-                    $(".fbs_element").removeClass("fbs_selected");
-                    $(".mbs_element").removeClass("mbs_selected");
+
+                    $.each(SGI.plumb_inst, function () {
+                        this.clearDragSelection();
+                    });
+
                     selection_start = true;
                 }
                 // Store current mouseposition
@@ -1014,10 +1026,9 @@ var SGI = {
                 if (mbs_element.length > 0) {
                     if ($(e.target).attr("id") == "prg_panel" || $(e.target).is(".prg_codebox")) {
 
-                        $.each(mbs_element, function () {
-                            $(this).removeClass("mbs_selected");
+                        $.each(SGI.plumb_inst, function () {
+                            this.clearDragSelection();
                         });
-                        $(".fbs_element").removeClass("fbs_selected");
                     }
 
                     $("#selection").hide();
@@ -1091,18 +1102,22 @@ var SGI = {
         var selection_fbs = false;
         var selection_start = false;
         var selection_codebox = "";
-
+        var inst;
 
         // Selection frame (playground :D)
         $("#prg_panel").on("mousedown", ".prg_codebox", function (e) {
             if ($(e.target).is('.prg_codebox')) {
                 $("body").bind("mousemove", function (_e) {
 
+                    inst = $(e.target).parent().attr("id");
+
                     if (selection_fbs) {
 
                         if (!selection_start) {
-                            $(".fbs_element").removeClass("fbs_selected");
-                            $(".mbs_element").removeClass("mbs_selected");
+//                            $(".fbs_element").removeClass("fbs_selected");
+                            $.each(SGI.plumb_inst, function () {
+                                this.clearDragSelection();
+                            });
                             selection_start = true;
                         }
                         // Store current mouseposition
@@ -1163,7 +1178,8 @@ var SGI = {
 
         $(document).mouseup(function (e) {
             if (selection_fbs) {
-                var $fbs_element = $("#prg_panel").find(".fbs_selected");
+//                var $fbs_element = $("#prg_panel").find(".fbs_selected");
+                var $fbs_element = $("#prg_panel").find(".jsplumb-drag-selected");
 
                 if (e.shiftKey == true) {
                     var $target = $(e.target);
@@ -1180,8 +1196,8 @@ var SGI = {
                     $("#selection").hide();
                 }
                 else {
-                    $.each($fbs_element, function () {
-                        $(this).removeClass("fbs_selected");
+                    $.each(SGI.plumb_inst, function () {
+                        this.clearDragSelection();
                     });
                     getIt();
                     $("#selection").hide();
@@ -1203,7 +1219,10 @@ var SGI = {
                     var ymiddle = (p.top ) + $(this).height() / 2;
                     if (matchPos(xmiddle, ymiddle)) {
                         // Colorize border, if element is inside the selection
-                        $(this).addClass("fbs_selected");
+//                        $(this).addClass("fbs_selected");
+//                        $(this).addClass("jsplumb-drag-selected");
+//                        alert(inst)
+                        SGI.plumb_inst["inst_" + inst].addToDragSelection($(this))
                     }
                 });
             }
@@ -2324,131 +2343,202 @@ var SGI = {
         var off;
         var ep_mbs = [];
         var ep_fbs = [];
+        var codebox_w = "";
+        var codebox_h = "";
 
-        $("#" + data.fbs_id)
-            .drag("init", function () {
-                $(".dot").remove();
-                if ($(this).is('.fbs_selected'))
-                    return $('.fbs_selected');
-            })
 
-            .drag("start", function (ev, dd) {
-                dd.limit = $div.offset();
-                dd.limit.bottom = dd.limit.top + (($div.outerHeight() - $(this).outerHeight()) * SGI.zoom);
-                dd.limit.right = dd.limit.left + (($div.outerWidth() - $(this).outerWidth()) * SGI.zoom);
+//        $("#" + data.fbs_id)
+//            .drag("init", function () {
+//                $(".dot").remove();
+//                if ($(this).is('.fbs_selected'))
+//                    return $('.fbs_selected');
+//            })
+//
+//            .drag("start", function (ev, dd) {
+//                dd.limit = $div.offset();
+//                dd.limit.bottom = dd.limit.top + (($div.outerHeight() - $(this).outerHeight()) * SGI.zoom);
+//                dd.limit.right = dd.limit.left + (($div.outerWidth() - $(this).outerWidth()) * SGI.zoom);
+//
+//                off = $(dd.drag).parent().offset();
+//                if ($(this).hasClass("fbs_element_onborder")) {
+//                    ep_mbs = SGI.plumb_inst.inst_mbs.getEndpoint($(this).attr("id"));
+//                    ep_fbs = SGI.plumb_inst["inst_" + $("#" + data.parent).parent().attr("id")].getEndpoint(data.fbs_id);
+//                } else {
+//                    ep_fbs = SGI.get_eps_by_elem(this);
+//                }
+//            })
+//
+//            .drag(function (ev, dd) {
+//
+//                if ($(this).hasClass("fbs_element_onborder")) {
+//
+//                    var $this_left = dd.offsetX - off.left;
+//                    var $this_top = dd.offsetY - off.top;
+//                    var $this_width = parseInt($(this).css("width"));
+//                    var $this_height = parseInt($(this).css("height"));
+//                    var $this_p_width = parseInt($($(this).parent()).css("width"));
+//                    var $this_p_height = parseInt($($(this).parent()).css("height"));
+//
+//                    if ($this_left > ($this_p_width - $this_width )) {
+//                        $($(this)).addClass("onborder_r")
+//                            .removeClass("onborder_b")
+//                            .removeClass("onborder_l")
+//                            .removeClass("onborder_t");
+//
+//                        $(this).css({
+//                            top: (Math.min(dd.limit.bottom, Math.max(dd.limit.top, dd.offsetY)) / SGI.zoom) - (off.top / SGI.zoom)
+//                        });
+//
+//                        ep_mbs.setAnchor([1, 0.5, 1, 0, 5, 2]);
+//                        if (ep_fbs) {
+//                            ep_fbs.setAnchor([0, 0.5, -1, 0, -5, 0]);
+//                        }
+//                    } else if ($this_left < 5) {
+//                        $($(this)).addClass("onborder_l")
+//                            .removeClass("onborder_b")
+//                            .removeClass("onborder_r")
+//                            .removeClass("onborder_t");
+//                        $(this).css({
+//                            top: (Math.min(dd.limit.bottom, Math.max(dd.limit.top, dd.offsetY)) / SGI.zoom) - (off.top / SGI.zoom)
+//                        });
+//
+//                        ep_mbs.setAnchor([0, 0.5, -1, 0, -3, 3]);
+//                        if (ep_fbs) {
+//                            ep_fbs.setAnchor([1, 0.5, 1, 0, 5, 0]);
+//
+//                        }
+//                    } else if ($this_top > ($this_p_height - $this_height)) {
+//                        $($(this)).addClass("onborder_b")
+//                            .removeClass("onborder_r")
+//                            .removeClass("onborder_l")
+//                            .removeClass("onborder_t");
+//                        $(this).css({
+//                            left: (Math.min(dd.limit.right, Math.max(dd.limit.left, dd.offsetX)) / SGI.zoom) - (off.left / SGI.zoom)
+//                        });
+//
+//                        ep_mbs.setAnchor([0.5, 1, 0, 1, 2, 7]);
+//                        if (ep_fbs) {
+//                            ep_fbs.setAnchor([0.5, 0, 0, -1, 0, -5]);
+//                        }
+//                    } else if ($this_top < 5) {
+//                        $($(this)).addClass("onborder_t")
+//                            .removeClass("onborder_b")
+//                            .removeClass("onborder_l")
+//                            .removeClass("onborder_r");
+//                        $(this).css({
+//                            left: (Math.min(dd.limit.right, Math.max(dd.limit.left, dd.offsetX)) / SGI.zoom) - (off.left / SGI.zoom)
+//                        });
+//
+//                        ep_mbs.setAnchor([0.5, 0, 0, -1, 2, -3]);
+//                        if (ep_fbs) {
+//                            ep_fbs.setAnchor([0.5, 1, 0, 1, 0, 5]);
+//                        }
+//                    } else {
+//                    }
+//                    SGI.plumb_inst["inst_" + $($div).parent().attr("id")].repaint($(this).attr("id"));
+//                    SGI.plumb_inst.inst_mbs.repaintEverything();
+//                } else {
+//
+//                    if (scope.setup.snap_grid) {
+//                        $(this).css({
+//
+//                            top: (Math.min(dd.limit.bottom - (off.top), Math.max(dd.limit.top - (off.top), Math.round((dd.offsetY - (off.top)) / SGI.grid) * SGI.grid))) / SGI.zoom,
+//                            left: (Math.min(dd.limit.right - (off.left), Math.max(dd.limit.left - (off.left), Math.round((dd.offsetX - (off.left)) / SGI.grid) * SGI.grid))) / SGI.zoom
+//                        });
+//
+//                    } else {
+//                        $(this).css({
+//                            top: (Math.min(dd.limit.bottom, Math.max(dd.limit.top, dd.offsetY)) / SGI.zoom) - (off.top / SGI.zoom),
+//                            left: (Math.min(dd.limit.right, Math.max(dd.limit.left, dd.offsetX)) / SGI.zoom) - (off.left / SGI.zoom)
+//                        });
+//                    }
+//                    console.log(ep_fbs);
+//                    console.log($($div).parent().attr("id"));
+//
+//                    SGI.plumb_inst["inst_" + $($div).parent().attr("id")].repaint(ep_fbs);
+//                }
+//
+//            })
+//
+//            .drag("end", function () {
+//                var nr = $(this).data("nr");
+//                scope.fbs[nr].style.top = $(this).position().top / SGI.zoom + "px";
+//                scope.fbs[nr].style.left = $(this).position().left / SGI.zoom + "px";
+//
+//                scope.$apply();
+//                if ($.isArray(ep_fbs) == true) {
+//                    SGI.plumb_inst["inst_" + $($div).parent().attr("id")].repaint(ep_fbs);
+//                } else {
+//                    SGI.plumb_inst["inst_" + $($div).parent().attr("id")].repaint($(this).attr("id"));
+//                }
+//
+//                SGI.plumb_inst.inst_mbs.repaintEverything();
+//            });
 
-                off = $(dd.drag).parent().offset();
-                if ($(this).hasClass("fbs_element_onborder")) {
-                    ep_mbs = SGI.plumb_inst.inst_mbs.getEndpoint($(this).attr("id"));
-                    ep_fbs = SGI.plumb_inst["inst_" + $("#" + data.parent).parent().attr("id")].getEndpoint(data.fbs_id);
-                } else {
-                    ep_fbs = SGI.get_eps_by_elem(this);
-                }
-            })
 
-            .drag(function (ev, dd) {
 
-                if ($(this).hasClass("fbs_element_onborder")) {
+        SGI.plumb_inst["inst_" + $($div).parent().attr("id")].draggable($("#" + data.fbs_id), {
+            containment: "parent",
+            start:function(params) {
+            codebox_h = $(params.el).parent().parent().height();
+            codebox_w = $(params.el).parent().parent().width();
+                ep_mbs = SGI.plumb_inst.inst_mbs.getEndpoint($(this).attr("id"));
+                ep_fbs = SGI.plumb_inst["inst_" + $("#" + data.parent).parent().attr("id")].getEndpoint(data.fbs_id);
 
-                    var $this_left = dd.offsetX - off.left;
-                    var $this_top = dd.offsetY - off.top;
-                    var $this_width = parseInt($(this).css("width"));
-                    var $this_height = parseInt($(this).css("height"));
-                    var $this_p_width = parseInt($($(this).parent()).css("width"));
-                    var $this_p_height = parseInt($($(this).parent()).css("height"));
+            },
+            drag:function(params) {
+//            $(params.el).css("top","0px");
+//console.log($(params.el).parent().parent().attr("id"))
+//console.log(params.el)
+                //todo not Everything
 
-                    if ($this_left > ($this_p_width - $this_width )) {
-                        $($(this)).addClass("onborder_r")
-                            .removeClass("onborder_b")
-                            .removeClass("onborder_l")
-                            .removeClass("onborder_t");
 
-                        $(this).css({
-                            top: (Math.min(dd.limit.bottom, Math.max(dd.limit.top, dd.offsetY)) / SGI.zoom) - (off.top / SGI.zoom)
-                        });
+
+
+
+                if ($(params.el).hasClass("fbs_element_onborder")) {
+                    console.log(params
+                   )
+                    var $this_left = params.pos[0];
+                    var $this_top =  params.pos[1];
+                    var $this_height = $(params.el).height();
+                    var $this_width = $(params.el).width();
+                    var $this = $(params.el);
+
+                    if ($this_left < (codebox_w /2)) {
+                        console.log("left")
+                        $(params.el).css("left", "0px")
+//                            .removeClass("onborder_b")
+//                            .removeClass("onborder_l")
+//                            .removeClass("onborder_t")
+//                            .removeClass("onborder_r");
+
+//                        $(this).css({
+//                            top: (Math.min(dd.limit.bottom, Math.max(dd.limit.top, dd.offsetY)) / SGI.zoom) - (off.top / SGI.zoom)
+//                        });
 
                         ep_mbs.setAnchor([1, 0.5, 1, 0, 5, 2]);
                         if (ep_fbs) {
                             ep_fbs.setAnchor([0, 0.5, -1, 0, -5, 0]);
                         }
-                    } else if ($this_left < 5) {
-                        $($(this)).addClass("onborder_l")
-                            .removeClass("onborder_b")
-                            .removeClass("onborder_r")
-                            .removeClass("onborder_t");
-                        $(this).css({
-                            top: (Math.min(dd.limit.bottom, Math.max(dd.limit.top, dd.offsetY)) / SGI.zoom) - (off.top / SGI.zoom)
-                        });
+                    }else{
+                        console.log("right")
+                        $(params.el).css("left", codebox_w+"px");
+//                            .removeClass("onborder_b")
+//                            .removeClass("onborder_l")
+//                            .removeClass("onborder_t")
+//                            .removeClass("onborder_l");
 
-                        ep_mbs.setAnchor([0, 0.5, -1, 0, -3, 3]);
-                        if (ep_fbs) {
-                            ep_fbs.setAnchor([1, 0.5, 1, 0, 5, 0]);
-
-                        }
-                    } else if ($this_top > ($this_p_height - $this_height)) {
-                        $($(this)).addClass("onborder_b")
-                            .removeClass("onborder_r")
-                            .removeClass("onborder_l")
-                            .removeClass("onborder_t");
-                        $(this).css({
-                            left: (Math.min(dd.limit.right, Math.max(dd.limit.left, dd.offsetX)) / SGI.zoom) - (off.left / SGI.zoom)
-                        });
-
-                        ep_mbs.setAnchor([0.5, 1, 0, 1, 2, 7]);
-                        if (ep_fbs) {
-                            ep_fbs.setAnchor([0.5, 0, 0, -1, 0, -5]);
-                        }
-                    } else if ($this_top < 5) {
-                        $($(this)).addClass("onborder_t")
-                            .removeClass("onborder_b")
-                            .removeClass("onborder_l")
-                            .removeClass("onborder_r");
-                        $(this).css({
-                            left: (Math.min(dd.limit.right, Math.max(dd.limit.left, dd.offsetX)) / SGI.zoom) - (off.left / SGI.zoom)
-                        });
-
-                        ep_mbs.setAnchor([0.5, 0, 0, -1, 2, -3]);
-                        if (ep_fbs) {
-                            ep_fbs.setAnchor([0.5, 1, 0, 1, 0, 5]);
-                        }
-                    } else {
                     }
-                    SGI.plumb_inst["inst_" + $($div).parent().attr("id")].repaint($(this).attr("id"));
+                    SGI.plumb_inst["inst_" + $(params.el).parent().parent().attr("id")].repaintEverything();
                     SGI.plumb_inst.inst_mbs.repaintEverything();
-                } else {
 
-                    if (scope.setup.snap_grid) {
-                        $(this).css({
-
-                            top: (Math.min(dd.limit.bottom - (off.top), Math.max(dd.limit.top - (off.top), Math.round((dd.offsetY - (off.top)) / SGI.grid) * SGI.grid))) / SGI.zoom,
-                            left: (Math.min(dd.limit.right - (off.left), Math.max(dd.limit.left - (off.left), Math.round((dd.offsetX - (off.left)) / SGI.grid) * SGI.grid))) / SGI.zoom
-                        });
-
-                    } else {
-                        $(this).css({
-                            top: (Math.min(dd.limit.bottom, Math.max(dd.limit.top, dd.offsetY)) / SGI.zoom) - (off.top / SGI.zoom),
-                            left: (Math.min(dd.limit.right, Math.max(dd.limit.left, dd.offsetX)) / SGI.zoom) - (off.left / SGI.zoom)
-                        });
-                    }
-                    SGI.plumb_inst["inst_" + $($div).parent().attr("id")].repaint(ep_fbs);
                 }
-
-            })
-
-            .drag("end", function () {
-                var nr = $(this).data("nr");
-                scope.fbs[nr].style.top = $(this).position().top / SGI.zoom + "px";
-                scope.fbs[nr].style.left = $(this).position().left / SGI.zoom + "px";
-
-                scope.$apply();
-                if ($.isArray(ep_fbs) == true) {
-                    SGI.plumb_inst["inst_" + $($div).parent().attr("id")].repaint(ep_fbs);
-                } else {
-                    SGI.plumb_inst["inst_" + $($div).parent().attr("id")].repaint($(this).attr("id"));
-                }
-
-                SGI.plumb_inst.inst_mbs.repaintEverything();
-            });
+            },
+            stop:function(params) {
+                SGI.plumb_inst["inst_" + $(params.el).parent().parent().attr("id")].repaintEverything();
+            }
+        });
 
 
     },
@@ -2825,11 +2915,11 @@ var SGI = {
 
     },
 
-    make_conpanel: function(){
+    make_conpanel: function () {
 
         SGI.con_files = [];
         try {
-            $.each(fs.readdirSync(path.resolve(scope.setup.datastore  + '/ScriptGUI_Data/connections/')), function () {
+            $.each(fs.readdirSync(path.resolve(scope.setup.datastore + '/ScriptGUI_Data/connections/')), function () {
                 var con_name = this.split(".json")[0];
                 con_name = con_name.replace("port", ":");
                 SGI.con_files.push(con_name)
@@ -2914,7 +3004,8 @@ var SGI = {
 
         SGI.copy_data = [];
 
-        $.each($('.fbs_selected'), function () {
+//        $.each($('.fbs_selected'), function () {
+        $.each($('.jsplumb-drag-selected'), function () {
             var posi = $(this).position();
             var data = {
                 type: $(this).attr("id").split("_")[0],
@@ -2928,7 +3019,10 @@ var SGI = {
     paste_selected: function (e) {
 
         var codebox = $(".codebox_active").find(".prg_codebox");
-        $(".fbs_selected").removeClass("fbs_selected");
+//        $(".fbs_selected").removeClass("fbs_selected");
+        $.each($(".fbs_selected .jsplumb-drag-selected"), function () {
+            SGI.plumb_inst["inst_" + $(codebox).parent().attr("id")].removeFromDragSelection($(this));
+        });
 
         $.each(SGI.copy_data, function () {
             var data = this;
@@ -3299,7 +3393,7 @@ var SGI = {
 
         }
 
-        if (scope.setup.datastore == "" || !fs.existsSync(path.resolve(scope.setup.datastore)) ) {
+        if (scope.setup.datastore == "" || !fs.existsSync(path.resolve(scope.setup.datastore))) {
             $("body").append('\
                 <div id="dialog_datastore" style="text-align: center" title="Datastore">\
                 <img src="./img/logo.png" style="width: 300px"/><br><br><br>\

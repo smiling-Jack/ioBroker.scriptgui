@@ -354,7 +354,7 @@ jQuery.extend(true, SGI, {
 
 // Ordnen
         $("#img_set_left").click(function () {
-            var items = $(".fbs_selected");
+            var items = $(".jsplumb-drag-selected");
             if (items.length > 1) {
 
                 function SortByName(a, b) {
@@ -402,7 +402,7 @@ jQuery.extend(true, SGI, {
 
         $("#img_set_right").click(function () {
             var position;
-            var items = $(".fbs_selected");
+            var items = $(".jsplumb-drag-selected");
 
             if (items.length > 1) {
                 function SortByName(a, b) {
@@ -449,7 +449,7 @@ jQuery.extend(true, SGI, {
 
         $("#img_set_top").click(function () {
             var position;
-            var items = $(".fbs_selected");
+            var items = $(".jsplumb-drag-selected");
             if (items.length > 1) {
                 function SortByName(a, b) {
                     var aName = $(a).position().top;
@@ -494,7 +494,7 @@ jQuery.extend(true, SGI, {
 
         $("#img_set_bottom").click(function () {
             var position;
-            var items = $(".fbs_selected");
+            var items = $(".jsplumb-drag-selected");
             if (items.length > 1) {
                 function SortByName(a, b) {
                     var aName = $(a).position().top;
@@ -539,7 +539,7 @@ jQuery.extend(true, SGI, {
 
         $("#img_set_steps").click(function () {
 
-            var items = $(".fbs_selected");
+            var items = $(".jsplumb-drag-selected");
             if (items.length > 1) {
                 function SortByTop(a, b) {
                     var aName = $(a).position().top;
@@ -1737,7 +1737,7 @@ jQuery.extend(true, SGI, {
     del_selected: function () {
 
         var mbs_sel = $(".mbs_selected");
-        var fbs_sel = $(".fbs_selected");
+        var fbs_sel = $(".jsplumb-drag-selected");
         var opt = {};
 
         $.each(fbs_sel, function () {

@@ -992,6 +992,12 @@ body {
     border-color: cyan;
 }
 
+.jsplumb-drag-selected{
+    /* TODO box shadow anpassen*/
+    box-shadow: 0 0 15px #0ff7ff;
+    border-color: cyan;
+}
+
 .mbs_selected {
     /* TODO box shadow anpassen*/
     box-shadow: 0 0 15px cyan;
