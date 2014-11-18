@@ -765,7 +765,9 @@ jQuery.extend(true, SGI, {
 // Live Test
         $("#img_set_script_play").button().click(function () {
                 if (SGI.con_data) {
+
                     sim.simulate();
+                    $(this).append('<div id="play_overlay"  ></div>')
                 } else {
                     alert("Keine Online/Offline daten")
                 }
@@ -780,6 +782,8 @@ jQuery.extend(true, SGI, {
 
         $("#img_set_script_stop").button().click(function () {
                 sim.stopsim();
+                console.log(this)
+
             }
         ).hover(
             function () {

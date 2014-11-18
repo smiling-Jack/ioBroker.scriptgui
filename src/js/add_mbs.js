@@ -645,6 +645,11 @@ SGI = $.extend(true, SGI, {
         SGI.make_mbs_drop();
 
 
+        if (data.type != "codebox") {
+            $("#" + data.mbs_id).append('<div class="mbs_shadow"></div>')
+        }
+
+
     }
 
 });

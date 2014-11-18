@@ -4,7 +4,7 @@
  */
 
 var sim = {
-    run_type: "sim",
+    run_type: "step",
     regaObjects: [],
     regaIndex: [],
     datapoints: [],
@@ -31,7 +31,7 @@ var sim = {
 
     stopsim: function () {
         if (SGI.sim_run == true) {
-
+$('#play_overlay').remove();
 
             $("#img_set_script_stop").stop(true, true).effect({
                 effect: "highlight",
@@ -227,6 +227,11 @@ var sim = {
                     'disabled': 'disabled'
                 });
             });
+
+            function step_fbs_highlight(id) {
+                console.log(id)
+                $(id).find(".fbs_shadow").effect("highlight", {color: "green"}, 800);
+            }
 
             function patternMatching(event, pattern) {
                 if (!pattern.logic) {
@@ -917,7 +922,7 @@ var sim = {
             }
 
             function setState(id, val, callback) {
-                if (sim.run_type == "trigger" || sim.run_type == "hotrun") {
+                if (sim.run_type == "hotrun") {
                     SGI.socket.emit("setState", [id, val], function () {
                         if (callback) {
                             callback();
@@ -1111,6 +1116,7 @@ var sim = {
 
                 SGI.sim_run = true;
                 $("#img_set_script_play").finish().effect("highlight");
+
             }
             catch (err) {
                 console.log(err)

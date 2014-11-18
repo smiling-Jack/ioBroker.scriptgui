@@ -1,7 +1,4 @@
 
-
-
-
 {"main": "index.html",
     "name": "ScriptGUI",
     "version": "0.72.9",
@@ -14,7 +11,7 @@
         "frame": true,
         "width": 800,
         "height": 600,
-        "resizable": false,
+        "resizable": true,
         "show": false
     },
     "webkit": {

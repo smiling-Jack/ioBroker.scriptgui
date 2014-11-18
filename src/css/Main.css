@@ -232,7 +232,7 @@ body {
     display: flex;
     width: 100%;
     justify-content: flex-start;
- margin-left: 10px;
+    margin-left: 10px;
 }
 
 .xs_text_toolbox {
@@ -568,24 +568,8 @@ body {
     padding-bottom: 2px;
     bottom: 0;
     background-color: transparent;
+    z-index: 2;
 
-}
-
-.btn_exp::before {
-    font-size: 12px;
-    height: 15px;
-    left: 0;
-    position: absolute;
-    width: 100%;
-    border-bottom-right-radius: 8px;
-    border-bottom-left-radius: 8px;
-    content: "";
-    border: medium none;
-    font-weight: bold;
-    padding-bottom: 2px;
-    bottom: 0;
-    background-color: #808080;
-    z-index: -1;
 }
 
 .inp_exp_val_in {
@@ -596,12 +580,12 @@ body {
     width: 15px;
     padding: 0;
     text-align: center;
-    background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
-
+    background: none;
+    z-index: 2;
     border-bottom: none;
-    border-left: 1px solid rgb(166,166,166);
+    border-left: 1px solid rgb(166, 166, 166);
     border-right: none;
-    border-top: 1px solid rgb(166,166,166);
+    border-top: 1px solid rgb(166, 166, 166);
 }
 
 .inp_exp_val_out {
@@ -612,12 +596,12 @@ body {
     width: 15px;
     padding: 0;
     text-align: center;
-    background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
-
-    border-bottom: 1px solid rgb(166,166,166);
-    border-left: 1px solid rgb(166,166,166);
+    background: none;
+    z-index: 2;
+    border-bottom: 1px solid rgb(166, 166, 166);
+    border-left: 1px solid rgb(166, 166, 166);
     border-right: none;
-    border-top: 1px solid rgb(166,166,166);
+    border-top: 1px solid rgb(166, 166, 166);
 
 }
 
@@ -625,7 +609,7 @@ body {
     border-bottom: none;
     border-left: none;
     border-right: none;
-    border-top: 1px solid rgb(166,166,166);
+    border-top: 1px solid rgb(166, 166, 166);
     background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
     color: black;
     left: 0;
@@ -639,10 +623,10 @@ body {
 
 .lab_exp_out {
     background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
-    border-bottom: 1px solid rgb(166,166,166);
+    border-bottom: 1px solid rgb(166, 166, 166);
     border-left: none;
     border-right: none;
-    border-top: 1px solid rgb(166,166,166);
+    border-top: 1px solid rgb(166, 166, 166);
     bottom: 0;
     color: black;
     height: 17px;
@@ -675,10 +659,10 @@ body {
     margin: auto;
     text-align: center;
     background-color: #ffffff;
-    border-right: 1px solid rgb(99,99,99);
-    border-bottom: 1px solid rgb(99,99,99);
-    border-top: 1px solid rgb(220,220,220);
-    border-left: 1px solid rgb(220,220,220);
+    border-right: 1px solid rgb(99, 99, 99);
+    border-bottom: 1px solid rgb(99, 99, 99);
+    border-top: 1px solid rgb(220, 220, 220);
+    border-left: 1px solid rgb(220, 220, 220);
     border-radius: 8px;
 
     z-index: 50;
@@ -918,6 +902,7 @@ body {
     padding-top: 1px;
     height: 10px;
     width: 10px;
+    z-index: 2;
 }
 
 .btn_min_obj {
@@ -928,6 +913,34 @@ body {
     padding-top: 1px;
     height: 10px;
     width: 10px;
+}
+
+#play_overlay {
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+    z-index: 2;
+    -webkit-animation: blinks 1.5s infinite linear;
+    border-radius: 6px;
+}
+
+@-webkit-keyframes blinks {
+    0% {
+        box-shadow: 0px 0px 0px 0px red, inset 0px 0px 0px 0px red;
+
+    }
+    50% {
+        box-shadow: 0px 0px 4px 6px red, inset 0px 0px 4px 3px red;
+
+    }
+    100% {
+        box-shadow: 0px 0px 0px 0px red, inset 0px 0px 0px 0px red;
+
+    }
 }
 
 .delay {
@@ -1203,10 +1216,10 @@ body {
     margin: auto;
     text-align: center;
     background-color: #ffffff;
-    border-right: 1px solid rgb(99,99,99);
-    border-bottom: 1px solid rgb(99,99,99);
-    border-top: 1px solid rgb(220,220,220);
-    border-left: 1px solid rgb(220,220,220);
+    border-right: 1px solid rgb(99, 99, 99);
+    border-bottom: 1px solid rgb(99, 99, 99);
+    border-top: 1px solid rgb(220, 220, 220);
+    border-left: 1px solid rgb(220, 220, 220);
     border-radius: 9px;
 
     z-index: 50;
@@ -1263,12 +1276,12 @@ body {
 .inp_obj_name {
     height: 16px;
     padding: 0;
-position: relative;
+    position: relative;
     z-index: 1;
     background-color: transparent;
     border: 1px solid rgb(166, 166, 166);
     padding-right: 1px;
-   margin: 4px
+    margin: 4px
 
 }
 
@@ -1361,6 +1374,8 @@ position: relative;
     color: black !important;
     font-size: 11px;
     display: flex;
+    position: relative;
+    z-index: 2;
 }
 
 .div_head_right {
@@ -1373,9 +1388,9 @@ position: relative;
     align-items: center;
     height: calc(100% - 0px);
     right: -1px;
-    z-index: 1;
+
     position: relative;
-    box-shadow: inset -3px -4px 14px -3px rgba(0, 0, 0, 1.7), inset 5px 10px 14px -5px rgba(255, 255, 255, 0.8);
+
 }
 
 .div_head_right_string {
@@ -1498,6 +1513,7 @@ position: relative;
     color: #000000 !important;
     font-size: 12px;
     position: relative;
+    z-index: 2;
     top: 2px;
     margin: 0;
 }
@@ -2236,9 +2252,8 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
 
 /*______________________________________*/
 
-.fbs_element:before {
+.fbs_shadow {
     /* background: red; */
-    content: "";
     display: inline-block;
     position: absolute;
     height: calc(100% + 2px);
@@ -2250,7 +2265,7 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
     /* border: 1px solid rgb(65, 65, 65); */
 }
 
-.mbs_element:not(.mbs_element_codebox):before {
+.mbs_shadow {
     /* background: red; */
     content: "";
     display: inline-block;

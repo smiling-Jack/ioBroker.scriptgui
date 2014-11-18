@@ -1017,14 +1017,15 @@ SGI = $.extend(true, SGI, {
                                 <div   class="div_head" style="background-color: gray">\
                                     <span style="background-color:transparent; border:none; width: 56px; text-align: center;" class="head_font">{{fbs[' + nr + '].opt}}</span>\
                                 </div>\
+                                <label class="lab_exp_in">Inputs</label>\
+                                <label class="lab_exp_out">Outputs</label>\
+                                <input ng-model="fbs[' + nr + '].exp_in"   id="var_in_' + data.fbs_id + '" class="inp_exp_val_in" />\
+                                <input ng-model="fbs[' + nr + '].exp_out"  id="var_out_' + data.fbs_id + '" class="inp_exp_val_out" />\
                                 <div id="left_' + data.fbs_id + '" class="div_left_exp">\
                                 </div>\
                                 <div id="right_' + data.fbs_id + '" class="div_right_exp">\
                                 </div>\
-                                <label class="lab_exp_in">Inputs</label>\
-                                <label class="lab_exp_out">Outputs</label>\
-                                <input ng-model="fbs[' + nr + '].exp_in"   id="var_in_' + data.fbs_id + '" class="inp_exp_val_in" type="text">\
-                                <input ng-model="fbs[' + nr + '].exp_out"  id="var_out_' + data.fbs_id + '" class="inp_exp_val_out" type="text">\
+                                <div style="background-color: gray;z-index: 0;height: 15px;" class="btn_exp"> </div>\
                                 <button type="button" id="btn_' + data.fbs_id + '" class="btn_exp">Edit</button> \
                              </div>');
 
@@ -1203,6 +1204,7 @@ SGI = $.extend(true, SGI, {
         if (copy) {
             $("#" + data.fbs_id).addClass("fbs_selected");
         }
+        $("#" + data.fbs_id).append('<div class="fbs_shadow"></div>')
 
     }
 
