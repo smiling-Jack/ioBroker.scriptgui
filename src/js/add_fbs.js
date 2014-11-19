@@ -807,30 +807,33 @@ SGI = $.extend(true, SGI, {
 
             var pos = SGI.find_border_position(data);
             if (pos == "left") {
-                $("#" + data.fbs_id).addClass("onborder_l");
-                ep_mbs.setAnchor([0, 0.5, -1, 0, -3, 3]);
-                ep_fbs.setAnchor([1, 0.5, 1, 0, 5, 0]);
+                $("#" + data.fbs_id).css("left", "0");
+                ep_mbs.setAnchor("Left");
+                ep_fbs.setAnchor("Right");
             }
-            if (pos == "right") {
-                $("#" + data.fbs_id).addClass("onborder_r");
-                ep_mbs.setAnchor([1, 0.5, 1, 0, 5, 2]);
-                ep_fbs.setAnchor([0, 0.5, -1, 0, -5, 0]);
+            else if (pos == "right") {
+                $("#" + data.fbs_id).css("left", $("#" + data.parent).width());
+                ep_mbs.setAnchor("Right");
+                ep_fbs.setAnchor("Left");
             }
-            if (pos == "top") {
-                $("#" + data.fbs_id).addClass("onborder_t");
-                ep_mbs.setAnchor([0.5, 0, 0, -1, 3, -3]);
-                ep_fbs.setAnchor([0.5, 1, 0, 1, 0, 5]);
+            else if (pos == "top") {
+                $("#" + data.fbs_id).css("top", "0");
+                ep_mbs.setAnchor("Top");
+                ep_fbs.setAnchor("Bottom");
 
             }
-            if (pos == "bottom") {
-                $("#" + data.fbs_id).addClass("onborder_b");
-                ep_mbs.setAnchor([0.5, 1, 0, 1, 2, 7]);
-                ep_fbs.setAnchor([0.5, 0, 0, -1, 0, -5]);
+            else if (pos == "bottom") {
+                $("#" + data.fbs_id).css("top", $("#" + data.parent).height());
+                ep_mbs.setAnchor("Bottom");
+                ep_fbs.setAnchor("Top");
 
 
             }
-            SGI.plumb_inst.inst_mbs.repaintEverything();
-            SGI.plumb_inst["inst_" + $("#" + data.parent).parent().attr("id")].repaintEverything();
+            setTimeout(function(){
+                SGI.plumb_inst.inst_mbs.repaintEverything();
+                SGI.plumb_inst["inst_" + $("#" + data.parent).parent().attr("id")].repaintEverything();
+            },10);
+
 
 
         }

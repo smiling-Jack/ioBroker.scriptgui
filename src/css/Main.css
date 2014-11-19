@@ -675,7 +675,7 @@ body {
     min-height: 100px;
     border: dotted 2px #00ffff;
     background-color: transparent !important;;
-    z-index: 3 !important;
+    z-index: 4 !important;
     width: auto;
     height: auto;
 }
@@ -992,7 +992,7 @@ body {
     border-color: cyan;
 }
 
-.jsplumb-drag-selected{
+.jsplumb-drag-selected {
     /* TODO box shadow anpassen*/
     box-shadow: 0 0 15px #0ff7ff;
     border-color: cyan;
@@ -1291,11 +1291,19 @@ body {
 
 }
 
-.fbs_element_next {
+.ep_mbs_onborder {
+    margin-top: 1px;
+    margin-left: 1px;
 
+}
+
+.fbs_element_next {
     width: 50px !important;
     height: 18px !important;
     background-color: red;
+    margin-left: -25px;
+    margin-top: -9px;
+
 }
 
 .cursor_help {
