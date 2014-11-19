@@ -807,23 +807,23 @@ SGI = $.extend(true, SGI, {
 
             var pos = SGI.find_border_position(data);
             if (pos == "left") {
-                $("#" + data.fbs_id).css("left", "0");
+                $("#" + data.fbs_id).css({left: "-28px", right: "auto", bottom:"auto"});
                 ep_mbs.setAnchor("Left");
                 ep_fbs.setAnchor("Right");
             }
             else if (pos == "right") {
-                $("#" + data.fbs_id).css("left", $("#" + data.parent).width());
+                $("#" + data.fbs_id).css({left: "auto", right: "-28px", bottom:"auto"});
                 ep_mbs.setAnchor("Right");
                 ep_fbs.setAnchor("Left");
             }
             else if (pos == "top") {
-                $("#" + data.fbs_id).css("top", "0");
+                $("#" + data.fbs_id).css({top: "-13px", bottom: "auto", right:"auto"});
                 ep_mbs.setAnchor("Top");
                 ep_fbs.setAnchor("Bottom");
 
             }
             else if (pos == "bottom") {
-                $("#" + data.fbs_id).css("top", $("#" + data.parent).height());
+                $("#" + data.fbs_id).css({top: "auto", bottom: "-13px", right:"auto"});
                 ep_mbs.setAnchor("Bottom");
                 ep_fbs.setAnchor("Top");
 

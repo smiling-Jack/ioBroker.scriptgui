@@ -98,7 +98,7 @@ SGI = $.extend(true, SGI, {
                     SGI.plumb_inst.inst_mbs.repaintEverything();
                 },
                 stop: function (event, ui) {
-                    $(this).css({border: "none"})
+                    $(this).css({border: "2px dotted transparent"});
                     $(this).parent().css({border: "2px dotted #00ffff"});
                     scope.mbs[nr].style["width"] = $(this).css("width");
                     scope.mbs[nr].style["height"] = $(this).css("height");
