@@ -1307,8 +1307,6 @@ body {
     width: 50px !important;
     height: 18px !important;
     background-color: red;
-
-
 }
 
 .cursor_help {
@@ -1340,7 +1338,6 @@ body {
     position: absolute;
     left: 0;
     height: 18px;
-
 }
 
 .div_io_out_string {
@@ -1348,7 +1345,6 @@ body {
     right: 0;
     top: 2px;
     height: 100%;
-
 }
 
 .div_io_in {
@@ -1384,7 +1380,6 @@ body {
     margin: 0;
     position: relative;
     z-index: 2;
-
 }
 
 .head_font_io_string {
@@ -1407,9 +1402,7 @@ body {
     align-items: center;
     height: calc(100% - 0px);
     right: -1px;
-
     position: relative;
-
 }
 
 .div_head_right_string {

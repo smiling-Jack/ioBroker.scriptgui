@@ -1205,7 +1205,8 @@ SGI = $.extend(true, SGI, {
 
         SGI.make_fbs_drag(data);
         if (copy) {
-            $("#" + data.fbs_id).addClass("fbs_selected");
+            SGI.plumb_inst["inst_"+ $("#"+data.parent).parent().attr("id")].adddToDragSelection($("#"+data.fbs_id))
+            //$("#" + data.fbs_id).addClass("fbs_selected");
         }
         $("#" + data.fbs_id).append('<div class="fbs_shadow"></div>')
 

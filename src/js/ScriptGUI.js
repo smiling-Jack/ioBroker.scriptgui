@@ -57,7 +57,7 @@ var SGI = {
     HOST_PORT: 3000,
 
     os: (os.type() == "Windows_NT" ? "win" : os.type() == "darwin" ? "osx" : os.type()) + "_" + os.arch().replace(/[a-z]+/, ""),
-
+    copy_data:[],
     socket: {},
     con_files: [],
     con_data: false,
@@ -2421,7 +2421,7 @@ var SGI = {
     },
 
     make_fbs_drag: function (data) {
-
+console.log(data)
         var $div = $("#" + data.parent);
         var ep_mbs = [];
         var ep_fbs = [];
@@ -3024,30 +3024,62 @@ var SGI = {
 
         SGI.copy_data = [];
 
+
 //        $.each($('.fbs_selected'), function () {
-        $.each($('.jsplumb-drag-selected'), function () {
-            var posi = $(this).position();
-            var data = {
-                type: $(this).attr("id").split("_")[0],
-                top: posi.top,
-                left: posi.left
-            };
-            SGI.copy_data.push(data)
+        $.each($('.jsplumb-drag-selected '), function () {
+            if ($(this).hasClass("fbs_element")){
+                var posi = $(this).position();
+                var data = {
+                    type: $(this).attr("id").split("_")[0],
+                    style:{
+                        top: posi.top,
+                        left: posi.left,
+                    },
+                    parent:"",
+                    fbs:true
+                };
+                SGI.copy_data.push(data)
+            }else if ($(this).hasClass("fbs_element")){
+                var posi = $(this).position();
+                var data = {
+                    type: $(this).attr("id").split("_")[0],
+                    style:{
+                    top: posi.top,
+                        left: posi.left,
+                },
+                    parent:"",
+                mbs:true
+                };
+                SGI.copy_data.push(data)
+            }
+
         });
+
+
     },
 
     paste_selected: function (e) {
 
         var codebox = $(".codebox_active").find(".prg_codebox");
+        console.log(codebox)
+
 //        $(".fbs_selected").removeClass("fbs_selected");
         $.each($(".fbs_selected .jsplumb-drag-selected"), function () {
             SGI.plumb_inst["inst_" + $(codebox).parent().attr("id")].removeFromDragSelection($(this));
         });
 
         $.each(SGI.copy_data, function () {
-            var data = this;
-            data.parent = $(codebox).attr('id');
-            SGI.add_fbs_element(this, true)
+            console.log(this)
+            if (this.fbs){
+                var data = this;
+                data.parent = $(codebox).attr('id');
+                SGI.add_fbs_element(data,data.style.left,data.style.top, true)
+            }else{
+                var data = this;
+                data.parent = "prg_panel";
+                SGI.add_fbs_element(data,data.style.left,data.style.top, true)
+            }
+
         });
     },
 

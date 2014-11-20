@@ -5,7 +5,7 @@
 
 SGI = $.extend(true, SGI, {
 
-    add_mbs_element: function (_data, left, top) {
+    add_mbs_element: function (_data, left, top ,copy) {
         var nr = _data.counter || SGI.mbs_n;
         SGI.mbs_n++;
 
