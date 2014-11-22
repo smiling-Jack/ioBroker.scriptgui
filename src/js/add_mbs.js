@@ -30,6 +30,12 @@ SGI = $.extend(true, SGI, {
             }
         };
 
+        if (copy) {
+            data.style = {
+                "left": left + 18 + "px",
+                "top": top + 18 + "px"
+            }
+        }
 
 //        PRG.mbs[data.mbs_id] = data; //todo Remove after ng
         scope.mbs[nr] = data;
@@ -649,6 +655,9 @@ SGI = $.extend(true, SGI, {
             $("#" + data.mbs_id).append('<div class="mbs_shadow"></div>')
         }
 
+        if (copy) {
+            SGI.plumb_inst["inst_mbs"].addToDragSelection($("#"+data.mbs_id));
+        }
 
     }
 

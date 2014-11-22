@@ -1740,30 +1740,26 @@ jQuery.extend(true, SGI, {
         var fbs_sel = $(".jsplumb-drag-selected");
         var opt = {};
 
-        $.each(fbs_sel, function () {
+        $.each($(".jsplumb-drag-selected"), function(){
+            if ($(this).hasClass("fbs_element")){
+                if ($(this).hasClass("fbs_element_onborder")) {
+                    opt.$trigger = this;
+                    SGI.del_fbs_onborder(opt)
 
-            if ($(this).hasClass("fbs_element_onborder")) {
-                opt.$trigger = this;
-                SGI.del_fbs_onborder(opt)
+                } else {
+                    opt.$trigger = this;
+                    SGI.del_fbs(opt)
+                }
+            }else{
+                if ($(this).hasClass("mbs_element_codebox")) {
+                    opt.$trigger = this;
+                    SGI.del_codebox(opt)
 
-            } else {
-                opt.$trigger = this;
-                SGI.del_fbs(opt)
+                } else {
+                    opt.$trigger = this;
+                    SGI.del_mbs(opt)
+                }
             }
-        });
-
-        $.each(mbs_sel, function () {
-
-            if ($(this).hasClass("mbs_element_codebox")) {
-                opt.$trigger = this;
-                SGI.del_codebox(opt)
-
-            } else {
-                opt.$trigger = this;
-                SGI.del_mbs(opt)
-            }
-
-
         });
 
     },

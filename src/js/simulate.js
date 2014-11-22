@@ -231,6 +231,7 @@ $('#play_overlay').remove();
             function step_fbs_highlight(id) {
                 console.log(id)
                 $(id).find(".fbs_shadow").effect("highlight", {color: "green"}, 800);
+
             }
 
             function patternMatching(event, pattern) {

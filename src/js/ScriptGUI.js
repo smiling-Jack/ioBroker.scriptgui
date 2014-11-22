@@ -57,7 +57,7 @@ var SGI = {
     HOST_PORT: 3000,
 
     os: (os.type() == "Windows_NT" ? "win" : os.type() == "darwin" ? "osx" : os.type()) + "_" + os.arch().replace(/[a-z]+/, ""),
-    copy_data:[],
+    copy_data: [],
     socket: {},
     con_files: [],
     con_data: false,
@@ -1077,7 +1077,7 @@ var SGI = {
                     var ymiddle = (p.top - 50) + $(this).height() / 2;
                     if (matchPos(xmiddle, ymiddle)) {
                         // Colorize border, if element is inside the selection
-                        if(!$(this).hasClass("mbs_element_codebox")){
+                        if (!$(this).hasClass("mbs_element_codebox")) {
                             SGI.plumb_inst.inst_mbs.addToDragSelection($(this))
                         }
                     }
@@ -1712,7 +1712,7 @@ var SGI = {
                 //isTarget: true,
                 paintStyle: endpointStyle,
                 dropOptions: {hoverClass: "dragHover"},
-                anchor: ["Continuous", { faces: ["top", "left", "right", "bottom"] }],
+                anchor: ["Continuous", {faces: ["top", "left", "right", "bottom"]}],
                 endpoint: ["Dot", {radius: 2}],
                 maxConnections: -1
             });
@@ -2421,7 +2421,7 @@ var SGI = {
     },
 
     make_fbs_drag: function (data) {
-console.log(data)
+        console.log(data)
         var $div = $("#" + data.parent);
         var ep_mbs = [];
         var ep_fbs = [];
@@ -2636,11 +2636,11 @@ console.log(data)
         } else {
             SGI.plumb_inst.inst_mbs.draggable($("#" + data.mbs_id), {
                 containment: "parent",
-                grid:[50, 50],
+                grid: [50, 50],
                 start: function () {
                     $(".dot").remove();
-                    console.log(   SGI.plumb_inst.inst_mbs)
-                    SGI.plumb_inst.inst_mbs.draggable({grid:[10, 10]});
+                    console.log(SGI.plumb_inst.inst_mbs)
+                    SGI.plumb_inst.inst_mbs.draggable({grid: [10, 10]});
                 },
                 drag: function (params) {
 
@@ -3027,28 +3027,29 @@ console.log(data)
 
 //        $.each($('.fbs_selected'), function () {
         $.each($('.jsplumb-drag-selected '), function () {
-            if ($(this).hasClass("fbs_element")){
+            console.log(this)
+            if ($(this).hasClass("fbs_element")) {
                 var posi = $(this).position();
                 var data = {
                     type: $(this).attr("id").split("_")[0],
-                    style:{
+                    style: {
                         top: posi.top,
-                        left: posi.left,
+                        left: posi.left
                     },
-                    parent:"",
-                    fbs:true
+                    parent: "",
+                    fbs: true
                 };
                 SGI.copy_data.push(data)
-            }else if ($(this).hasClass("fbs_element")){
+            } else if ($(this).hasClass("mbs_element")) {
                 var posi = $(this).position();
                 var data = {
                     type: $(this).attr("id").split("_")[0],
-                    style:{
-                    top: posi.top,
-                        left: posi.left,
-                },
-                    parent:"",
-                mbs:true
+                    style: {
+                        top: posi.top,
+                        left: posi.left
+                    },
+                    parent: "",
+                    mbs: true
                 };
                 SGI.copy_data.push(data)
             }
@@ -3061,23 +3062,22 @@ console.log(data)
     paste_selected: function (e) {
 
         var codebox = $(".codebox_active").find(".prg_codebox");
-        console.log(codebox)
 
 //        $(".fbs_selected").removeClass("fbs_selected");
-        $.each($(".fbs_selected .jsplumb-drag-selected"), function () {
-            SGI.plumb_inst["inst_" + $(codebox).parent().attr("id")].removeFromDragSelection($(this));
+        $.each(SGI.plumb_inst, function () {
+            this.clearDragSelection();
         });
 
         $.each(SGI.copy_data, function () {
-            console.log(this)
-            if (this.fbs){
+
+            if (this.fbs) {
                 var data = this;
                 data.parent = $(codebox).attr('id');
-                SGI.add_fbs_element(data,data.style.left,data.style.top, true)
-            }else{
+                SGI.add_fbs_element(data, data.style.left, data.style.top, true)
+            } else {
                 var data = this;
                 data.parent = "prg_panel";
-                SGI.add_fbs_element(data,data.style.left,data.style.top, true)
+                SGI.add_mbs_element(data, data.style.left, data.style.top, true)
             }
 
         });
@@ -3381,14 +3381,14 @@ console.log(data)
 
                                 for (var i = 1; i <= parseInt(data.in); i++) {
                                     $("#left_" + data.name).append('' +
-                                        '<div id="' + data.name + '_in' + i + '"  class="div_input ' + data.name + '_in">' +
-                                        '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: -11px; top:5px"></div>' +
-                                        '</div>')
+                                    '<div id="' + data.name + '_in' + i + '"  class="div_input ' + data.name + '_in">' +
+                                    '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: -11px; top:5px"></div>' +
+                                    '</div>')
                                 }
                                 for (var i = 1; i <= parseInt(data.out); i++) {
                                     $("#right_" + data.name).append('<div id="' + data.name + '_out' + i + '" class="div_output1 ' + data.name + '_out">' +
-                                        '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: 21px; top:5px"></div>' +
-                                        '</div>');
+                                    '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: 21px; top:5px"></div>' +
+                                    '</div>');
 
                                 }
 
