@@ -1,53 +1,31 @@
+{
+  "main": "start.html",
+  "name": "ScriptGUI",
+  "version": "0.73.0",
+  "description": "Script GUI",
+  "keywords": [],
+  "window": {
+    "title": "ScriptGUI",
+    "icon": "img/cube256.png",
+    "toolbar": false,
+    "frame": false,
+    "width": 370,
+    "height": 245,
+    "resizable": false,
+    "show": false
+  },
+  "webkit": {
+    "plugin": true
+  },
+  "maintainers": [
+    {
+      "name": "Steffen Schorling",
+      "email": "Steffen@ccu.io",
+      "web": "http://www.scriptgui.info"
+    }
+  ],
+  "devDependencies": {
 
-{"main": "index.html",
-    "name": "ScriptGUI",
-    "version": "0.72.9",
-    "description": "Script GUI",
-    "keywords": [],
-    "window": {
-        "title": "ScriptGUI",
-        "icon": "img/cube256.png",
-        "toolbar": false,
-        "frame": true,
-        "width": 800,
-        "height": 600,
-        "resizable": true,
-        "show": false
-    },
-    "webkit": {
-        "plugin": true
-    },
-    "maintainers": [
-        {
-            "name": "Steffen Schorling",
-            "email": "Steffen@ccu.io",
-            "web": "http://www.scriptgui.info"
-        }
-    ]
+  }
 }
-//{"main": "start.html",
-//    "name": "ScriptGUI",
-//    "version": "0.72.10",
-//    "description": "Script GUI",
-//    "keywords": [],
-//    "window": {
-//        "title": "ScriptGUI",
-//        "icon": "img/cube256.png",
-//        "toolbar": false,
-//        "frame": false,
-//        "width": 370,
-//        "height": 245,
-//        "resizable": false,
-//        "show": false
-//    },
-//    "webkit": {
-//        "plugin": true
-//    },
-//    "maintainers": [
-//        {
-//            "name": "Steffen Schorling",
-//            "email": "Steffen@ccu.io",
-//            "web": "http://www.scriptgui.info"
-//        }
-//    ]
-//}
+

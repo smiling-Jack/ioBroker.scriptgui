@@ -666,7 +666,7 @@ var Compiler = {
                     Compiler.script += output + '  = parseInt(' + this["input"][0]["herkunft"] + ');';
                 }
                 if (this["type"] == "tofloat") {
-                    Compiler.script += output + '  = parseFloat(' + this["input"][0]["herkunft"] + '.toString().replace("," , "."));';
+                    Compiler.script += output + '  = parseFloat(' + this["input"][0]["herkunft"] + '.replace("," , "."));';
                 }
                 if (this["type"] == "tostring") {
                     Compiler.script += output + '  = ' + this["input"][0]["herkunft"] + '.toString();';
@@ -674,6 +674,7 @@ var Compiler = {
                 if (this["type"] == "toh") {
                     Compiler.script += output + '  = parseFloat(' + this["input"][0]["herkunft"] + '/10/60/60);';
                 }
+
                 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                 if (this["type"] == "next") {
                     var targets = "";

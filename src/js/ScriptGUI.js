@@ -115,10 +115,7 @@ var SGI = {
     },
 
     Setup: function () {
-        if (nwDir.indexOf("ScriptGUI.app") != -1 && SGI.os.indexOf("win") != -1) {
-            SGI.dev = true
-        }
-        //SGI.dev = false;
+        //SGI.dev = true;
 
         scope = angular.element($('body')).scope();
         scope.$apply();
@@ -3021,13 +3018,10 @@ var SGI = {
     },
 
     copy_selected: function () {
-
         SGI.copy_data = [];
-
 
 //        $.each($('.fbs_selected'), function () {
         $.each($('.jsplumb-drag-selected '), function () {
-            console.log(this)
             if ($(this).hasClass("fbs_element")) {
                 var posi = $(this).position();
                 var data = {
@@ -3042,8 +3036,9 @@ var SGI = {
                 SGI.copy_data.push(data)
             } else if ($(this).hasClass("mbs_element")) {
                 var posi = $(this).position();
+
                 var data = {
-                    type: $(this).attr("id").split("_")[0],
+                    type: $(this).attr("id").split(/_[0-9]+/)[0],
                     style: {
                         top: posi.top,
                         left: posi.left

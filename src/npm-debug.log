@@ -2,12 +2,12 @@
 1 verbose cli [ 'C:\\Program Files\\nodejs\\\\node.exe',
 1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
 1 verbose cli   'install',
-1 verbose cli   'suncalc' ]
+1 verbose cli   'rasterizehtml' ]
 2 info using npm@1.4.28
 3 info using node@v0.10.33
 4 verbose node symlink C:\Program Files\nodejs\\node.exe
 5 error Failed to parse json
-5 error Unexpected end of input
+5 error Unexpected token /
 6 error File: E:\Home_Programming\ScriptGUI.app\src\package.json
 7 error Failed to parse package.json data.
 7 error package.json must be actual JSON, not just JavaScript.
@@ -15,7 +15,7 @@
 7 error This is not a bug in npm.
 7 error Tell the package author to fix their package.json file. JSON.parse
 8 error System Windows_NT 6.1.7601
-9 error command "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "suncalc"
+9 error command "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "rasterizehtml"
 10 error cwd E:\Home_Programming\ScriptGUI.app\src
 11 error node -v v0.10.33
 12 error npm -v 1.4.28
