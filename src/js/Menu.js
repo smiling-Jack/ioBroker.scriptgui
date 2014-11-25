@@ -181,58 +181,68 @@ jQuery.extend(true, SGI, {
                 position: "relative"
             });
 
-//            Für Pause,Intervall,Loop
-//            $("#endpoints").css({
-//                left: 10 - left + "px",
-//                top: 0 - top + "px",
-//                position: "relative",
-//
-//            });
-//
-//            $(".mbs_element").css({
-//                left: 10,
-//                top: 0,
-//                position: "relative",
-//
-//            });
-//            $("#photo").css({
-//                height: 2 + height + "px",
-//                width: 20 + width + "px",
-//                left: "50%",
-//                top: "50%",
-//            });
+            //Für Pause,Intervall,Loop
+            $("#endpoints").css({
+                left: 10 - left + "px",
+                top: 0 - top + "px",
+                position: "relative",
 
-            canvg();
-            canvg();
-            canvg();
-            canvg();
-            canvg();
-            canvg();
+            });
 
-            html2canvas(document.getElementById("photo"), {
-                background: undefined,
-                onrendered: function (canvas) {
+            $(".mbs_element").css({
+                left: 10,
+                top: 0,
+                position: "relative",
 
-                    $("body").append('<div style="text-align: center" id="dialog_photo"></div>');
+            });
+            $("#photo").css({
+                height: 2 + height + "px",
+                width: 20 + width + "px",
+                left: "50%",
+                top: "50%",
+            });
 
-                    $("#dialog_photo").dialog({
-                        modal: true,
-                        close: function () {
-                            $("#dialog_photo").remove()
-                        }
-                    });
 
-                    $("#dialog_photo").append(canvas);
-                    canvas.toBlob(function (blob) {
-                        saveAs(blob, type + ".png");
-                    });
-                    var data = scope.setup.last_file
+            var data = $("#photo").html();
+            var ng    = new RegExp("ng-" + '[^ ]+', "g");
+            var title = new RegExp("title=\"" + '[^\"]+', "g");;
 
-                    SGI.clear();
-                    SGI.load_prg(data);
+            data = data
+                .replace(ng, "")
+                .replace(title, "")
+                .replace(/\s+/g, " ")
+            console.log(data)
 
+            var h = $(window).height() - 200;
+            var v = $(window).width() - 400;
+
+            $("body").append('\
+                   <div id="dialog_html" style="text-align: left" title="Scriptvorschau">\
+                    <textarea id="codemirror" name="codemirror" class="code frame_color ui-corner-all"></textarea>\
+                   </div>');
+            $("#dialog_html").dialog({
+                height: h,
+                width: v,
+                resizable: true,
+                close: function () {
+                    $("#dialog_code").remove();
                 }
             });
+
+
+
+            var editor = CodeMirror.fromTextArea(document.getElementById("codemirror"), {
+                mode : "xml",
+                htmlMode: true,
+            //value:data.toString(),
+                lineNumbers: true,
+                readOnly: false,
+                theme: "monokai"
+
+            });
+
+
+            editor.setOption("value", html_beautify(data.toString(), {indent_size: 2}));
 
         });
         $("#m_fbs-image").click(function () {
@@ -316,10 +326,9 @@ jQuery.extend(true, SGI, {
         $("#m_show_debugscript").click(function () {
 
 
-
-                var script = Compiler.make_prg(sim.run_type);
-                console.log(script)
-                SGI.show_Script(script)
+            var script = Compiler.make_prg(sim.run_type);
+            console.log(script)
+            SGI.show_Script(script)
 
         });
 
@@ -774,7 +783,7 @@ jQuery.extend(true, SGI, {
             }
         ).hover(
             function () {
-                    $(this).addClass("ui-state-focus");
+                $(this).addClass("ui-state-focus");
             }, function () {
                 $(this).removeClass("ui-state-focus");
             }
@@ -787,19 +796,18 @@ jQuery.extend(true, SGI, {
             }
         ).hover(
             function () {
-                    $(this).addClass("ui-state-focus");
+                $(this).addClass("ui-state-focus");
             }, function () {
                 $(this).removeClass("ui-state-focus");
             }
         );
 
 
-        $( "#run_type" ).buttonset();
+        $("#run_type").buttonset();
 
 
-
-        $('.run_type').click(function(){
-              sim.run_type = $(".run_type:checked").data("info");
+        $('.run_type').click(function () {
+            sim.run_type = $(".run_type:checked").data("info");
         });
 
 
@@ -1740,8 +1748,8 @@ jQuery.extend(true, SGI, {
         var fbs_sel = $(".jsplumb-drag-selected");
         var opt = {};
 
-        $.each($(".jsplumb-drag-selected"), function(){
-            if ($(this).hasClass("fbs_element")){
+        $.each($(".jsplumb-drag-selected"), function () {
+            if ($(this).hasClass("fbs_element")) {
                 if ($(this).hasClass("fbs_element_onborder")) {
                     opt.$trigger = this;
                     SGI.del_fbs_onborder(opt)
@@ -1750,7 +1758,7 @@ jQuery.extend(true, SGI, {
                     opt.$trigger = this;
                     SGI.del_fbs(opt)
                 }
-            }else{
+            } else {
                 if ($(this).hasClass("mbs_element_codebox")) {
                     opt.$trigger = this;
                     SGI.del_codebox(opt)
@@ -2218,8 +2226,8 @@ jQuery.extend(true, SGI, {
                     });
 
 
-                if (!newVersionExists){
-                   $("#btn_update").button( "disable" )
+                if (!newVersionExists) {
+                    $("#btn_update").button("disable")
                 }
             }
         });

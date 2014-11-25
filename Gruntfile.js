@@ -64,12 +64,12 @@ module.exports = function (grunt) {
 
 
         rename: {
-           'osx32.app': {
+           'osx_32': {
                 files: [
                     {src: ['build/osx_32/ScriptGUI/node-webkit.app'], dest: 'build/osx_32/ScriptGUI/ScriptGUI.app'},
                 ]
             },
-            'osx64.app': {
+            'osx_64': {
                 files: [
                     {src: ['build/osx_64/ScriptGUI/node-webkit.app'], dest: 'build/osx_64/ScriptGUI/ScriptGUI.app'},
                 ]
@@ -181,17 +181,11 @@ module.exports = function (grunt) {
             "build_date": d.getDate() + "." + parseInt(d.getMonth() + 1) + "." + d.getFullYear(),
             "manifestUrl": "http://37.120.169.17/jdownloads/ScriptGUI/update.json",
             "packages": {
-                "mac32": {
+                "mac": {
                     "url": "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_osx32.zip"
                 },
-                "mac64": {
-                    "url": "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_osx64.zip"
-                },
-                "win32": {
+                "win": {
                     "url": "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_win32.zip"
-                },
-                "win64": {
-                    "url": "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_win64.zip"
                 },
                 "linux32": {
                     "url": "http://37.120.169.17/jdownloads/ScriptGUI/ScriptGUI_linux.tar.gz"
@@ -220,13 +214,13 @@ module.exports = function (grunt) {
         grunt.file.mkdir("build/osx_32/ScriptGUI/");
         grunt.task.run(["copy:osx32_webkit"]);
         grunt.task.run(["copy:osx32_src"]);
-        grunt.task.run(["rename:osx_32.app"]);
+        grunt.task.run(["rename:osx_32"]);
     });
     grunt.registerTask('build_osx64', function () {
         grunt.file.mkdir("build/osx_64/ScriptGUI/");
         grunt.task.run(["copy:osx64_webkit"]);
         grunt.task.run(["copy:osx64_src"]);
-        grunt.task.run(["rename:osx64.app"]);
+        grunt.task.run(["rename:osx_64"]);
     });
 
 

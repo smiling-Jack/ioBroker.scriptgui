@@ -9,6 +9,8 @@ var path = require('path');
 var fs = require('fs');
 var nw_gui = require('nw.gui');
 
+var js_beautify = require('js-beautify');
+var html_beautify = require('js-beautify').html;
 
 var start_win;
 var main_win = nw_gui.Window.get();
@@ -115,7 +117,7 @@ var SGI = {
     },
 
     Setup: function () {
-        //SGI.dev = true;
+        SGI.dev = true;
 
         scope = angular.element($('body')).scope();
         scope.$apply();
