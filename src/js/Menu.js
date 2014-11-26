@@ -204,21 +204,20 @@ jQuery.extend(true, SGI, {
 
 
             var data = $("#photo").html();
-            var ng    = new RegExp("ng-" + '[^ ]+', "g");
-            var title = new RegExp("title=\"" + '[^\"]+', "g");;
+            var title = new RegExp("title=\"" + '[^\"]+', "g");
 
             data = data
-                .replace(ng, "")
-                .replace(title, "")
-                .replace(/\s+/g, " ")
-            console.log(data)
+                .replace(/(ng-model="|ng-style=")[A-Za-z0-9\[\].]+"/g, "")
+                .replace(/(ng-)[A-Za-z0-9\[\].]+/g, "")
+                .replace(/(_jsPlumb_endpoint_anchor_|_jsPlumb_endpoint|jsplumb-draggable|jsplumb-droppable)/g, "");
 
-            var h = $(window).height() - 200;
-            var v = $(window).width() - 400;
+            var h = $(window).height() - 10;
+            var v = $(window).width() - 10;
 
             $("body").append('\
                    <div id="dialog_html" style="text-align: left" title="Scriptvorschau">\
                     <textarea id="codemirror" name="codemirror" class="code frame_color ui-corner-all"></textarea>\
+                    <button id="save_html">Save</button>\
                    </div>');
             $("#dialog_html").dialog({
                 height: h,
@@ -229,7 +228,15 @@ jQuery.extend(true, SGI, {
                 }
             });
 
-
+            $("#save_html").button().click(function(){
+                fs.writeFile(nwDir+ '/../../src/img/FBS/' + type + '.html', data, function (err) {
+                    if (err){
+                        throw err;
+                    }else{
+alert ("ok")
+                    }
+                });
+            })
 
             var editor = CodeMirror.fromTextArea(document.getElementById("codemirror"), {
                 mode : "xml",
@@ -327,7 +334,6 @@ jQuery.extend(true, SGI, {
 
 
             var script = Compiler.make_prg(sim.run_type);
-            console.log(script)
             SGI.show_Script(script)
 
         });
