@@ -204,19 +204,21 @@ jQuery.extend(true, SGI, {
 
 
             var data = $("#photo").html();
-            var title = new RegExp("title=\"" + '[^\"]+', "g");
 
             data = data
                 .replace(/(ng-model="|ng-style=")[A-Za-z0-9\[\].]+"/g, "")
+                .replace(/(id=")[A-Za-z0-9\[\]._]+"/g, "")
                 .replace(/(ng-)[A-Za-z0-9\[\].]+/g, "")
-                .replace(/(_jsPlumb_endpoint_anchor_|_jsPlumb_endpoint|jsplumb-draggable|jsplumb-droppable)/g, "");
+                .replace(/(_jsPlumb_endpoint_anchor_|jsplumb-draggable|jsplumb-droppable)/g, "")
+                .replace(/(_jsPlumb_endpoint)/g, "html_endpoint")
+                .replace(/(mbs_element )/g, "mbs_html ");
 
             var h = $(window).height() - 10;
             var v = $(window).width() - 10;
 
             $("body").append('\
                    <div id="dialog_html" style="text-align: left" title="Scriptvorschau">\
-                    <textarea id="codemirror" name="codemirror" class="code frame_color ui-corner-all"></textarea>\
+                    <textarea id="codemirror_html" name="codemirror" class="code frame_color ui-corner-all"></textarea>\
                     <button id="save_html">Save</button>\
                    </div>');
             $("#dialog_html").dialog({
@@ -224,34 +226,32 @@ jQuery.extend(true, SGI, {
                 width: v,
                 resizable: true,
                 close: function () {
-                    $("#dialog_code").remove();
+                    $("#dialog_html").remove();
+                    SGI.clear();
                 }
             });
 
             $("#save_html").button().click(function(){
-                fs.writeFile(nwDir+ '/../../src/img/FBS/' + type + '.html', data, function (err) {
+                fs.writeFile(nwDir+ '/../../src/img/FBS/' + type + '.html', editor.getValue(), function (err) {
                     if (err){
                         throw err;
                     }else{
-alert ("ok")
+                        $("#dialog_html").dialog("close");
                     }
                 });
-            })
+            });
 
-            var editor = CodeMirror.fromTextArea(document.getElementById("codemirror"), {
+            var editor = CodeMirror.fromTextArea(document.getElementById("codemirror_html"), {
                 mode : "xml",
                 htmlMode: true,
-            //value:data.toString(),
                 lineNumbers: true,
                 readOnly: false,
                 theme: "monokai"
-
             });
-
-
             editor.setOption("value", html_beautify(data.toString(), {indent_size: 2}));
 
         });
+
         $("#m_fbs-image").click(function () {
 
             var type;
@@ -283,50 +283,55 @@ alert ("ok")
                 position: "relative"
             });
 
+            var data = $("#photo").html();
 
-            canvg();
-            canvg();
-            canvg();
-            canvg();
-            canvg();
-            canvg();
+            data = data
+                .replace(/(ng-bind="fbs\[0\].name")/g, "")
+                .replace(/(ng-model="|ng-style=")[A-Za-z0-9\[\].]+"/g, "")
+                .replace(/(id="|ng-style=")[A-Za-z0-9\[\]._]+"/g, "")
+                .replace(/(ng-)[A-Za-z0-9\[\].]+/g, "")
+                .replace(/(_jsPlumb_endpoint_anchor_|jsplumb-draggable|jsplumb-droppable)/g, "")
+                .replace(/(_jsPlumb_endpoint)/g, "html_endpoint")
+                .replace(/(fbs_element )/g, "fbs_html ");
 
+            var h = $(window).height() - 10;
+            var v = $(window).width() - 10;
 
-            //html2canvas(document.getElementById("photo")).then(function (canvas) {
-            //    $("body").append('<div style="text-align: center" id="dialog_photo"></div>');
-            //
-            //    $("#dialog_photo").dialog({
-            //        modal: true,
-            //        close: function () {
-            //            $("#dialog_photo").remove()
-            //        }
-            //    });
-            //
-            //    $("#dialog_photo").append(canvas)
-            //    console.log(canvas)
-            //});
+            $("body").append('\
+                   <div id="dialog_html" style="text-align: left" title="Scriptvorschau">\
+                    <textarea id="codemirror_html" name="codemirror" class="code frame_color ui-corner-all"></textarea>\
+                    <button id="save_html">Save</button>\
+                   </div>');
+            $("#dialog_html").dialog({
+                height: h,
+                width: v,
+                resizable: true,
+                close: function () {
 
-
-            html2canvas(document.getElementById("photo"), {
-                background: undefined,
-                onrendered: function (canvas) {
-
-                    $("body").append('<div style="text-align: center" id="dialog_photo"></div>');
-
-                    $("#dialog_photo").dialog({
-                        modal: true,
-                        close: function () {
-                            $("#dialog_photo").remove()
-                        }
-                    });
-
-                    $("#dialog_photo").append((Canvas2Image.convertToImage(canvas, $("#photo").width(), $("#photo").height(), "png")));
-                    fs.writeFile(nwDir + "/" + type + ".png", Canvas2Image.saveAsImage(canvas, $("#photo").width(), $("#photo").height(), "png"), "base64", function () {
-
-                    })
-
+                    $("#dialog_html").remove();
+                    SGI.clear();
                 }
             });
+
+            $("#save_html").button().click(function(){
+                fs.writeFile(nwDir+ '/../../src/img/FBS/' + type + '.html', editor.getValue(), function (err) {
+                    if (err){
+                        throw err;
+                    }else{
+                        $("#dialog_html").dialog("close");
+                    }
+                });
+            });
+
+            var editor = CodeMirror.fromTextArea(document.getElementById("codemirror_html"), {
+                mode : "xml",
+                htmlMode: true,
+                lineNumbers: true,
+                readOnly: false,
+                theme: "monokai"
+            });
+            editor.setOption("value", html_beautify(data.toString(), {indent_size: 2}));
+
 
         });
 

@@ -653,7 +653,7 @@ SGI = $.extend(true, SGI, {
 
 
         if (data.type != "codebox") {
-            $("#" + data.mbs_id).append('<div class="mbs_shadow"></div>')
+            $("#prg_panel").find($("#" + data.mbs_id)).append('<div class="mbs_shadow"></div>')
         }
 
         if (copy) {

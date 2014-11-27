@@ -445,6 +445,13 @@ body {
     margin-top: -1px;
     margin-left: -1px;
 }
+.html_endpoint {
+    z-index: 3 !important;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: -1px;
+    margin-left: -1px;
+}
 
 ._jsPlumb_connector {
     z-index: 1;
@@ -642,6 +649,9 @@ body {
 /*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*/
 /*MBS_Element*/
 /*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*/
+.html_element{
+    position: relative;
+}
 .mbs {
 
     margin-top: 30px;
@@ -652,6 +662,22 @@ body {
 }
 
 .mbs_element {
+    position: absolute !important;;
+    width: 60px;
+    min-height: 40px;
+    height: auto;
+    margin: auto;
+    text-align: center;
+    background-color: #ffffff;
+    border-right: 1px solid rgb(99, 99, 99);
+    border-bottom: 1px solid rgb(99, 99, 99);
+    border-top: 1px solid rgb(220, 220, 220);
+    border-left: 1px solid rgb(220, 220, 220);
+    border-radius: 8px;
+
+    z-index: 50;
+}
+.mbs_html{
     position: absolute !important;;
     width: 60px;
     min-height: 40px;
@@ -1218,6 +1244,23 @@ body {
 }
 
 .fbs_element {
+    position: absolute !important;
+    width: 60px;
+    height: auto;
+    margin: auto;
+    text-align: center;
+    background-color: #ffffff;
+    border-right: 1px solid rgb(99, 99, 99);
+    border-bottom: 1px solid rgb(99, 99, 99);
+    border-top: 1px solid rgb(220, 220, 220);
+    border-left: 1px solid rgb(220, 220, 220);
+    border-radius: 9px;
+
+    z-index: 50;
+    overflow: visible;
+}
+
+.fbs_html {
     position: absolute !important;
     width: 60px;
     height: auto;
@@ -2304,4 +2347,31 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
     /* border: 1px solid rgb(65, 65, 65); */
     z-index: 1;
     border-radius: 15px;
+}
+
+.html_endpoint:before {
+    /* background: red; */
+    content: "";
+    display: inline-block;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0px;
+    top: 0px;
+    box-shadow: inset 4px 4px 4px rgba(255, 255, 255, 0.4), inset -4px -4px 4px rgba(0, 0, 0, 0.4);
+    /* border: 1px solid rgb(65, 65, 65); */
+    z-index: 1;
+    border-radius: 15px;
+}
+
+.html_element:before {
+    /* background: red; */
+    content: "";
+    display: inline-block;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0px;
+    top: 0px;
+    z-index: 10000;
 }

@@ -122,6 +122,8 @@ var SGI = {
         scope = angular.element($('body')).scope();
         scope.$apply();
 
+
+
         $("#prgopen").attr("nwworkingdir", path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/"));
         $("#prgsaveas").attr("nwworkingdir", path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/"));
 // Setze Sprache
@@ -161,6 +163,21 @@ var SGI = {
 
         // Toolbox XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         $(".toolbox").hide();
+
+        $.each($(".html_element"), function(a){
+            $(this).load(nwDir+ '/../../src/img/FBS/' + $(this).attr("id") + '.html', function(data){
+                if(!data){
+                    $(this).load(nwDir+ '/../../src/img/FBS/dummy.html', function(data){
+                        $(this).append(data);
+                        $(this).height($(this).children().first().height());
+                        $(this).width($(this).children().first().width() +20)
+                        });
+                }
+                $(this).append(data);
+                $(this).height($(this).children().first().height());
+                $(this).width($(this).children().first().width() +20)
+            })
+        });
 
 
         var box_init = storage.get(SGI.str_tollbox) || ["Allgemain", "alg"];
@@ -359,7 +376,6 @@ var SGI = {
                             if (ui["draggable"] != ui["helper"] && ev.pageX > 150) {
                                 var data = {
                                     type: $(ui["draggable"][0]).attr("id")
-
                                 };
                                 var top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top + 30) / SGI.zoom);
                                 var left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left + 42 ) / SGI.zoom);
@@ -370,7 +386,6 @@ var SGI = {
                             if ($(ev.target).attr("id") == "prg_panel" && SGI.drop_block == false && scope.setup.fbs_wrap == true) {
                                 var data = {
                                     type: "codebox"
-
                                 };
                                 var top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top + 30) / SGI.zoom);
                                 var left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left + 42 ) / SGI.zoom);
@@ -382,7 +397,7 @@ var SGI = {
                                     type: $(ui["draggable"][0]).attr("id")
                                 };
 
-
+alert(data.type)
                                 SGI.add_fbs_element(data, 50 / SGI.zoom, 50 / SGI.zoom);
 
                             }
