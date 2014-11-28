@@ -442,15 +442,15 @@ body {
     z-index: 3 !important;
     border-radius: 5px;
     overflow: hidden;
-    margin-top: -1px;
-    margin-left: -1px;
+    /*margin-top: -1px;*/
+    /*margin-left: -1px;*/
 }
 .html_endpoint {
     z-index: 3 !important;
     border-radius: 5px;
     overflow: hidden;
-    margin-top: -1px;
-    margin-left: -1px;
+    /*margin-top: -1px;*/
+    /*margin-left: -1px;*/
 }
 
 ._jsPlumb_connector {
@@ -655,7 +655,7 @@ body {
 .mbs {
 
     margin-top: 30px;
-    margin-left: auto;
+    margin-left: -5px;
     margin-right: auto;
     margin-bottom: 0;
 
@@ -1011,6 +1011,8 @@ body {
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 0;
+    left:-5px;
+
 
 }
 

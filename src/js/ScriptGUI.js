@@ -23,6 +23,8 @@ var up_pkg = require('./update.json');
 var updater = require('node-webkit-updater');
 var upd = new updater(up_pkg);
 
+var bausteine = require('./js/bausteine.json');
+
 main_win.title = main_manifest.name + " " + main_manifest.version + " Beta-Test";
 
 function haveParent(theParent) {
@@ -123,7 +125,6 @@ var SGI = {
         scope.$apply();
 
 
-
         $("#prgopen").attr("nwworkingdir", path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/"));
         $("#prgsaveas").attr("nwworkingdir", path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/"));
 // Setze Sprache
@@ -164,25 +165,26 @@ var SGI = {
         // Toolbox XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         $(".toolbox").hide();
 
-        $.each($(".html_element"), function(a){
-            $(this).load(nwDir+ '/../../src/img/FBS/' + $(this).attr("id") + '.html', function(data){
-                if(!data){
-                    $(this).load(nwDir+ '/../../src/img/FBS/dummy.html', function(data){
-
-                        $(this).append(data);
-
-                        });
-                }else {
+        $.each($(".html_element"), function (a) {
+            var id = $(this).attr("id");
+            if (bausteine[id]) {
 
 
+                $(this)
+                    .append('<div style="position:absolute">'+bausteine[id]["data"]+'</div>')
+                    .css({height: bausteine[id].h, width: bausteine[id].w })
 
-                    $(this).append(data);
+
+            } else {
 
 
+                $(this).append('<div class="mbs_html " style="height:62px; width: 62px ; left: 10px; top: 0px; position: relative;">\
+                    <div style="position: relative; z-index: 3; color: red; margin-top: 10px;font-size: 12px;font-weight: 900">Dummy<br>'+id+'</div>\
+                </div>');
 
 
-                }
-            })
+            }
+
         });
 
 
@@ -3399,14 +3401,14 @@ var SGI = {
 
                                 for (var i = 1; i <= parseInt(data.in); i++) {
                                     $("#left_" + data.name).append('' +
-                                    '<div id="' + data.name + '_in' + i + '"  class="div_input ' + data.name + '_in">' +
-                                    '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: -11px; top:5px"></div>' +
-                                    '</div>')
+                                        '<div id="' + data.name + '_in' + i + '"  class="div_input ' + data.name + '_in">' +
+                                        '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: -11px; top:5px"></div>' +
+                                        '</div>')
                                 }
                                 for (var i = 1; i <= parseInt(data.out); i++) {
                                     $("#right_" + data.name).append('<div id="' + data.name + '_out' + i + '" class="div_output1 ' + data.name + '_out">' +
-                                    '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: 21px; top:5px"></div>' +
-                                    '</div>');
+                                        '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: 21px; top:5px"></div>' +
+                                        '</div>');
 
                                 }
 

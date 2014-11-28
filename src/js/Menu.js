@@ -266,10 +266,17 @@ jQuery.extend(true, SGI, {
             $(".fbs_element, ._jsPlumb_endpoint").wrapAll('<div id="photo" style="position: relative"></div>');
             $("._jsPlumb_endpoint").wrapAll('<div id="endpoints" style="position: relative"></div>');
 
+//            $("#endpoints").css({
+//                left: 10 -  width + "px",
+//                top: -4  - top -height + "px",
+//                position: "relative"
+//            });
+
             $("#endpoints").css({
-                left: 8 - left + "px",
-                top: -2 - top + "px",
-                position: "relative"
+                left: -0 - left + "px",
+                top: -4  - top -height + "px",
+                position: "relative",
+                zindex: 10000
             });
 
             $(".fbs_element").css({
@@ -316,7 +323,11 @@ jQuery.extend(true, SGI, {
             });
 
             $("#save_html").button().click(function(){
-                fs.writeFile(nwDir+ '/../../src/img/FBS/' + type + '.html', editor.getValue(), function (err) {
+                bausteine[type] =  {};
+                bausteine[type]["data"] =  html_beautify(data.toString(), {indent_size: 2});
+                bausteine[type]["h"] =  height;
+                bausteine[type]["w"] =  width;
+                fs.writeFile(nwDir+ '/../../src/js/bausteine.json', JSON.stringify(bausteine), function (err) {
                     if (err){
                         throw err;
                     }else{
