@@ -254,7 +254,7 @@ jQuery.extend(true, SGI, {
 
         $("#m_fbs-image").click(function () {
 
-            var type;
+            var type ="";
             var left = $(".fbs_element").position().left;
             var height = $(".fbs_element").height();
             var width = $(".fbs_element").width();
@@ -268,7 +268,7 @@ jQuery.extend(true, SGI, {
 
             $("#endpoints").css({
                 left: 8 - left + "px",
-                top: -8 - top + "px",
+                top: -2 - top + "px",
                 position: "relative"
             });
 
@@ -286,6 +286,8 @@ jQuery.extend(true, SGI, {
             var data = $("#photo").html();
 
             data = data
+                .replace("<div", '<div style="height:'+height+'px ; width:'+width+'px "')
+                .replace(/(ng-bind="fbs\[0\].name")/g, "")
                 .replace(/(ng-bind="fbs\[0\].name")/g, "")
                 .replace(/(ng-model="|ng-style=")[A-Za-z0-9\[\].]+"/g, "")
                 .replace(/(id="|ng-style=")[A-Za-z0-9\[\]._]+"/g, "")

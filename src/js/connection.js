@@ -92,19 +92,13 @@ jQuery.extend(true, SGI, {
         try {
             var _url = $("#inp_con_ip").val();
             var url = "";
-            if ( _url.split(".")[0] == "s" || _url.split(".")[0] == "S" ){
-                if (_url.split(":").length < 2) {
-                    url = "https://" + _url.replace("s.","") + ":8443";
-                } else {
-                    url = "https://" + _url.replace("s.","") ;
-                }
-            }else{
+
                 if (_url.split(":").length < 2) {
                     url = "http://" + _url + ":8080";
                 } else {
                     url = "http://" + _url;
                 }
-            }
+
 
 
             $("#img_con_state").attr("src", "img/icon/flag-blue.png");

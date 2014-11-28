@@ -678,7 +678,7 @@ body {
     z-index: 50;
 }
 .mbs_html{
-    position: absolute !important;;
+    position: relative !important;;
     width: 60px;
     min-height: 40px;
     height: auto;
@@ -1259,9 +1259,11 @@ body {
     z-index: 50;
     overflow: visible;
 }
-
+.fbs{
+    position: relative;
+}
 .fbs_html {
-    position: absolute !important;
+    position: relative !important;
     width: 60px;
     height: auto;
     margin: auto;
@@ -2373,5 +2375,5 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
     width: 100%;
     left: 0px;
     top: 0px;
-    z-index: 10000;
+    z-index: 51;
 }

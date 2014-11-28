@@ -11,7 +11,7 @@ SGI = $.extend(true, SGI, {
         SGI.fbs_n++;
         var data = {
             parent: _data.parent,
-            fbs_id: _data.type + "_" + nr,
+            fbs_id: _data.type + "_" + nr.toString(),
             type: _data.type,
             hmid: _data.hmid || [],
             name: _data.name || SGI.get_name(_data.hmid) ,
@@ -36,7 +36,6 @@ SGI = $.extend(true, SGI, {
             }
         };
 
-
         if (copy) {
             data.style = {
                 "left": left + 18 + "px",
@@ -46,8 +45,6 @@ SGI = $.extend(true, SGI, {
 
         scope.fbs[ nr] = data;
 
-
-//        PRG.fbs[data.fbs_id] = data; //todo Remove after ng
 
         var input_data = "";
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -1190,26 +1187,30 @@ SGI = $.extend(true, SGI, {
 
         }
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-//        scope.$apply();
+        //scope.$apply();
 
-        var _in = $('.' + data.fbs_id + '_in');
+    var _in = $("#"+data.parent).find($('.' + data.fbs_id + '_in'));
 
-        $.each(_in, function () {
-            var id = $(this).attr("id");
-            SGI.add_fbs_endpoint(id, "input", data);
-        });
+    $.each(_in, function () {
+        var id = $(this).attr("id");
 
-        var _out = $('.' + data.fbs_id + '_out');
-        $.each(_out, function () {
-            var id = $(this).attr("id");
-            SGI.add_fbs_endpoint(id, "output", data);
-        });
+        SGI.add_fbs_endpoint(id, "input", data);
+    });
 
-        SGI.make_fbs_drag(data);
-        if (copy) {
-            SGI.plumb_inst["inst_"+ $("#"+data.parent).parent().attr("id")].addToDragSelection($("#"+data.fbs_id));
-        }
-        $("#" + data.fbs_id).append('<div class="fbs_shadow"></div>')
+    var _out = $("#"+data.parent).find($('.' + data.fbs_id + '_out'));
+    $.each(_out, function (x) {
+        var id = $(this).attr("id");
+        SGI.add_fbs_endpoint(id, "output", data);
+    });
+
+    SGI.make_fbs_drag(data);
+    if (copy) {
+        SGI.plumb_inst["inst_"+ $("#"+data.parent).parent().attr("id")].addToDragSelection($("#"+data.fbs_id));
+    }
+    $("#" + data.fbs_id).append('<div class="fbs_shadow"></div>')
+
+
+
 
     }
 

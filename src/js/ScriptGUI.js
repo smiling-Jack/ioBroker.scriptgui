@@ -168,14 +168,20 @@ var SGI = {
             $(this).load(nwDir+ '/../../src/img/FBS/' + $(this).attr("id") + '.html', function(data){
                 if(!data){
                     $(this).load(nwDir+ '/../../src/img/FBS/dummy.html', function(data){
+
                         $(this).append(data);
-                        $(this).height($(this).children().first().height());
-                        $(this).width($(this).children().first().width() +20)
+
                         });
+                }else {
+
+
+
+                    $(this).append(data);
+
+
+
+
                 }
-                $(this).append(data);
-                $(this).height($(this).children().first().height());
-                $(this).width($(this).children().first().width() +20)
             })
         });
 
@@ -397,7 +403,7 @@ var SGI = {
                                     type: $(ui["draggable"][0]).attr("id")
                                 };
 
-alert(data.type)
+
                                 SGI.add_fbs_element(data, 50 / SGI.zoom, 50 / SGI.zoom);
 
                             }
