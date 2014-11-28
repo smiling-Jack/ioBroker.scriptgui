@@ -168,21 +168,13 @@ var SGI = {
         $.each($(".html_element"), function (a) {
             var id = $(this).attr("id");
             if (bausteine[id]) {
-
-
                 $(this)
                     .append('<div style="position:absolute">'+bausteine[id]["data"]+'</div>')
-                    .css({height: bausteine[id].h, width: bausteine[id].w })
-
-
+                    .css({height: bausteine[id].h +"px", width: bausteine[id].w+"px" })
             } else {
-
-
-                $(this).append('<div class="mbs_html " style="height:62px; width: 62px ; left: 10px; top: 0px; position: relative;">\
+                $(this).append('<div class="mbs_html " style="height:62px; width: 124px ;position: relative;">\
                     <div style="position: relative; z-index: 3; color: red; margin-top: 10px;font-size: 12px;font-weight: 900">Dummy<br>'+id+'</div>\
                 </div>');
-
-
             }
 
         });
@@ -335,15 +327,8 @@ var SGI = {
             start: function (e, ui) {
             },
             drag: function (e, ui) {
-
-                $("body").find("#helper").css({
-                    left: parseInt(ui.offset.left + 30),
-                    top: parseInt(ui.offset.top - 5)
-                });
-                ui.position.left = parseInt(ui.offset.left + 32);
+                ui.position.left = parseInt(ui.offset.left+52 );
                 ui.position.top = parseInt(ui.offset.top - 0);
-
-
             },
             stop: function () {
                 $("#helper").remove()
@@ -360,11 +345,8 @@ var SGI = {
 
             },
             drag: function (e, ui) {
-                $("body").find("#helper").css({
-                    left: parseInt(ui.offset.left + 30),
-                    top: parseInt(ui.offset.top - 5)
-                });
-                ui.position.left = parseInt(ui.offset.left + 32);
+
+                ui.position.left = parseInt(ui.offset.left +10 );
                 ui.position.top = parseInt(ui.offset.top - 0);
             },
             stop: function () {
@@ -381,22 +363,22 @@ var SGI = {
 
 
                         if ($(ui["draggable"][0]).hasClass("mbs")) {
-                            if (ui["draggable"] != ui["helper"] && ev.pageX > 150) {
+                            if (ui["draggable"] != ui["helper"] && ev.pageX > 180) {
                                 var data = {
                                     type: $(ui["draggable"][0]).attr("id")
                                 };
                                 var top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top + 30) / SGI.zoom);
-                                var left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left + 42 ) / SGI.zoom);
+                                var left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left + 10 ) / SGI.zoom);
                                 SGI.add_mbs_element(data, left, top);
                             }
                         } else {
 
-                            if ($(ev.target).attr("id") == "prg_panel" && SGI.drop_block == false && scope.setup.fbs_wrap == true) {
+                            if ($(ev.target).attr("id") == "prg_panel" && SGI.drop_block == false && scope.setup.fbs_wrap == true && ev.pageX > 180) {
                                 var data = {
                                     type: "codebox"
                                 };
-                                var top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top + 30) / SGI.zoom);
-                                var left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left + 42 ) / SGI.zoom);
+                                var top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top -20 ) / SGI.zoom);
+                                var left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left ) / SGI.zoom);
                                 SGI.add_mbs_element(data, left, top);
 
 

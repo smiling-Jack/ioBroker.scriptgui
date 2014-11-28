@@ -162,7 +162,7 @@ jQuery.extend(true, SGI, {
 //          Für Trigger
             $("#endpoints").css({
                 left: 0 - left + "px",
-                top: 0 - top + "px",
+                top: -2 - top -height + "px",
                 position: "relative"
 
             });
@@ -182,30 +182,31 @@ jQuery.extend(true, SGI, {
             });
 
             //Für Pause,Intervall,Loop
-            $("#endpoints").css({
-                left: 10 - left + "px",
-                top: 0 - top + "px",
-                position: "relative",
-
-            });
-
-            $(".mbs_element").css({
-                left: 10,
-                top: 0,
-                position: "relative",
-
-            });
-            $("#photo").css({
-                height: 2 + height + "px",
-                width: 20 + width + "px",
-                left: "50%",
-                top: "50%",
-            });
+//            $("#endpoints").css({
+//                left: 10 - left + "px",
+//                top: 0 - top + "px",
+//                position: "relative",
+//
+//            });
+//
+//            $(".mbs_element").css({
+//                left: 10,
+//                top: 0,
+//                position: "relative",
+//
+//            });
+//            $("#photo").css({
+//                height: 2 + height + "px",
+//                width: 20 + width + "px",
+//                left: "50%",
+//                top: "50%",
+//            });
 
 
             var data = $("#photo").html();
 
             data = data
+                .replace("<div", '<div style="height:'+height+'px ; width:'+width+'px "')
                 .replace(/(ng-model="|ng-style=")[A-Za-z0-9\[\].]+"/g, "")
                 .replace(/(id=")[A-Za-z0-9\[\]._]+"/g, "")
                 .replace(/(ng-)[A-Za-z0-9\[\].]+/g, "")
@@ -232,7 +233,11 @@ jQuery.extend(true, SGI, {
             });
 
             $("#save_html").button().click(function(){
-                fs.writeFile(nwDir+ '/../../src/img/FBS/' + type + '.html', editor.getValue(), function (err) {
+                bausteine[type] =  {};
+                bausteine[type]["data"] =  editor.getValue();
+                bausteine[type]["h"] =  height;
+                bausteine[type]["w"] =  width;
+                fs.writeFile(nwDir+ '/../../src/js/bausteine.json', JSON.stringify(bausteine), function (err) {
                     if (err){
                         throw err;
                     }else{
@@ -295,7 +300,6 @@ jQuery.extend(true, SGI, {
             data = data
                 .replace("<div", '<div style="height:'+height+'px ; width:'+width+'px "')
                 .replace(/(ng-bind="fbs\[0\].name")/g, "")
-                .replace(/(ng-bind="fbs\[0\].name")/g, "")
                 .replace(/(ng-model="|ng-style=")[A-Za-z0-9\[\].]+"/g, "")
                 .replace(/(id="|ng-style=")[A-Za-z0-9\[\]._]+"/g, "")
                 .replace(/(ng-)[A-Za-z0-9\[\].]+/g, "")
@@ -324,7 +328,7 @@ jQuery.extend(true, SGI, {
 
             $("#save_html").button().click(function(){
                 bausteine[type] =  {};
-                bausteine[type]["data"] =  html_beautify(data.toString(), {indent_size: 2});
+                bausteine[type]["data"] =  editor.getValue();
                 bausteine[type]["h"] =  height;
                 bausteine[type]["w"] =  width;
                 fs.writeFile(nwDir+ '/../../src/js/bausteine.json', JSON.stringify(bausteine), function (err) {
