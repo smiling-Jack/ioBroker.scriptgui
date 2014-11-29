@@ -471,6 +471,18 @@ var SGI = {
             }
         }, 100);
 
+
+
+
+
+
+
+
+
+
+
+
+
     },
 
     global_event: function () {
