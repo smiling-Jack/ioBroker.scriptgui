@@ -689,11 +689,18 @@ var Compiler = {
                     var $this = this;
 
                     $.each(this.target, function () {
-                        //TODO REMOVE DELAY
-//                        if (this[1] == 0) {
-                        targets += "if(" + $this["input"][0].herkunft + " == true){" + this[0] + " (data);}";
-//                        } else
-//                            targets += "if(" + $this["input"][0].herkunft + " == true){setTimeout(function(data){ " + this[0] + "()}," + this[1] * 1000 + ");}"
+                        targets += "if(" + $this["input"][0].herkunft + " != false && " + $this["input"][0].herkunft + " != undefined && " + $this["input"][0].herkunft + " != 0 ){" + this[0] + " (data);}";
+                    });
+                    Compiler.script += targets;
+
+                }
+                //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                if (this["type"] == "next0") {
+                    var targets = "";
+                    var $this = this;
+
+                    $.each(this.target, function () {
+                        targets += "if(" + $this["input"][0].herkunft + " == false || " + $this["input"][0].herkunft + " == undefined || " + $this["input"][0].herkunft + " == ''){" + this[0] + " (data);}";
                     });
                     Compiler.script += targets;
                 }

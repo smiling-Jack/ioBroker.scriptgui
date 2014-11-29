@@ -1730,61 +1730,8 @@ body {
 
 }
 
-/*.onborder_top {*/
-/*position: absolute;*/
-/*top: -5px!important;*/
-/*width: 100% !important;*/
-/*height: 1px !important;*/
-/*}*/
 
-/*.onborder_bottom {*/
-/*position: absolute;*/
-/*bottom: 0;*/
-/*width: 100% !important;*/
-/*height: 1px !important;*/
 
-/*}*/
-
-/*.onborder_left {*/
-/*position: absolute;*/
-/*left: -5px!important;*/
-/*margin-top: -14px!important;*/
-/*height: 100% !important;*/
-/*width: 1px !important;*/
-/*}*/
-
-/*.onborder_right {*/
-/*position: absolute;*/
-/*right: 0;*/
-/*margin-top: -14px!important;*/
-/*height: calc(100%) !important;*/
-/*width: 1px !important;*/
-
-/*}*/
-
-.onborder_t {
-    position: absolute;
-    top: -10px !important;
-    bottom: auto !important;
-}
-
-.onborder_b {
-    position: absolute;
-    bottom: -8px !important;
-    top: auto !important;
-}
-
-.onborder_l {
-    position: absolute;
-    left: -25px !important;
-    right: auto !important;
-}
-
-.onborder_r {
-    position: absolute;
-    right: -25px !important;
-    left: auto !important;
-}
 
 /*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*/
 /* Save Dialog*/

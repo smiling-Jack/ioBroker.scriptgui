@@ -173,7 +173,7 @@ var SGI = {
                     .css({height: bausteine[id].h +"px", width: bausteine[id].w+"px" })
             } else {
                 $(this).append('<div class="mbs_html " style="height:62px; width: 124px ;position: relative;">\
-                    <div style="position: relative; z-index: 3; color: red; margin-top: 10px;font-size: 12px;font-weight: 900">Dummy<br>'+id+'</div>\
+                    <div style="position: relative; z-index: 3; color: red; margin-top: 10px;font-size: 12px;font-weight: 900; line-height: 44px;">'+id+'</div>\
                 </div>');
             }
 
@@ -2524,95 +2524,6 @@ var SGI = {
 
     make_mbs_drag: function (data) {
 
-//            if (data.type == "codebox") {
-//                var start_left = 0;
-//                var start_top = 0;
-//                $("#" + data.mbs_id).find(".titel_body")
-//
-//
-//                    .drag("init", function () {
-//
-//                        if ($(this).is('.mbs_selected'))
-//                            return $('.mbs_selected');
-//                    })
-//
-//                    .drag("start", function (ev, dd) {
-//                        $(".dot").remove();
-//                        off = $(dd.drag).parent().offset();
-//                        start_left = parseInt($(this).parent().css("left").split("px")[0]);
-//                        start_top = parseInt($(this).parent().css("top").split("px")[0]);
-//                    })
-//
-//                    .drag(function (ev, dd) {
-//
-//                        if (scope.setup.snap_grid) {
-//                            $(this).parent().css({
-//                                top: Math.round(Math.round((dd.offsetY - (off.top)) / (SGI.grid * SGI.zoom)) * (SGI.grid * SGI.zoom) / SGI.zoom) + start_top,
-//                                left: Math.round(Math.round((dd.offsetX - (off.left)) / (SGI.grid * SGI.zoom)) * (SGI.grid * SGI.zoom) / SGI.zoom) + start_left
-//                            });
-//
-//                        } else {
-//                            $(this).parent().css({
-//                                top: Math.round((dd.offsetY - (off.top)) / SGI.zoom) + start_top,
-//                                left: Math.round((dd.offsetX - (off.left)) / SGI.zoom) + start_left
-//                            });
-//                        }
-//
-//                        SGI.plumb_inst.inst_mbs.repaintEverything()
-//
-//                    })
-//                    .drag("end", function () {
-//                        var nr = $(this).data("nr");
-//                        scope.mbs[nr].style.top = $(this).parent().css("top");
-//                        scope.mbs[nr].style.left = $(this).parent().css("left");
-//                        SGI.plumb_inst.inst_mbs.repaintEverything();
-//                        scope.$apply();
-//                    });
-//
-//            } else {
-//
-//                var off;
-//
-//                $("#" + data.mbs_id)
-//                    .drag("init", function () {
-//                        if ($(this).is('.mbs_selected'))
-//                            return $('.mbs_selected');
-//                    })
-//
-//                    .drag("start", function (ev, dd) {
-//                        $(".dot").remove();
-//                        off = $(dd.drag).parent().offset();
-//                        start_left = parseInt($(this).parent().css("left").split("px")[0]);
-//                        start_top = parseInt($(this).parent().css("top").split("px")[0]);
-//                    })
-//
-//                    .drag(function (ev, dd) {
-//
-//                        if (scope.setup.snap_grid) {
-//                            $(this).css({
-//                                top: Math.round(Math.round((dd.offsetY - (off.top)) / (SGI.grid * SGI.zoom)) * (SGI.grid * SGI.zoom) / SGI.zoom),
-//                                left: Math.round(Math.round((dd.offsetX - (off.left)) / (SGI.grid * SGI.zoom)) * (SGI.grid * SGI.zoom) / SGI.zoom)
-//                            });
-//
-//                        } else {
-//                            $(this).css({
-//                                top: Math.round((dd.offsetY - (off.top)) / SGI.zoom),
-//                                left: Math.round((dd.offsetX - (off.left)) / SGI.zoom)
-//                            });
-//                        }
-//
-//                        SGI.plumb_inst.inst_mbs.repaintEverything(); //todo UNBEDINGT das Everything ersetzen eigentlich alle repaintEverything !!!
-//
-//
-//                    })
-//                    .drag("end", function () {
-//                        var nr = $(this).data("nr");
-//                        scope.mbs[nr].style.top = $(this).css("top");
-//                        scope.mbs[nr].style.left = $(this).css("left");
-//                        scope.$apply();
-//
-//                    });
-
         if (data.type == "codebox") {
             SGI.plumb_inst.inst_mbs.draggable($("#" + data.mbs_id).find(".titel_body"), {
                 containment: "parent",
@@ -2640,7 +2551,7 @@ var SGI = {
         } else {
             SGI.plumb_inst.inst_mbs.draggable($("#" + data.mbs_id), {
                 containment: "parent",
-                grid: [50, 50],
+
                 start: function () {
                     $(".dot").remove();
                     console.log(SGI.plumb_inst.inst_mbs)
@@ -2656,8 +2567,6 @@ var SGI = {
                     scope.$apply();
                 }
             });
-
-
         }
     },
 

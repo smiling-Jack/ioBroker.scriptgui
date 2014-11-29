@@ -99,21 +99,7 @@ jQuery.extend(true, SGI, {
                     url = "http://" + _url;
                 }
 
-
-
             $("#img_con_state").attr("src", "img/icon/flag-blue.png");
-
-             $.ajax({
-                url: url + "/auth/auth.js",
-                type: "GET",
-                dataType: "text"
-            })
-            .done(function( data ) {
-                console.log( data );
-            })
-            .fail(function( jqXHR, textStatus ) {
-                console.log( textStatus);
-            });
 
             $.get(url + "/auth/auth.js", function (data) {
                 var socketSession_id = data.split('\'')[1];
@@ -202,24 +188,15 @@ jQuery.extend(true, SGI, {
             })
 
                 .fail(function (err) {
-                    throw err
+                console.log(err)
+                    SGI.disconnect()
                 });
 
 
         }
         catch (err) {
-            $("#img_con_state").attr("src", "img/icon/flag-red.png");
-            $("#btn_con_offline").parent().removeClass("div_img_glass_on");
-            $("#btn_con_online").parent().removeClass("div_img_glass_on");
-
-            homematic = {
-                uiState: {"_65535": {"Value": null}},
-                regaIndex: {},
-                regaObjects: {}
-            };
-            SGI.con_data = false;
-
-            throw err
+            console.log(err)
+            SGI.disconnect()
         }
     },
 
