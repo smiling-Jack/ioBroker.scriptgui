@@ -17,7 +17,6 @@ var main_win = nw_gui.Window.get();
 var main_manifest = nw_gui.App.manifest;
 
 var request = require("request");
-var getmac = require('getmac');
 var ncp = require('ncp');
 var up_pkg = require('./update.json');
 var updater = require('node-webkit-updater');
@@ -470,19 +469,6 @@ var SGI = {
 
             }
         }, 100);
-
-
-
-
-
-
-
-
-
-
-
-
-
     },
 
     global_event: function () {
