@@ -872,6 +872,49 @@ SGI = $.extend(true, SGI, {
         }
 
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+        if (data.type == "each") {
+            scope.fbs[nr].scope = "liste_ch_dp";
+            scope.append($("#" + data.parent), '\
+            <div style="z-index: 5"  id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_onborder fbs_element_next">\
+                <p class="head_next">each</p>\
+            </div>');
+
+
+            SGI.add_mbs_endpoint(data);
+            SGI.add_fbs_endpoint(data.fbs_id, "", data, "onborder");
+
+            var ep_mbs = SGI.plumb_inst.inst_mbs.getEndpoint(data.fbs_id);
+            var ep_fbs = SGI.plumb_inst["inst_" + $("#" + data.parent).parent().attr("id")].getEndpoint(data.fbs_id);
+
+            var pos = SGI.find_border_position(data);
+            if (pos == "left") {
+                $("#" + data.fbs_id).css({left: "-28px", right: "auto", bottom:"auto"});
+                ep_mbs.setAnchor("Left");
+                ep_fbs.setAnchor("Right");
+            }
+            else if (pos == "right") {
+                $("#" + data.fbs_id).css({left: "auto", right: "-28px", bottom:"auto"});
+                ep_mbs.setAnchor("Right");
+                ep_fbs.setAnchor("Left");
+            }
+            else if (pos == "top") {
+                $("#" + data.fbs_id).css({top: "-13px", bottom: "auto", right:"auto"});
+                ep_mbs.setAnchor("Top");
+                ep_fbs.setAnchor("Bottom");
+            }
+            else if (pos == "bottom") {
+                $("#" + data.fbs_id).css({top: "auto", bottom: "-13px", right:"auto"});
+                ep_mbs.setAnchor("Bottom");
+                ep_fbs.setAnchor("Top");
+            }
+            setTimeout(function(){
+                SGI.plumb_inst.inst_mbs.repaintEverything();
+                SGI.plumb_inst["inst_" + $("#" + data.parent).parent().attr("id")].repaintEverything();
+            },10);
+        }
+
+        //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         if (data.type == "lfwert") {
             scope.fbs[nr].scope = "liste_val";
 

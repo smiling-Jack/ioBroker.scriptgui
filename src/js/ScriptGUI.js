@@ -17,7 +17,6 @@ var main_win = nw_gui.Window.get();
 var main_manifest = nw_gui.App.manifest;
 
 var request = require("request");
-var getmac = require('getmac');
 var ncp = require('ncp');
 var up_pkg = require('./update.json');
 var updater = require('node-webkit-updater');
@@ -124,7 +123,6 @@ var SGI = {
         scope = angular.element($('body')).scope();
         scope.$apply();
 
-
         $("#prgopen").attr("nwworkingdir", path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/"));
         $("#prgsaveas").attr("nwworkingdir", path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/"));
 // Setze Sprache
@@ -169,11 +167,11 @@ var SGI = {
             var id = $(this).attr("id");
             if (bausteine[id]) {
                 $(this)
-                    .append('<div style="position:absolute">'+bausteine[id]["data"]+'</div>')
-                    .css({height: bausteine[id].h +"px", width: bausteine[id].w+"px" })
+                    .append('<div style="position:absolute">' + bausteine[id]["data"] + '</div>')
+                    .css({height: bausteine[id].h + "px", width: bausteine[id].w + "px"})
             } else {
                 $(this).append('<div class="mbs_html " style="height:62px; width: 124px ;position: relative;">\
-                    <div style="position: relative; z-index: 3; color: red; margin-top: 10px;font-size: 12px;font-weight: 900; line-height: 44px;">'+id+'</div>\
+                    <div style="position: relative; z-index: 3; color: red; margin-top: 10px;font-size: 12px;font-weight: 900; line-height: 44px;">' + id + '</div>\
                 </div>');
             }
 
@@ -327,7 +325,7 @@ var SGI = {
             start: function (e, ui) {
             },
             drag: function (e, ui) {
-                ui.position.left = parseInt(ui.offset.left+52 );
+                ui.position.left = parseInt(ui.offset.left + 52);
                 ui.position.top = parseInt(ui.offset.top - 0);
             },
             stop: function () {
@@ -346,7 +344,7 @@ var SGI = {
             },
             drag: function (e, ui) {
 
-                ui.position.left = parseInt(ui.offset.left +10 );
+                ui.position.left = parseInt(ui.offset.left + 10);
                 ui.position.top = parseInt(ui.offset.top - 0);
             },
             stop: function () {
@@ -377,7 +375,7 @@ var SGI = {
                                 var data = {
                                     type: "codebox"
                                 };
-                                var top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top -20 ) / SGI.zoom);
+                                var top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top - 20 ) / SGI.zoom);
                                 var left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left ) / SGI.zoom);
                                 SGI.add_mbs_element(data, left, top);
 
@@ -470,17 +468,6 @@ var SGI = {
 
             }
         }, 100);
-
-
-
-
-
-
-
-
-
-
-
 
 
     },
@@ -1571,7 +1558,9 @@ var SGI = {
 
         var codebox = $("#" + parent).parent().attr("id");
 
-
+console.log("scope"+scope);
+console.log("type"+type);
+console.log("position"+position);
         if (scope == "singel") {
             if (type == "input") {
                 endpointStyle = {fillStyle: "green"};
@@ -1609,7 +1598,7 @@ var SGI = {
         }
 
 
-        if (scope == "liste_ch") {
+        if (scope == "liste_ch" ) {
 
             if (type == "input") {
                 endpointStyle = {fillStyle: "#660066"};
@@ -1621,8 +1610,7 @@ var SGI = {
                     endpoint: ["Rectangle", {width: 20, height: 10}],
                     scope: "liste_ch"
                 });
-            }
-            if (type == "output") {
+            }else if (type == "output") {
                 endpointStyle = {fillStyle: "#882288"};
                 SGI.plumb_inst["inst_" + codebox].addEndpoint(id.toString(), {uuid: id.toString()}, {
                     anchor: [1, 0.5, 1, 0, 0, 0],
@@ -1637,7 +1625,16 @@ var SGI = {
             }
         }
         if (scope == "liste_ch_dp") {
-
+            if (position == "onborder") {
+                endpointStyle = {fillStyle: "#ff99ff"};
+                SGI.plumb_inst["inst_" + codebox].addEndpoint(id.toString(), {uuid: id.toString()}, {
+                    isTarget: true,
+                    paintStyle: endpointStyle,
+                    connector: ["Flowchart", {stub: _stub, alwaysRespectStubs: true}],
+                    endpoint: ["Rectangle", {width: 13, height: 13}],
+                    scope: "liste_dp"
+                });
+            }else
             if (type == "input") {
                 endpointStyle = {fillStyle: "#660066"};
                 SGI.plumb_inst["inst_" + codebox].addEndpoint(id.toString(), {uuid: id.toString()}, {
@@ -1648,7 +1645,7 @@ var SGI = {
                     endpoint: ["Rectangle", {width: 20, height: 10}],
                     scope: "liste_ch"
                 });
-            }
+            }else
             if (type == "output") {
                 endpointStyle = {fillStyle: "#ff99ff"};
                 SGI.plumb_inst["inst_" + codebox].addEndpoint(id.toString(), {uuid: id.toString()}, {
@@ -2437,7 +2434,6 @@ var SGI = {
     },
 
     make_fbs_drag: function (data) {
-        console.log(data)
         var $div = $("#" + data.parent);
         var ep_mbs = [];
         var ep_fbs = [];
@@ -2459,8 +2455,8 @@ var SGI = {
                     $this_width = $(params.el).width();
                 },
                 drag: function (params) {
+                    console.log($(params.el).hasClass("fbs_element_onborder"))
                     if ($(params.el).hasClass("fbs_element_onborder")) {
-
                         var $this_left = params.pos[0];
                         var $this_right = codebox_w - params.pos[0] - $this_width;
                         var $this_top = params.pos[1];
@@ -3304,14 +3300,14 @@ var SGI = {
 
                                 for (var i = 1; i <= parseInt(data.in); i++) {
                                     $("#left_" + data.name).append('' +
-                                        '<div id="' + data.name + '_in' + i + '"  class="div_input ' + data.name + '_in">' +
-                                        '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: -11px; top:5px"></div>' +
-                                        '</div>')
+                                    '<div id="' + data.name + '_in' + i + '"  class="div_input ' + data.name + '_in">' +
+                                    '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: -11px; top:5px"></div>' +
+                                    '</div>')
                                 }
                                 for (var i = 1; i <= parseInt(data.out); i++) {
                                     $("#right_" + data.name).append('<div id="' + data.name + '_out' + i + '" class="div_output1 ' + data.name + '_out">' +
-                                        '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: 21px; top:5px"></div>' +
-                                        '</div>');
+                                    '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: 21px; top:5px"></div>' +
+                                    '</div>');
 
                                 }
 

@@ -940,8 +940,54 @@ $('#play_overlay').remove();
                 }
             }
 
-            function schedule(data) {
-            }
+            function schedule(pattern, callback) {
+
+
+                //if (sim.run_type == "trigger" || sim.run_type == "hotrun") {
+                    var sch;
+                    //if (pattern.astro) {
+                        //var date = new Date();
+                        //var ts = sim.suncalc.getTimes(date, sim.settings.latitude, sim.settings.longitude)[pattern.astro];
+                        //
+                        //if (ts == null) {
+                        //    // Ereignis tritt nicht auf - in 24h noch mal versuchen
+                        //    sch = sim.scheduler.scheduleJob(ts, function () {
+                        //        setTimeout(function () {
+                        //            sch = schedule(pattern, callback);
+                        //        }, 86400000);
+                        //    });
+                        //    sim.schedules.push(sch);
+                        //    return sch;
+                        //}
+                        //
+                        //if (pattern.shift) {
+                        //    ts = new Date(ts.getTime() + (pattern.shift * 60000));
+                        //}
+                        //
+                        //if (ts < date) {
+                        //    date = new Date(date.getTime() + 86400000);
+                        //    ts = sim.suncalc.getTimes(date, sim.settings.latitude, sim.settings.longitude)[pattern.astro];
+                        //    if (pattern.shift) {
+                        //        ts = new Date(ts.getTime() + (pattern.shift * 60000));
+                        //    }
+                        //}
+                        //
+                        //sch = sim.scheduler.scheduleJob(ts, function () {
+                        //    setTimeout(function () {
+                        //        sch = schedule(pattern, callback);
+                        //    }, 1000);
+                        //    callback();
+                        //});
+                        //
+                        //sim.schedules.push(sch);
+                        //return sch;
+                    //} else {
+                        sch = sim.scheduler.scheduleJob(pattern, callback);
+                        sim.schedules.push(sch);
+                        return sch;
+                    //}
+                }
+            //}
 
             function subscribe(pattern, callbackOrId, value, mbs) {
 
@@ -1120,7 +1166,6 @@ $('#play_overlay').remove();
 
             }
             catch (err) {
-                console.log(err)
                 var real_script = js_beautify(Compiler.make_prg().toString());
                 var _sim_script = sim_script.split(/\n/);
                 var _real_script = real_script.split(/\n/)

@@ -148,7 +148,7 @@ var Compiler = {
             }
             if (PRG._scope.mbs[nr].type == "trigger_zykm") {
 
-                Compiler.trigger += 'schedule(" */' + PRG._scope.mbs[nr].time + ' * * * * ", function (data){' + targets + ' }' + mbs_nr + '); '
+                Compiler.trigger += 'schedule(" */' + PRG._scope.mbs[nr].time + ' * * * * ", function (data){' + targets + ' }); '
 
             }
             if (PRG._scope.mbs[nr].type == "trigger_vartime") {
