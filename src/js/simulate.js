@@ -12,7 +12,7 @@ function start_sim_p(sim_script) {
     sim_p = cp.fork('./js/sim_process.js', [homematic,sim_script], {
 
         execArgv: ['--debug-brk'],
-        silent: true
+
     });
     sim_p.on('close', function (code, signal) {
         console.log('close ' + code + "   " + signal);
@@ -20,7 +20,6 @@ function start_sim_p(sim_script) {
     sim_p.on('error', function (code, signal) {
         console.log('error ' + code + "   " + signal);
     });
-
     sim_p.on('exit', function (code, signal) {
         console.log('exit ' + code + "   " + signal);
         $("#prg_panel").find("select, input:not(.force_input)").each(function () {
@@ -44,7 +43,6 @@ function start_sim_p(sim_script) {
         $(".fbs, .mbs").show();
         SGI.sim_run = false
     });
-
     sim_p.on('message', function (data) {
 
         if (typeof data == 'string') {

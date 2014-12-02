@@ -440,14 +440,14 @@ body {
 
 ._jsPlumb_endpoint {
     z-index: 3 !important;
-    border-radius: 5px;
+    border-radius: 8px;
     overflow: hidden;
     /*margin-top: -1px;*/
     /*margin-left: -1px;*/
 }
 .html_endpoint {
     z-index: 3 !important;
-    border-radius: 5px;
+    border-radius: 8px;
     overflow: hidden;
     /*margin-top: -1px;*/
     /*margin-left: -1px;*/

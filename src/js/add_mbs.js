@@ -27,7 +27,10 @@ SGI = $.extend(true, SGI, {
             style: _data.style || {
                 "left": left + "px",
                 "top": top + "px"
-            }
+            },
+            opt1:_data.opt1 || "",
+            opt2:_data.opt1 || "",
+            opt3:_data.opt1 || "",
         };
 
         if (copy) {
@@ -397,7 +400,7 @@ SGI = $.extend(true, SGI, {
                 <div id="head_' + data.mbs_id + '" class="div_head" style="background-color: #0060FF">\
                     <a class="head_font">Delay</a>\
                 </div>\
-                <div style="border-bottom: 1px solid cyan; display: flex;">\
+                <div style="border-bottom: 1px solid rgb(166, 166, 166); display: flex;">\
                     <input type="text" class="brake_delay " ng-model="mbs[' + nr + '].val" id="' + data.mbs_id + '_delay" title="' + SGI.translate("Pause in Sekunden") + '" />\
                     <input type="checkbox" class="brake_delay_check" ng-model="mbs[' + nr + '].wert" id="' + data.mbs_id + '_delay_opt" title="' + SGI.translate("delay_check") + '"/>\
                 </div>\
@@ -425,7 +428,7 @@ SGI = $.extend(true, SGI, {
                 <div id="head_' + data.mbs_id + '" class="div_head" style="background-color: #0060FF">\
                     <a class="head_font">Intervall</a>\
                  </div>\
-                <div style="border-bottom: 1px solid cyan">\
+                <div style="border-bottom: 1px solid rgb(166, 166, 166)">\
                     <input type="text" class="brake_delay" ng-model="mbs[' + nr + '].val" id="' + data.mbs_id + '_delay" title="' + SGI.translate("Pause in Sekunden") + '" />\
                 </div>\
                 <div id="left_' + nr + '" class="div_left">\
@@ -455,7 +458,7 @@ SGI = $.extend(true, SGI, {
                 <div id="head_' + data.mbs_id + '" class="div_head" style="background-color: #0060FF">\
                     <a class="head_font">Loop</a>\
                 </div>\
-                <div style="border-bottom: 1px solid cyan">\
+                <div style="border-bottom: 1px solid rgb(166, 166, 166)">\
                     <div style="color: #000000; display: inline; font-size: 9px;">Loop:</div><input ng-model="mbs[' + nr + '].wert" type="text" class="brake_delay" id="' + data.mbs_id + '_n" title="' + SGI.translate("loop_n") + '" />\
                     <div style="color: #000000; display: inline; font-size: 9px;">Time:</div><input ng-model="mbs[' + nr + '].val" type="text" class="brake_delay" id="' + data.mbs_id + '_delay" title="' + SGI.translate("loop_delay") + '" />\
                 </div>\
@@ -477,6 +480,140 @@ SGI = $.extend(true, SGI, {
 
             $("#" + data.mbs_id + "_n").numberMask({type: 'int', beforePoint: 5})
 
+        }
+        //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        if (data.type == "block_t") {
+
+            if (data.opt1 == "") {
+                data.opt1 = "1";
+            }
+
+
+            if (typeof data.wert === "object") {
+                data.wert = 1;
+            }
+            scope.append($("#prg_panel"), '\
+            <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_simpel mbs_element_control ">\
+                <div id="head_' + data.mbs_id + '" class="div_head" style="background-color: #0060FF">\
+                    <a class="head_font">Block t</a>\
+                </div>\
+                <div style="border-bottom: 1px solid rgb(166, 166, 166)">\
+                    <div style="color: #000000; display: inline; font-size: 9px;">Ms:</div><input ng-model="mbs[' + nr + '].opt1" type="text" class="brake_delay" id="' + data.mbs_id + '_opt1" />\
+                </div>\
+                <div id="left_' + nr + '" class="div_left">\
+                    <div id="' + data.mbs_id + '_in1" class="div_input ' + data.mbs_id + '_in"><a class="input_font">In</a></div>\
+                    <div id="' + data.mbs_id + '_in2" class="div_input ' + data.mbs_id + '_in"><a class="input_font">Reset</a></div>\
+                </div>\
+                <div id="right_' + nr + '" class="div_right_brake">\
+                    <div id="' + data.mbs_id + '_out" class="div_output1 ' + data.mbs_id + '_out"><a class="output_font"></a></div>\
+                </div>\
+            </div>');
+
+
+
+
+        }
+        //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        if (data.type == "block_n") {
+
+            if (data.opt1 == "") {
+                data.opt1 = "1";
+            }
+
+
+            if (typeof data.wert === "object") {
+                data.wert = 1;
+            }
+            scope.append($("#prg_panel"), '\
+            <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_simpel mbs_element_control ">\
+                <div id="head_' + data.mbs_id + '" class="div_head" style="background-color: #0060FF">\
+                    <a class="head_font">Block n</a>\
+                </div>\
+                <div style="border-bottom: 1px solid rgb(166, 166, 166)">\
+                    <div style="color: #000000; display: inline; font-size: 9px;">Count:</div><input ng-model="mbs[' + nr + '].opt1" type="text" class="brake_delay" id="' + data.mbs_id + '_opt1" />\
+                </div>\
+                <div id="left_' + nr + '" class="div_left">\
+                    <div id="' + data.mbs_id + '_in1" class="div_input ' + data.mbs_id + '_in"><a class="input_font">In</a></div>\
+                    <div id="' + data.mbs_id + '_in2" class="div_input ' + data.mbs_id + '_in"><a class="input_font">Reset</a></div>\
+                </div>\
+                <div id="right_' + nr + '" class="div_right_brake">\
+                    <div id="' + data.mbs_id + '_out" class="div_output1 ' + data.mbs_id + '_out"><a class="output_font"></a></div>\
+                </div>\
+            </div>');
+
+
+            $("#" + data.mbs_id + "_opt1").numberMask({type: 'int', beforePoint: 5})
+        }
+        //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        if (data.type == "block_tt") {
+
+            if (data.opt1 == "") {
+                data.opt1 = "00:00";
+            }
+            if (data.opt2 == "") {
+                data.opt2 = "00:00";
+            }
+
+
+            if (typeof data.wert === "object") {
+                data.wert = 1;
+            }
+            scope.append($("#prg_panel"), '\
+            <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_simpel mbs_element_control ">\
+                <div id="head_' + data.mbs_id + '" class="div_head" style="background-color: #0060FF">\
+                    <a class="head_font">Block tt</a>\
+                </div>\
+                <div style="border-bottom: 1px solid rgb(166, 166, 166)">\
+                    <div style="color: #000000; display: inline; font-size: 9px;">Time1</div><input ng-model="mbs[' + nr + '].opt1" type="text" class="brake_delay" id="' + data.mbs_id + '_opt1" />\
+                    <div style="color: #000000; display: inline; font-size: 9px;">Time2</div><input ng-model="mbs[' + nr + '].opt2" type="text" class="brake_delay" id="' + data.mbs_id + '_opt2" />\
+                </div>\
+                <div id="left_' + nr + '" class="div_left">\
+                    <div id="' + data.mbs_id + '_in1" class="div_input ' + data.mbs_id + '_in"><a class="input_font">In</a></div>\
+                    <div id="' + data.mbs_id + '_in2" class="div_input ' + data.mbs_id + '_in"><a class="input_font">Reset</a></div>\
+                </div>\
+                <div id="right_' + nr + '" class="div_right_loop">\
+                    <div id="' + data.mbs_id + '_out" class="div_output1 ' + data.mbs_id + '_out"><a class="output_font"></a></div>\
+                </div>\
+            </div>');
+
+
+
+        }
+
+        //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        if (data.type == "block_tn") {
+
+            if (data.opt1 == "") {
+                data.opt1 = "1";
+            }
+            if (data.opt2 == "") {
+                data.opt2 = "1";
+            }
+
+
+            if (typeof data.wert === "object") {
+                data.wert = 1;
+            }
+            scope.append($("#prg_panel"), '\
+            <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_simpel mbs_element_control ">\
+                <div id="head_' + data.mbs_id + '" class="div_head" style="background-color: #0060FF">\
+                    <a class="head_font">Block tn</a>\
+                </div>\
+                <div style="border-bottom: 1px solid rgb(166, 166, 166)">\
+                    <div style="color: #000000; display: inline; font-size: 9px;">Ms:  </div><input ng-model="mbs[' + nr + '].opt1" type="text" class="brake_delay" id="' + data.mbs_id + '_opt1" />\
+                    <div style="color: #000000; display: inline; font-size: 9px;">Count:</div><input ng-model="mbs[' + nr + '].opt2" type="text" class="brake_delay" id="' + data.mbs_id + '_opt2" />\
+                </div>\
+                <div id="left_' + nr + '" class="div_left">\
+                    <div id="' + data.mbs_id + '_in1" class="div_input ' + data.mbs_id + '_in"><a class="input_font">In</a></div>\
+                    <div id="' + data.mbs_id + '_in2" class="div_input ' + data.mbs_id + '_in"><a class="input_font">Reset</a></div>\
+                </div>\
+                <div id="right_' + nr + '" class="div_right_loop">\
+                    <div id="' + data.mbs_id + '_out" class="div_output1 ' + data.mbs_id + '_out"><a class="output_font"></a></div>\
+                </div>\
+            </div>');
+
+
+            $("#" + data.mbs_id + "_opt1").numberMask({type: 'int', beforePoint: 5})
         }
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         if (data.type == "scriptobj") {

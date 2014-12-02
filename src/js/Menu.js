@@ -181,26 +181,26 @@ jQuery.extend(true, SGI, {
                 position: "relative"
             });
 
-            //Für Pause,Intervall,Loop
+//            Für Pause,Intervall,Loop
 //            $("#endpoints").css({
 //                left: 10 - left + "px",
 //                top: 0 - top + "px",
-//                position: "relative",
+//                position: "relative"
 //
 //            });
-//
-//            $(".mbs_element").css({
-//                left: 10,
-//                top: 0,
-//                position: "relative",
-//
-//            });
-//            $("#photo").css({
-//                height: 2 + height + "px",
-//                width: 20 + width + "px",
-//                left: "50%",
-//                top: "50%",
-//            });
+
+            $(".mbs_element").css({
+                left: 10,
+                top: 0,
+                position: "relative"
+
+            });
+            $("#photo").css({
+                height: 2 + height + "px",
+                width: 20 + width + "px",
+                left: "50%",
+                top: "50%"
+            });
 
 
             var data = $("#photo").html();

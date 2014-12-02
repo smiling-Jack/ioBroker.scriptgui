@@ -1628,6 +1628,7 @@ console.log("position"+position);
                 SGI.plumb_inst["inst_" + codebox].addEndpoint(id.toString(), {uuid: id.toString()}, {
                     isTarget: true,
                     paintStyle: endpointStyle,
+                    cssClass: "ep_fbs_onborder",
                     connector: ["Flowchart", {stub: _stub, alwaysRespectStubs: true}],
                     endpoint: ["Rectangle", {width: 13, height: 13}],
                     scope: "liste_dp"
@@ -1749,7 +1750,7 @@ console.log("position"+position);
             });
 
 
-        } else if (data.type == "brake" || data.type == "intervall" || data.type == "loop") {
+        } else if (data.type == "brake" || data.type == "intervall" || data.type == "loop" || data.type.split("_")[0] == "block") {
             endpointStyle = {fillStyle: "blue"};
             SGI.plumb_inst.inst_mbs.addEndpoint(data.mbs_id + "_in1", {uuid: data.mbs_id + "_in1"}, {
                 //dropOptions: { hoverClass: "dragHover" },
