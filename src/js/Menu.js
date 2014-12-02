@@ -819,8 +819,6 @@ jQuery.extend(true, SGI, {
 
         $("#img_set_script_stop").button().click(function () {
                 sim.stopsim();
-                console.log(this)
-
             }
         ).hover(
             function () {
