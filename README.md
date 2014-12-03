@@ -54,6 +54,14 @@ CCU-IO.ScriptGUI ist ein Visueller Script builder auf Node-Webkit basis. Mit ihm
 * Change fbs  Next 1
 * Add fbs Next 0
 * Add fbs each
+* Add fbs Block t
+* Add fbs Block <n
+* Add fbs Block >n
+* Add fbs Block e
+* Add fbs Block nt
+* Add fbs Block tt
+
+
 
 
 * Livetest starting in his owen process

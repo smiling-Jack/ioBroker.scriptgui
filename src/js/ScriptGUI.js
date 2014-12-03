@@ -174,7 +174,6 @@ var SGI = {
                     <div style="position: relative; z-index: 3; color: red; margin-top: 10px;font-size: 12px;font-weight: 900; line-height: 44px;">' + id + '</div>\
                 </div>');
             }
-
         });
 
 
@@ -190,6 +189,7 @@ var SGI = {
             data: [
                 SGI.translate("Allgemein"),
                 SGI.translate("Programme"),
+                SGI.translate("Blocker"),
                 SGI.translate("Logic"),
                 SGI.translate("Listen Filter"),
                 SGI.translate("Get Set Var"),
@@ -200,9 +200,7 @@ var SGI = {
                 SGI.translate("Trigger Daten"),
                 SGI.translate("Expert")
             ]
-
         });
-
 
         $("#toolbox_" + box_init[1]).show();
 
@@ -216,6 +214,9 @@ var SGI = {
             }
             if (val == SGI.translate("Programme")) {
                 box = "prog"
+            }
+            if (val == SGI.translate("Blocker")) {
+                box = "block"
             }
             if (val == SGI.translate("Logic")) {
                 box = "logic"
@@ -244,9 +245,7 @@ var SGI = {
             if (val == SGI.translate("Convert")) {
                 box = "convert"
             }
-//            if(val ==""){box = ""}
-//            if(val ==""){box = ""}
-//            if(val ==""){box = ""}
+
             $(".toolbox").hide();
             $("#toolbox_" + box).show();
             storage.set(SGI.str_tollbox, [val, box]);
@@ -1556,9 +1555,9 @@ var SGI = {
 
         var codebox = $("#" + parent).parent().attr("id");
 
-console.log("scope"+scope);
-console.log("type"+type);
-console.log("position"+position);
+        console.log("scope" + scope);
+        console.log("type" + type);
+        console.log("position" + position);
         if (scope == "singel") {
             if (type == "input") {
                 endpointStyle = {fillStyle: "green"};
@@ -1596,7 +1595,7 @@ console.log("position"+position);
         }
 
 
-        if (scope == "liste_ch" ) {
+        if (scope == "liste_ch") {
 
             if (type == "input") {
                 endpointStyle = {fillStyle: "#660066"};
@@ -1608,7 +1607,7 @@ console.log("position"+position);
                     endpoint: ["Rectangle", {width: 20, height: 10}],
                     scope: "liste_ch"
                 });
-            }else if (type == "output") {
+            } else if (type == "output") {
                 endpointStyle = {fillStyle: "#882288"};
                 SGI.plumb_inst["inst_" + codebox].addEndpoint(id.toString(), {uuid: id.toString()}, {
                     anchor: [1, 0.5, 1, 0, 0, 0],
@@ -1633,8 +1632,7 @@ console.log("position"+position);
                     endpoint: ["Rectangle", {width: 13, height: 13}],
                     scope: "liste_dp"
                 });
-            }else
-            if (type == "input") {
+            } else if (type == "input") {
                 endpointStyle = {fillStyle: "#660066"};
                 SGI.plumb_inst["inst_" + codebox].addEndpoint(id.toString(), {uuid: id.toString()}, {
                     anchor: [0, 0.5, -1, 0, 0, 0],
@@ -1644,8 +1642,7 @@ console.log("position"+position);
                     endpoint: ["Rectangle", {width: 20, height: 10}],
                     scope: "liste_ch"
                 });
-            }else
-            if (type == "output") {
+            } else if (type == "output") {
                 endpointStyle = {fillStyle: "#ff99ff"};
                 SGI.plumb_inst["inst_" + codebox].addEndpoint(id.toString(), {uuid: id.toString()}, {
                     anchor: [1, 0.5, 1, 0, 0, 0],
@@ -1760,16 +1757,16 @@ console.log("position"+position);
                 paintStyle: endpointStyle,
                 endpoint: ["Rectangle", {width: 20, height: 10}]
             });
-
-            SGI.plumb_inst.inst_mbs.addEndpoint(data.mbs_id + "_in2", {uuid: data.mbs_id + "_in2"}, {
-                //dropOptions: { hoverClass: "dragHover" },
-                anchor: ["Left"],
-                isTarget: true,
-                isSource: false,
-                paintStyle: endpointStyle,
-                endpoint: ["Rectangle", {width: 20, height: 10}]
-            });
-
+            if (data.type != "block_tt") {
+                SGI.plumb_inst.inst_mbs.addEndpoint(data.mbs_id + "_in2", {uuid: data.mbs_id + "_in2"}, {
+                    //dropOptions: { hoverClass: "dragHover" },
+                    anchor: ["Left"],
+                    isTarget: true,
+                    isSource: false,
+                    paintStyle: endpointStyle,
+                    endpoint: ["Rectangle", {width: 20, height: 10}]
+                });
+            }
             SGI.plumb_inst.inst_mbs.addEndpoint(data.mbs_id + "_out", {uuid: data.mbs_id + "_out"}, {
                 anchor: ["Right"],
                 isSource: true,
@@ -3299,14 +3296,14 @@ console.log("position"+position);
 
                                 for (var i = 1; i <= parseInt(data.in); i++) {
                                     $("#left_" + data.name).append('' +
-                                    '<div id="' + data.name + '_in' + i + '"  class="div_input ' + data.name + '_in">' +
-                                    '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: -11px; top:5px"></div>' +
-                                    '</div>')
+                                        '<div id="' + data.name + '_in' + i + '"  class="div_input ' + data.name + '_in">' +
+                                        '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: -11px; top:5px"></div>' +
+                                        '</div>')
                                 }
                                 for (var i = 1; i <= parseInt(data.out); i++) {
                                     $("#right_" + data.name).append('<div id="' + data.name + '_out' + i + '" class="div_output1 ' + data.name + '_out">' +
-                                    '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: 21px; top:5px"></div>' +
-                                    '</div>');
+                                        '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: 21px; top:5px"></div>' +
+                                        '</div>');
 
                                 }
 

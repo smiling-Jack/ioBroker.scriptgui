@@ -664,7 +664,7 @@ SGI = $.extend(true, SGI, {
                 <div id="right_' + nr + '" class="div_right_io">\
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
-                <div id="div_hmid_' + nr + '" class="div_konst">Channel ID</div>\
+                <div id="div_hmid_' + nr + '" class="div_konst">Ch. ID</div>\
                  <div   class="div_head_right " style="background-color: red">\
                         <p class="head_font_io">Tr.</p>\
                 </div>\
@@ -678,7 +678,7 @@ SGI = $.extend(true, SGI, {
                 <div id="right_' + nr + '" class="div_right_io">\
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
-                <div id="div_hmid_' + nr + '" class="div_konst">Channel Name</div>\
+                <div id="div_hmid_' + nr + '" class="div_konst">Ch. Name</div>\
                  <div   class="div_head_right " style="background-color: red">\
                         <p class="head_font_io">Tr.</p>\
                 </div>\
@@ -692,7 +692,7 @@ SGI = $.extend(true, SGI, {
                 <div id="right_' + nr + '" class="div_right_io">\
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
-                <div id="div_hmid_' + nr + '" class="div_konst">Channel Type</div>\
+                <div id="div_hmid_' + nr + '" class="div_konst">Ch. Type</div>\
                  <div   class="div_head_right " style="background-color: red">\
                         <p class="head_font_io">Tr.</p>\
                 </div>\
@@ -706,7 +706,7 @@ SGI = $.extend(true, SGI, {
                 <div id="right_' + nr + '" class="div_right_io">\
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
-                <div id="div_hmid_' + nr + '" class="div_konst">Channel Gewerk IDs</div>\
+                <div id="div_hmid_' + nr + '" class="div_konst">Ch. func IDs</div>\
                  <div   class="div_head_right " style="background-color: red">\
                         <p class="head_font_io">Tr.</p>\
                 </div>\
@@ -720,7 +720,7 @@ SGI = $.extend(true, SGI, {
                 <div id="right_' + nr + '" class="div_right_io">\
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
-                <div id="div_hmid_' + nr + '" class="div_konst">Channel room IDs</div>\
+                <div id="div_hmid_' + nr + '" class="div_konst">Ch. room IDs</div>\
                  <div   class="div_head_right " style="background-color: red">\
                         <p class="head_font_io">Tr.</p>\
                 </div>\
@@ -734,7 +734,7 @@ SGI = $.extend(true, SGI, {
                 <div id="right_' + nr + '" class="div_right_io">\
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
-                <div id="div_hmid_' + nr + '" class="div_konst">Channel Gewerk names</div>\
+                <div id="div_hmid_' + nr + '" class="div_konst">Ch. func names</div>\
                  <div   class="div_head_right " style="background-color: red">\
                         <p class="head_font_io">Tr.</p>\
                 </div>\
@@ -748,7 +748,7 @@ SGI = $.extend(true, SGI, {
                 <div id="right_' + nr + '" class="div_right_io">\
                     <div id="' + data.fbs_id + '_out" class="div_io_in ' + data.fbs_id + '_out"></div>\
                 </div>\
-                <div id="div_hmid_' + nr + '" class="div_konst">Channel room names</div>\
+                <div id="div_hmid_' + nr + '" class="div_konst">Ch. room names</div>\
                 <div   class="div_head_right " style="background-color: red">\
                     <p class="head_font_io">Tr.</p>\
                 </div>\

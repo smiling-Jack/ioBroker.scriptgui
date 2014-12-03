@@ -1882,7 +1882,7 @@ body {
     position: relative;
     z-index: 1;
     background-color: transparent;
-    margin: 1px 0 0 5px;
+    margin: 1px 0 0 9px;
 
 }
 
@@ -1893,7 +1893,7 @@ body {
     border: medium none;
     display: inline;
     margin: 0;
-    width: 33px;
+    width: 29px;
     text-align: center;
     font-size: 11px;
 

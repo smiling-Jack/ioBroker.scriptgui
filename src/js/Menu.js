@@ -164,14 +164,12 @@ jQuery.extend(true, SGI, {
                 left: 0 - left + "px",
                 top: -2 - top -height + "px",
                 position: "relative"
-
             });
 
             $(".mbs_element").css({
                 left: 0,
                 top: 0,
                 position: "relative"
-
             });
             $("#photo").css({
                 height: 12 + height + "px",
