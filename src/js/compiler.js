@@ -284,7 +284,7 @@ var Compiler = {
                 Compiler.block +=  "}";
 
                 Compiler.block += "function  " + this.mbs_id + "_in2 (data){";
-                Compiler.block += "clearTimeout(" + this.mbs_id + "_t)";
+                Compiler.block += "clearTimeout(" + this.mbs_id + "_t);";
                 Compiler.block += this.mbs_id +" = false;";
                 Compiler.block += "}";
             }

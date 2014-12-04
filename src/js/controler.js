@@ -14,15 +14,37 @@ angular.module('tutorialApp', [])
             "update": false,
             "user_name": "",
             "user_mail": "",
-            "datastore":"",
-            "last_start":"",
+            "datastore": "",
+            "last_start": "",
+            "last_con": false,
+            "auto_con": false,
+            "con_type": ""
         };
 
 
         try {
             fs.readFile(nwDir + '/setup.json', "utf8", function (err, data) {
                 if (!err) {
-                    $scope.setup = JSON.parse(data.split("}")[0] + "}");
+                    var load = JSON.parse(data.split("}")[0] + "}");
+                    $scope.setup = {
+                        "user_id": load.user_id || setup_default.user_id,
+                        "lang": load.lang || setup_default.lang,
+                        "theme": load.theme || setup_default.theme,
+                        "snap_grid": load.snap_grid || setup_default.snap_grid,
+                        "tooltip": load.tooltip || setup_default.tooltip,
+                        "fbs_wrap": load.fbs_wrap || setup_default.fbs_wrap,
+                        "LT_open": load.LT_open || setup_default.LT_open,
+                        "last_file": load.last_file || setup_default.last_file,
+                        "last_open": load.last_open || setup_default.last_open,
+                        "update": load.update || setup_default.update,
+                        "user_name": load.user_name || setup_default.user_name,
+                        "user_mail": load.user_mail || setup_default.user_mail,
+                        "datastore": load.datastore || setup_default.datastore,
+                        "last_start": load.last_start || setup_default.last_start,
+                        "last_con": load.last_con || setup_default.last_con,
+                        "auto_con": load.auto_con || setup_default.auto_con,
+                        "con_type": load.con_type || setup_default.con_type,
+                    }
                     angular_init()
                 } else {
                     fs.writeFile(nwDir + '/setup.json', JSON.stringify(setup_default), function (err) {

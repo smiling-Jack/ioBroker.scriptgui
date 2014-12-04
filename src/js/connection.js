@@ -43,12 +43,24 @@ jQuery.extend(true, SGI, {
 //        $("#inp_con_ip").unbind("change")
     },
 
-    offline: function () {
+    offline: function (_url) {
+        var url = $("#inp_con_ip").val().replace(":", "port");
+
+        if (_url){
+            url = _url
+        }
+
+        if (scope.setup.last_con != url || scope.setup.con_type != "offline"){
+            scope.setup.last_con = url;
+            scope.setup.con_type = "offline";
+            scope.$apply();
+            SGI.save_setup()
+        }
         try {
 
-            var name = $("#inp_con_ip").val().replace(":", "port");
+            var url = $("#inp_con_ip").val().replace(":", "port");
 
-            fs.readFile(scope.setup.datastore + '/ScriptGUI_Data/connections/' + name + '.json', function (err, data) {
+            fs.readFile(scope.setup.datastore + '/ScriptGUI_Data/connections/' + url + '.json', function (err, data) {
                 if (!err) {
 
                     homematic = JSON.parse(data);
@@ -88,24 +100,40 @@ jQuery.extend(true, SGI, {
         }
     },
 
-    online: function () {
+    online: function (__url) {
         try {
             var _url = $("#inp_con_ip").val();
             var url = "";
-
+            if(__url){
+                url = __url;
+            }else{
                 if (_url.split(":").length < 2) {
                     url = "http://" + _url + ":8080";
                 } else {
                     url = "http://" + _url;
                 }
+            }
+
+
+
 
             $("#img_con_state").attr("src", "img/icon/flag-blue.png");
+
+            if (scope.setup.last_con != url || scope.setup.con_type != "online"){
+                scope.setup.last_con = url;
+                scope.setup.con_type = "online";
+                scope.$apply();
+                SGI.save_setup()
+            }
 
             $.get(url + "/auth/auth.js", function (data) {
                 var socketSession_id = data.split('\'')[1];
 
-                SGI.socket = io.connect(url + "?key=" + socketSession_id, {'force new connection': true});
 
+
+
+
+                SGI.socket = io.connect(url + "?key=" + socketSession_id, {'force new connection': true});
                 SGI.socket.on("connect", function (err) {
 
                     SGI.socket.emit("getSettings", function (data) {
@@ -174,7 +202,6 @@ jQuery.extend(true, SGI, {
                     SGI.disconnect();
                     SGI.offline();
                 });
-
                 SGI.socket.on('disconnect', function () {
                     $("#img_con_state").attr("src", "img/icon/flag-red.png");
                     $("#img_set_script_engine").hide();

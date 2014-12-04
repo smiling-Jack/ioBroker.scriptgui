@@ -5,15 +5,12 @@
 
 
 var cp = require('child_process');
+var stacktrace = require('stack-trace');
 
 var sim_p;
 
 function start_sim_p(sim_script) {
-    sim_p = cp.fork('./js/sim_process.js', [homematic,sim_script], {
-
-        execArgv: ['--debug-brk'],
-
-    });
+    sim_p = cp.fork('./js/sim_process.js', [homematic,sim_script]);
     sim_p.on('close', function (code, signal) {
         console.log('close ' + code + "   " + signal);
     });
@@ -22,6 +19,7 @@ function start_sim_p(sim_script) {
     });
     sim_p.on('exit', function (code, signal) {
         console.log('exit ' + code + "   " + signal);
+        $('#play_overlay').remove();
         $("#prg_panel").find("select, input:not(.force_input)").each(function () {
             $(this).removeAttr('disabled');
         });
@@ -59,8 +57,8 @@ function start_sim_p(sim_script) {
             }else if(data[0] == "running"){
                 sim.running();
             }  else {
+                sim.script_err(data)
 
-                console.log(data);
 
             }
 
@@ -76,13 +74,16 @@ var sim = {
     run_type: "sim",
     script:"",
     script_err: function (err) {
+
+        console.log(err)
+
+        var line_number = parseInt(err.split(":")[1].split(" ")[0]);
         var real_script = js_beautify(Compiler.make_prg().toString());
         var _sim_script = sim.script.split(/\n/);
         var _real_script = real_script.split(/\n/)
-        var sim_error_line_text = _sim_script[err.lineNumber - 1];
-        var sim_error_line = _sim_script.indexOf(sim_error_line_text) + 1;
-        var real_error_line = _real_script.indexOf(sim_error_line_text) + 1;
-
+        var sim_error_line_text = _sim_script[line_number-1];
+        var sim_error_line = _sim_script.indexOf(sim_error_line_text);
+        var real_error_line = _real_script.indexOf(sim_error_line_text);
 
         for (var i = sim_error_line; i > 1; i--) {
             if (_sim_script[i].split("xxxxxxxxxxxxxxxxxxxx ").length > 1) {
@@ -92,9 +93,13 @@ var sim = {
             }
         }
 
-        $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td><b>Zeilentext:</b>" + sim_error_line_text + "</td></tr>");
+
+
+        $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td style='color: red'>" + err + "</td></tr>");
         $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td><b>Fehler in Zeile:</b> " + real_error_line + "</td></tr>");
-        $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td style='color: red'>" + err + "</td></tr>");
+        $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td><b>Zeilentext:</b>" + sim_error_line_text + "</td></tr>");
+
+//       sim.stopsim()
     },
     gettime: function () {
 
@@ -180,8 +185,9 @@ var sim = {
         console.log("logger-------------------------------");
     },
     stopsim: function () {
+
         if (SGI.sim_run == true) {
-            $('#play_overlay').remove();
+
 
             $("#img_set_script_stop").stop(true, true).effect({
                 effect: "highlight",
@@ -202,12 +208,10 @@ var sim = {
                     sim_p.send(["exit"])
                 }
             });
-
-
         }
-
     },
     running: function(){
+        console.log("running")
         SGI.sim_run = true;
         var scope = angular.element($('body')).scope();
         var that = this;
@@ -256,6 +260,7 @@ var sim = {
                     }
 
                 });
+
             }
             catch (err) {
                 var err_text = "";

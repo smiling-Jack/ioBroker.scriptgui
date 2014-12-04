@@ -50,6 +50,7 @@ CCU-IO.ScriptGUI ist ein Visueller Script builder auf Node-Webkit basis. Mit ihm
 * Bugfix connection if port not exist
 * Change Toolbox Image's to HTML's
 * Bugfix FBS on border
+* Add Auto connect to last connection & Setup
 
 * Change fbs  Next 1
 * Add fbs Next 0
@@ -62,9 +63,8 @@ CCU-IO.ScriptGUI ist ein Visueller Script builder auf Node-Webkit basis. Mit ihm
 * Add fbs Block tt
 
 
-
-
 * Livetest starting in his owen process
+
 
 ### 0.73.0
 * Bugfix Select fbs & mbs

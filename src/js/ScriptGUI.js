@@ -442,6 +442,17 @@ var SGI = {
 
         console.log("Start finish");
 
+        // Auto Connect
+        if (scope.setup.auto_con){
+            if(scope.setup.con_type == "onlien"){
+                SGI.online(scope.setup.last_con)
+            }
+            if(scope.setup.con_type == "offline"){
+                SGI.offline(scope.setup.last_con)
+            }
+
+        }
+
 
         // todo Register mit Homepage verbinden
 //        setTimeout(function () {

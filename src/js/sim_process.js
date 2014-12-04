@@ -2,6 +2,9 @@
  * Created by jack on 29.11.2014.
  */
 
+var stacktrace = require('stack-trace');
+var vm = require('vm');
+
 process.on('message', function (data) {
     if (data[0] == "exit") {
         process.exit(1000)
@@ -128,6 +131,8 @@ process.on('message', function (data) {
     }
 
 });
+//
+
 
 var sim = {
     regaObjects: [],
@@ -146,8 +151,6 @@ var script = process.argv[3];
 sim.regaObjects = process.argv[2].regaObjects;
 sim.regaIndex = process.argv[2].regaIndex;
 sim.datapoints = process.argv[2].uiState;
-
-
 
 function logger(data) {
     process.send(data)
@@ -842,7 +845,10 @@ function patternMatching(event, pattern) {
 }
 
 function getState(id) {
-    return sim.datapoints["_" + id]["Value"]
+
+        return sim.datapoints["_" + id]["Value"]
+
+
 }
 
 function setState(id, val, callback) {
@@ -867,7 +873,7 @@ function schedule(data) {
 }
 
 function subscribe(pattern, callbackOrId, value, mbs) {
-
+try{
     if (sim.run_type == "trigger" || sim.run_type == "hotrun") {
         if (typeof pattern != "object") {
             pattern = {id: pattern, change: "ne"};
@@ -901,6 +907,9 @@ function subscribe(pattern, callbackOrId, value, mbs) {
             mbs_nr: mbs_nr,
         });
     }
+}catch(err){
+    process.send(["script_err", err]);
+}
 }
 
 function execCmd(data) {
@@ -923,13 +932,19 @@ function simout(key, data) {
 }
 
 
+
+
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-
 try {
-    log("Start");
-    eval(script);
-    process.send(["running"])
+
+
+    log("try{"+script+"}catch(err){process.send(['script_err', err]);}'");
+
+    eval("try{"+script.toString()+"}catch(err){process.send(['script_err', err]);}'");
+//    vm.runInThisContext(script, "hallo.js");
+
+
     //$(document).on("change", '.force_input', "", function (e) {
     //    var x = $(e.target).data("info").toString();
     //    var force = $(e.target).val();
@@ -948,9 +963,9 @@ try {
     //
     //
     //$("#img_set_script_play").finish().effect("highlight");
-}
-catch (err) {
-    process.send(["script_err", err]);
+    process.send(["running"]);
+}catch(err){
+    process.send(["script_err", err.stack]);
 }
 
 
