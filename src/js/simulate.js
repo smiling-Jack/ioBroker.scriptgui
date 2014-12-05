@@ -9,8 +9,11 @@ var stacktrace = require('stack-trace');
 
 var sim_p;
 
-function start_sim_p(sim_script) {
-    sim_p = cp.fork('./js/sim_process.js', [homematic,sim_script]);
+function start_sim_p() {
+
+    console.log(homematic)
+    sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type]);
+    $("#body").css("cursor", "default");
     sim_p.on('close', function (code, signal) {
         console.log('close ' + code + "   " + signal);
     });
@@ -67,6 +70,8 @@ function start_sim_p(sim_script) {
         }
 
     });
+    sim_p.send(["home", homematic])
+
 }
 
 
@@ -243,20 +248,17 @@ var sim = {
                 })
             }
         });
-        $(document).css('cursor', 'pointer' );
+
     },
     simulate: function () {
         if (!SGI.sim_run) {
-
-
             try {
-
                 sim.script = js_beautify(Compiler.make_prg(sim.run_type).toString());
-                start_sim_p(sim.script);
+                start_sim_p();
+
                 $(document).bind("new_data", function (event, data) {
                     if(SGI.sim_run){
-                        sim_p.send(["new_data",data]);
-                        console.log(data)
+                        sim_p.send(["new_data",data])
                     }
 
                 });
@@ -278,13 +280,6 @@ var sim = {
                 $("#" + Compiler.last_fbs).addClass("error_fbs");
                 $("#" + Compiler.last_fbs).effect("bounce");
             }
-
-
-
-
-
-
-
         }
     }
 };

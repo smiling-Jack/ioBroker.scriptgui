@@ -309,9 +309,9 @@ var Compiler = {
                 Compiler.block += "var " + this.mbs_id + " = 1;";
                 Compiler.block += "function  " + this.mbs_id + "_in1 (data){";
                 Compiler.block += "if("+ this.mbs_id +" > "+ parseInt(PRG._scope.mbs[nr].opt1) +"){";
-                Compiler.block +=    this.mbs_id + " ++;";
                 Compiler.block += targets;
                 Compiler.block +=     "}";
+                Compiler.block +=    this.mbs_id + " ++;";
                 Compiler.block +=  "}";
 
                 Compiler.block += "function  " + this.mbs_id + "_in2 (data){";
@@ -342,9 +342,9 @@ var Compiler = {
 
 
                 Compiler.block += "function  " + this.mbs_id + "_in1 (data){";
-                Compiler.block +=   "if("+ this.mbs_id +"_r){";
                 Compiler.block +=      this.mbs_id + "_n ++;";
-                Compiler.block +=       "if("+ this.mbs_id +"_n == "+ parseFloat(PRG._scope.mbs[nr].opt1)+" ){";
+                Compiler.block +=   "if("+ this.mbs_id +"_r){"
+                Compiler.block +=       "if("+ this.mbs_id +"_n == "+ parseFloat(PRG._scope.mbs[nr].opt2)+" ){";
                 Compiler.block +=           targets;
                 Compiler.block +=           "clearTimeout(" + this.mbs_id + "_t);";
                 Compiler.block +=           this.mbs_id +"_n = 0;";

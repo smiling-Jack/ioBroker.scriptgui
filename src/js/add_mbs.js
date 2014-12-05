@@ -590,12 +590,12 @@ SGI = $.extend(true, SGI, {
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         if (data.type == "block_tt") {
 
-            if (data.opt1 == "") {
-                data.opt1 = "00:00";
-            }
-            if (data.opt2 == "") {
-                data.opt2 = "00:00";
-            }
+            //if (data.opt1 == "") {
+            //    data.opt1 = "00:00";
+            //}
+            //if (data.opt2 == "") {
+            //    data.opt2 = "00:00";
+            //}
 
             scope.append($("#prg_panel"), '\
             <div id="' + data.mbs_id + '" ng-style="mbs[' + nr + '].style" data-nr="' + nr + '" class="mbs_element mbs_element_simpel mbs_element_control ">\

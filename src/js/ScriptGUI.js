@@ -444,7 +444,7 @@ var SGI = {
 
         // Auto Connect
         if (scope.setup.auto_con){
-            if(scope.setup.con_type == "onlien"){
+            if(scope.setup.con_type == "online"){
                 SGI.online(scope.setup.last_con)
             }
             if(scope.setup.con_type == "offline"){
@@ -2462,7 +2462,7 @@ var SGI = {
                     $this_width = $(params.el).width();
                 },
                 drag: function (params) {
-                    console.log($(params.el).hasClass("fbs_element_onborder"))
+
                     if ($(params.el).hasClass("fbs_element_onborder")) {
                         var $this_left = params.pos[0];
                         var $this_right = codebox_w - params.pos[0] - $this_width;
@@ -2569,7 +2569,6 @@ var SGI = {
 
                 start: function () {
                     $(".dot").remove();
-                    console.log(SGI.plumb_inst.inst_mbs)
                     SGI.plumb_inst.inst_mbs.draggable({grid: [10, 10]});
                 },
                 drag: function (params) {
