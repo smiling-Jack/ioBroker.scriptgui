@@ -946,14 +946,14 @@ body {
 #play_overlay {
     height: 100%;
     width: 100%;
-    background-color: transparent;
+    background-color: red;
     position: absolute;
     top: 0;
     left: 0;
-    opacity: 0.5;
+    opacity: 0.65;
     z-index: 2;
     -webkit-animation: blinks 1.5s infinite linear;
-    border-radius: 6px;
+    border-radius: 16px;
 }
 
 @-webkit-keyframes blinks {
@@ -1910,8 +1910,8 @@ cursor: pointer;
 }
 
 .error_fbs {
-    outline: 5px solid red;
-    outline-offset: 6px;
+border: 2px solid red !important;
+
 }
 
 .inp_round {

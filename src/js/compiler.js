@@ -401,9 +401,9 @@ var Compiler = {
             var all_in_box = this[0];
             Compiler.script += '//' + PRG._scope.mbs[nr].titel + '\n';
             Compiler.script += 'function ' + idx + '(data){ ';
-            if (sim == "step") {
-                Compiler.script += idx + '_0();';
-            }
+//            if (sim == "step") {
+//                Compiler.script += idx + '_0();';
+//            }
             $.each(all_in_box, function (n) {
 
                 var nr = this.fbs_id.split("_").pop();
@@ -414,14 +414,14 @@ var Compiler = {
 
 
                 Compiler.last_fbs = this.fbs_id;
-                if (sim == "step") {
-                    if (this.output[0]) {
-                        Compiler.script += 'var ' + this.output[0].ausgang + ';';
-                        output = this.output[0].ausgang
-                    }
-
-                    Compiler.script += 'function ' + idx + "_" + n + '(){'
-                }
+//                if (sim == "step") {
+//                    if (this.output[0]) {
+//                        Compiler.script += 'var ' + this.output[0].ausgang + ';';
+//                        output = this.output[0].ausgang
+//                    }
+//
+//                    Compiler.script += 'function ' + idx + "_" + n + '(){'
+//                }
                 if (sim != false) {
                     Compiler.script += '\n\n// xxxxxxxxxxxxxxxxxxxx ' + this.fbs_id + ' xxxxxxxxxxxxxxxxxxxx \n';
                 }
@@ -983,17 +983,17 @@ var Compiler = {
                 }
 
                 if (sim == "step") {
-                    var call = "";
-                    if (this.output[0]) {
-                        var reg = new RegExp("[var " + this.output[0].ausgang + "]+$");
-                        Compiler.script = Compiler.script.replace(reg, this.output[0].ausgang)
-                    }
-                    if (all_in_box.length > (n + 1)) {
-                        call = 'setTimeout(function(){ ' + idx + "_" + (n + 1) + '()},' + 1000  + ');'
-                    }
+//                    var call = "";
+//                    if (this.output[0]) {
+//                        var reg = new RegExp("[var " + this.output[0].ausgang + "]+$");
+//                        Compiler.script = Compiler.script.replace(reg, this.output[0].ausgang)
+////                    }
+//                    if (all_in_box.length > (n + 1)) {
+//                        call = 'setTimeout(function(){ ' + idx + "_" + (n + 1) + '()},' + 1000  + ');'
+//                    }
 
-                    Compiler.script += 'step_fbs_highlight(' + this.fbs_id + ');';
-                    Compiler.script += call + '}';
+                    Compiler.script += 'step_fbs_highlight("' + this.fbs_id + '");';
+//                    Compiler.script += call + '}';
                 }
             });
             Compiler.script += '};\n';

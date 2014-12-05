@@ -1,23 +1,20 @@
 /**
  * Created by jack on 29.11.2014.
  */
-
+var y = 0
 var stacktrace = require('stack-trace');
 var vm = require('vm');
 
 process.on("uncaughtException", function (e) {
-    process.send(e.stack);
-    process.exit(9999)
+    process.send(["script_err", e.stack]);
+    process.exit(9990)
 });
 
 
-//
-function logger(data) {
-    process.send(data)
-}
+
 
 var sim = {
-    run_type : process.argv[3],
+    run_type: process.argv[3],
     regaObjects: [],
     regaIndex: [],
     datapoints: [],
@@ -29,7 +26,6 @@ var sim = {
 };
 
 
-//todo make vm
 
 var script = process.argv[2];
 
@@ -43,6 +39,7 @@ process.on('message', function (data) {
             run(script);
         } catch (err) {
             process.send(["script_err", err.stack]);
+            process.exit(9999)
         }
     } else if (data[0] == "exit") {
         process.exit(1000)
@@ -53,9 +50,15 @@ process.on('message', function (data) {
 function run(script) {
 
 
-
     function step_fbs_highlight(id) {
-        process.send(["step_fbs_highlight", id]);
+        var d = (new Date).valueOf() + 1000;
+
+        process.send("hi");
+
+        while(d > (new Date).valueOf()){
+
+        };
+
     }
 
     function patternMatching(event, pattern) {
@@ -772,39 +775,39 @@ function run(script) {
 
     function subscribe(pattern, callbackOrId, value, mbs) {
 
-            if (sim.run_type == "trigger" || sim.run_type == "hotrun") {
-                if (typeof pattern != "object") {
-                    pattern = {id: pattern, change: "ne"};
-                }
-                // enable calls like: on("ADAPTER.LIGHT.SWITCH.STATE", "ADAPTER.LIGHT.RELAY.STATE"); // Set state of SWITCH to RELAY if state of SWITCH changes
-                // and
-                // on("ADAPTER.LIGHT.SWITCH.STATE", "ADAPTER.LIGHT.RELAY.STATE", 1); // Set 1 to RELAY if state of SWITCH changes
-                var callb = null;
-                if (typeof callbackOrId != "function") {
-                    if (typeof value != 'undefined') {
-                        callb = function (obj) {
-                            setState(callbackOrId, value);
-                        }
-                    } else {
-                        callb = function (obj) {
-                            setState(callbackOrId, getState(obj.id));
-                        }
+        if (sim.run_type == "trigger" || sim.run_type == "hotrun") {
+            if (typeof pattern != "object") {
+                pattern = {id: pattern, change: "ne"};
+            }
+            // enable calls like: on("ADAPTER.LIGHT.SWITCH.STATE", "ADAPTER.LIGHT.RELAY.STATE"); // Set state of SWITCH to RELAY if state of SWITCH changes
+            // and
+            // on("ADAPTER.LIGHT.SWITCH.STATE", "ADAPTER.LIGHT.RELAY.STATE", 1); // Set 1 to RELAY if state of SWITCH changes
+            var callb = null;
+            if (typeof callbackOrId != "function") {
+                if (typeof value != 'undefined') {
+                    callb = function (obj) {
+                        setState(callbackOrId, value);
                     }
                 } else {
-                    callb = callbackOrId;
+                    callb = function (obj) {
+                        setState(callbackOrId, getState(obj.id));
+                    }
                 }
-                var mbs_nr;
-                if (Array.isArray(value)) {
-                    mbs_nr = value[0];
-                } else {
-                    mbs_nr = mbs[0];
-                }
-                sim.subscribers.push({
-                    pattern: pattern,
-                    callback: callb,
-                    mbs_nr: mbs_nr
-                });
+            } else {
+                callb = callbackOrId;
             }
+            var mbs_nr;
+            if (Array.isArray(value)) {
+                mbs_nr = value[0];
+            } else {
+                mbs_nr = mbs[0];
+            }
+            sim.subscribers.push({
+                pattern: pattern,
+                callback: callb,
+                mbs_nr: mbs_nr
+            });
+        }
 
     }
 
@@ -826,138 +829,133 @@ function run(script) {
     function simout(key, data) {
         process.send(["simout", key, data]);
     }
-
-    try {
-        log("start");
-
+    log("start");
+//    vm.runInThisContext(script, "s_engine")
         eval(script);
-        process.on('message', function (data) {
-            if (data[0] == "trigger") {
-                eval(data[1])
+    process.on('message', function (data) {
+        if (data[0] == "trigger") {
+            eval(data[1])
 
-            } else if (data[0] == "new_data") {
-                var obj = [data[1].id, data[1].value, data[1].timestamp, data[1].certain, data[1].lasttimestamp];
+        } else if (data[0] == "new_data") {
+            var obj = [data[1].id, data[1].value, data[1].timestamp, data[1].certain, data[1].lasttimestamp];
 
-                var o = {
-                    Value: data[1].value,
-                    Timestamp: data[1].timestamp,
-                    Certain: data[1].certain
-                };
-
-
-                if (!obj) {
-                    return;
-                }
-                var id = obj[0];
-
-                var name,
-                    parent,
-                    channelName,
-                    deviceName,
-                    channelType,
-                    deviceType,
-                    rooms = [],
-                    funcs = [],
-                    roomNames = [],
-                    funcNames = [];
+            var o = {
+                Value: data[1].value,
+                Timestamp: data[1].timestamp,
+                Certain: data[1].certain
+            };
 
 
-                if (sim.regaObjects[id]) {
-                    name = sim.regaObjects[id].Name;
-                    parent = sim.regaObjects[id].Parent;
-                }
+            if (!obj) {
+                return;
+            }
+            var id = obj[0];
 
-                if (parent) {
+            var name,
+                parent,
+                channelName,
+                deviceName,
+                channelType,
+                deviceType,
+                rooms = [],
+                funcs = [],
+                roomNames = [],
+                funcNames = [];
 
-                    channelName = sim.regaObjects[parent].Name;
-                    channelType = sim.regaObjects[parent].HssType;
 
-                    // Räume finden
-                    var roomIndex = sim.regaIndex.ENUM_ROOMS;
-                    for (var i = 0; i < roomIndex.length; i++) {
-                        var room = roomIndex[i];
-                        if (sim.regaObjects[room].Channels.indexOf(parent) != -1) {
-                            rooms.push(room);
-                            roomNames.push(sim.regaObjects[room].Name);
-                        }
+            if (sim.regaObjects[id]) {
+                name = sim.regaObjects[id].Name;
+                parent = sim.regaObjects[id].Parent;
+            }
+
+            if (parent) {
+
+                channelName = sim.regaObjects[parent].Name;
+                channelType = sim.regaObjects[parent].HssType;
+
+                // Räume finden
+                var roomIndex = sim.regaIndex.ENUM_ROOMS;
+                for (var i = 0; i < roomIndex.length; i++) {
+                    var room = roomIndex[i];
+                    if (sim.regaObjects[room].Channels.indexOf(parent) != -1) {
+                        rooms.push(room);
+                        roomNames.push(sim.regaObjects[room].Name);
                     }
-
-                    // Gewerke finden
-                    var funcIndex = sim.regaIndex.ENUM_FUNCTIONS;
-                    for (var i = 0; i < funcIndex.length; i++) {
-                        var func = funcIndex[i];
-                        if (sim.regaObjects[func].Channels.indexOf(parent) != -1) {
-                            funcs.push(func);
-                            funcNames.push(sim.regaObjects[func].Name);
-                        }
-                    }
-
-                    // Gerät
-                    var device = sim.regaObjects[parent].Parent;
-                    deviceName = (sim.regaObjects[device] ? sim.regaObjects[device].Name : undefined);
-                    deviceType = (sim.regaObjects[device] ? sim.regaObjects[device].HssType : undefined);
-
                 }
 
-
-                var oldObj = sim.datapoints[id];
-
-                if (!oldObj) {
-                    oldObj = [];
+                // Gewerke finden
+                var funcIndex = sim.regaIndex.ENUM_FUNCTIONS;
+                for (var i = 0; i < funcIndex.length; i++) {
+                    var func = funcIndex[i];
+                    if (sim.regaObjects[func].Channels.indexOf(parent) != -1) {
+                        funcs.push(func);
+                        funcNames.push(sim.regaObjects[func].Name);
+                    }
                 }
 
-                sim.datapoints[id] = [obj[1], obj[2], obj[3], obj[4]];
+                // Gerät
+                var device = sim.regaObjects[parent].Parent;
+                deviceName = (sim.regaObjects[device] ? sim.regaObjects[device].Name : undefined);
+                deviceType = (sim.regaObjects[device] ? sim.regaObjects[device].HssType : undefined);
 
-                var eventObj = {
-                    id: id,
-                    name: name,
-                    newState: {
-                        value: obj[1],
-                        timestamp: obj[2],
-                        ack: obj[3],
-                        lastchange: obj[4]
-                    },
-                    oldState: {
-                        value: oldObj[0],
-                        timestamp: oldObj[1],
-                        ack: oldObj[2],
-                        lastchange: oldObj[3]
-                    },
-                    channel: {
-                        id: parent,
-                        name: channelName,
-                        type: channelType,
-                        funcIds: funcs,
-                        roomIds: rooms,
-                        funcNames: funcNames,
-                        roomNames: roomNames
-                    },
-                    device: {
-                        id: device,
-                        name: deviceName,
-                        type: deviceType
-                    }
-
-                };
+            }
 
 
-                var length = sim.subscribers.length;
-                for (var i = 0; i < length; i++) {
-                    //
-                    if (patternMatching(eventObj, sim.subscribers[i].pattern)) {
-                        //$("#" + scope.mbs[sim.subscribers[i].mbs_nr].mbs_id).children().effect("highlight", {color: "green"}, 800);
-                        sim.subscribers[i].callback(eventObj);
+            var oldObj = sim.datapoints[id];
 
-                    }
+            if (!oldObj) {
+                oldObj = [];
+            }
+
+            sim.datapoints[id] = [obj[1], obj[2], obj[3], obj[4]];
+
+            var eventObj = {
+                id: id,
+                name: name,
+                newState: {
+                    value: obj[1],
+                    timestamp: obj[2],
+                    ack: obj[3],
+                    lastchange: obj[4]
+                },
+                oldState: {
+                    value: oldObj[0],
+                    timestamp: oldObj[1],
+                    ack: oldObj[2],
+                    lastchange: oldObj[3]
+                },
+                channel: {
+                    id: parent,
+                    name: channelName,
+                    type: channelType,
+                    funcIds: funcs,
+                    roomIds: rooms,
+                    funcNames: funcNames,
+                    roomNames: roomNames
+                },
+                device: {
+                    id: device,
+                    name: deviceName,
+                    type: deviceType
+                }
+
+            };
+
+
+            var length = sim.subscribers.length;
+            for (var i = 0; i < length; i++) {
+                //
+                if (patternMatching(eventObj, sim.subscribers[i].pattern)) {
+                    //$("#" + scope.mbs[sim.subscribers[i].mbs_nr].mbs_id).children().effect("highlight", {color: "green"}, 800);
+                    sim.subscribers[i].callback(eventObj);
+
                 }
             }
-        });
+        }
+    });
 
+    process.send(["running"]);
 
-        process.send(["running"]);
-    } catch (err) {
-        process.send(["script_err", err.stack]);
-    }
 }
 
 

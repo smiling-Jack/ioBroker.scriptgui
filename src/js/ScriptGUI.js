@@ -311,6 +311,7 @@ var SGI = {
             $("#main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
         }
 
+        console.log((new Date).valueOf())
 
         //      Make element draggable
         var active_toolbox;
