@@ -34,7 +34,7 @@ jQuery.extend(true, SGI, {
         $("#img_set_script_engine").hide();
         $("#img_con_state").attr("title", "");
 
-        $(".run_type, #img_set_script_play ,#img_set_script_stop").button({disabled:true});
+        $(".run_type,#run_step, #img_set_script_play ,#img_set_script_stop").button({disabled:true});
         $(".run_type").prop("checked", false);
         $("#run_type1").prop("checked", true);
         $(".run_type").button("refresh");
@@ -68,7 +68,7 @@ jQuery.extend(true, SGI, {
                     $("#btn_con_offline").parent().addClass("div_img_glass_on");
                     $("#btn_con_online").parent().removeClass("div_img_glass_on");
                     SGI.con_data = true;
-                    $("#run_type0 , #run_type1, #img_set_script_play ,#img_set_script_stop").button({disabled:false});
+                    $("#run_step, #run_type1, #img_set_script_play ,#img_set_script_stop").button({disabled:false});
                 } else {
                     alert(err)
                     $("#img_con_state").attr("src", "img/icon/flag-red.png");
@@ -189,7 +189,7 @@ jQuery.extend(true, SGI, {
                                     SGI.con_data = true;
                                     $("#img_con_state").attr("src", "img/icon/flag-green.png");
 
-                                    $(".run_type, #img_set_script_play ,#img_set_script_stop").button({disabled:false});
+                                    $(".run_type,#run_step, #img_set_script_play ,#img_set_script_stop").button({disabled:false});
 
 
                                 });

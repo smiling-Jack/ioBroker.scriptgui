@@ -47,6 +47,7 @@
     <script type="text/javascript" src="js/lib/jquery.numberMask.js"></script>
     <script type="text/javascript" src="js/lib/jquery.autosize.min.js"></script>
     <script type="text/javascript" src="js/lib/loStorage.js"></script>
+    <script type="text/javascript" src="js/lib/jquery.animate-shadow-min.js"></script>
 
     <script type="text/javascript" src="js/lib/fm/file_manager.js"></script>
     <script type="text/javascript" src="js/hmSelect_new.js"></script>
@@ -396,8 +397,9 @@
                  title="Stop" disabled></button>
             <button class="translate" id="clear_force">Force entfernen</button>
         </div>
+
         <div id="run_type" style="margin-top: 5px; width: 100%; margin-left: 10px;">
-            <input class="run_type" type="radio" id="run_type0" disabled data-info="step" name="radio">                   <label style="width: 81px" id="lba_run_type0" for="run_type0">Step</label>
+            <input class="step" type="checkbox" id="run_step" disabled data-info="step" name="step">                   <label style="width: 81px" id="lba_run_step" for="run_step">Step</label>
             <input class="run_type" type="radio" id="run_type1" disabled data-info="sim" name="radio"checked="checked">  <label style="width: 81px" id="lba_run_type1" for="run_type1">Sim</label>
             <input class="run_type" type="radio" id="run_type2" disabled data-info="trigger" name="radio">                  <label style="width: 81px" id="lba_run_type2" for="run_type2">Trigger</label>
             <input class="run_type" type="radio" id="run_type3" disabled data-info="hotrun" name="radio">          <label style="width: 81px" id="lba_run_type3" for="run_type3">Hotrun</label>

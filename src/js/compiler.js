@@ -1,8 +1,8 @@
 var Compiler = {
     last_fbs: "",
     script: "",
-    make_prg: function (sim) {
-
+    make_prg: function (run_type, step) {
+console.log(step)
         Compiler.trigger = "// Trigger\n";
         Compiler.obj = "\n// CCU.IO Objekte\n";
         Compiler.timeout = "\n// Timeout Variablen\n";
@@ -27,8 +27,8 @@ var Compiler = {
             var targets = "";
 
 
-            if (sim == "trigger" || sim == "hotrun") {
-                mbs_nr = ", [" + nr + "]";
+            if (run_type == "trigger" || run_type == "hotrun") {
+                mbs_nr = ", ['" + this.mbs_id + "']";
             } else {
                 mbs_nr = "";
             }
@@ -211,7 +211,17 @@ var Compiler = {
 
             var nr = this.mbs_id.split("_").pop();
 
+            var highlight_in = "";
+            var highlight_reset = "";
+
             var targets = "";
+            if (step == "true") {
+                highlight_in = "step_mbs_highlight_in('"+this.mbs_id+"');";
+                highlight_reset = "step_mbs_highlight_reset('"+this.mbs_id+"');";
+                targets= "step_mbs_highlight_out('"+this.mbs_id+"');";
+            }
+
+
             $.each(this.target, function () {
                 targets += this + "(data);";
             });
@@ -221,15 +231,18 @@ var Compiler = {
                 Compiler.timeout += "var " + this.mbs_id + " = [] ;";
                 if (PRG._scope.mbs[nr].wert == true) {
                     Compiler.timeout += "function  " + this.mbs_id + "_in1 (data){";
+                    Compiler.timeout += highlight_in;
                     Compiler.timeout += "clearTimeout(" + this.mbs_id + ".pop());";
                     Compiler.timeout += this.mbs_id + ".push(setTimeout(function(){" + targets + "}," + parseFloat(PRG._scope.mbs[nr].val) * 1000 + "))";
                     Compiler.timeout += "}";
                 } else {
                     Compiler.timeout += "function  " + this.mbs_id + "_in1 (data){";
+                    Compiler.timeout += highlight_in;
                     Compiler.timeout += this.mbs_id + ".push(setTimeout(function(){" + targets + "}," + parseFloat(PRG._scope.mbs[nr].val) * 1000 + "))";
                     Compiler.timeout += "}";
                 }
                 Compiler.timeout += "function  " + this.mbs_id + "_in2 (data){";
+                Compiler.timeout += highlight_reset;
                 Compiler.timeout += "while (" + this.mbs_id + ".length > 0 ) clearTimeout(" + this.mbs_id + ".pop());";
                 Compiler.timeout += "}";
             }
@@ -238,11 +251,13 @@ var Compiler = {
 
                 Compiler.timeout += "var " + this.mbs_id + " ;";
                 Compiler.timeout += "function  " + this.mbs_id + "_in1 (data){";
+                Compiler.timeout += highlight_in;;
                 Compiler.timeout += "clearInterval(" + this.mbs_id + " );";
                 Compiler.timeout += this.mbs_id + " = setInterval(function(){" + targets + "}," + parseFloat(PRG._scope.mbs[nr].val) * 1000 + ")";
                 Compiler.timeout += "}";
 
                 Compiler.timeout += "function  " + this.mbs_id + "_in2 (data){";
+                Compiler.timeout += highlight_reset;
                 Compiler.timeout += "clearInterval(" + this.mbs_id + " );";
                 Compiler.timeout += "}";
             }
@@ -260,12 +275,14 @@ var Compiler = {
                 Compiler.timeout += "}";
 
                 Compiler.timeout += "function  " + this.mbs_id + "_in1 (data){";
+                Compiler.timeout += highlight_in;
                 Compiler.timeout += this.mbs_id + "= 0;";
                 Compiler.timeout += "clearTimeout(" + this.mbs_id + "_delay);";
                 Compiler.timeout += this.mbs_id + "_loop(data)";
                 Compiler.timeout += "}";
 
                 Compiler.timeout += "function  " + this.mbs_id + "_in2 (data){";
+                Compiler.timeout += highlight_reset;
                 Compiler.timeout += "clearInterval(" + this.mbs_id + "_delay );";
                 Compiler.timeout += this.mbs_id + "= " + parseInt(PRG._scope.mbs[nr].wert) + ";";
                 Compiler.timeout += "}";
@@ -276,6 +293,7 @@ var Compiler = {
                 Compiler.block += "var " + this.mbs_id + " = false ;";
                 Compiler.block += "var " + this.mbs_id + "_t;";
                 Compiler.block += "function  " + this.mbs_id + "_in1 (data){";
+                Compiler.block += highlight_in;
                 Compiler.block += "if(! "+ this.mbs_id +"){";
                 Compiler.block +=     this.mbs_id + "_t = setTimeout(function(){" + this.mbs_id +" = false}," + parseFloat(PRG._scope.mbs[nr].opt1)+");";
                 Compiler.block += this.mbs_id +" = true;";
@@ -284,6 +302,7 @@ var Compiler = {
                 Compiler.block +=  "}";
 
                 Compiler.block += "function  " + this.mbs_id + "_in2 (data){";
+                Compiler.block += highlight_reset;
                 Compiler.block += "clearTimeout(" + this.mbs_id + "_t);";
                 Compiler.block += this.mbs_id +" = false;";
                 Compiler.block += "}";
@@ -293,6 +312,7 @@ var Compiler = {
 
                 Compiler.block += "var " + this.mbs_id + " = 1;";
                 Compiler.block += "function  " + this.mbs_id + "_in1 (data){";
+                Compiler.block += highlight_in;
                 Compiler.block += "if("+ this.mbs_id +" < "+ parseInt(PRG._scope.mbs[nr].opt1)+"){";
                 Compiler.block +=    this.mbs_id + " ++;";
                 Compiler.block += targets;
@@ -300,6 +320,7 @@ var Compiler = {
                 Compiler.block +=  "}";
 
                 Compiler.block += "function  " + this.mbs_id + "_in2 (data){";
+                Compiler.block += highlight_reset;
                 Compiler.block += this.mbs_id +" = 1;";
                 Compiler.block += "}";
             }
@@ -308,6 +329,7 @@ var Compiler = {
 
                 Compiler.block += "var " + this.mbs_id + " = 1;";
                 Compiler.block += "function  " + this.mbs_id + "_in1 (data){";
+                Compiler.block += highlight_in;
                 Compiler.block += "if("+ this.mbs_id +" > "+ parseInt(PRG._scope.mbs[nr].opt1) +"){";
                 Compiler.block += targets;
                 Compiler.block +=     "}";
@@ -315,6 +337,7 @@ var Compiler = {
                 Compiler.block +=  "}";
 
                 Compiler.block += "function  " + this.mbs_id + "_in2 (data){";
+                Compiler.block += highlight_reset;
                 Compiler.block += this.mbs_id +" = 1;";
                 Compiler.block += "}";
             }
@@ -323,6 +346,7 @@ var Compiler = {
 
                 Compiler.block += "var " + this.mbs_id + " = 1;";
                 Compiler.block += "function  " + this.mbs_id + "_in1 (data){";
+                Compiler.block += highlight_in;
                 Compiler.block += "if("+ this.mbs_id +" == "+ parseInt(PRG._scope.mbs[nr].opt1) +"){";
                 Compiler.block +=    this.mbs_id + " = 1;";
                 Compiler.block += targets;
@@ -330,6 +354,7 @@ var Compiler = {
                 Compiler.block +=  "}";
 
                 Compiler.block += "function  " + this.mbs_id + "_in2 (data){";
+                Compiler.block += highlight_reset;
                 Compiler.block += this.mbs_id +" = 1;";
                 Compiler.block += "}";
             }
@@ -342,6 +367,7 @@ var Compiler = {
 
 
                 Compiler.block += "function  " + this.mbs_id + "_in1 (data){";
+                Compiler.block += highlight_in;
                 Compiler.block +=      this.mbs_id + "_n ++;";
                 Compiler.block +=   "if("+ this.mbs_id +"_r){"
                 Compiler.block +=       "if("+ this.mbs_id +"_n == "+ parseFloat(PRG._scope.mbs[nr].opt2)+" ){";
@@ -357,6 +383,7 @@ var Compiler = {
                 Compiler.block +=  "}";
 
                 Compiler.block += "function  " + this.mbs_id + "_in2 (data){";
+                Compiler.block += highlight_reset;
                 Compiler.block += "clearTimeout(" + this.mbs_id + "_t);";
                 Compiler.block += this.mbs_id +"_n = 0;";
                 Compiler.block += this.mbs_id +"_r = false;";
@@ -368,6 +395,7 @@ var Compiler = {
 //                abfarge ob Tegeswechsel
                 if(PRG._scope.mbs[nr].opt1 < PRG._scope.mbs[nr].opt2){
                     Compiler.block += "function  " + this.mbs_id + "_in1 (data){";
+                    Compiler.block += highlight_in;
                     Compiler.block += "var d = new Date;";
                     Compiler.block += "var ts = ('0' + d.getHours()).slice(-2) + ':'+ ('0' + (d.getMinutes())).slice(-2);";
                     Compiler.block +=    "if(ts > \""+PRG._scope.mbs[nr].opt1.toString()+"\" && ts < \""+PRG._scope.mbs[nr].opt2.toString()+"\"){";
@@ -376,6 +404,7 @@ var Compiler = {
                     Compiler.block += "}";
                 }else{
                     Compiler.block += "function  " + this.mbs_id + "_in1 (data){";
+                    Compiler.block += highlight_in;
                     Compiler.block += "var d = new Date;";
                     Compiler.block += "var ts = ('0' + d.getHours()).slice(-2) + ':'+ ('0' + (d.getMinutes())).slice(-2);";
                     Compiler.block +=    "if(ts < \""+PRG._scope.mbs[nr].opt1.toString()+"\" && ts > \""+PRG._scope.mbs[nr].opt2.toString()+"\"){";
@@ -422,7 +451,7 @@ var Compiler = {
 //
 //                    Compiler.script += 'function ' + idx + "_" + n + '(){'
 //                }
-                if (sim != false) {
+                if (run_type != false) {
                     Compiler.script += '\n\n// xxxxxxxxxxxxxxxxxxxx ' + this.fbs_id + ' xxxxxxxxxxxxxxxxxxxx \n';
                 }
                 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -948,12 +977,12 @@ var Compiler = {
 
                 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-                if (sim != false && this.output.length > 0) {
+                if (run_type != false && this.output.length > 0) {
                     $.each(this.output, function () {
                         Compiler.script += 'simout("' + this.ausgang + '",' + this.ausgang + ');';
                     });
                 }
-                if (sim != false && this.output.length > 0 && this.force != undefined) {
+                if (run_type != false && this.output.length > 0 && this.force != undefined) {
                     var force = this.force;
                     $.each(this.output, function () {
 
@@ -974,7 +1003,7 @@ var Compiler = {
                         }
                     });
                 }
-                if (sim != false && this.output.length > 0 && ( this.force == undefined || this.force == NaN  )) {
+                if (run_type != false && this.output.length > 0 && ( this.force == undefined || this.force == NaN  )) {
                     $.each(this.output, function () {
                         Compiler.force += 'var ' + this.ausgang + '_force = undefined ;';
                         Compiler.script += this.ausgang + ' = ' + this.ausgang + '_force || ' + this.ausgang + ';';
@@ -982,18 +1011,10 @@ var Compiler = {
                     });
                 }
 
-                if (sim == "step") {
-//                    var call = "";
-//                    if (this.output[0]) {
-//                        var reg = new RegExp("[var " + this.output[0].ausgang + "]+$");
-//                        Compiler.script = Compiler.script.replace(reg, this.output[0].ausgang)
-////                    }
-//                    if (all_in_box.length > (n + 1)) {
-//                        call = 'setTimeout(function(){ ' + idx + "_" + (n + 1) + '()},' + 1000  + ');'
-//                    }
+                if (step == "true") {
 
                     Compiler.script += 'step_fbs_highlight("' + this.fbs_id + '");';
-//                    Compiler.script += call + '}';
+
                 }
             });
             Compiler.script += '};\n';

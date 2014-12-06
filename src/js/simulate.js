@@ -59,24 +59,29 @@ function start_sim_p() {
                 sim.script_err(data[1])
             }else if(data[0] == "running"){
                 sim.running();
+            }else if(data[0] == "trigger_highlight"){
+                sim.trigger_highlight(data[1]);
+            }else if(data[0] == "step_fbs_highlight"){
+                sim.step_fbs_highlight(data[1]);
+            }else if(data[0] == "step_mbs_highlight_in"){
+                sim.step_mbs_highlight_in(data[1]);
+            }else if(data[0] == "step_mbs_highlight_out"){
+                sim.step_mbs_highlight_out(data[1]);
+            }else if(data[0] == "step_mbs_highlight_reset"){
+                sim.step_mbs_highlight_reset(data[1]);
             }  else {
                 sim.script_err(data)
-
-
             }
-
         } else {
             console.log(data);
         }
-
     });
     sim_p.send(["home", homematic])
-
 }
-
 
 var sim = {
     run_type: "sim",
+    step: "false",
     script:"",
     script_err: function (err) {
 
@@ -130,6 +135,7 @@ var sim = {
     },
     simout: function (key, data) {
 
+        //$("#"+key.replace("_out","")).stop().animate({boxShadow: '0 0 30px #f00'},400).animate({boxShadow: '0 0 0px transparent'},400);
         var nr = key.split("_")[1];
 
         var codebox = $("#" + scope.fbs[nr]["parent"]).parent().attr("id");
@@ -163,10 +169,10 @@ var sim = {
             data = _data
         }
 
-        $.each(cons, function () {
-            var id = this.id;
-            this.removeOverlay("sim");
-            this.addOverlay(
+
+        function add_overlay (_this, data, id){
+
+            _this.addOverlay(
                 ["Custom", {
                     create: function () {
                         return $('<div>\
@@ -179,20 +185,53 @@ var sim = {
 
             $("#overlay_" + id)
                 .mouseenter(function () {
-                    $(this).addClass("overlay_expand")
+                    $(_this).addClass("overlay_expand")
                         .parent().css({"z-index": 2000});
                 })
                 .mouseleave(function () {
-                    $(this).removeClass("overlay_expand")
+                    $(_this).removeClass("overlay_expand")
                         .parent().css({"z-index": 1000});
                 });
+        }
+
+
+        $.each(cons, function () {
+            var id = this.id;
+            this.removeOverlay("sim");
+            var _this = this
+            if(sim.step == "true"){
+                setTimeout(function(){
+                    add_overlay(_this, data, id)
+                },500);
+
+            }else{
+                add_overlay(_this, data, id)
+            }
+
         });
     },
     log: function (data) {
         $("#sim_output").prepend("<tr><td style='width: 100px'>" + sim.gettime_m() + "</td><td>" + data + "</td></tr>");
     },
+    trigger_highlight: function (id) {
+        console.log(id)
+        $("#"+id).stop().animate({boxShadow: '0 0 30px 10px #0f0'},400).animate({boxShadow: '0 0 0px 0px transparent'},400);
+    },
     step_fbs_highlight: function (id) {
-        $(id).find(".fbs_shadow").effect("highlight", {color: "green"}, 800);
+        console.log(id)
+        $("#"+id).stop().animate({boxShadow: '0 0 30px 10px #f00'},400).animate({boxShadow: '0 0 0px 0px transparent'},400);
+    },
+    step_mbs_highlight_in: function (id) {
+        console.log(id)
+        $("#"+id).stop().animate({boxShadow: '0 0 30px 10px #00f'},300).animate({boxShadow: '0 0 0px 0px transparent'},300);
+    },
+    step_mbs_highlight_out: function (id) {
+        console.log(id)
+        $("#"+id).stop().animate({boxShadow: '0 0 30px 10px #f00'},300).animate({boxShadow: '0 0 0px 0px transparent'},300);
+    },
+    step_mbs_highlight_reset: function (id) {
+        console.log(id)
+        $("#"+id).stop().animate({boxShadow: '0 0 30px 10px #ff0'},400).animate({boxShadow: '0 0 0px 0px transparent'},400);
     },
     logger: function (data) {
         console.log("logger-------------------------------");
@@ -249,10 +288,46 @@ var sim = {
         });
 
     },
+    running: function(){
+        console.log("running")
+        SGI.sim_run = true;
+        var scope = angular.element($('body')).scope();
+        var that = this;
+        $(".fbs, .mbs").hide();
+        $("#img_set_script_play").attr("src", "img/icon/playing.png");
+        $(".btn_min_trigger").attr("src", "img/icon/start.png");
+        $(".btn_min_trigger").css({
+            height: "15px",
+            top: 0,
+            width: "15px"
+        });
+
+        $("#prg_panel").find("select,button, input:not(.force_input)").each(function () {
+            $(this).attr({
+                'disabled': 'disabled'
+            });
+        });
+        $(".btn_min_trigger").bind("click", function () {
+            if (SGI.sim_run) {
+
+                var trigger = $(this).parent().parent().attr("id");
+                $.each(PRG.struck.trigger, function () {
+                    if (this.mbs_id == trigger) {
+                        $.each(this.target, function () {
+                            sim_p.send(["trigger", this + "(" + JSON.stringify(SGI.start_data.valueOf()) + ")"]);
+                        });
+                        return false
+                    }
+                })
+            }
+        });
+
+    },
     simulate: function () {
         if (!SGI.sim_run) {
             try {
-                sim.script = js_beautify(Compiler.make_prg(sim.run_type).toString());
+                console.log(sim.step)
+                sim.script = js_beautify(Compiler.make_prg(sim.run_type,sim.step).toString());
                 start_sim_p();
 
                 $(document).bind("new_data", function (event, data) {

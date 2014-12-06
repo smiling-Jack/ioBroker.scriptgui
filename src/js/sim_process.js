@@ -51,13 +51,43 @@ function run(script) {
 
 
     function step_fbs_highlight(id) {
-        var d = (new Date).valueOf() + 1000;
+        var d = (new Date).valueOf() + 800;
 
-        process.send("hi");
+        process.send(["step_fbs_highlight",id]);
 
         while(d > (new Date).valueOf()){
 
-        };
+        }
+
+    }
+    function step_mbs_highlight_in(id) {
+        var d = (new Date).valueOf() + 600;
+
+        process.send(["step_mbs_highlight_in",id]);
+
+        while(d > (new Date).valueOf()){
+
+        }
+
+    }
+    function step_mbs_highlight_out(id) {
+        var d = (new Date).valueOf() + 600;
+
+        process.send(["step_mbs_highlight_out",id]);
+
+        while(d > (new Date).valueOf()){
+
+        }
+
+    }
+    function step_mbs_highlight_reset(id) {
+        var d = (new Date).valueOf() + 1000;
+
+        process.send(["step_mbs_highlight_reset",id]);
+
+        while(d > (new Date).valueOf()){
+
+        }
 
     }
 
@@ -947,6 +977,7 @@ function run(script) {
                 //
                 if (patternMatching(eventObj, sim.subscribers[i].pattern)) {
                     //$("#" + scope.mbs[sim.subscribers[i].mbs_nr].mbs_id).children().effect("highlight", {color: "green"}, 800);
+                    process.send(["trigger_highlight",sim.subscribers[i].mbs_nr]);
                     sim.subscribers[i].callback(eventObj);
 
                 }

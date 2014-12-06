@@ -162,7 +162,7 @@ jQuery.extend(true, SGI, {
 //          Für Trigger
             $("#endpoints").css({
                 left: 0 - left + "px",
-                top: -2 - top -height + "px",
+                top: -2 - top - height + "px",
                 position: "relative"
             });
 
@@ -204,7 +204,7 @@ jQuery.extend(true, SGI, {
             var data = $("#photo").html();
 
             data = data
-                .replace("<div", '<div style="height:'+height+'px ; width:'+width+'px "')
+                .replace("<div", '<div style="height:' + height + 'px ; width:' + width + 'px "')
                 .replace(/(ng-model="|ng-style=")[A-Za-z0-9\[\].]+"/g, "")
                 .replace(/(id=")[A-Za-z0-9\[\]._]+"/g, "")
                 .replace(/(ng-)[A-Za-z0-9\[\].]+/g, "")
@@ -230,22 +230,22 @@ jQuery.extend(true, SGI, {
                 }
             });
 
-            $("#save_html").button().click(function(){
-                bausteine[type] =  {};
-                bausteine[type]["data"] =  editor.getValue();
-                bausteine[type]["h"] =  height;
-                bausteine[type]["w"] =  width;
-                fs.writeFile(nwDir+ '/../../src/js/bausteine.json', JSON.stringify(bausteine), function (err) {
-                    if (err){
+            $("#save_html").button().click(function () {
+                bausteine[type] = {};
+                bausteine[type]["data"] = editor.getValue();
+                bausteine[type]["h"] = height;
+                bausteine[type]["w"] = width;
+                fs.writeFile(nwDir + '/../../src/js/bausteine.json', JSON.stringify(bausteine), function (err) {
+                    if (err) {
                         throw err;
-                    }else{
+                    } else {
                         $("#dialog_html").dialog("close");
                     }
                 });
             });
 
             var editor = CodeMirror.fromTextArea(document.getElementById("codemirror_html"), {
-                mode : "xml",
+                mode: "xml",
                 htmlMode: true,
                 lineNumbers: true,
                 readOnly: false,
@@ -257,7 +257,7 @@ jQuery.extend(true, SGI, {
 
         $("#m_fbs-image").click(function () {
 
-            var type ="";
+            var type = "";
             var left = $(".fbs_element").position().left;
             var height = $(".fbs_element").height();
             var width = $(".fbs_element").width();
@@ -277,7 +277,7 @@ jQuery.extend(true, SGI, {
 
             $("#endpoints").css({
                 left: -0 - left + "px",
-                top: -4  - top -height + "px",
+                top: -4 - top - height + "px",
                 position: "relative",
                 zindex: 10000
             });
@@ -296,7 +296,7 @@ jQuery.extend(true, SGI, {
             var data = $("#photo").html();
 
             data = data
-                .replace("<div", '<div style="height:'+height+'px ; width:'+width+'px "')
+                .replace("<div", '<div style="height:' + height + 'px ; width:' + width + 'px "')
                 .replace(/(ng-bind="fbs\[0\].name")/g, "")
                 .replace(/(ng-model="|ng-style=")[A-Za-z0-9\[\].]+"/g, "")
                 .replace(/(id="|ng-style=")[A-Za-z0-9\[\]._]+"/g, "")
@@ -324,22 +324,22 @@ jQuery.extend(true, SGI, {
                 }
             });
 
-            $("#save_html").button().click(function(){
-                bausteine[type] =  {};
-                bausteine[type]["data"] =  editor.getValue();
-                bausteine[type]["h"] =  height;
-                bausteine[type]["w"] =  width;
-                fs.writeFile(nwDir+ '/../../src/js/bausteine.json', JSON.stringify(bausteine), function (err) {
-                    if (err){
+            $("#save_html").button().click(function () {
+                bausteine[type] = {};
+                bausteine[type]["data"] = editor.getValue();
+                bausteine[type]["h"] = height;
+                bausteine[type]["w"] = width;
+                fs.writeFile(nwDir + '/../../src/js/bausteine.json', JSON.stringify(bausteine), function (err) {
+                    if (err) {
                         throw err;
-                    }else{
+                    } else {
                         $("#dialog_html").dialog("close");
                     }
                 });
             });
 
             var editor = CodeMirror.fromTextArea(document.getElementById("codemirror_html"), {
-                mode : "xml",
+                mode: "xml",
                 htmlMode: true,
                 lineNumbers: true,
                 readOnly: false,
@@ -353,7 +353,7 @@ jQuery.extend(true, SGI, {
         $("#m_show_debugscript").click(function () {
 
 
-            var script = Compiler.make_prg(sim.run_type);
+            var script = Compiler.make_prg(sim.run_type, sim.step);
             SGI.show_Script(script)
 
         });
@@ -830,10 +830,18 @@ jQuery.extend(true, SGI, {
         $("#run_type").buttonset();
 
 
-        $('.run_type').click(function () {
+        $('.run_type').click(function (id) {
+
             sim.run_type = $(".run_type:checked").data("info");
         });
 
+        $('#run_step').click(function (id) {
+
+            $('#lba_run_step').removeClass("ui-state-focus");
+
+            sim.step = $('#lba_run_step').attr("aria-pressed")
+
+        });
 
         $("#prg_panel").on("click", ".btn_min_trigger", function () {
             if (!SGI.sim_run) {

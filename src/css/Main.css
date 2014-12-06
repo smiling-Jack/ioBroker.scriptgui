@@ -674,6 +674,7 @@ body {
     border-top: 1px solid rgb(220, 220, 220);
     border-left: 1px solid rgb(220, 220, 220);
     border-radius: 8px;
+    box-shadow: 0 0 0px transparent;
 
     z-index: 50;
 }
@@ -1259,7 +1260,7 @@ body {
     border-radius: 9px;
 
     z-index: 50;
-    overflow: visible;
+    box-shadow: 0 0 0px transparent;
 }
 .fbs{
     position: relative;
@@ -2268,6 +2269,7 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
     width: calc(100% + 2px);
     left: -1px;
     top: -1px;
+    border: 0px solid red;
     border-radius: 8px;
     box-shadow: inset -3px -4px 14px rgba(0, 0, 0, 0.7), inset 3px 5px 14px rgba(255, 255, 255, 0.8);
     /* border: 1px solid rgb(65, 65, 65); */
