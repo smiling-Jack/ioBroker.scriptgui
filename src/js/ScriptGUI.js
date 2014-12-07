@@ -8,7 +8,7 @@ var net = require('net');
 var path = require('path');
 var fs = require('fs');
 var nw_gui = require('nw.gui');
-
+var schedule = require('node-schedule')
 var js_beautify = require('js-beautify');
 var html_beautify = require('js-beautify').html;
 
@@ -119,6 +119,42 @@ var SGI = {
 
     Setup: function () {
         SGI.dev = true;
+
+        //var old_date = Date;
+        //
+        //var d = new Date(2012, 0, 20,19,15)
+        //
+        //Date = function(){return d}
+        //
+        //console.log( new Date())
+        //
+        //setTimeout(function(){Date = old_date},100)
+        //setTimeout(function(){ console.log( new Date())},500)
+
+
+
+        //var rule = new schedule.RecurrenceRule();
+        //rule.second = 0;
+        //   var x =  schedule.scheduleJob(rule, function(){
+        //        console.log( new Date())
+        //    });
+        //
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         scope = angular.element($('body')).scope();
         scope.$apply();
@@ -258,6 +294,10 @@ var SGI = {
                 SGI.del_all_force();
             });
 
+
+        $("#sim_date").datetimepicker({
+            timeFormat: "HH:mm"
+        });
 
         var start_h;
         var log_h = 130;

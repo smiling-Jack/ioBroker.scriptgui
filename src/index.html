@@ -23,6 +23,7 @@
 
 
     <script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/lib/jquery-ui-timepicker-addon.js"></script>
     <script type="text/javascript" src="js/lib/jquery.contextMenu.js"></script>
 
     <script type="text/javascript" src="js/lib/jquery.event.drag.js"></script>
@@ -384,17 +385,18 @@
 <div id="sim_log" class="sim_log frame_color ui-state-default">
     <div id="sim_log_head" class="sim_log_head ui-state-default"></div>
     <div class="div_sim_controll">
-        <div class="item_font translate"
-             style="align-self: flex-start; font-size: 26px;font-weight: bold; padding-bottom: 5px; padding-left: 5px">
-            Live Test
+        <div style="align-self: flex-start; font-size: 26px;font-weight: bold; padding-bottom: 5px; padding-left: 5px">
+            <a class="item_font translate" >Live Test</a>
+            <button style="height: 34px; width: 34px; background-image:url('img/icon/play.png'); background-color: transparent; background-repeat: no-repeat; background-size: contain; border-radius: 16px;"
+                    class="img_iconbar  set_script title_translate" id="img_set_script_play"
+                    title="Teste Script" disabled></button>
+            <button style="margin-left: 15px; height: 34px; width: 34px; background-image:url('img/icon/stop.png'); background-color: transparent; background-repeat: no-repeat; background-size: contain;border-radius: 16px;"
+                    class="img_iconbar  set_script title_translate" id="img_set_script_stop"
+                    title="Stop" disabled></button>
+
         </div>
         <div class="div_sim_controll_icons">
-            <button style="height: 34px; width: 34px; background-image:url('img/icon/play.png'); background-color: transparent; background-repeat: no-repeat; background-size: contain; border-radius: 16px;"
-                 class="img_iconbar script_engine set_script title_translate" id="img_set_script_play"
-                 title="Teste Script" disabled></button>
-            <button style="margin-left: 15px; height: 34px; width: 34px; background-image:url('img/icon/stop.png'); background-color: transparent; background-repeat: no-repeat; background-size: contain;border-radius: 16px;"
-                 class="img_iconbar script_engine set_script title_translate" id="img_set_script_stop"
-                 title="Stop" disabled></button>
+            <input id="sim_date" style="border-radius: 8px;width: 155px;" class="ui-widget ui-state-default frame_color"/>
             <button class="translate" id="clear_force">Force entfernen</button>
         </div>
 

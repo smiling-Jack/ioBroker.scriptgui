@@ -1,9 +1,9 @@
 /**
  * Created by jack on 29.11.2014.
  */
-var y = 0
-var stacktrace = require('stack-trace');
-var vm = require('vm');
+
+
+//var vm = require('vm');
 
 process.on("uncaughtException", function (e) {
     process.send(["script_err", e.stack]);
