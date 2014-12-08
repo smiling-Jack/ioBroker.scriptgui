@@ -31,13 +31,13 @@ var sim = {
 
 var old_date = Date;
 
-var set_date = []
+var sd = []
 //
 Date = function() {
     if (sim.time_mode == "auto") {
-        return old_date
+        return new old_date
     } else {
-        return old_date(set_date)
+        return new old_date(sd[0],sd[1],sd[2],sd[3],sd[4])
     }
 };
 
@@ -63,9 +63,9 @@ process.on('message', function (data) {
         if (data[1] == "manual"){
             sim.time_mode = "manual";
             var d = data[2].split(" ")[0].split("/");
-            var t = data[2].split(" ")[1].split(";");
+            var t = data[2].split(" ")[1].split(":");
 
-            set_date = [parseInt(d[2]), parseInt(d[1]),parseInt(d[0]),parseInt(t[0]),parseInt(t[1])]
+            sd = [parseInt(d[2]), parseInt(d[1]),parseInt(d[0]),parseInt(t[0]),parseInt(t[1])]
 
         }else{
             sim.time_mode = "auto"

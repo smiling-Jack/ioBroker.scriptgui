@@ -120,16 +120,35 @@ var SGI = {
     Setup: function () {
         SGI.dev = true;
 
-        var old_date = Date;
+        //var old_date = Date;
+        //var set_date = [2013,12,12,6,15]
+        ///
+        //
+        //Date = function(){return new old_date}
+        //
+        //console.log( new Date().getDate())
+        //
+        //setTimeout(function(){Date = old_date},100)
+        //setTimeout(function(){ console.log( new Date().getDate())},500)
+        //
 
-        var d = new Date(2012, 0, 20,19,15)
 
-        Date = function(){return d}
+//        var old_date = Date;
+//
+//var d = new Date(2012, 0, 20,19,15)
+////
+//        Date = function() {
+//            //if (sim.time_mode == "auto") {
+//            //    return old_date
+//            //} else {
+//            return  new old_date(d)
+//            //}
+//        }
+//
+//        console.log(new Date)
+//        console.log((new Date).toLocaleTimeString())
 
-        console.log( new Date().getDate())
 
-        setTimeout(function(){Date = old_date},100)
-        setTimeout(function(){ console.log( new Date().getDate())},500)
 
 
         var rule = new schedule.RecurrenceRule();

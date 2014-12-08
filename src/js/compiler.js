@@ -753,7 +753,8 @@ console.log(step)
                         time2.setMonth(date1[1] - 1);\
                         time2.setDate(date1[0]);\
                     }\
-\
+process.send(time1);\
+process.send(time2);\
                     if (time1.valueOf() < now.valueOf() && time2.valueOf() > now.valueOf()) {\
                         var ' + this.output[0].ausgang + ' = true;\
                     }else{\
