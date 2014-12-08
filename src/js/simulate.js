@@ -21,7 +21,6 @@ function start_sim_p() {
         console.log('exit ' + code + "   " + signal);
 
 
-
         $('#play_overlay').remove();
         $("#prg_panel").find("select, input:not(.force_input)").each(function () {
             $(this).removeAttr('disabled');
@@ -41,7 +40,7 @@ function start_sim_p() {
         });
 
 
-        $(".fbs, .mbs").show();
+        $("#toolbox_sim_param").hide();
         SGI.sim_run = false
     });
     sim_p.on('message', function (data) {
@@ -81,6 +80,7 @@ function start_sim_p() {
 
 var sim = {
     run_type: "sim",
+    time:"",
     step: "false",
     script:"",
     script_err: function (err) {
@@ -120,6 +120,9 @@ var sim = {
         $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td><b>Zeilentext:</b>" + real_error_line_text + "</td></tr>");
 
 //       sim.stopsim()
+    },
+    set_time: function(time){
+        sim_p.send(["time",sim.time_mode,time])
     },
     gettime: function () {
 
@@ -258,8 +261,11 @@ var sim = {
         SGI.sim_run = true;
         var scope = angular.element($('body')).scope();
         var that = this;
-        $(".fbs, .mbs").hide();
-        $("#img_set_script_play").attr("src", "img/icon/playing.png");
+
+
+        $("#toolbox_sim_param").show();
+
+
         $(".btn_min_trigger").attr("src", "img/icon/start.png");
         $(".btn_min_trigger").css({
             height: "15px",
@@ -288,41 +294,7 @@ var sim = {
         });
 
     },
-    running: function(){
-        console.log("running")
-        SGI.sim_run = true;
-        var scope = angular.element($('body')).scope();
-        var that = this;
-        $(".fbs, .mbs").hide();
-        $("#img_set_script_play").attr("src", "img/icon/playing.png");
-        $(".btn_min_trigger").attr("src", "img/icon/start.png");
-        $(".btn_min_trigger").css({
-            height: "15px",
-            top: 0,
-            width: "15px"
-        });
 
-        $("#prg_panel").find("select,button, input:not(.force_input)").each(function () {
-            $(this).attr({
-                'disabled': 'disabled'
-            });
-        });
-        $(".btn_min_trigger").bind("click", function () {
-            if (SGI.sim_run) {
-
-                var trigger = $(this).parent().parent().attr("id");
-                $.each(PRG.struck.trigger, function () {
-                    if (this.mbs_id == trigger) {
-                        $.each(this.target, function () {
-                            sim_p.send(["trigger", this + "(" + JSON.stringify(SGI.start_data.valueOf()) + ")"]);
-                        });
-                        return false
-                    }
-                })
-            }
-        });
-
-    },
     simulate: function () {
         if (!SGI.sim_run) {
             try {

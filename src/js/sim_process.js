@@ -5,6 +5,8 @@
 
 //var vm = require('vm');
 
+
+
 process.on("uncaughtException", function (e) {
     process.send(["script_err", e.stack]);
     process.exit(9990)
@@ -14,6 +16,7 @@ process.on("uncaughtException", function (e) {
 
 
 var sim = {
+    time_mode:"auto",
     run_type: process.argv[3],
     regaObjects: [],
     regaIndex: [],
@@ -23,6 +26,19 @@ var sim = {
     suncalc: require('suncalc'),
     subscribers: [],
     schedules: []
+};
+
+
+var old_date = Date;
+
+var set_date = []
+//
+Date = function() {
+    if (sim.time_mode == "auto") {
+        return old_date
+    } else {
+        return old_date(set_date)
+    }
 };
 
 
@@ -43,6 +59,17 @@ process.on('message', function (data) {
         }
     } else if (data[0] == "exit") {
         process.exit(1000)
+    }else if(data[0] == "time"){
+        if (data[1] == "manual"){
+            sim.time_mode = "manual";
+            var d = data[2].split(" ")[0].split("/");
+            var t = data[2].split(" ")[1].split(";");
+
+            set_date = [parseInt(d[2]), parseInt(d[1]),parseInt(d[0]),parseInt(t[0]),parseInt(t[1])]
+
+        }else{
+            sim.time_mode = "auto"
+        }
     }
 });
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

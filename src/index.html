@@ -375,8 +375,19 @@
 <div id="toolbox_expert" class="toolbox frame_color ui-state-default">
     <div id="expert" class="fbs html_element"></div>
 </div>
+<br>
+
+
+
 
 </div>
+    <div id="toolbox_sim_param"      class="frame_color ui-state-default">
+        <div style="font-size: 23px; width: 100%;text-align: center;">Life Test <br> Parameter</div>
+        <hr>
+        <div style="font-size: 15px;width: 100%; text-align: left;">Sim Zeit:</div>
+        <input id="sim_date" style="border-radius: 8px;width: 155px;" class="ui-widget ui-state-default frame_color"/>
+        <hr>
+    </div>
 <div id="prg_body" class="prg_body">
     <div id="prg_panel" class="prg_panel">
     </div>
@@ -387,16 +398,16 @@
     <div class="div_sim_controll">
         <div style="align-self: flex-start; font-size: 26px;font-weight: bold; padding-bottom: 5px; padding-left: 5px">
             <a class="item_font translate" >Live Test</a>
+
+
+        </div>
+        <div class="div_sim_controll_icons">
             <button style="height: 34px; width: 34px; background-image:url('img/icon/play.png'); background-color: transparent; background-repeat: no-repeat; background-size: contain; border-radius: 16px;"
                     class="img_iconbar  set_script title_translate" id="img_set_script_play"
                     title="Teste Script" disabled></button>
             <button style="margin-left: 15px; height: 34px; width: 34px; background-image:url('img/icon/stop.png'); background-color: transparent; background-repeat: no-repeat; background-size: contain;border-radius: 16px;"
                     class="img_iconbar  set_script title_translate" id="img_set_script_stop"
                     title="Stop" disabled></button>
-
-        </div>
-        <div class="div_sim_controll_icons">
-            <input id="sim_date" style="border-radius: 8px;width: 155px;" class="ui-widget ui-state-default frame_color"/>
             <button class="translate" id="clear_force">Force entfernen</button>
         </div>
 
@@ -547,7 +558,6 @@
     <div style="width: 100%; height: 100%; opacity: 0.9" class="frame_color ui-state-default"></div>
     <div class="circle wait_div"></div>
     <div class="circle1 wait_div"></div>
-
 </div>
 </body>
 </html>

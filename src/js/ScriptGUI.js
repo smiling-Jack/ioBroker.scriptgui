@@ -120,40 +120,38 @@ var SGI = {
     Setup: function () {
         SGI.dev = true;
 
-        //var old_date = Date;
-        //
-        //var d = new Date(2012, 0, 20,19,15)
-        //
-        //Date = function(){return d}
-        //
-        //console.log( new Date())
-        //
-        //setTimeout(function(){Date = old_date},100)
-        //setTimeout(function(){ console.log( new Date())},500)
+        var old_date = Date;
+
+        var d = new Date(2012, 0, 20,19,15)
+
+        Date = function(){return d}
+
+        console.log( new Date().getDate())
+
+        setTimeout(function(){Date = old_date},100)
+        setTimeout(function(){ console.log( new Date().getDate())},500)
 
 
+        var rule = new schedule.RecurrenceRule();
+        rule.second = 0;
+        schedule.scheduleJob(rule, function () {
+            var d = new Date();
+            $("#sim_date").val(('0' + d.getDate()).slice(-2) + "/" + ('0' + (d.getMonth() + 1)).slice(-2) + "/" + d.getFullYear() + " " + ('0' + d.getHours()).slice(-2) + ':' + ('0' + (d.getMinutes())).slice(-2));
+        });
+        var d = new Date();
+        $("#sim_date").val(('0' + d.getDate()).slice(-2) + "/" + ('0' + (d.getMonth() + 1)).slice(-2) + "/" + d.getFullYear() + " " + ('0' + d.getHours()).slice(-2) + ':' + ('0' + (d.getMinutes())).slice(-2));
 
-        //var rule = new schedule.RecurrenceRule();
-        //rule.second = 0;
-        //   var x =  schedule.scheduleJob(rule, function(){
-        //        console.log( new Date())
-        //    });
-        //
+        $("#sim_date").datetimepicker({
+            timeFormat: "HH:mm",
+            altFormat: "dd/mm/yy",
+            dateFormat: "dd/mm/yy",
 
+        });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+        $("#sim_date").change(function(){
+            sim.time_mode = "manual";
+            sim.set_time($("#sim_date").val());
+        });
 
 
         scope = angular.element($('body')).scope();
@@ -295,9 +293,7 @@ var SGI = {
             });
 
 
-        $("#sim_date").datetimepicker({
-            timeFormat: "HH:mm"
-        });
+
 
         var start_h;
         var log_h = 130;
@@ -350,7 +346,6 @@ var SGI = {
             });
             $("#main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
         }
-
 
 
         //      Make element draggable
@@ -484,11 +479,11 @@ var SGI = {
         console.log("Start finish");
 
         // Auto Connect
-        if (scope.setup.auto_con){
-            if(scope.setup.con_type == "online"){
+        if (scope.setup.auto_con) {
+            if (scope.setup.con_type == "online") {
                 SGI.online(scope.setup.last_con)
             }
-            if(scope.setup.con_type == "offline"){
+            if (scope.setup.con_type == "offline") {
                 SGI.offline(scope.setup.last_con)
             }
 

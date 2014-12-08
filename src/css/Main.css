@@ -169,7 +169,14 @@ body {
     overflow-y: scroll;
     overflow-x: hidden;
 }
-
+#toolbox_sim_param{
+    display: none;
+    position: absolute;
+    top: 0;
+    z-index: 100;
+    width: 180px;
+    height: calc(100% - 6px);
+}
 .xs_button_toolbox {
     border-radius: 0 !important;
     display: list-item;
