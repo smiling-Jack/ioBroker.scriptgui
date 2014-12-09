@@ -11,6 +11,9 @@
 .ui-timepicker-rtl dl dt{ float: right; clear: right; }
 .ui-timepicker-rtl dl dd { margin: 0 45% 10px 10px; }
 .ui-datepicker{z-index: 100!important;}
+.ui-datepicker-current{display: none}
+.ui-datepicker-buttonpane{text-align: center}
+.ui-datepicker-close{float: none!important}
 /*------------------------------------------------------------------------------------*/
 html {
     position: absolute;

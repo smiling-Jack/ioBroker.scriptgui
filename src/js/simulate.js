@@ -80,6 +80,7 @@ function start_sim_p() {
 
 var sim = {
     run_type: "sim",
+    time_mode : "auto",
     time:"",
     step: "false",
     script:"",

@@ -65,7 +65,7 @@ process.on('message', function (data) {
             var d = data[2].split(" ")[0].split("/");
             var t = data[2].split(" ")[1].split(":");
 
-            sd = [parseInt(d[2]), parseInt(d[1]),parseInt(d[0]),parseInt(t[0]),parseInt(t[1])]
+            sd = [parseInt(d[2]), parseInt(d[1])-1,parseInt(d[0]),parseInt(t[0]),parseInt(t[1])]
 
         }else{
             sim.time_mode = "auto"

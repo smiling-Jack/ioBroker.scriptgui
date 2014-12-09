@@ -149,13 +149,13 @@ var SGI = {
 //        console.log((new Date).toLocaleTimeString())
 
 
-
-
         var rule = new schedule.RecurrenceRule();
         rule.second = 0;
         schedule.scheduleJob(rule, function () {
-            var d = new Date();
-            $("#sim_date").val(('0' + d.getDate()).slice(-2) + "/" + ('0' + (d.getMonth() + 1)).slice(-2) + "/" + d.getFullYear() + " " + ('0' + d.getHours()).slice(-2) + ':' + ('0' + (d.getMinutes())).slice(-2));
+            if (sim.time_mode == "auto") {
+                var d = new Date();
+                $("#sim_date").val(('0' + d.getDate()).slice(-2) + "/" + ('0' + (d.getMonth() + 1)).slice(-2) + "/" + d.getFullYear() + " " + ('0' + d.getHours()).slice(-2) + ':' + ('0' + (d.getMinutes())).slice(-2));
+            }
         });
         var d = new Date();
         $("#sim_date").val(('0' + d.getDate()).slice(-2) + "/" + ('0' + (d.getMonth() + 1)).slice(-2) + "/" + d.getFullYear() + " " + ('0' + d.getHours()).slice(-2) + ':' + ('0' + (d.getMinutes())).slice(-2));
@@ -167,9 +167,16 @@ var SGI = {
 
         });
 
-        $("#sim_date").change(function(){
+        $("#sim_date").change(function () {
             sim.time_mode = "manual";
             sim.set_time($("#sim_date").val());
+        });
+
+        $("#btn_sim_time_auto").button().click(function () {
+            sim.time_mode = "auto";
+            var d = new Date();
+            $("#sim_date").val(('0' + d.getDate()).slice(-2) + "/" + ('0' + (d.getMonth() + 1)).slice(-2) + "/" + d.getFullYear() + " " + ('0' + d.getHours()).slice(-2) + ':' + ('0' + (d.getMinutes())).slice(-2));
+            sim_p.send(["time",sim.time_mode])
         });
 
 
@@ -310,8 +317,6 @@ var SGI = {
                 $(this).removeClass("ui-state-focus");
                 SGI.del_all_force();
             });
-
-
 
 
         var start_h;
