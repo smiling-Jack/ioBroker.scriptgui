@@ -6,17 +6,14 @@
 //var vm = require('vm');
 
 
-
 process.on("uncaughtException", function (e) {
     process.send(["script_err", e.stack]);
     process.exit(9990)
 });
 
 
-
-
 var sim = {
-    time_mode:"auto",
+    time_mode: "auto",
     run_type: process.argv[3],
     regaObjects: [],
     regaIndex: [],
@@ -33,14 +30,13 @@ var old_date = Date;
 
 var sd = []
 //
-Date = function() {
+Date = function () {
     if (sim.time_mode == "auto") {
         return new old_date
     } else {
-        return new old_date(sd[0],sd[1],sd[2],sd[3],sd[4])
+        return new old_date(sd[0], sd[1], sd[2], sd[3], sd[4])
     }
 };
-
 
 
 var script = process.argv[2];
@@ -59,15 +55,15 @@ process.on('message', function (data) {
         }
     } else if (data[0] == "exit") {
         process.exit(1000)
-    }else if(data[0] == "time"){
-        if (data[1] == "manual"){
+    } else if (data[0] == "time") {
+        if (data[1] == "manual") {
             sim.time_mode = "manual";
             var d = data[2].split(" ")[0].split("/");
             var t = data[2].split(" ")[1].split(":");
 
-            sd = [parseInt(d[2]), parseInt(d[1])-1,parseInt(d[0]),parseInt(t[0]),parseInt(t[1])]
+            sd = [parseInt(d[2]), parseInt(d[1]) - 1, parseInt(d[0]), parseInt(t[0]), parseInt(t[1])]
 
-        }else{
+        } else {
             sim.time_mode = "auto"
         }
     }
@@ -79,50 +75,37 @@ function run(script) {
 
     function step_fbs_highlight(id) {
         var d = (new Date).valueOf() + 800;
-
-        process.send(["step_fbs_highlight",id]);
-
-        while(d > (new Date).valueOf()){
-
+        process.send(["step_fbs_highlight", id]);
+        while (d > (new Date).valueOf()) {
         }
-
     }
+
     function step_mbs_highlight_in(id) {
         var d = (new Date).valueOf() + 600;
-
-        process.send(["step_mbs_highlight_in",id]);
-
-        while(d > (new Date).valueOf()){
-
+        process.send(["step_mbs_highlight_in", id]);
+        while (d > (new Date).valueOf()) {
         }
-
     }
+
     function step_mbs_highlight_out(id) {
         var d = (new Date).valueOf() + 600;
-
-        process.send(["step_mbs_highlight_out",id]);
-
-        while(d > (new Date).valueOf()){
-
+        process.send(["step_mbs_highlight_out", id]);
+        while (d > (new Date).valueOf()) {
         }
 
     }
+
     function step_mbs_highlight_reset(id) {
         var d = (new Date).valueOf() + 1000;
-
-        process.send(["step_mbs_highlight_reset",id]);
-
-        while(d > (new Date).valueOf()){
-
+        process.send(["step_mbs_highlight_reset", id]);
+        while (d > (new Date).valueOf()) {
         }
-
     }
 
     function patternMatching(event, pattern) {
         if (!pattern.logic) {
             pattern.logic = "and";
         }
-
         var matched = false;
 
         // Datapoint id matching
@@ -886,14 +869,16 @@ function run(script) {
     function simout(key, data) {
         process.send(["simout", key, data]);
     }
+
     log("start");
 //    vm.runInThisContext(script, "s_engine")
-        eval(script);
+    eval(script);
     process.on('message', function (data) {
         if (data[0] == "trigger") {
             eval(data[1])
 
-        } else if (data[0] == "new_data") {
+        }
+        else if (data[0] == "new_data") {
             var obj = [data[1].id, data[1].value, data[1].timestamp, data[1].certain, data[1].lasttimestamp];
 
             var o = {
@@ -1004,11 +989,28 @@ function run(script) {
                 //
                 if (patternMatching(eventObj, sim.subscribers[i].pattern)) {
                     //$("#" + scope.mbs[sim.subscribers[i].mbs_nr].mbs_id).children().effect("highlight", {color: "green"}, 800);
-                    process.send(["trigger_highlight",sim.subscribers[i].mbs_nr]);
+                    process.send(["trigger_highlight", sim.subscribers[i].mbs_nr]);
                     sim.subscribers[i].callback(eventObj);
 
                 }
             }
+        }
+        else if (data[0] == "force") {
+            var x = data[2];
+            var force = data[1];
+            if (force == "" || force == undefined || force == "undefined" || force == NaN) {
+                eval(x + "_force = undefined ;");
+            } else if (force == "true") {
+                eval(x + "_force = 1 ;");
+            } else if (force == "false") {
+                eval(x + "_force = 0 ;");
+            } else if (isNaN(force)) {
+                eval(x + "_force = '" + force.toString() + "';");
+            } else {
+                eval(x + "_force = " + force + ";");
+            }
+
+
         }
     });
 

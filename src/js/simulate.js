@@ -27,10 +27,11 @@ function start_sim_p() {
         });
         $(".error_fbs").removeClass("error_fbs");
 
-        $("#img_set_script_play").attr("src", "img/icon/play.png");
+        $("#prg_body").css("border-color","transparent")
 
         $(".btn_min_trigger").unbind("click");
         $(document).unbind("new_data");
+        $('.force_input').unbind("change");
 
         $(".btn_min_trigger").attr("src", "img/icon/bullet_toggle_minus.png");
         $(".btn_min_trigger").css({
@@ -309,6 +310,10 @@ var sim = {
                     }
                 });
 
+
+
+
+
             }
             catch (err) {
                 var err_text = "";
@@ -332,7 +337,13 @@ var sim = {
 
 
 
-
+$(document).on("change",'.force_input',function (e) {
+    var x = $(e.target).data("info").toString();
+    var force = $(e.target).val();
+    if (SGI.sim_run) {
+        sim_p.send(["force", force, x])
+    }
+});
 
 
 

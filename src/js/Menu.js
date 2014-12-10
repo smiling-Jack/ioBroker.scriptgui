@@ -799,10 +799,13 @@ jQuery.extend(true, SGI, {
 
 // Live Test
         $("#img_set_script_play").button().click(function () {
-                if (SGI.con_data) {
+                if (SGI.con_data ) {
+if(!SGI.sim_run){
+    $("#prg_body").css("border-color","red")
+    sim.simulate();
+    $(this).append('<div id="play_overlay"  ></div>')
+}
 
-                    sim.simulate();
-                    $(this).append('<div id="play_overlay"  ></div>')
                 } else {
                     alert("Keine Online/Offline daten")
                 }

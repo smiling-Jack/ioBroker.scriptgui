@@ -425,12 +425,12 @@ body {
 .prg_body {
     position: relative !important;
     top: -32px;
-    left: 180px;
-    width: calc(100% - 183px);
-    height: calc(100% - 6px);
+    left: 182px;
+    width: calc(100% - 192px);
+    height: calc(100% - 14px);
     overflow: scroll;
     max-height: 100%;
-    border: none !important;
+    border: 5px solid transparent;
 
 }
 
@@ -1043,13 +1043,13 @@ body {
 
 .fbs_selected {
     /* TODO box shadow anpassen*/
-    box-shadow: 0 0 15px #0ff7ff;
+    box-shadow: 0px 0px 5px 2px #0ff7ff !important;
     border-color: cyan;
 }
 
 .jsplumb-drag-selected {
-    /* TODO box shadow anpassen*/
-    box-shadow: 0 0 15px #0ff7ff;
+     /*TODO box shadow anpassen*/
+    box-shadow: 0px 0px 5px 2px #0ff7ff !important;
     border-color: cyan;
 }
 
