@@ -141,7 +141,6 @@ SGI = $.extend(true, SGI, {
             </div>');
 
             $("#text_" + nr).autosize();
-            console.log($("#" + data.mbs_id).data("nr"));
 
         }
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -816,7 +815,6 @@ SGI = $.extend(true, SGI, {
         }
 
         scope.$apply();
-        console.log(data)
 
         SGI.add_mbs_endpoint(data);
         SGI.make_mbs_drag(data);

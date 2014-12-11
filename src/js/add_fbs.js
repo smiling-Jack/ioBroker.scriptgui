@@ -324,7 +324,6 @@ SGI = $.extend(true, SGI, {
 
                 if (bind == false) {
                     $('#string_var_' + nr).bind("mouseup", function () {
-                        console.log(nr)
                         scope.fbs[nr].style.width = w;
                         scope.$apply();
                         $('#string_var_' + nr).unbind("mouseup");
@@ -758,7 +757,6 @@ SGI = $.extend(true, SGI, {
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
         if (data.type == "next") {
-            console.log(data)
             scope.append($("#" + data.parent), '\
                         <div style="z-index: 5"  id="' + data.fbs_id + '" ng-style="fbs[' + nr + '].style" data-nr="' + nr + '" class="fbs_element fbs_element_onborder fbs_element_next">\
                                 <p class="head_next">Next</p>\

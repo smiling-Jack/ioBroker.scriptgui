@@ -9,7 +9,7 @@ CCU-IO.ScriptGUI ist ein Visueller Script builder auf Node-Webkit basis. Mit ihm
 
 ### 0.7
 
-* Performance allgemein und speziel Drag der Bausteine (evt. nutzung Katavorio) 
+
 * Test Programme
 * Mode umschaltung GUI/EDIT ?
 * Jede Programmbox mit Try Catch wrappen
@@ -49,6 +49,7 @@ CCU-IO.ScriptGUI ist ein Visueller Script builder auf Node-Webkit basis. Mit ihm
 ### 0.73.1
 * Bugfix connection if port not exist
 * Change Toolbox Image's to HTML's
+* Add Looking scriptengine_rest for 6 seconds
 * Bugfix FBS on border
 * Add Auto connect to last connection & Setup
 
@@ -61,6 +62,8 @@ CCU-IO.ScriptGUI ist ein Visueller Script builder auf Node-Webkit basis. Mit ihm
 * Add fbs Block e
 * Add fbs Block nt
 * Add fbs Block tt
+
+* Change Highlight on step
 
 
 * Livetest starting in his owen process

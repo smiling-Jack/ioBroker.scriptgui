@@ -34,7 +34,6 @@ var nwDir = upd.getAppPath();
 
 
 process.on("uncaughtException", function (e) {
-    console.log(e);
     main_win.show();
     SGI.error_box(e.stack)
 });
@@ -163,7 +162,7 @@ var SGI = {
         $("#sim_date").datetimepicker({
             timeFormat: "HH:mm",
             altFormat: "dd/mm/yy",
-            dateFormat: "dd/mm/yy",
+            dateFormat: "dd/mm/yy"
 
         });
 
@@ -606,7 +605,7 @@ var SGI = {
                 main_win.reload();
             } else if (SGI.key == 70 && event.altKey == true) {
                 var test = test_fehler;
-            } else if (SGI.key == 18 || SGI.key == 91 || SGI.key == 93 || event.alt == true) {
+            } else if (SGI.key == 17 || SGI.key == 91 || SGI.key == 93 || event.ctrlKey == true) {
                 $("body").css({cursor: "help"});
                 SGI.key = 17;
             }
@@ -672,12 +671,10 @@ var SGI = {
     },
 
     save_setup: function () {
-        console.log("setup save");
         fs.writeFile(nwDir + '/setup.json', JSON.stringify(scope.setup), function (err) {
             if (!err) {
-                console.log("save")
             } else {
-                console.log(err)
+
             }
         });
     },
@@ -1489,8 +1486,7 @@ var SGI = {
                         scope.$apply()
 
                     } catch (err) {
-                        console.log(err);
-                        console.log(this)
+
                     }
                 });
             });
@@ -1581,8 +1577,7 @@ var SGI = {
                         scope.$apply()
 
                     } catch (err) {
-                        console.log(err);
-                        console.log(this)
+
                     }
                 });
             });
@@ -2717,7 +2712,6 @@ var SGI = {
 
         PRG._scope = SGI.make_savedata();
 
-
         $("#prg_panel .mbs_element_codebox ").each(function (idx, elem) {
             var $this = $(elem);
             var fbs = $($this).find(".fbs_element");
@@ -2818,21 +2812,18 @@ var SGI = {
             sortable.sort(SortByEbene);
             PRG.struck.codebox[$($this).attr("id")] = [sortable];
         });
-        console.info("struck1");
         $("#prg_panel .mbs_element_trigger ").each(function (idx, elem) {
             var $this = $(elem);
             PRG.struck.trigger[idx] = {
                 mbs_id: $this.attr('id')
             };
         });
-        console.info("struck2");
         $("#prg_panel .mbs_element_control ").each(function (idx, elem) {
             var $this = $(elem);
             PRG.struck.control[idx] = {
                 mbs_id: $this.attr('id')
             };
         });
-        console.info("struck3");
         $.each(PRG.struck.codebox, function (idx) {
             var $codebox = idx;
 
@@ -2893,7 +2884,6 @@ var SGI = {
                 this["output"] = output;
             });
         });
-        console.info("struck4");
         $.each(PRG.struck.trigger, function () {
 
             var $this = this;
@@ -2905,7 +2895,6 @@ var SGI = {
                 }
             });
         });
-        console.info("struck5");
         $.each(PRG.struck.control, function () {
 
             var $this = this;
@@ -2918,7 +2907,6 @@ var SGI = {
                 }
             });
         });
-        console.info("struck6");
 
     },
 
@@ -3224,12 +3212,9 @@ var SGI = {
 
     get_id_by_name: function (name) {
         var id = 0;
-        console.log(name)
         $.each(homematic.regaObjects, function (key) {
 
             if (key > 99999) {
-                console.log(key);
-                console.log(this);
                 if (this.Name == name) {
                     id = key
                     return false
@@ -3245,7 +3230,6 @@ var SGI = {
         if (SGI.con_data) {
             var last_id = 100000;
             var id_by_name = SGI.get_id_by_name(name);
-            console.log("by_name " + id_by_name)
             if (id_by_name == 0) {
                 $.each(Object.keys(homematic.regaObjects).sort(), function () {
 
@@ -3326,7 +3310,6 @@ var SGI = {
 
         fs.readdir(scope.setup.datastore + '/ScriptGUI_Data/experts/', function (err, _files) {
             if (err) {
-                console.log(err);
                 throw err;
             } else {
 

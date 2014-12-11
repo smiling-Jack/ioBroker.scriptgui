@@ -719,7 +719,7 @@ jQuery.extend(true, SGI, {
             if (!script_engine_lock) {
                 try {
 
-//                    SGI.socket.emit("reloadScriptEngine");
+                    SGI.socket.emit("reloadScriptEngine");
 
 
                 } catch (err) {
@@ -770,7 +770,7 @@ jQuery.extend(true, SGI, {
             if ($(this).parent().hasClass("div_img_glass_on")) {
                 SGI.disconnect()
             } else {
-                SGI.disconnect()
+                SGI.disconnect();
                 SGI.offline()
             }
         }).hover(
@@ -1682,7 +1682,6 @@ if(!SGI.sim_run){
         $.each(cons, function () {
             if (this.getOverlay('force')) {
                 this.removeOverlay('force');
-                console.log(this.sourceId);
                 scope.fbs[this.sourceId.split("_")[1]].force = undefined;
             }
         });
@@ -2291,11 +2290,11 @@ if(!SGI.sim_run){
 
             $(".quick-help").css({
                 position: "absolute",
-                top: "51px",
-                left: "auto",
-                right: "21px",
-                width: "200px"
-
+                top: "58px",
+                left: "182px",
+                right: "auto",
+                width: "200px",
+"z-index": 50
             });
 
         }
@@ -2337,8 +2336,18 @@ if(!SGI.sim_run){
             brake: '<div class="quick-help_content">      <H2>Delay:</H2>                   <p>' + SGI.translate("brake") + '</p></div>',
             intervall: '<div class="quick-help_content">      <H2>Intervall:</H2>               <p>' + SGI.translate("intervall") + '</p></div>',
             loop: '<div class="quick-help_content">      <H2>Loop:</H2>                    <p>' + SGI.translate("loop") + '</p></div>',
+
+            block_t:    '<div class="quick-help_content">      <H2>Block t:</H2>           <p>' + SGI.translate("block_t") + '</p></div>',
+            block_kn:   '<div class="quick-help_content">      <H2>Block &ltn:</H2>           <p>' + SGI.translate("block_kn") + '</p></div>',
+            block_gn:   '<div class="quick-help_content">      <H2>Block &gtn:</H2>           <p>' + SGI.translate("block_gn") + '</p></div>',
+            block_e:    '<div class="quick-help_content">      <H2>Block e:</H2>           <p>' + SGI.translate("block_e") + '</p></div>',
+            block_tn:   '<div class="quick-help_content">      <H2>Block tn:</H2>           <p>' + SGI.translate("block_tn") + '</p></div>',
+            block_tt:   '<div class="quick-help_content">      <H2>Block tt:</H2>           <p>' + SGI.translate("block_tt") + '</p></div>',
+
+
             next: '<div class="quick-help_content">      <H2>Next:</H2>                    <p>' + SGI.translate("next") + '</p></div>',
             next1: '<div class="quick-help_content">      <H2>Next 1:</H2>                  <p>' + SGI.translate("next1") + '</p></div>',
+            next0: '<div class="quick-help_content">      <H2>Next 0:</H2>                  <p>' + SGI.translate("next0") + '</p></div>',
             komex: '<div class="quick-help_content">      <H2>Comment:</H2>                 <p>' + SGI.translate("komex") + '</p></div>',
             ccuobj: '<div class="quick-help_content">      <H2>CCU.IO Object:</H2>           <p>' + SGI.translate("ccuobj") + '</p></div>',
             ccuobjpersi: '<div class="quick-help_content">      <H2>CCU.IO Object persident:</H2> <p>' + SGI.translate("ccuobjpersi") + '</p></div>',
@@ -2368,14 +2377,15 @@ if(!SGI.sim_run){
             SGI.klick = elem;
 
 
-            //   console.log("Keynumber: " + SGI.key);
             if (SGI.key == 17) {
                 SGI.open_quick_help_dialog();
                 $("#help-content").children().remove();
                 var type
-                if ($(elem.target).hasClass("fbs_element") || $(elem.target).hasClass("mbs_element")) {
 
-                    if ($(elem.target).attr("id").split("_")[0] == "trigger") {
+
+                if ($(elem.target).hasClass("fbs_element") || $(elem.target).hasClass("mbs_element")|| $(elem.target).hasClass("fbs") || $(elem.target).hasClass("mbs")) {
+
+                    if ($(elem.target).attr("id").split("_")[0] == "trigger" || $(elem.target).attr("id").split("_")[0] == "block" ) {
                         type = $(elem.target).attr("id").split("_")[0] + "_" + $(elem.target).attr("id").split("_")[1];
                     } else {
                         type = $(elem.target).attr("id").split("_")[0];
@@ -2384,9 +2394,9 @@ if(!SGI.sim_run){
                     $("#help-content").append(help[type]);
                 } else {
                     $.each($(elem.target).parents(), function () {
-                        if ($(this).hasClass("fbs_element") || $(this).hasClass("mbs_element")) {
+                        if ($(this).hasClass("fbs_element") || $(this).hasClass("mbs_element")||$(this).hasClass("fbs") || $(this).hasClass("mbs")) {
 
-                            if ($(this).attr("id").split("_")[0] == "trigger") {
+                            if ($(this).attr("id").split("_")[0] == "trigger" || $(this).attr("id").split("_")[0] == "trigger") {
                                 type = $(this).attr("id").split("_")[0] + "_" + $(this).attr("id").split("_")[1];
                             } else {
                                 type = $(this).attr("id").split("_")[0];
@@ -2402,12 +2412,11 @@ if(!SGI.sim_run){
                     });
                 }
 
-                if ($(elem.target).parent().hasClass("fbs") || $(elem.target).parent().hasClass("mbs")) {
-                    type = $(elem.target).parent().attr("id");
-                    $("#help-content").append(help[type]);
-                }
+
+
 
             }
+            console.log(type)
         });
     }
 });
