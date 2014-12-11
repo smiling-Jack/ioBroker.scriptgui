@@ -51,7 +51,7 @@ process.on('message', function (data) {
             run(script);
         } catch (err) {
             process.send(["script_err", err.stack]);
-            process.exit(9999)
+
         }
     } else if (data[0] == "exit") {
         process.exit(1000)

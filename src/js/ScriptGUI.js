@@ -1626,9 +1626,6 @@ var SGI = {
 
         var codebox = $("#" + parent).parent().attr("id");
 
-        console.log("scope" + scope);
-        console.log("type" + type);
-        console.log("position" + position);
         if (scope == "singel") {
             if (type == "input") {
                 endpointStyle = {fillStyle: "green"};
@@ -2764,6 +2761,9 @@ var SGI = {
                     }
                 });
                 ebene--;
+                if (ebene == 0 ){
+                    throw "ebene"
+                }
             }
 
             $.each(data, function () {

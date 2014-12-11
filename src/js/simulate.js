@@ -9,6 +9,32 @@ var stacktrace = require('stack-trace');
 
 var sim_p;
 
+function sim_exit(){
+    console.log("exit")
+    $('#play_overlay').remove();
+    $("#prg_panel").find("select, input:not(.force_input)").each(function () {
+        $(this).removeAttr('disabled');
+    });
+
+
+    $("#prg_body").css("border-color","transparent")
+
+    $(".btn_min_trigger").unbind("click");
+    $(document).unbind("new_data");
+    $('.force_input').unbind("change");
+
+    $(".btn_min_trigger").attr("src", "img/icon/bullet_toggle_minus.png");
+    $(".btn_min_trigger").css({
+        height: "10px",
+        top: 3,
+        width: "10px"
+    });
+
+
+    $("#toolbox_sim_param").hide();
+    SGI.sim_run = false
+}
+
 function start_sim_p() {
     sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type]);
     sim_p.on('close', function (code, signal) {
@@ -20,29 +46,8 @@ function start_sim_p() {
     sim_p.on('exit', function (code, signal) {
         console.log('exit ' + code + "   " + signal);
 
+sim_exit()
 
-        $('#play_overlay').remove();
-        $("#prg_panel").find("select, input:not(.force_input)").each(function () {
-            $(this).removeAttr('disabled');
-        });
-        $(".error_fbs").removeClass("error_fbs");
-
-        $("#prg_body").css("border-color","transparent")
-
-        $(".btn_min_trigger").unbind("click");
-        $(document).unbind("new_data");
-        $('.force_input').unbind("change");
-
-        $(".btn_min_trigger").attr("src", "img/icon/bullet_toggle_minus.png");
-        $(".btn_min_trigger").css({
-            height: "10px",
-            top: 3,
-            width: "10px"
-        });
-
-
-        $("#toolbox_sim_param").hide();
-        SGI.sim_run = false
     });
     sim_p.on('message', function (data) {
 
@@ -89,14 +94,22 @@ var sim = {
 
         console.log(err)
 
-
-
-        if(err.split(":")[0] == "s_engine"){
-            var line_number = parseInt(err.split(":")[1].split("=")[0]);
-
-        }else{
-            var line_number = parseInt(err.split("s_engine:")[1].split(":")[0]);
+        try{
+            sim_p.send(["exit"])
         }
+       catch (e){}
+
+
+        var line_number;
+
+        //if(err.split(":")[0] == "s_engine"){
+        //line_number = parseInt(err.split(":")[1].split("=")[0]);
+        //
+        //}else{
+        //line_number = parseInt(err.split("s_engine:")[1].split(":")[0]);
+        //}
+
+
 
         var real_script = js_beautify(Compiler.make_prg().toString());
         var _sim_script = sim.script.split(/\n/);
@@ -105,6 +118,8 @@ var sim = {
         var sim_error_line = _sim_script.indexOf(sim_error_line_text);
         var real_error_line = _real_script.indexOf(sim_error_line_text);
         var real_error_line_text = _real_script[real_error_line-1];
+
+        console.log(sim_error_line)
 
         for (var i = sim_error_line; i > 1; i--) {
             if (_sim_script[i].split("xxxxxxxxxxxxxxxxxxxx ").length > 1) {
@@ -122,6 +137,7 @@ var sim = {
         $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td><b>Zeilentext:</b>" + real_error_line_text + "</td></tr>");
 
 //       sim.stopsim()
+
     },
     set_time: function(time){
         sim_p.send(["time",sim.time_mode,time])
@@ -244,7 +260,7 @@ var sim = {
         console.log("logger-------------------------------");
     },
     stopsim: function () {
-
+        $(".error_fbs").removeClass("error_fbs");
         if (SGI.sim_run == true) {
 
 
@@ -300,7 +316,7 @@ var sim = {
     simulate: function () {
         if (!SGI.sim_run) {
             try {
-                console.log(sim.step)
+                //var time_out = setTimeout(function(){throw 1},1)
                 sim.script = js_beautify(Compiler.make_prg(sim.run_type,sim.step).toString());
                 start_sim_p();
 
@@ -309,27 +325,28 @@ var sim = {
                         sim_p.send(["new_data",data])
                     }
                 });
-
-
-
-
-
             }
             catch (err) {
                 var err_text = "";
 
-                if (err == "TypeError: this.output[0] is undefined") {
+                if (err.message == "Cannot read property 'ausgang' of undefined") {
                     err_text = " <b style='color: red'>Error:</b> Offenen Ausgang gefunden"
-                } else if (err == "TypeError: this.input[0] is undefined") {
+                } else if (err.message == "Cannot read property 'herkunft' of undefined") {
                     err_text = " <b style='color: red'>Error:</b> Offenen Eingang gefunden"
                 } else {
-                    err_text = err
+                    err_text = err.message
                 }
 
-//                $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td>" + err_text + "</td></tr>");
+                //sim.script_err(err.stack)
+                console.log(err)
+                $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td>" + err_text + "</td></tr>");
+//                $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td style='color: red'>" + err + "</td></tr>");
+//                $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td><b>Fehler in Zeile:</b> " + real_error_line + "</td></tr>");
+//                $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td><b>Zeilentext:</b>" + real_error_line_text + "</td></tr>");
 
                 $("#" + Compiler.last_fbs).addClass("error_fbs");
                 $("#" + Compiler.last_fbs).effect("bounce");
+                sim_exit()
             }
         }
     }
