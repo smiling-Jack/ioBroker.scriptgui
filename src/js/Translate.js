@@ -83,8 +83,8 @@ SGI = $.extend(true, SGI, {
         'erstellung'            : {'de': 'Build: ',                  'en': 'Build: ',                     'ru': ''},//ToDo RU
         'ok'                    : {'de': 'ok',                       'en': 'ok',                          'ru': ''},//ToDo RU
         'path'                  : {'de': 'Pfad: ',                 'en': 'path: ',                      'ru': 'пластырь:'},//ToDo RU
-        'select_datastore'      : {'de': 'Bitte Wählen sie das Verzeichnis in dem der ScriptGUI_Datastore enthalten ist bzw. erstellt werden soll.',
-                                   'en': 'Build: ',
+        'select_datastore'      : {'de': 'Bitte wählen sie das Verzeichnis in dem der ScriptGUI_Datastore enthalten ist bzw. erstellt werden soll.',
+                                   'en': 'Pleas chose the path for the ScriptGUI_Datastore',
                                    'ru': ''},//ToDo RU
         'register_info'         : {'de': 'Bitte registrieren Sie Ihre Version<br>und<br>helfen sie mit ScriptGUI zu verbessern',
                                    'en': 'Please register your copy<br>and<br>help you to improve ScriptGUI',
@@ -265,7 +265,7 @@ SGI = $.extend(true, SGI, {
         zahl: {
             'de': 'Der Ausgang entspricht der eingegebenen Zahl<br><br>Als eingabe sind nur Nummern möglich, das Dezimaltrennzeichen ist "." zb. 123.45',
             'en': 'The output is equal to defined number<br><br>Only digits are allowed and the divider is ".", e.g. 123.45',
-            'ru': 'ru'
+            'ru': '' //ToDo RU
         },
         string: {
             'de': 'Der Ausgang entspricht dem eingegebenen Text. Durch "Enter" hinzugefügte Zeilenumbrüche werden als Leerzeichen übernommen. ' +
@@ -364,21 +364,56 @@ SGI = $.extend(true, SGI, {
                 'Nach aufruf des Starteingangs wird die wird der Loop gestartet. Bei aufruf Abbrechen wird der Loop beendet.<br><br>' +
                 'Die Eingabe der Time erfolgt in Sekunden kann aber auch z.b 0.5 sein.',
             'en': 'Calls the connected programm box defined number of times. The pause can be defined between ths calls.<br><br>'+
-                'The executing starts after call of start input. The calls stop if Cancel input called.<br><br>' +
+                'The executing starts after call of start input. The calls stop if Cancel input called.Programboxen' +
                 'The pause can be set in seconds. Values as 0.5 are alowed too.',
             'ru': 'Вызывает привязанную программу заданное число раз. Между вызовами можно задать паузу.<br><br>'+
                 'Вызовы стартуются если вызван вход Start. Вызовы прекращаются если вызвать вход Cancel.<br><br>' +
                 'Длительность паузы задаётся в секундах, но можно использовать и дробные значения. Например, 0.5 это пол-секунды.'
         },
+        block_t: {
+            'de': 'Dieser Baustein blockiert den aufruf von Programboxen oder anderen Bausteinen:<br><br>Nach deinem aufruf für die einstellte Zeit.<br><br> Die Zeit entspicht Millisekunden  ',
+            'en': '',
+            'ru': '' //ToDo RU
+        },
+        block_kn: {
+            'de': 'Dieser Baustein blockiert den aufruf von Programboxen oder anderen Bausteinen:<br><br>Solage wie die Summe aller Aufrufe kleiner ist als der eingestellte Wert',
+            'en': '',
+            'ru': '' //ToDo RU
+        },
+        block_gn: {
+            'de': 'Dieser Baustein blockiert den aufruf von Programboxen oder anderen Bausteinen:<br><br>Wenn die Summe aller Aufrufe größer ist als der eingestellte Wert',
+            'en': '',
+            'ru': '' //ToDo RU
+        },
+        block_e: {
+            'de': 'Dieser Baustein blockiert den aufruf von Programboxen oder anderen Bausteinen:<br><br>Ausser jedes x´te mal<br><br>Hinweis:<br>Der erste aufruf geht auch durch',
+            'en': '',
+            'ru': '' //ToDo RU
+        },
+        block_tn: {
+            'de': 'Dieser Baustein blockiert den aufruf von Programboxen oder anderen Bausteinen:<br><br>Ausser wenn in der eingestellten Zeit die Anzahl des eingestellten Wertes erreicht. Geht ein aufruf durch danach beginnt die Zeit und Anzahl von vorne',
+            'en': '',
+            'ru': '' //ToDo RU
+        },
+        block_tt: {
+            'de': 'Dieser Baustein blockiert den aufruf von Programboxen oder anderen Bausteinen:<br><br>Ausser in der Zeit von Time1 bis Time2 <br><br>Hinweis:<br>Tageswechsel sind möglich also:<br>Time1="23:00"<br> und <br>Time2 ="01:00',
+            'en': '',
+            'ru': '' //ToDo RU
+        },
         next: {
-            'de': 'Ruft eine weitere Programmboxen auf.<br><br>Hinweis:<br>Verbindungen können eine Pause enthalten.',
-            'en': 'Calls the next program box.<br><br>Note:<br>The call can be executed with pause.',
-            'ru': 'Вызывает следующую программу.<br><br>Замечание:<br>Соединение может содержать паузу.'
+            'de': 'Ruft eine weitere Programmboxen auf.',
+            'en': 'Calls the next program box.',
+            'ru': 'Вызывает следующую программу.'
         },
         next1: {
-            'de': 'Ruft eine weitere Programmboxen auf wenn der Eingang 1 oder true ist.<br><br>Hinweis:<br>Verbindungen können eine Pause enthalten.',
-            'en': 'Calls the next program box if the input is not 0.<br><br>Note:<br>The call can be executed with pause.',
-            'ru':'Вызывает следующую программу, если вход не 0.<br><br>Замечание:<br>Соединение может содержать паузу.'
+            'de': 'Ruft eine weitere Programmboxen auf wenn der Eingang 1 oder true ist.',
+            'en': 'Calls the next program box if the input is not 0.',
+            'ru':'Вызывает следующую программу, если вход не 0.'
+        },
+        next0: {
+            'de': 'Ruft eine weitere Programmboxen auf wenn der Eingang 0 oder false ist.',
+            'en': 'Calls the next program box if the input is not 1.',
+            'ru': '' //ToDo RU
         },
         komex: {
             'de': 'Kommentarbox ohne weitere Funktion.',
@@ -592,7 +627,7 @@ SGI = $.extend(true, SGI, {
     translate: function (text) {
         SGI.language = scope.setup.lang;
 		if (SGI.words[text]) {
-			if (SGI.words[text][SGI.language])
+			if (SGI.words[text][SGI.language] != '')
 			   return SGI.words[text][SGI.language];
 			else if (SGI.words[text]["de"])
 				console.warn("Keine Übersätzung für "+ text + " in "+ SGI.language +" gefunden");

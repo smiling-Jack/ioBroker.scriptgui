@@ -215,14 +215,12 @@ jQuery.extend(true, SGI, {
             })
 
                 .fail(function (err) {
-                console.log(err)
                     SGI.disconnect()
                 });
 
 
         }
         catch (err) {
-            console.log(err)
             SGI.disconnect()
         }
     },
@@ -338,7 +336,6 @@ jQuery.extend(true, SGI, {
             }
         } catch (err) {
             console.log("register nicht möglich");
-            console.log(err)
         }
 
     },

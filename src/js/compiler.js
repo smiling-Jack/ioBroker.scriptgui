@@ -2,7 +2,6 @@ var Compiler = {
     last_fbs: "",
     script: "",
     make_prg: function (run_type, step) {
-console.log(step)
         Compiler.trigger = "// Trigger\n";
         Compiler.obj = "\n// CCU.IO Objekte\n";
         Compiler.timeout = "\n// Timeout Variablen\n";

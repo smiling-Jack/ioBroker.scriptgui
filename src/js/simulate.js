@@ -300,7 +300,6 @@ var sim = {
     simulate: function () {
         if (!SGI.sim_run) {
             try {
-                console.log(sim.step)
                 sim.script = js_beautify(Compiler.make_prg(sim.run_type,sim.step).toString());
                 start_sim_p();
 

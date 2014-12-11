@@ -1019,6 +1019,13 @@ function run(script) {
 }
 
 
+process.stdout.on('data', function (data) {
+process.send(data.toString())
+});
+
+setTimeout(function(){console.log("LOG TEST")},500)
+
+
 
 
 
