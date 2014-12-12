@@ -119,7 +119,6 @@ var SGI = {
     Setup: function () {
         //SGI.dev = true;
 
-
         var rule = new schedule.RecurrenceRule();
         rule.second = 0;
         schedule.scheduleJob(rule, function () {
@@ -2609,7 +2608,7 @@ var SGI = {
 
                 start: function () {
                     $(".dot").remove();
-                    SGI.plumb_inst.inst_mbs.draggable({grid: [10, 10]});
+
                 },
                 drag: function (params) {
 

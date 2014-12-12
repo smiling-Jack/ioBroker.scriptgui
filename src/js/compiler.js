@@ -7,8 +7,8 @@ var Compiler = {
         Compiler.timeout = "\n// Timeout Variablen\n";
         Compiler.block = "\n// Blocking Variablen\n";
         Compiler.force = "\n// Force Variablen\n";
+        Compiler.script ="";
 
-        Compiler.script = "";
 
         SGI.make_struc();
 
@@ -1021,7 +1021,7 @@ process.send(time2);\
         });
 
         Compiler.force += Compiler.script;
-        Compiler.script = Compiler.force;
+        Compiler.script = "//@ sourceURL=" + SGI.file_name.split(".")[0]+".js \n" + Compiler.force;
         return (Compiler.script);
     }
 };

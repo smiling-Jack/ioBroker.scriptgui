@@ -569,6 +569,8 @@ body {
     float: left;
     position: relative;
     width: 50%;
+    top: -15px;
+
 }
 
 .div_right_exp {
@@ -577,12 +579,13 @@ body {
     flex-direction: column;
     float: right;
     width: 50%;
+    top: -15px;
+    position: relative;
 }
 
 .fbs_element_exp {
     min-height: 72px;
     overflow: hidden !important;
-
 }
 
 .btn_exp {
@@ -605,9 +608,9 @@ body {
 
 .inp_exp_val_in {
     height: 17px;
-    position: absolute;
-    right: 1px;
-    top: 18px;
+    position: relative;
+    right: -32px;
+    top: 0px;
     width: 15px;
     padding: 0;
     text-align: center;
@@ -621,9 +624,9 @@ body {
 
 .inp_exp_val_out {
     height: 17px;
-    position: absolute;
-    right: 1px;
-    top: 36px;
+    position: relative;
+    right: -12px;
+    top: 18px;
     width: 15px;
     padding: 0;
     text-align: center;
