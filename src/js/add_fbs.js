@@ -780,7 +780,7 @@ SGI = $.extend(true, SGI, {
             }
             if (pos == "bottom") {
                 $("#" + data.fbs_id).css({top: "auto", bottom: "-13px", right:"auto"});
-                ep.setAnchor("Buttom");
+                ep.setAnchor("Bottom");
             }
             SGI.plumb_inst.inst_mbs.repaintEverything();
 

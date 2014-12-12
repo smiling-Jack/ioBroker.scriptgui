@@ -117,35 +117,7 @@ var SGI = {
     },
 
     Setup: function () {
-        SGI.dev = true;
-
-        //var old_date = Date;
-        //var set_date = [2013,12,12,6,15]
-        ///
-        //
-        //Date = function(){return new old_date}
-        //
-        //console.log( new Date().getDate())
-        //
-        //setTimeout(function(){Date = old_date},100)
-        //setTimeout(function(){ console.log( new Date().getDate())},500)
-        //
-
-
-//        var old_date = Date;
-//
-//var d = new Date(2012, 0, 20,19,15)
-////
-//        Date = function() {
-//            //if (sim.time_mode == "auto") {
-//            //    return old_date
-//            //} else {
-//            return  new old_date(d)
-//            //}
-//        }
-//
-//        console.log(new Date)
-//        console.log((new Date).toLocaleTimeString())
+        //SGI.dev = true;
 
 
         var rule = new schedule.RecurrenceRule();
@@ -175,7 +147,7 @@ var SGI = {
             sim.time_mode = "auto";
             var d = new Date();
             $("#sim_date").val(('0' + d.getDate()).slice(-2) + "/" + ('0' + (d.getMonth() + 1)).slice(-2) + "/" + d.getFullYear() + " " + ('0' + d.getHours()).slice(-2) + ':' + ('0' + (d.getMinutes())).slice(-2));
-            sim_p.send(["time",sim.time_mode])
+            sim_p.send(["time", sim.time_mode])
         });
 
 
@@ -1006,6 +978,7 @@ var SGI = {
 
         SGI.plumb_inst.inst_mbs.bind("dblclick", function (c) {
             if (SGI.klick.target.tagName == "path") {
+                clearTimeout(mbs_dot);
                 $(".dot").remove();
                 SGI.plumb_inst.inst_mbs.detach(c);
             }
@@ -1360,54 +1333,156 @@ var SGI = {
 
     load_prg: function (_data) {
         var data = _data;
-        if (data.version == undefined) {
+        try {
+            if (data.version == undefined) {
 
-            $.each(data.mbs, function () {
-                this["style"] = {
-                    "left": this.left + "px",
-                    "top": this.top + "px",
-                    "width": this.width + "px",
-                    "height": this.height + "px"
-                };
+                $.each(data.mbs, function () {
+                    this["style"] = {
+                        "left": this.left + "px",
+                        "top": this.top + "px",
+                        "width": this.width + "px",
+                        "height": this.height + "px"
+                    };
 
-                delete this.left;
-                delete this.top;
-                delete this.width;
-                delete this.height;
-
-
-                SGI.add_mbs_element(this);
-                if (this.counter > SGI.mbs_n) {
-                    SGI.mbs_n = this.counter
-                }
-
-            });
-            $.each(data.fbs, function () {
-                this["style"] = {
-                    "left": this.left + "px",
-                    "top": this.top + "px"
-                };
-
-                delete this.left;
-                delete this.top;
+                    delete this.left;
+                    delete this.top;
+                    delete this.width;
+                    delete this.height;
 
 
-                SGI.add_fbs_element(this);
-                if (this.counter > SGI.mbs_n) {
-                    SGI.fbs_n = this.counter
-                }
-            });
-            $.each(data.connections.mbs, function () {
-                var source = this.pageSourceId;
-                var target = this.pageTargetId;
-                var c;
-                this["connector"] = {
-                    "stub": [30, 30],
-                    "midpoint": 0.5
-                };
+                    SGI.add_mbs_element(this);
+                    if (this.counter > SGI.mbs_n) {
+                        SGI.mbs_n = this.counter
+                    }
 
-                if (target.split("_")[0] == "codebox") {
-                    try {
+                });
+                $.each(data.fbs, function () {
+                    this["style"] = {
+                        "left": this.left + "px",
+                        "top": this.top + "px"
+                    };
+
+                    delete this.left;
+                    delete this.top;
+
+
+                    SGI.add_fbs_element(this);
+                    if (this.counter > SGI.mbs_n) {
+                        SGI.fbs_n = this.counter
+                    }
+                });
+                $.each(data.connections.mbs, function () {
+                    var source = this.pageSourceId;
+                    var target = this.pageTargetId;
+                    var c;
+                    this["connector"] = {
+                        "stub": [30, 30],
+                        "midpoint": 0.5
+                    };
+
+                    if (target.split("_")[0] == "codebox") {
+                        try {
+                            c = SGI.plumb_inst.inst_mbs.connect({
+                                uuids: [source],
+                                target: target
+
+                            });
+                            c.setConnector(["Flowchart", {
+                                stub: this.connector.stub,
+                                alwaysRespectStubs: true,
+                                midpoint: this.connector.midpoint
+                            }]);
+                            scope.con.mbs[c.id] = {
+                                pageSourceId: c.sourceId,
+                                pageTargetId: c.targetId,
+                                connector: {
+                                    stub: this.connector.stub,
+                                    midpoint: this.connector.midpoint
+                                }
+                            };
+                        } catch (err) {
+                        }
+
+
+                    } else {
+                        try {
+                            c = SGI.plumb_inst.inst_mbs.connect({uuids: [source, target]});
+
+                            c.setConnector(["Flowchart", {
+                                stub: this.connector.stub,
+                                alwaysRespectStubs: true,
+                                midpoint: this.connector.midpoint
+                            }]);
+                            scope.con.mbs[c.id] = {
+                                pageSourceId: c.sourceId,
+                                pageTargetId: c.targetId,
+                                connector: {
+                                    stub: this.connector.stub,
+                                    midpoint: this.connector.midpoint
+                                }
+                            }
+                        } catch (err) {
+                        }
+                    }
+
+                });
+                $.each(data.connections.fbs, function (index) {
+                    $.each(this, function () {
+                        this["connector"] = {
+                            "stub": [30, 30],
+                            "midpoint": 0.5
+                        };
+
+                        try {
+
+                            var source = this.pageSourceId;
+                            var target = this.pageTargetId;
+
+                            var c = SGI.plumb_inst["inst_" + index].connect({
+                                uuids: [source, target]
+
+                            });
+
+                            c.setConnector(["Flowchart", {
+                                stub: this.connector.stub,
+                                alwaysRespectStubs: true,
+                                midpoint: this.connector.midpoint
+                            }]);
+
+                            scope.con.fbs[index][c.id] = {
+                                pageSourceId: c.sourceId,
+                                pageTargetId: c.targetId,
+                                connector: {
+                                    stub: this.connector.stub,
+                                    midpoint: this.connector.midpoint
+                                }
+                            };
+                            scope.$apply()
+
+                        } catch (err) {
+
+                        }
+                    });
+                });
+
+            } else {
+                $.each(data.mbs, function () {
+                    SGI.add_mbs_element(this);
+                    if (this.counter > SGI.mbs_n) {
+                        SGI.mbs_n = this.counter
+                    }
+                });
+                $.each(data.fbs, function () {
+                    SGI.add_fbs_element(this);
+                    if (this.counter > SGI.fbs_n) {
+                        SGI.fbs_n = this.counter
+                    }
+                });
+                $.each(data.con.mbs, function () {
+                    var source = this.pageSourceId;
+                    var target = this.pageTargetId;
+                    var c;
+                    if (target.split("_")[0] == "codebox") {
                         c = SGI.plumb_inst.inst_mbs.connect({
                             uuids: [source],
                             target: target
@@ -1426,12 +1501,8 @@ var SGI = {
                                 midpoint: this.connector.midpoint
                             }
                         };
-                    } catch (err) {
-                    }
 
-
-                } else {
-                    try {
+                    } else {
                         c = SGI.plumb_inst.inst_mbs.connect({uuids: [source, target]});
 
                         c.setConnector(["Flowchart", {
@@ -1447,145 +1518,52 @@ var SGI = {
                                 midpoint: this.connector.midpoint
                             }
                         }
-                    } catch (err) {
                     }
-                }
 
-            });
-            $.each(data.connections.fbs, function (index) {
-                $.each(this, function () {
-                    this["connector"] = {
-                        "stub": [30, 30],
-                        "midpoint": 0.5
-                    };
-
-                    try {
-
-                        var source = this.pageSourceId;
-                        var target = this.pageTargetId;
-
-                        var c = SGI.plumb_inst["inst_" + index].connect({
-                            uuids: [source, target]
-
-                        });
-
-                        c.setConnector(["Flowchart", {
-                            stub: this.connector.stub,
-                            alwaysRespectStubs: true,
-                            midpoint: this.connector.midpoint
-                        }]);
-
-                        scope.con.fbs[index][c.id] = {
-                            pageSourceId: c.sourceId,
-                            pageTargetId: c.targetId,
-                            connector: {
-                                stub: this.connector.stub,
-                                midpoint: this.connector.midpoint
-                            }
-                        };
-                        scope.$apply()
-
-                    } catch (err) {
-
-                    }
                 });
-            });
+                $.each(data.con.fbs, function (index) {
+                    $.each(this, function () {
 
-        } else {
-            $.each(data.mbs, function () {
-                SGI.add_mbs_element(this);
-                if (this.counter > SGI.mbs_n) {
-                    SGI.mbs_n = this.counter
-                }
-            });
-            $.each(data.fbs, function () {
-                SGI.add_fbs_element(this);
-                if (this.counter > SGI.fbs_n) {
-                    SGI.fbs_n = this.counter
-                }
-            });
-            $.each(data.con.mbs, function () {
-                var source = this.pageSourceId;
-                var target = this.pageTargetId;
-                var c;
-                if (target.split("_")[0] == "codebox") {
-                    c = SGI.plumb_inst.inst_mbs.connect({
-                        uuids: [source],
-                        target: target
+                        try {
 
+                            var source = this.pageSourceId;
+                            var target = this.pageTargetId;
+
+                            var c = SGI.plumb_inst["inst_" + index].connect({
+                                uuids: [source, target]
+
+                            });
+
+                            c.setConnector(["Flowchart", {
+                                stub: this.connector.stub,
+                                alwaysRespectStubs: true,
+                                midpoint: this.connector.midpoint
+                            }]);
+
+                            scope.con.fbs[index][c.id] = {
+                                pageSourceId: c.sourceId,
+                                pageTargetId: c.targetId,
+                                connector: {
+                                    stub: this.connector.stub,
+                                    midpoint: this.connector.midpoint
+                                }
+                            };
+                            scope.$apply()
+
+                        } catch (err) {
+
+                        }
                     });
-                    c.setConnector(["Flowchart", {
-                        stub: this.connector.stub,
-                        alwaysRespectStubs: true,
-                        midpoint: this.connector.midpoint
-                    }]);
-                    scope.con.mbs[c.id] = {
-                        pageSourceId: c.sourceId,
-                        pageTargetId: c.targetId,
-                        connector: {
-                            stub: this.connector.stub,
-                            midpoint: this.connector.midpoint
-                        }
-                    };
-
-                } else {
-                    c = SGI.plumb_inst.inst_mbs.connect({uuids: [source, target]});
-
-                    c.setConnector(["Flowchart", {
-                        stub: this.connector.stub,
-                        alwaysRespectStubs: true,
-                        midpoint: this.connector.midpoint
-                    }]);
-                    scope.con.mbs[c.id] = {
-                        pageSourceId: c.sourceId,
-                        pageTargetId: c.targetId,
-                        connector: {
-                            stub: this.connector.stub,
-                            midpoint: this.connector.midpoint
-                        }
-                    }
-                }
-
-            });
-            $.each(data.con.fbs, function (index) {
-                $.each(this, function () {
-
-                    try {
-
-                        var source = this.pageSourceId;
-                        var target = this.pageTargetId;
-
-                        var c = SGI.plumb_inst["inst_" + index].connect({
-                            uuids: [source, target]
-
-                        });
-
-                        c.setConnector(["Flowchart", {
-                            stub: this.connector.stub,
-                            alwaysRespectStubs: true,
-                            midpoint: this.connector.midpoint
-                        }]);
-
-                        scope.con.fbs[index][c.id] = {
-                            pageSourceId: c.sourceId,
-                            pageTargetId: c.targetId,
-                            connector: {
-                                stub: this.connector.stub,
-                                midpoint: this.connector.midpoint
-                            }
-                        };
-                        scope.$apply()
-
-                    } catch (err) {
-
-                    }
                 });
-            });
+            }
+
+            SGI.fbs_n++;
+            SGI.mbs_n++;
         }
-
-        SGI.fbs_n++;
-        SGI.mbs_n++;
-
+        catch (err){
+            $("#wait_div").hide();
+            SGI.error_box("load_prg  <br> "+err.msg)
+        }
     },
 
     add_input: function (opt) {
@@ -1884,6 +1862,7 @@ var SGI = {
 
         scope.con.fbs[id] = {};
         scope.$apply();
+        var fbs_dot = false;
 
         SGI.plumb_inst["inst_" + id].bind("click", function (c, p) {
 
@@ -1917,10 +1896,10 @@ var SGI = {
 
                 if (path.length == 5) {
                     dot2_x = svg_posi.left + path[3].start[0] + parseInt(svg_trans[0]) + Math.abs((path[2].start[0] - path[2].end[0]) / 2) - 8;
-                    dot2_y = svg_posi.top + path[2].start[1] - parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) - 8;
+                    dot2_y = svg_posi.top + path[2].start[1] - parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) +8;
                     dot2_d = "y";
                     dot3_x = svg_posi.left + path[path.length - 1].start[0] + parseInt(svg_trans[0]) - 8;
-                    dot3_y = svg_posi.top + path[path.length - 1].end[1] - parseInt(svg_trans[1]);
+                    dot3_y = svg_posi.top + path[path.length - 1].end[1] - parseInt(svg_trans[1])+4;
 
                     $(".dot").remove();
                     $(c.connector.svg).parent().append('<div id="dot1" class="dot" style="left:' + dot1_x + 'px;top: ' + dot1_y + 'px  "></div>');
@@ -2076,28 +2055,28 @@ var SGI = {
                                 if (new_midpoint > 0.98) {
                                     new_midpoint = 0.98;
                                     if (path.length == 5) {
-                                        ui.position.left = svg_posi.left + path[2].start[0] + parseInt(svg_trans[0]) - Math.abs((path[3].start[0] - path[2].start[0]) / 2) + 1;
+                                        ui.position.left = svg_posi.left + path[2].start[0] + parseInt(svg_trans[0]) - Math.abs((path[3].start[0] - path[2].start[0]) / 2) -8;
                                         ui.position.top = svg_posi.top + path[2].start[1] + parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) - 8;
                                     } else if (path.length == 4) {
                                         ui.position.left = dot2_x = svg_posi.left + path[1].start[0] + parseInt(svg_trans[0]) - Math.abs((path[1].start[0] - path[1].end[0]) / 2) - 8;
                                         ui.position.top = dot2_y = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[1].start[1] - path[1].start[1]) / 2) + 1;
                                     } else {
-                                        ui.position.left = svg_posi.left + path[1].start[0] - parseInt(svg_trans[0]) - Math.abs((path[2].start[0] - path[2].start[0]) / 2);
-                                        ui.position.top = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[2].start[1] - path[1].start[1]) / 2);
+                                        ui.position.left = svg_posi.left + path[1].start[0] - parseInt(svg_trans[0]) - Math.abs((path[2].start[0] - path[2].start[0]) / 2)+8;
+                                        ui.position.top = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[2].start[1] - path[1].start[1]) / 2)+8;
                                     }
                                 }
 
                                 if (new_midpoint < 0.02) {
                                     new_midpoint = 0.02;
                                     if (path.length == 5) {
-                                        ui.position.left = svg_posi.left + path[2].start[0] + parseInt(svg_trans[0]) - Math.abs((path[3].start[0] - path[2].start[0]) / 2) + 1;
+                                        ui.position.left = svg_posi.left + path[2].start[0] + parseInt(svg_trans[0]) - Math.abs((path[3].start[0] - path[2].start[0]) / 2) -8;
                                         ui.position.top = svg_posi.top + path[2].start[1] + parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) - 8;
                                     } else if (path.length == 4) {
                                         ui.position.left = dot2_x = svg_posi.left + path[1].start[0] + parseInt(svg_trans[0]) - Math.abs((path[1].start[0] - path[1].end[0]) / 2) - 8;
                                         ui.position.top = dot2_y = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[1].start[1] - path[1].start[1]) / 2) + 1;
                                     } else {
-                                        ui.position.left = svg_posi.left + path[1].start[0] - parseInt(svg_trans[0]) - Math.abs((path[2].start[0] - path[2].start[0]) / 2);
-                                        ui.position.top = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[2].start[1] - path[1].start[1]) / 2);
+                                        ui.position.left = svg_posi.left + path[1].start[0] - parseInt(svg_trans[0]) - Math.abs((path[2].start[0] - path[2].start[0]) / 2)+8;
+                                        ui.position.top = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[2].start[1] - path[1].start[1]) / 2)+8;
                                     }
                                 }
                             } else {
@@ -2178,12 +2157,21 @@ var SGI = {
                 }
             }
 
-            make_dot();
+            setTimeout(function () {
+                if (scope.con.fbs[id][c.id]) {
+                    make_dot();
+                }
+            }, 300)
+
+
         });
 
         SGI.plumb_inst["inst_" + id].bind("dblclick", function (c) {
-            $(".dot").remove();
-            SGI.plumb_inst["inst_" + id].detach(c);
+
+            if (SGI.klick.target.tagName == "path") {
+                $(".dot").remove();
+                SGI.plumb_inst["inst_" + id].detach(c);
+            }
 
         });
 
@@ -2755,7 +2743,7 @@ var SGI = {
                     }
                 });
                 ebene--;
-                if (ebene == 0 ){
+                if (ebene == 0) {
                     throw "ebene"
                 }
             }
@@ -3349,14 +3337,14 @@ var SGI = {
 
                                 for (var i = 1; i <= parseInt(data.in); i++) {
                                     $("#left_" + data.name).append('' +
-                                        '<div id="' + data.name + '_in' + i + '"  class="div_input ' + data.name + '_in">' +
-                                        '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: -11px; top:5px"></div>' +
-                                        '</div>')
+                                    '<div id="' + data.name + '_in' + i + '"  class="div_input ' + data.name + '_in">' +
+                                    '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: -11px; top:5px"></div>' +
+                                    '</div>')
                                 }
                                 for (var i = 1; i <= parseInt(data.out); i++) {
                                     $("#right_" + data.name).append('<div id="' + data.name + '_out' + i + '" class="div_output1 ' + data.name + '_out">' +
-                                        '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: 21px; top:5px"></div>' +
-                                        '</div>');
+                                    '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: 21px; top:5px"></div>' +
+                                    '</div>');
 
                                 }
 
@@ -3466,52 +3454,52 @@ var SGI = {
     }
 };
 
-window.timeoutList = [];
-window.intervalList = [];
-
-window.oldSetTimeout = window.setTimeout;
-window.oldSetInterval = window.setInterval;
-window.oldClearTimeout = window.clearTimeout;
-window.oldClearInterval = window.clearInterval;
-
-window.setTimeout = function (code, delay) {
-    var retval = window.oldSetTimeout(code, delay);
-    window.timeoutList.push(retval);
-    return retval;
-};
-window.clearTimeout = function (id) {
-    var ind = window.timeoutList.indexOf(id);
-    if (ind >= 0) {
-        window.timeoutList.splice(ind, 1);
-    }
-    var retval = window.oldClearTimeout(id);
-    return retval;
-};
-window.setInterval = function (code, delay) {
-    var retval = window.oldSetInterval(code, delay);
-    window.intervalList.push(retval);
-    return retval;
-};
-window.clearInterval = function (id) {
-    var ind = window.intervalList.indexOf(id);
-    if (ind >= 0) {
-        window.intervalList.splice(ind, 1);
-    }
-    var retval = window.oldClearInterval(id);
-    return retval;
-};
-window.clearAllTimeouts = function () {
-    for (var i in window.timeoutList) {
-        window.oldClearTimeout(window.timeoutList[i]);
-    }
-    window.timeoutList = [];
-};
-window.clearAllIntervals = function () {
-    for (var i in window.intervalList) {
-        window.oldClearInterval(window.intervalList[i]);
-    }
-    window.intervalList = [];
-};
+//window.timeoutList = [];
+//window.intervalList = [];
+//
+//window.oldSetTimeout = window.setTimeout;
+//window.oldSetInterval = window.setInterval;
+//window.oldClearTimeout = window.clearTimeout;
+//window.oldClearInterval = window.clearInterval;
+//
+//window.setTimeout = function (code, delay) {
+//    var retval = window.oldSetTimeout(code, delay);
+//    window.timeoutList.push(retval);
+//    return retval;
+//};
+//window.clearTimeout = function (id) {
+//    var ind = window.timeoutList.indexOf(id);
+//    if (ind >= 0) {
+//        window.timeoutList.splice(ind, 1);
+//    }
+//    var retval = window.oldClearTimeout(id);
+//    return retval;
+//};
+//window.setInterval = function (code, delay) {
+//    var retval = window.oldSetInterval(code, delay);
+//    window.intervalList.push(retval);
+//    return retval;
+//};
+//window.clearInterval = function (id) {
+//    var ind = window.intervalList.indexOf(id);
+//    if (ind >= 0) {
+//        window.intervalList.splice(ind, 1);
+//    }
+//    var retval = window.oldClearInterval(id);
+//    return retval;
+//};
+//window.clearAllTimeouts = function () {
+//    for (var i in window.timeoutList) {
+//        window.oldClearTimeout(window.timeoutList[i]);
+//    }
+//    window.timeoutList = [];
+//};
+//window.clearAllIntervals = function () {
+//    for (var i in window.intervalList) {
+//        window.oldClearInterval(window.intervalList[i]);
+//    }
+//    window.intervalList = [];
+//};
 
 
 var deleteFolderRecursive = function (path) {

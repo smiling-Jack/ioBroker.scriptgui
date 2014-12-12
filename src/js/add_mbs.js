@@ -29,8 +29,8 @@ SGI = $.extend(true, SGI, {
                 "top": top + "px"
             },
             opt1:_data.opt1 || "",
-            opt2:_data.opt1 || "",
-            opt3:_data.opt1 || "",
+            opt2:_data.opt2 || "",
+            opt3:_data.opt3 || "",
         };
 
         if (copy) {

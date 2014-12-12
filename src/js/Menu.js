@@ -2154,7 +2154,7 @@ if(!SGI.sim_run){
     },
 
     error_box: function (data) {
-
+console.log(data)
         var _data = data.split("\n").join("<br>").replace(/file:\/\/\//g, "").replace(/at HTMLDocument./g, "");
 
         var mail = "";
@@ -2416,7 +2416,7 @@ if(!SGI.sim_run){
 
 
             }
-            console.log(type)
+
         });
     }
 });
