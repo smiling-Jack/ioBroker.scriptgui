@@ -2245,7 +2245,7 @@ console.log(data)
                                         $('#update_info').text("Restart");
                                         var _np = newAppPath.split("ScriptGUI.");
                                         var np;
-                                        if (SGI.os == "darwin") {
+                                        if (SGI.os == "osx_32" || SGI.os == "osx_64"  ) {
                                             np = newAppPath
                                         } else {
                                             np = _np[0] + "ScriptGUI/ScriptGUI." + _np[1];

@@ -58,7 +58,7 @@ var SGI = {
     HOST: '37.120.169.17',
     HOST_PORT: 3000,
 
-    os: (os.type() == "Windows_NT" ? "win" : os.type() == "darwin" ? "osx" : os.type()) + "_" + os.arch().replace(/[a-z]+/, ""),
+    os: (os.type() == "Windows_NT" ? "win" : os.type() == "Darwin" ? "osx" : os.type()) + "_" + os.arch().replace(/[a-z]+/, ""),
     copy_data: [],
     socket: {},
     con_files: [],
@@ -3316,35 +3316,63 @@ var SGI = {
                             } else {
                                 var data = JSON.parse(data);
                                 SGI.experts[data.name] = data;
-                                $("#toolbox_expert").append('\
-                                <div id="expert_' + data.name + '" style="width: 60px;height: auto;margin: auto;text-align: center;background-color: #ffffff;border: 1px solid #00ffff;border-radius: 7px;z-index: 50;display: inline-table;margin-top:30px; overflow-x: visible;overflow-y: hidden ;min-height:72px" class="fbs_exp_custom fbs">\
-                                <div style="position: relative; height: 100%; width: 100%; display: inline-block;"> \
-                                <div  class="div_head" style="background-color: gray;">\
-                                    <a style="background-color:transparent; border:none; width: 56px; text-align: center;" class="head_font">' + data.name + '</a>\
-                                </div>\
-                                <div id="left_' + data.name + '" class="div_left_exp">\
-                                </div>\
-                                <div id="right_' + data.name + '" class="div_right_exp">\
-                                </div>\
-                                <label class="lab_exp_in">Inputs</label>\
-                                <label class="lab_exp_out">Outputs</label>\
-                                <a style="color: #000000" id="var_in_' + data.name + '" class="inp_exp_val_in" >' + data.in + '</a>\
-                                <a style="color: #000000" id="var_out_' + data.name + '" class="inp_exp_val_out" >' + data.out + '</a>\
-                                <button type="button" style="z-index: 2" id="btn_' + data.name + '" class="btn_exp">Edit</button> \
-                                </div> \
-                             </div><br class="expert_br">');
+                             //   $("#toolbox_expert").append('\
+                             //   <div id="expert_' + data.name + '" style="width: 60px;height: auto;margin: auto;text-align: center;background-color: #ffffff;border: 1px solid #00ffff;border-radius: 7px;z-index: 50;display: inline-table;margin-top:30px; overflow-x: visible;overflow-y: hidden ;min-height:72px" class="fbs_exp_custom fbs">\
+                             //   <div style="position: relative; height: 100%; width: 100%; display: inline-block;"> \
+                             //   <div  class="div_head" style="background-color: gray;">\
+                             //       <a style="background-color:transparent; border:none; width: 56px; text-align: center;" class="head_font">' + data.name + '</a>\
+                             //   </div>\
+                             //   <div id="left_' + data.name + '" class="div_left_exp">\
+                             //   </div>\
+                             //   <div id="right_' + data.name + '" class="div_right_exp">\
+                             //   </div>\
+                             //   <label class="lab_exp_in">Inputs</label>\
+                             //   <label class="lab_exp_out">Outputs</label>\
+                             //   <a style="color: #000000" id="var_in_' + data.name + '" class="inp_exp_val_in" >' + data.in + '</a>\
+                             //   <a style="color: #000000" id="var_out_' + data.name + '" class="inp_exp_val_out" >' + data.out + '</a>\
+                             //   <button type="button" style="z-index: 2" id="btn_' + data.name + '" class="btn_exp">Edit</button> \
+                             //   </div> \
+                             //</div><br class="expert_br">');
 
-                                for (var i = 1; i <= parseInt(data.in); i++) {
-                                    $("#left_" + data.name).append('' +
-                                    '<div id="' + data.name + '_in' + i + '"  class="div_input ' + data.name + '_in">' +
-                                    '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: -11px; top:5px"></div>' +
-                                    '</div>')
+                                $("#toolbox_expert").append(
+                                "<div id='expert_" + data.name + "' style='width: 60px;height: auto;margin: auto;text-align: center;background-color: #ffffff;border-radius: 12px;z-index: 50;display: inline-table;margin-top:30px; overflow-x: visible;overflow-y: hidden ;min-height:72px' class='fbs_exp_custom fbs'> "+
+                                "<div  style=\"width:60px; overflow: visible!important;display: inline-block;  \" class=\"fbs_html fbs_element_exp \" style=\"left: 8px; top: 0px; position: relative;\">" +
+                                    "<div class=\"div_head\" style=\"background-color: gray;overflow: visible!important;height: auto;\">" +
+                                        "<span style=\"background-color:transparent; border:none; width: 56px; text-align: center;\" class=\"head_font \">Expert</span>" +
+                                    "</div>" +
+                                    "<label class=\"lab_exp_in\">Inputs</label>" +
+                                    "<label class=\"lab_exp_out\">Outputs</label>" +
+                                    "<input class=\"inp_exp_val_in \">" +
+                                    "<input class=\"inp_exp_val_out \">" +
+                                    "<div  id='left_" + data.name+ "'  class=\"div_left_exp\">" +
+                                    "</div>" +
+                                    "<div  id='right_" + data.name+ "' class=\"div_right_exp\">" +
+                                    "</div>" +
+                                    "<div style=\"background-color: gray;z-index: 1;height: 15px;\" class=\"btn_exp\"></div>" +
+                                    "<button type=\"button\" class=\"btn_exp\">Edit</button>" +
+                                    "<div style='position: absolute; width: 100%; height: 100%; z-index: -1 ;background-color: #ffffff;top:0;border-radius: 12px' ></div>"+
+                                    "<div class=\"fbs_shadow\"></div>" +
+                                "</div>" +
+                                "</div>"
+                                );
+
+                                  for (var i = 1; i <= parseInt(data.in); i++) {
+                                    $("#left_" + data.name).append(
+                                        "<div  class=\"html_endpoint \" style=\"position: relative; margin-top: 5px; height: 11px; width: 20px; left: -10px; top: 0px;z-index: -1!important;\">" +
+                                    "<svg style=\"position:absolute;left:0px;top:0px\" width=\"20\" height=\"11\" pointer-events=\"all\" position=\"absolute\" version=\"1.1\" xmlns=\"http://www.w3.org/1999/xhtml\">" +
+                                    "<rect width=\"20\" height=\"11\" version=\"1.1\" xmlns=\"http://www.w3.org/1999/xhtml\" fill=\"gray\" stroke=\"none\" style=\"\"></rect>" +
+                                    "</svg>" +
+                                    "</div>"
+                                    )
                                 }
                                 for (var i = 1; i <= parseInt(data.out); i++) {
-                                    $("#right_" + data.name).append('<div id="' + data.name + '_out' + i + '" class="div_output1 ' + data.name + '_out">' +
-                                    '<div style="background-color:gray;height: 10px;width: 10px;position: relative;left: 21px; top:5px"></div>' +
-                                    '</div>');
-
+                                    $("#right_" + data.name).append(
+                                    "<div class=\"html_endpoint \" style=\"position: relative; margin-top: 5px;height: 11px; width: 20px; left: 10px; top: 0px;z-index: -1!important;\">" +
+                                    "<svg style=\"position:absolute;left:0px;top:0px\" width=\"20\" height=\"11\" pointer-events=\"all\" position=\"absolute\" version=\"1.1\" xmlns=\"http://www.w3.org/1999/xhtml\">" +
+                                    "<rect width=\"20\" height=\"11\" version=\"1.1\" xmlns=\"http://www.w3.org/1999/xhtml\" fill=\"gray\" stroke=\"none\" style=\"\"></rect>" +
+                                    "</svg>" +
+                                    "</div>"
+                                    )
                                 }
 
                                 var active_toolbox;
