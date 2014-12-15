@@ -68,7 +68,7 @@
 
 </head>
 
-<body id="body" ng-controller="GUICtrl" >
+<body id="body" ng-controller="GUICtrl">
 <div id="menu_body" class="menu_body ui-state-default">
     <ul id="menu" style="margin-top: 1px;" class="sf-menu">
         <li class="ui-state-default ui-corner-all" style="border: none"><a class=" translate">Datei</a>
@@ -85,7 +85,7 @@
         <li class="ui-state-default ui-corner-all" style="border: none"><a class="menu_font translate">Einstellungen</a>
             <ul>
                 <li class="ui-state-default frame_color menu_item"><a class="translate">Theme</a>
-                    <ul id="ul_theme" >
+                    <ul id="ul_theme">
                         <li class="ui-state-default frame_color menu_item"><a class="translate" data-info="dark-hive">Dark-Hive</a>
                         </li>
                         <li class="ui-state-default frame_color menu_item"><a class="translate"
@@ -138,7 +138,7 @@
                     </ul>
                 </li>
                 <li class="ui-state-default frame_color menu_item" style="border: none"><a class="translate">Mode</a>
-                    <ul id="ul_mode" >
+                    <ul id="ul_mode">
                         <li class="ui-state-default frame_color menu_item"><a id="m_mode_editor" class="translate">Editor</a>
                         </li>
                         <li class="ui-state-default frame_color menu_item"><a id="m_mode_gui"
@@ -169,7 +169,7 @@
                 <li class="ui-state-default frame_color menu_item"><a id="m_update" class="translate">Update</a></li>
             </ul>
         </li>
-        <li id="develop_menu" style="display: none" ><a class="menu_font translate">Develop</a>
+        <li id="develop_menu" style="display: none"><a class="menu_font translate">Develop</a>
             <ul>
                 <li class="ui-state-default frame_color menu_item"><a id="m_mbs-image" style="white-space:nowrap;"
                                                                       class="translate">MBS Image</a></li>
@@ -228,177 +228,175 @@
     </div>
     <img src="img/icon/flag-red.png" class="img_iconbar title_translate" id="img_con_state" title="Status"/>
     <img src="img/icon/cog.png" class="img_iconbar script_engine title_translate" id="img_set_script_engine"
-         style="display: none"  title="Scriptengine Neustarten"/>
+         style="display: none" title="Scriptengine Neustarten"/>
 
 
 </div>
 <div id="main" class="main ui-widget-content">
-<div id="toolbox_select" class="toolbox_select">
-</div>
+    <div id="toolbox_select" class="toolbox_select">
+    </div>
 
-<div id="toolbox_body" class="toolbox_body frame_color ui-state-default">
-<div id="toolbox_alg" class="toolbox frame_color ui-state-default">
-    <div id="komex"         class="mbs html_element"></div>
-    <div id="scriptobj"     class="mbs html_element"></div>
-    <div id="ccuobj"        class="mbs html_element"></div>
-    <div id="ccuobjpersi"   class="mbs html_element"></div>
-</div>
+    <div id="toolbox_body" class="toolbox_body frame_color ui-state-default">
+        <div id="toolbox_alg" class="toolbox frame_color ui-state-default">
+            <div id="komex" class="mbs html_element"></div>
+            <div id="scriptobj" class="mbs html_element"></div>
+            <div id="ccuobj" class="mbs html_element"></div>
+            <div id="ccuobjpersi" class="mbs html_element"></div>
+        </div>
 
-<div id="toolbox_prog" class="toolbox frame_color ui-state-default">
-    <div id="codebox"   class="mbs html_element"></div>
-    <div id="next"      class="fbs html_element"></div>
-    <div id="next1"     class="fbs html_element"></div>
-    <div id="next0"     class="fbs html_element"></div>
-    <!--<div id="each"     class="fbs html_element"></div>-->
-    <div id="brake"     class="mbs html_element"></div>
-    <div id="intervall" class="mbs html_element"></div>
-    <div id="loop"      class="mbs html_element"></div>
-</div>
+        <div id="toolbox_prog" class="toolbox frame_color ui-state-default">
+            <div id="codebox" class="mbs html_element"></div>
+            <div id="next" class="fbs html_element"></div>
+            <div id="next1" class="fbs html_element"></div>
+            <div id="next0" class="fbs html_element"></div>
+            <!--<div id="each"     class="fbs html_element"></div>-->
+            <div id="brake" class="mbs html_element"></div>
+            <div id="intervall" class="mbs html_element"></div>
+            <div id="loop" class="mbs html_element"></div>
+        </div>
 
-<div id="toolbox_block" class="toolbox frame_color ui-state-default">
-    <div id="block_t"      class="mbs html_element"></div>
-    <div id="block_kn"      class="mbs html_element"></div>
-    <div id="block_gn"      class="mbs html_element"></div>
-    <div id="block_e"      class="mbs html_element"></div>
-    <div id="block_tn"      class="mbs html_element"></div>
-    <div id="block_tt"      class="mbs html_element"></div>
-</div>
+        <div id="toolbox_block" class="toolbox frame_color ui-state-default">
+            <div id="block_t" class="mbs html_element"></div>
+            <div id="block_kn" class="mbs html_element"></div>
+            <div id="block_gn" class="mbs html_element"></div>
+            <div id="block_e" class="mbs html_element"></div>
+            <div id="block_tn" class="mbs html_element"></div>
+            <div id="block_tt" class="mbs html_element"></div>
+        </div>
 
-<div id="toolbox_logic" class="toolbox frame_color ui-state-default">
-    <div id="und"       class="fbs html_element"></div>
-    <div id="oder"      class="fbs html_element"></div>
-    <div id="not"       class="fbs html_element"></div>
-    <div id="wenn"      class="fbs html_element"></div>
-    <div id="timespan"  class="fbs html_element"></div>
-    <br>
-    <hr>
-    <div id="verketten" class="fbs html_element"></div>
-</div>
+        <div id="toolbox_logic" class="toolbox frame_color ui-state-default">
+            <div id="und" class="fbs html_element"></div>
+            <div id="oder" class="fbs html_element"></div>
+            <div id="not" class="fbs html_element"></div>
+            <div id="wenn" class="fbs html_element"></div>
+            <div id="timespan" class="fbs html_element"></div>
+            <br>
+            <hr>
+            <div id="verketten" class="fbs html_element"></div>
+        </div>
 
-<div id="toolbox_filter" class="toolbox frame_color ui-state-default">
-    <div id="lfdevice"  class="fbs html_element"></div>
-    <div id="lfchannel" class="fbs html_element"></div>
-    <div id="lfdp"      class="fbs html_element"></div>
-    <div id="lfwert"    class="fbs html_element"></div>
-</div>
+        <div id="toolbox_filter" class="toolbox frame_color ui-state-default">
+            <div id="lfdevice" class="fbs html_element"></div>
+            <div id="lfchannel" class="fbs html_element"></div>
+            <div id="lfdp" class="fbs html_element"></div>
+            <div id="lfwert" class="fbs html_element"></div>
+        </div>
 
-<div id="toolbox_io" class="toolbox frame_color ui-state-default">
-    <div id="input"         class="fbs html_element"></div>
-    <div id="linput"        class="fbs html_element"></div>
-    <div id="inputlocal"    class="fbs html_element"></div>
-    <div id="output"        class="fbs html_element"></div>
-    <div id="outputlocal"   class="fbs html_element"></div>
-    <br>
-    <hr>
-    <div id="true"      class="fbs html_element"></div>
-    <div id="false"     class="fbs html_element"></div>
-    <div id="zahl"      class="fbs html_element"></div>
-    <div id="string"    class="fbs html_element"></div>
-    <div id="vartime"   class="fbs html_element"></div>
-    <br>
-    <hr>
-    <div id="mail"      class="fbs html_element"></div>
-    <div id="pushover"  class="fbs html_element"></div>
-    <div id="debugout"  class="fbs html_element"></div>
-</div>
+        <div id="toolbox_io" class="toolbox frame_color ui-state-default">
+            <div id="input" class="fbs html_element"></div>
+            <div id="linput" class="fbs html_element"></div>
+            <div id="inputlocal" class="fbs html_element"></div>
+            <div id="output" class="fbs html_element"></div>
+            <div id="outputlocal" class="fbs html_element"></div>
+            <br>
+            <hr>
+            <div id="true" class="fbs html_element"></div>
+            <div id="false" class="fbs html_element"></div>
+            <div id="zahl" class="fbs html_element"></div>
+            <div id="string" class="fbs html_element"></div>
+            <div id="vartime" class="fbs html_element"></div>
+            <br>
+            <hr>
+            <div id="mail" class="fbs html_element"></div>
+            <div id="pushover" class="fbs html_element"></div>
+            <div id="debugout" class="fbs html_element"></div>
+        </div>
 
-<div id="toolbox_math" class="toolbox frame_color ui-state-default">
-    <div id="inc"       class="fbs html_element"></div>
-    <div id="dec"       class="fbs html_element"></div>
-    <div id="summe"     class="fbs html_element"></div>
-    <div id="differenz" class="fbs html_element"></div>
-    <div id="round"     class="fbs html_element"></div>
-</div>
+        <div id="toolbox_math" class="toolbox frame_color ui-state-default">
+            <div id="inc" class="fbs html_element"></div>
+            <div id="dec" class="fbs html_element"></div>
+            <div id="summe" class="fbs html_element"></div>
+            <div id="differenz" class="fbs html_element"></div>
+            <div id="round" class="fbs html_element"></div>
+        </div>
 
-<div id="toolbox_convert" class="toolbox frame_color ui-state-default">
-    <div id="toint"     class="fbs html_element"></div>
-    <div id="tofloat"   class="fbs html_element"></div>
-    <div id="tostring"  class="fbs html_element"></div>
-    <div id="toh"       class="fbs html_element"></div>
-</div>
+        <div id="toolbox_convert" class="toolbox frame_color ui-state-default">
+            <div id="toint" class="fbs html_element"></div>
+            <div id="tofloat" class="fbs html_element"></div>
+            <div id="tostring" class="fbs html_element"></div>
+            <div id="toh" class="fbs html_element"></div>
+        </div>
 
-<div id="toolbox_s_trigger" class="toolbox frame_color ui-state-default">
-    <div id="trigger_event" class="mbs html_element"></div>
-    <div id="trigger_EQ"    class="mbs html_element"></div>
-    <div id="trigger_NE"    class="mbs html_element"></div>
-    <div id="trigger_GT"    class="mbs html_element"></div>
-    <div id="trigger_GE"    class="mbs html_element"></div>
-    <div id="trigger_LT"    class="mbs html_element"></div>
-    <div id="trigger_LE"    class="mbs html_element"></div>
-    <div id="trigger_val"   class="mbs html_element"></div>
-</div>
+        <div id="toolbox_s_trigger" class="toolbox frame_color ui-state-default">
+            <div id="trigger_event" class="mbs html_element"></div>
+            <div id="trigger_EQ" class="mbs html_element"></div>
+            <div id="trigger_NE" class="mbs html_element"></div>
+            <div id="trigger_GT" class="mbs html_element"></div>
+            <div id="trigger_GE" class="mbs html_element"></div>
+            <div id="trigger_LT" class="mbs html_element"></div>
+            <div id="trigger_LE" class="mbs html_element"></div>
+            <div id="trigger_val" class="mbs html_element"></div>
+        </div>
 
-<div id="toolbox_t_trigger"     class="toolbox frame_color ui-state-default">
-    <div id="trigger_start"     class="mbs html_element"></div>
-    <div id="trigger_time"      class="mbs html_element"></div>
-    <div id="trigger_vartime"   class="mbs html_element"></div>
-    <div id="trigger_zykm"      class="mbs html_element"></div>
-    <div id="trigger_astro"     class="mbs html_element"></div>
-    <div id="trigger_yearly"    class="mbs html_element"></div>
-    <div id="trigger_monthly"   class="mbs html_element"></div>
-</div>
+        <div id="toolbox_t_trigger" class="toolbox frame_color ui-state-default">
+            <div id="trigger_start" class="mbs html_element"></div>
+            <div id="trigger_time" class="mbs html_element"></div>
+            <div id="trigger_vartime" class="mbs html_element"></div>
+            <div id="trigger_zykm" class="mbs html_element"></div>
+            <div id="trigger_astro" class="mbs html_element"></div>
+            <div id="trigger_yearly" class="mbs html_element"></div>
+            <div id="trigger_monthly" class="mbs html_element"></div>
+        </div>
 
-<div id="toolbox_trigger_daten" class="toolbox frame_color ui-state-default">
-    <div id="trigvalue" class="fbs html_element"></div>
-    <div id="trigtime"  class="fbs html_element"></div>
-    <br>
-    <hr>
-    <div id="trigoldvalue"  class="fbs html_element"></div>
-    <div id="trigoldtime"   class="fbs html_element"></div>
-    <br>
-    <hr>
-    <div id="trigid"    class="fbs html_element"></div>
-    <div id="trigname"  class="fbs html_element"></div>
-    <br>
-    <hr>
-    <div id="trigchid"          class="fbs html_element"></div>
-    <div id="trigchname"        class="fbs html_element"></div>
-    <div id="trigchtype"        class="fbs html_element"></div>
-    <div id="trigchfuncIds"     class="fbs html_element"></div>
-    <div id="trigchroomIds"     class="fbs html_element"></div>
-    <div id="trigchfuncNames"   class="fbs html_element"></div>
-    <div id="trigchroomNames"   class="fbs html_element"></div>
-    <br>
-    <hr>
-    <!--<div id="trigdevid" class="fbs">-->
-    <!--<img alt="" src="img/FBS/trigdevid.png" onError="this.src='img/icon/image.png';">-->
-    <!--</div>-->
-    <!--<div id="trigdevname" class="fbs">-->
-    <!--<img alt="" src="img/FBS/trigdevname.png" onError="this.src='img/icon/image.png';">-->
-    <!--</div>-->
-    <!--<div id="trigdevtype" class="fbs">-->
-    <!--<img alt="" src="img/FBS/trigdevtype.png" onError="this.src='img/icon/image.png';">-->
-    <!--</div>-->
-
-
-</div>
-<div id="toolbox_expert" class="toolbox frame_color ui-state-default">
-    <div id="expert" class="fbs html_element"></div>
-</div>
-<br>
+        <div id="toolbox_trigger_daten" class="toolbox frame_color ui-state-default">
+            <div id="trigvalue" class="fbs html_element"></div>
+            <div id="trigtime" class="fbs html_element"></div>
+            <br>
+            <hr>
+            <div id="trigoldvalue" class="fbs html_element"></div>
+            <div id="trigoldtime" class="fbs html_element"></div>
+            <br>
+            <hr>
+            <div id="trigid" class="fbs html_element"></div>
+            <div id="trigname" class="fbs html_element"></div>
+            <br>
+            <hr>
+            <div id="trigchid" class="fbs html_element"></div>
+            <div id="trigchname" class="fbs html_element"></div>
+            <div id="trigchtype" class="fbs html_element"></div>
+            <div id="trigchfuncIds" class="fbs html_element"></div>
+            <div id="trigchroomIds" class="fbs html_element"></div>
+            <div id="trigchfuncNames" class="fbs html_element"></div>
+            <div id="trigchroomNames" class="fbs html_element"></div>
+            <br>
+            <hr>
+            <!--<div id="trigdevid" class="fbs">-->
+            <!--<img alt="" src="img/FBS/trigdevid.png" onError="this.src='img/icon/image.png';">-->
+            <!--</div>-->
+            <!--<div id="trigdevname" class="fbs">-->
+            <!--<img alt="" src="img/FBS/trigdevname.png" onError="this.src='img/icon/image.png';">-->
+            <!--</div>-->
+            <!--<div id="trigdevtype" class="fbs">-->
+            <!--<img alt="" src="img/FBS/trigdevtype.png" onError="this.src='img/icon/image.png';">-->
+            <!--</div>-->
 
 
+        </div>
+        <div id="toolbox_expert" class="toolbox frame_color ui-state-default">
+            <div id="expert" class="fbs html_element"></div>
+        </div>
+        <br>
 
 
-</div>
-    <div id="toolbox_sim_param"      class="frame_color ui-state-default">
+    </div>
+    <div id="toolbox_sim_param" class="frame_color ui-state-default">
         <div style="font-size: 23px; width: 100%;text-align: center;">Life Test <br> Parameter</div>
         <hr>
         <div style="font-size: 15px;width: 100%; text-align: left;">Sim Zeit:</div>
         <input id="sim_date" style="border-radius: 8px;width: 155px;" class="ui-widget ui-state-default frame_color"/>
-        <button id="btn_sim_time_auto" type="button" >Auto</button>
+        <button id="btn_sim_time_auto" type="button">Auto</button>
         <hr>
     </div>
-<div id="prg_body" class="prg_body">
-    <div id="prg_panel" class="prg_panel">
+    <div id="prg_body" class="prg_body">
+        <div id="prg_panel" class="prg_panel">
+        </div>
     </div>
-</div>
 </div>
 <div id="sim_log" class="sim_log frame_color ui-state-default">
     <div id="sim_log_head" class="sim_log_head ui-state-default"></div>
     <div class="div_sim_controll">
         <div style="align-self: flex-start; font-size: 26px;font-weight: bold; padding-bottom: 5px; padding-left: 5px">
-            <a class="item_font translate" >Live Test</a>
+            <a class="item_font translate">Live Test</a>
 
 
         </div>
@@ -409,14 +407,19 @@
             <button style="margin-left: 15px; height: 34px; width: 34px; background-image:url('img/icon/stop.png'); background-color: transparent; background-repeat: no-repeat; background-size: contain;border-radius: 16px;"
                     class="img_iconbar  set_script title_translate" id="img_set_script_stop"
                     title="Stop" disabled></button>
+            <button class="translate" id="clear_log">Log leeren</button>
             <button class="translate" id="clear_force">Force entfernen</button>
         </div>
 
         <div id="run_type" style="margin-top: 5px; width: 100%; margin-left: 10px;">
-            <input class="step" type="checkbox" id="run_step" disabled data-info="step" name="step">                   <label style="width: 81px" id="lba_run_step" for="run_step">Step</label>
-            <input class="run_type" type="radio" id="run_type1" disabled data-info="sim" name="radio"checked="checked">  <label style="width: 81px" id="lba_run_type1" for="run_type1">Sim</label>
-            <input class="run_type" type="radio" id="run_type2" disabled data-info="trigger" name="radio">                  <label style="width: 81px" id="lba_run_type2" for="run_type2">Trigger</label>
-            <input class="run_type" type="radio" id="run_type3" disabled data-info="hotrun" name="radio">          <label style="width: 81px" id="lba_run_type3" for="run_type3">Hotrun</label>
+            <input class="step" type="checkbox" id="run_step" disabled data-info="step" name="step"> <label
+                style="width: 81px" id="lba_run_step" for="run_step">Step</label>
+            <input class="run_type" type="radio" id="run_type1" disabled data-info="sim" name="radio" checked="checked">
+            <label style="width: 81px" id="lba_run_type1" for="run_type1">Sim</label>
+            <input class="run_type" type="radio" id="run_type2" disabled data-info="trigger" name="radio"> <label
+                style="width: 81px" id="lba_run_type2" for="run_type2">Trigger</label>
+            <input class="run_type" type="radio" id="run_type3" disabled data-info="hotrun" name="radio"> <label
+                style="width: 81px" id="lba_run_type3" for="run_type3">Hotrun</label>
         </div>
 
     </div>
@@ -430,7 +433,7 @@
         <!--</div>-->
     </div>
 </div>
-<div id="setup_dialog" >
+<div id="setup_dialog">
     <input class="focus_dummy"
            style="border:none;height: 1px;padding: 1px;width: 1px;background: transparent;z-index: 101" type="button"/>
 

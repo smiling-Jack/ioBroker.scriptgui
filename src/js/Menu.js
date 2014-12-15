@@ -74,7 +74,7 @@ jQuery.extend(true, SGI, {
         $("#m_show_script").click(function () {
 //            if ($("body").find(".ui-dialog:not(.quick-help)").length == 0) {
 
-            var script = Compiler.make_prg();
+            var script = Compiler.make_prg(false,false);
             SGI.show_Script(script)
 //            }
         });
@@ -1754,15 +1754,16 @@ if(!SGI.sim_run){
             $this = $(opt).attr("$trigger").parent().parent()
         }
 
-
         var children = $($this).find("div");
-        $.each(children, function () {
-            var ep = SGI.plumb_inst.inst_mbs.getEndpoints($(this).attr("id"));
 
-            SGI.plumb_inst.inst_mbs.detachAllConnections(this);
+        SGI.plumb_inst.inst_mbs.detachAllConnections($($this));
+        $.each(children, function () {
+            var ep = SGI.plumb_inst["inst_" + $($this).attr("id")].getEndpoints($(this).attr("id"));
+
+            SGI.plumb_inst["inst_" + $($this).attr("id")].detachAllConnections(this);
 
             if (ep != undefined) {
-                SGI.plumb_inst.inst_mbs.deleteEndpoint($(ep).attr("elementId"));
+                SGI.plumb_inst["inst_" + $($this).attr("id")].deleteEndpoint($(ep).attr("elementId"));
             }
 
             if ($(this).hasClass("fbs_element")) {
@@ -1772,6 +1773,7 @@ if(!SGI.sim_run){
         });
         $($this).remove();
         delete scope.mbs[$($this).data("nr")];
+        delete scope.con.fbs[$($this).attr("id")];
 
         scope.$apply();
 
@@ -2098,7 +2100,7 @@ if(!SGI.sim_run){
     },
 
     save_Script: function () {
-        var script = Compiler.make_prg();
+        var script = Compiler.make_prg(false,false);
         if (SGI.file_name == undefined || SGI.file_name == "Neu" || SGI.file_name == "") {
             alert("Bitte erst Programm Speichern");
 

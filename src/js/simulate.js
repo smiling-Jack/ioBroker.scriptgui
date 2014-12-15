@@ -12,10 +12,16 @@ var sim_p;
 function sim_exit(){
     console.log("exit")
     $('#play_overlay').remove();
+    $("#run_type").show();
     $("#prg_panel").find("select, input:not(.force_input)").each(function () {
         $(this).removeAttr('disabled');
     });
 
+    if($("#img_con_state").attr("src") == "img/icon/flag-yellow.png"){
+        $("#run_type1,#run_step").button({disabled:false});
+    }else if ($("#img_con_state").attr("src") == "img/icon/flag-green.png"){
+        $("#run_type1,#run_type2,#run_type3,#run_step").button({disabled:false});
+    }
 
     $("#prg_body").css("border-color","transparent")
 
@@ -30,6 +36,12 @@ function sim_exit(){
         width: "10px"
     });
 
+    $.each(SGI.plumb_inst, function () {
+        var con = this.getAllConnections();
+        $.each(con, function () {
+            this.removeOverlay("sim")
+        });
+    });
 
     $("#toolbox_sim_param").hide();
     SGI.sim_run = false
@@ -277,12 +289,13 @@ var sim = {
     running: function(){
         console.log("running")
         SGI.sim_run = true;
+        //$("body").css("cursor","not-allowed");
         var scope = angular.element($('body')).scope();
         var that = this;
 
 
         $("#toolbox_sim_param").show();
-
+        $(".run_type,#run_step").button({disabled:true});
 
         $(".btn_min_trigger").attr("src", "img/icon/start.png");
         $(".btn_min_trigger").css({

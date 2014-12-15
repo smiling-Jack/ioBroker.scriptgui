@@ -119,7 +119,17 @@ body {
     padding: 2px;
     width: 81px;
     position: relative;
-    left: 144px;
+    left: 77px;
+
+}
+#clear_log{
+    font-size: 10px !important;
+    font-weight: bold;
+    height: 38px;
+    padding: 2px;
+    width: 81px;
+    position: relative;
+    left: 77px;
 
 }
 
@@ -360,12 +370,18 @@ body {
     padding: 0;
     resize: none;
     width: calc(100% - 340px);
-    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: hidden;
     position: relative;
     background-color: white;
     border: none !important;
+    -webkit-user-select: text;
 }
-
+.sim_output_body::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);
+    background-image: none;
+}
 .div_sim_controll {
     height: calc(100% - 10px);
     width: 340px;

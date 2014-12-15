@@ -8,9 +8,10 @@ var net = require('net');
 var path = require('path');
 var fs = require('fs');
 var nw_gui = require('nw.gui');
-var schedule = require('node-schedule')
+var schedule = require('node-schedule');
 var js_beautify = require('js-beautify');
 var html_beautify = require('js-beautify').html;
+
 
 var start_win;
 var main_win = nw_gui.Window.get();
@@ -183,16 +184,16 @@ var SGI = {
         $(".prg_body").scrollTop(1000 - ($(".prg_body").height() / 2));
         $(".prg_body").scrollLeft(2000 - ($(".prg_body").width() / 2));
 
-        var color = $(".frame_color").css("background-color");
-        document.styleSheets[1].cssRules[3].style["background-color"] = color;
-        document.styleSheets[1].cssRules[4].style["background-color"] = color;
+        //var color = $(".frame_color").css("background-color");
+        //document.styleSheets[1].cssRules[3].style["background-color"] = color;
+        //document.styleSheets[1].cssRules[4].style["background-color"] = color;
 
-        $("#sim_output").prepend("<tr><td style='width: 100px'>Script Log</td><td></td></tr>");
+
 
 
         // Toolbox XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         $(".toolbox").hide();
-
+        $("#sim_output").prepend("<tr><td style='width: 100px'>Script Log</td><td></td></tr>");
         $.each($(".html_element"), function (a) {
             var id = $(this).attr("id");
             if (bausteine[id]) {
@@ -286,6 +287,12 @@ var SGI = {
             .click(function () {
                 $(this).removeClass("ui-state-focus");
                 SGI.del_all_force();
+            });
+
+        $("#clear_log").button()
+            .click(function () {
+                $("#sim_output").children().remove();
+                $("#sim_output").prepend("<tr><td style='width: 100px'>Script Log</td><td></td></tr>");
             });
 
 
@@ -580,7 +587,6 @@ var SGI = {
                 $("body").css({cursor: "help"});
                 SGI.key = 17;
             }
-
         });
 
         $(document).on('click', ".fbs_element", function (target) {
@@ -1478,6 +1484,7 @@ var SGI = {
                     }
                 });
                 $.each(data.con.mbs, function () {
+                    try {
                     var source = this.pageSourceId;
                     var target = this.pageTargetId;
                     var c;
@@ -1517,6 +1524,10 @@ var SGI = {
                                 midpoint: this.connector.midpoint
                             }
                         }
+                    }
+
+                    } catch (err) {
+
                     }
 
                 });
@@ -1561,7 +1572,7 @@ var SGI = {
         }
         catch (err){
             $("#wait_div").hide();
-            SGI.error_box("load_prg  <br> "+err.msg)
+            SGI.error_box("load_prg  <br> "+err.stack)
         }
     },
 
@@ -3164,6 +3175,9 @@ var SGI = {
         scope.reset_scope_watchers();
         scope.$apply();
         SGI.mbs_inst();
+
+        $("#sim_output").children().remove();
+        $("#sim_output").prepend("<tr><td style='width: 100px'>Script Log</td><td></td></tr>");
     },
 
     get_name: function (hmid) {

@@ -47,9 +47,20 @@ CCU-IO.ScriptGUI ist ein Visueller Script builder auf Node-Webkit basis. Mit ihm
 
 ## Changelog
 ### 0.73.2
+* Add Livetest parameter
 * Give the Script a Filename
-* Bugfix Expert (Inputs)
+* Bugfix Expert (Inputs) (not finish)
 * Bugfix OSX update
+* Bugfix Text-select Simout
+* Bugfix open prg, try on fbs con (wenn einer Verbindung ein Ziel fehlt wird sie nicht erstellt).
+* Bugfix delete codebox (delete realy all cons)
+* Bugfix save script (make_script(false,false))
+* Bugfix remove sim overlay after process exit
+* Disable run_typ button on sim_run
+
+* Clear Log on load prg
+* Add clear log Button
+
 
 ### 0.73.1
 * Bugfix connection if port not exist
@@ -69,7 +80,6 @@ CCU-IO.ScriptGUI ist ein Visueller Script builder auf Node-Webkit basis. Mit ihm
 * Add fbs Block tt
 
 * Change Highlight on step
-
 
 * Livetest starting in his owen process
 
