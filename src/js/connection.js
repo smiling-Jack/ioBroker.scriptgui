@@ -368,6 +368,6 @@ jQuery.extend(true, SGI, {
         });
 
 
-    },
+    }
 });
 

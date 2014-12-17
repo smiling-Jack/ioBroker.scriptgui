@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2013 Steffen Schorling http://github.com/smiling-Jack
  * Lizenz: [CC BY-NC 3.0](http://creativecommons.org/licenses/by-nc/3.0/de/)
  */
@@ -14,7 +14,7 @@ SGI = $.extend(true, SGI, {
             fbs_id: _data.type + "_" + nr.toString(),
             type: _data.type,
             hmid: _data.hmid || [],
-            name: _data.name || SGI.get_name(_data.hmid) ,
+            name: _data.name || SGI.get_name(_data.hmid),
             value: _data.value || 0,
             input_n: _data.input_n || 2,
             width: _data.width,
@@ -310,7 +310,7 @@ SGI = $.extend(true, SGI, {
                 <div id="right_' + nr + '" class="div_right_string">\
                     <div id="' + data.fbs_id + '_out" class="div_io_out_string ' + data.fbs_id + '_out"></div>\
                 </div>\
-                <textarea class="inp_text"  style="width: '+data.style.width+'px" id="string_var_' + nr + '" ng-model="fbs[' + nr + '].value"></textarea>\
+                <textarea class="inp_text"  style="width: ' + data.style.width + 'px" id="string_var_' + nr + '" ng-model="fbs[' + nr + '].value"></textarea>\
                 <div   class="div_head_right_string " style="background-color: orange">\
                     <div class="head_font_io_string">Text</div>\
                 </div>\
@@ -767,19 +767,19 @@ SGI = $.extend(true, SGI, {
 
             var pos = SGI.find_border_position(data);
             if (pos == "left") {
-                $("#" + data.fbs_id).css({left: "-28px", right: "auto", bottom:"auto"});
+                $("#" + data.fbs_id).css({left: "-28px", right: "auto", bottom: "auto"});
                 ep.setAnchor("Left");
             }
             if (pos == "right") {
-                $("#" + data.fbs_id).css({left: "auto", right: "-28px", bottom:"auto"});
+                $("#" + data.fbs_id).css({left: "auto", right: "-28px", bottom: "auto"});
                 ep.setAnchor("Right");
             }
             if (pos == "top") {
-                $("#" + data.fbs_id).css({top: "-13px", bottom: "auto", right:"auto"});
+                $("#" + data.fbs_id).css({top: "-13px", bottom: "auto", right: "auto"});
                 ep.setAnchor("Top");
             }
             if (pos == "bottom") {
-                $("#" + data.fbs_id).css({top: "auto", bottom: "-13px", right:"auto"});
+                $("#" + data.fbs_id).css({top: "auto", bottom: "-13px", right: "auto"});
                 ep.setAnchor("Bottom");
             }
             SGI.plumb_inst.inst_mbs.repaintEverything();
@@ -803,29 +803,29 @@ SGI = $.extend(true, SGI, {
 
             var pos = SGI.find_border_position(data);
             if (pos == "left") {
-                $("#" + data.fbs_id).css({left: "-28px", right: "auto", bottom:"auto"});
+                $("#" + data.fbs_id).css({left: "-28px", right: "auto", bottom: "auto"});
                 ep_mbs.setAnchor("Left");
                 ep_fbs.setAnchor("Right");
             }
             else if (pos == "right") {
-                $("#" + data.fbs_id).css({left: "auto", right: "-28px", bottom:"auto"});
+                $("#" + data.fbs_id).css({left: "auto", right: "-28px", bottom: "auto"});
                 ep_mbs.setAnchor("Right");
                 ep_fbs.setAnchor("Left");
             }
             else if (pos == "top") {
-                $("#" + data.fbs_id).css({top: "-13px", bottom: "auto", right:"auto"});
+                $("#" + data.fbs_id).css({top: "-13px", bottom: "auto", right: "auto"});
                 ep_mbs.setAnchor("Top");
                 ep_fbs.setAnchor("Bottom");
             }
             else if (pos == "bottom") {
-                $("#" + data.fbs_id).css({top: "auto", bottom: "-13px", right:"auto"});
+                $("#" + data.fbs_id).css({top: "auto", bottom: "-13px", right: "auto"});
                 ep_mbs.setAnchor("Bottom");
                 ep_fbs.setAnchor("Top");
             }
-            setTimeout(function(){
+            setTimeout(function () {
                 SGI.plumb_inst.inst_mbs.repaintEverything();
                 SGI.plumb_inst["inst_" + $("#" + data.parent).parent().attr("id")].repaintEverything();
-            },10);
+            }, 10);
         }
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
@@ -844,29 +844,29 @@ SGI = $.extend(true, SGI, {
 
             var pos = SGI.find_border_position(data);
             if (pos == "left") {
-                $("#" + data.fbs_id).css({left: "-28px", right: "auto", bottom:"auto"});
+                $("#" + data.fbs_id).css({left: "-28px", right: "auto", bottom: "auto"});
                 ep_mbs.setAnchor("Left");
                 ep_fbs.setAnchor("Right");
             }
             else if (pos == "right") {
-                $("#" + data.fbs_id).css({left: "auto", right: "-28px", bottom:"auto"});
+                $("#" + data.fbs_id).css({left: "auto", right: "-28px", bottom: "auto"});
                 ep_mbs.setAnchor("Right");
                 ep_fbs.setAnchor("Left");
             }
             else if (pos == "top") {
-                $("#" + data.fbs_id).css({top: "-13px", bottom: "auto", right:"auto"});
+                $("#" + data.fbs_id).css({top: "-13px", bottom: "auto", right: "auto"});
                 ep_mbs.setAnchor("Top");
                 ep_fbs.setAnchor("Bottom");
             }
             else if (pos == "bottom") {
-                $("#" + data.fbs_id).css({top: "auto", bottom: "-13px", right:"auto"});
+                $("#" + data.fbs_id).css({top: "auto", bottom: "-13px", right: "auto"});
                 ep_mbs.setAnchor("Bottom");
                 ep_fbs.setAnchor("Top");
             }
-            setTimeout(function(){
+            setTimeout(function () {
                 SGI.plumb_inst.inst_mbs.repaintEverything();
                 SGI.plumb_inst["inst_" + $("#" + data.parent).parent().attr("id")].repaintEverything();
-            },10);
+            }, 10);
         }
 
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -887,29 +887,29 @@ SGI = $.extend(true, SGI, {
 
             var pos = SGI.find_border_position(data);
             if (pos == "left") {
-                $("#" + data.fbs_id).css({left: "-28px", right: "auto", bottom:"auto"});
+                $("#" + data.fbs_id).css({left: "-28px", right: "auto", bottom: "auto"});
                 ep_mbs.setAnchor("Left");
                 ep_fbs.setAnchor("Right");
             }
             else if (pos == "right") {
-                $("#" + data.fbs_id).css({left: "auto", right: "-28px", bottom:"auto"});
+                $("#" + data.fbs_id).css({left: "auto", right: "-28px", bottom: "auto"});
                 ep_mbs.setAnchor("Right");
                 ep_fbs.setAnchor("Left");
             }
             else if (pos == "top") {
-                $("#" + data.fbs_id).css({top: "-13px", bottom: "auto", right:"auto"});
+                $("#" + data.fbs_id).css({top: "-13px", bottom: "auto", right: "auto"});
                 ep_mbs.setAnchor("Top");
                 ep_fbs.setAnchor("Bottom");
             }
             else if (pos == "bottom") {
-                $("#" + data.fbs_id).css({top: "auto", bottom: "-13px", right:"auto"});
+                $("#" + data.fbs_id).css({top: "auto", bottom: "-13px", right: "auto"});
                 ep_mbs.setAnchor("Bottom");
                 ep_fbs.setAnchor("Top");
             }
-            setTimeout(function(){
+            setTimeout(function () {
                 SGI.plumb_inst.inst_mbs.repaintEverything();
                 SGI.plumb_inst["inst_" + $("#" + data.parent).parent().attr("id")].repaintEverything();
-            },10);
+            }, 10);
         }
 
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -1162,7 +1162,7 @@ SGI = $.extend(true, SGI, {
 
 
             $("#btn_" + data.fbs_id).click(function () {
-                SGI.edit_exp(scope.fbs[nr]["value"],scope.fbs[nr]["opt"], function (data) {
+                SGI.edit_exp(scope.fbs[nr]["value"], scope.fbs[nr]["opt"], function (data) {
                     scope.fbs[nr]["value"] = data.value;
                     scope.fbs[nr]["opt"] = data.name;
                     scope.$apply();
@@ -1254,7 +1254,7 @@ SGI = $.extend(true, SGI, {
 
 
             $("#btn_" + data.fbs_id).click(function () {
-                SGI.edit_exp(scope.fbs[nr]["value"],scope.fbs[nr]["opt"], function (data) {
+                SGI.edit_exp(scope.fbs[nr]["value"], scope.fbs[nr]["opt"], function (data) {
                     scope.fbs[nr]["value"] = data.value;
                     scope.fbs[nr]["opt"] = data.name;
                     scope.$apply();
@@ -1265,27 +1265,25 @@ SGI = $.extend(true, SGI, {
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         //scope.$apply();
 
-    var _in = $("#"+data.parent).find($('.' + data.fbs_id + '_in'));
+        var _in = $("#" + data.parent).find($('.' + data.fbs_id + '_in'));
 
-    $.each(_in, function () {
-        var id = $(this).attr("id");
+        $.each(_in, function () {
+            var id = $(this).attr("id");
 
-        SGI.add_fbs_endpoint(id, "input", data);
-    });
+            SGI.add_fbs_endpoint(id, "input", data);
+        });
 
-    var _out = $("#"+data.parent).find($('.' + data.fbs_id + '_out'));
-    $.each(_out, function (x) {
-        var id = $(this).attr("id");
-        SGI.add_fbs_endpoint(id, "output", data);
-    });
+        var _out = $("#" + data.parent).find($('.' + data.fbs_id + '_out'));
+        $.each(_out, function (x) {
+            var id = $(this).attr("id");
+            SGI.add_fbs_endpoint(id, "output", data);
+        });
 
-    SGI.make_fbs_drag(data);
-    if (copy) {
-        SGI.plumb_inst["inst_"+ $("#"+data.parent).parent().attr("id")].addToDragSelection($("#"+data.fbs_id));
-    }
-    $("#" + data.fbs_id).append('<div class="fbs_shadow"></div>')
-
-
+        SGI.make_fbs_drag(data);
+        if (copy) {
+            SGI.plumb_inst["inst_" + $("#" + data.parent).parent().attr("id")].addToDragSelection($("#" + data.fbs_id));
+        }
+        $("#" + data.fbs_id).append('<div class="fbs_shadow"></div>')
 
 
     }

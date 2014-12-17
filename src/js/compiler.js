@@ -34,7 +34,7 @@ var Compiler = {
 
             $.each(this.target, function () {
 //                if (this[1] == 0) {
-                targets += this + "(data);"
+                targets += this + "(data);";
 //                } else
 //                    targets += " setTimeout(function(){ " + this[0] + "(data)}," + this[1] * 1000 + ");"
             });
@@ -95,7 +95,7 @@ var Compiler = {
             if (PRG._scope.mbs[nr].type == "trigger_time") {
 
                 $.each(PRG._scope.mbs[nr].time, function (index) {
-                    var _time = this;
+
 
                     var m = this.split(":")[1];
                     var h = this.split(":")[0];
@@ -158,8 +158,8 @@ var Compiler = {
                 Compiler.trigger += 'var h = (d.getHours() < 10) ? "0"+d.getHours() : d.getHours();';
                 Compiler.trigger += 'var m = (d.getMinutes() < 10) ? "0"+d.getMinutes() : d.getMinutes();';
                 Compiler.trigger += 'var now = h.toString() + ":" + m.toString() +":00";';
-                Compiler.trigger += 'if('
-                $.each(PRG._scope.mbs[nr].hmid, function (index, obj) {
+                Compiler.trigger += 'if(';
+                $.each(PRG._scope.mbs[nr].hmid, function (index) {
 
                     Compiler.trigger += 'homematic.uiState["_"+' + this + '] == now';
                     if (index + 1 < n) {
@@ -368,7 +368,7 @@ var Compiler = {
                 Compiler.block += "function  " + this.mbs_id + "_in1 (data){";
                 Compiler.block += highlight_in;
                 Compiler.block +=      this.mbs_id + "_n ++;";
-                Compiler.block +=   "if("+ this.mbs_id +"_r){"
+                Compiler.block +=   "if("+ this.mbs_id +"_r){";
                 Compiler.block +=       "if("+ this.mbs_id +"_n == "+ parseFloat(PRG._scope.mbs[nr].opt2)+" ){";
                 Compiler.block +=           targets;
                 Compiler.block +=           "clearTimeout(" + this.mbs_id + "_t);";
@@ -829,7 +829,6 @@ process.send(time2);\
                         targets += "if(" + $this["input"][0].herkunft + " != false && " + $this["input"][0].herkunft + " != undefined && " + $this["input"][0].herkunft + " != 0 ){" + this[0] + " (data);}";
                     });
                     Compiler.script += targets;
-
                 }
                 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                 if (this["type"] == "next0") {
@@ -945,7 +944,6 @@ process.send(time2);\
                     Compiler.script += 'var _out1 = [];';
                     Compiler.script += 'var _out2 = [];';
                     Compiler.script += 'var _out3 = [];';
-
                     Compiler.script += 'for(var i = 0;i<' + this["input"][0].herkunft + '.length;i++){';
                     Compiler.script += 'if (regaObjects[' + this["input"][0].herkunft + '[i]]["ValueType"] == 4){';
                     Compiler.script += ' var val = getState(' + this["input"][0].herkunft + '[i]).toFixed(1) ';
@@ -957,7 +955,6 @@ process.send(time2);\
                     Compiler.script += '    _out2.push(regaObjects[regaObjects[' + this["input"][0].herkunft + '[i]]["Parent"]].Name);';
                     Compiler.script += '    _out3.push(regaObjects[regaObjects[regaObjects[' + this["input"][0].herkunft + '[i]]["Parent"]]["Parent"]].Name);';
                     Compiler.script += '    }';
-
                     this["output"].sort(function (a, b) {
                         return a.ausgang > b.ausgang;
                     });
@@ -1012,9 +1009,7 @@ process.send(time2);\
                 }
 
                 if (step == "true") {
-
                     Compiler.script += 'step_fbs_highlight("' + this.fbs_id + '");';
-
                 }
             });
             Compiler.script += '};\n';

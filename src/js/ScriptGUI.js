@@ -2,7 +2,7 @@
  * Copyright (c) 2013 Steffen Schorling http://github.com/smiling-Jack
  * Lizenz: [CC BY-NC 3.0](http://creativecommons.org/licenses/by-nc/3.0/de/)
  */
-"use strict";
+
 var os = require('os');
 var net = require('net');
 var path = require('path');
@@ -51,7 +51,8 @@ var PRG = {
     }
 };
 
-var SGI = {
+var SGI;
+SGI = {
 
     dev: false,
     version: main_manifest.version,
@@ -118,7 +119,7 @@ var SGI = {
     },
 
     Setup: function () {
-        //SGI.dev = true;
+        SGI.dev = true;
 
         var rule = new schedule.RecurrenceRule();
         rule.second = 0;
@@ -189,12 +190,10 @@ var SGI = {
         //document.styleSheets[1].cssRules[4].style["background-color"] = color;
 
 
-
-
         // Toolbox XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         $(".toolbox").hide();
         $("#sim_output").prepend("<tr><td style='width: 100px'>Script Log</td><td></td></tr>");
-        $.each($(".html_element"), function (a) {
+        $.each($(".html_element"), function () {
             var id = $(this).attr("id");
             if (bausteine[id]) {
                 $(this)
@@ -350,7 +349,7 @@ var SGI = {
 
 
         //      Make element draggable
-        var active_toolbox;
+
 
         $(".fbs").draggable({
             helper: "clone",
@@ -395,41 +394,37 @@ var SGI = {
                 drop: function (ev, ui) {
                     setTimeout(function () {
 
-
+                        var left;
+                        var top;
+                        var data;
                         if ($(ui["draggable"][0]).hasClass("mbs")) {
                             if (ui["draggable"] != ui["helper"] && ev.pageX > 180) {
-                                var data = {
+                                data = {
                                     type: $(ui["draggable"][0]).attr("id")
                                 };
-                                var top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top + 30) / SGI.zoom);
-                                var left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left + 10 ) / SGI.zoom);
+                                top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top + 30) / SGI.zoom);
+                                left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left + 10 ) / SGI.zoom);
                                 SGI.add_mbs_element(data, left, top);
                             }
                         } else {
 
                             if ($(ev.target).attr("id") == "prg_panel" && SGI.drop_block == false && scope.setup.fbs_wrap == true && ev.pageX > 180) {
-                                var data = {
+                                data = {
                                     type: "codebox"
                                 };
-                                var top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top - 20 ) / SGI.zoom);
-                                var left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left ) / SGI.zoom);
+                                top = parseInt((ui["offset"]["top"] - $("#prg_panel").offset().top - 20 ) / SGI.zoom);
+                                left = parseInt((ui["offset"]["left"] - $("#prg_panel").offset().left ) / SGI.zoom);
                                 SGI.add_mbs_element(data, left, top);
-
-
                                 data = {
                                     parent: $("#prg_panel").children().last().children().last().attr("id"),
                                     type: $(ui["draggable"][0]).attr("id")
                                 };
 
-
                                 SGI.add_fbs_element(data, 50 / SGI.zoom, 50 / SGI.zoom);
-
                             }
-
                         }
                     }, 0);
                 }
-
             });
 
 
@@ -525,7 +520,6 @@ var SGI = {
             if (!$(event.target).hasClass("dot") && $(event.target).parent().prop("tagName") != "svg") {
                 $(".dot").remove();
             }
-
         });
 
         //todo umstellung auf node-webkit shortcuts
@@ -1485,46 +1479,46 @@ var SGI = {
                 });
                 $.each(data.con.mbs, function () {
                     try {
-                    var source = this.pageSourceId;
-                    var target = this.pageTargetId;
-                    var c;
-                    if (target.split("_")[0] == "codebox") {
-                        c = SGI.plumb_inst.inst_mbs.connect({
-                            uuids: [source],
-                            target: target
+                        var source = this.pageSourceId;
+                        var target = this.pageTargetId;
+                        var c;
+                        if (target.split("_")[0] == "codebox") {
+                            c = SGI.plumb_inst.inst_mbs.connect({
+                                uuids: [source],
+                                target: target
 
-                        });
-                        c.setConnector(["Flowchart", {
-                            stub: this.connector.stub,
-                            alwaysRespectStubs: true,
-                            midpoint: this.connector.midpoint
-                        }]);
-                        scope.con.mbs[c.id] = {
-                            pageSourceId: c.sourceId,
-                            pageTargetId: c.targetId,
-                            connector: {
+                            });
+                            c.setConnector(["Flowchart", {
                                 stub: this.connector.stub,
+                                alwaysRespectStubs: true,
                                 midpoint: this.connector.midpoint
-                            }
-                        };
+                            }]);
+                            scope.con.mbs[c.id] = {
+                                pageSourceId: c.sourceId,
+                                pageTargetId: c.targetId,
+                                connector: {
+                                    stub: this.connector.stub,
+                                    midpoint: this.connector.midpoint
+                                }
+                            };
 
-                    } else {
-                        c = SGI.plumb_inst.inst_mbs.connect({uuids: [source, target]});
+                        } else {
+                            c = SGI.plumb_inst.inst_mbs.connect({uuids: [source, target]});
 
-                        c.setConnector(["Flowchart", {
-                            stub: this.connector.stub,
-                            alwaysRespectStubs: true,
-                            midpoint: this.connector.midpoint
-                        }]);
-                        scope.con.mbs[c.id] = {
-                            pageSourceId: c.sourceId,
-                            pageTargetId: c.targetId,
-                            connector: {
+                            c.setConnector(["Flowchart", {
                                 stub: this.connector.stub,
+                                alwaysRespectStubs: true,
                                 midpoint: this.connector.midpoint
+                            }]);
+                            scope.con.mbs[c.id] = {
+                                pageSourceId: c.sourceId,
+                                pageTargetId: c.targetId,
+                                connector: {
+                                    stub: this.connector.stub,
+                                    midpoint: this.connector.midpoint
+                                }
                             }
                         }
-                    }
 
                     } catch (err) {
 
@@ -1570,9 +1564,9 @@ var SGI = {
             SGI.fbs_n++;
             SGI.mbs_n++;
         }
-        catch (err){
+        catch (err) {
             $("#wait_div").hide();
-            SGI.error_box("load_prg  <br> "+err.stack)
+            SGI.error_box("load_prg  <br> " + err.stack)
         }
     },
 
@@ -1581,7 +1575,6 @@ var SGI = {
         var id = $($(opt).attr("$trigger")).attr("id");
         var nr = $($(opt).attr("$trigger")).data("nr");
         var data = scope.fbs[nr];
-        var nr = $($(opt).attr("$trigger")).data("nr");
         var type = id.split("_")[0];
         var index = $($("#" + id).find("[id^='left']")).children().length + 1;
         var add_id = type + '_' + nr + '_in' + index + '';
@@ -1906,10 +1899,10 @@ var SGI = {
 
                 if (path.length == 5) {
                     dot2_x = svg_posi.left + path[3].start[0] + parseInt(svg_trans[0]) + Math.abs((path[2].start[0] - path[2].end[0]) / 2) - 8;
-                    dot2_y = svg_posi.top + path[2].start[1] - parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) +8;
+                    dot2_y = svg_posi.top + path[2].start[1] - parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) + 8;
                     dot2_d = "y";
                     dot3_x = svg_posi.left + path[path.length - 1].start[0] + parseInt(svg_trans[0]) - 8;
-                    dot3_y = svg_posi.top + path[path.length - 1].end[1] - parseInt(svg_trans[1])+4;
+                    dot3_y = svg_posi.top + path[path.length - 1].end[1] - parseInt(svg_trans[1]) + 4;
 
                     $(".dot").remove();
                     $(c.connector.svg).parent().append('<div id="dot1" class="dot" style="left:' + dot1_x + 'px;top: ' + dot1_y + 'px  "></div>');
@@ -2065,28 +2058,28 @@ var SGI = {
                                 if (new_midpoint > 0.98) {
                                     new_midpoint = 0.98;
                                     if (path.length == 5) {
-                                        ui.position.left = svg_posi.left + path[2].start[0] + parseInt(svg_trans[0]) - Math.abs((path[3].start[0] - path[2].start[0]) / 2) -8;
+                                        ui.position.left = svg_posi.left + path[2].start[0] + parseInt(svg_trans[0]) - Math.abs((path[3].start[0] - path[2].start[0]) / 2) - 8;
                                         ui.position.top = svg_posi.top + path[2].start[1] + parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) - 8;
                                     } else if (path.length == 4) {
                                         ui.position.left = dot2_x = svg_posi.left + path[1].start[0] + parseInt(svg_trans[0]) - Math.abs((path[1].start[0] - path[1].end[0]) / 2) - 8;
                                         ui.position.top = dot2_y = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[1].start[1] - path[1].start[1]) / 2) + 1;
                                     } else {
-                                        ui.position.left = svg_posi.left + path[1].start[0] - parseInt(svg_trans[0]) - Math.abs((path[2].start[0] - path[2].start[0]) / 2)+8;
-                                        ui.position.top = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[2].start[1] - path[1].start[1]) / 2)+8;
+                                        ui.position.left = svg_posi.left + path[1].start[0] - parseInt(svg_trans[0]) - Math.abs((path[2].start[0] - path[2].start[0]) / 2) + 8;
+                                        ui.position.top = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[2].start[1] - path[1].start[1]) / 2) + 8;
                                     }
                                 }
 
                                 if (new_midpoint < 0.02) {
                                     new_midpoint = 0.02;
                                     if (path.length == 5) {
-                                        ui.position.left = svg_posi.left + path[2].start[0] + parseInt(svg_trans[0]) - Math.abs((path[3].start[0] - path[2].start[0]) / 2) -8;
+                                        ui.position.left = svg_posi.left + path[2].start[0] + parseInt(svg_trans[0]) - Math.abs((path[3].start[0] - path[2].start[0]) / 2) - 8;
                                         ui.position.top = svg_posi.top + path[2].start[1] + parseInt(svg_trans[1]) + Math.abs((path[3].start[1] - path[2].start[1]) / 2) - 8;
                                     } else if (path.length == 4) {
                                         ui.position.left = dot2_x = svg_posi.left + path[1].start[0] + parseInt(svg_trans[0]) - Math.abs((path[1].start[0] - path[1].end[0]) / 2) - 8;
                                         ui.position.top = dot2_y = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[1].start[1] - path[1].start[1]) / 2) + 1;
                                     } else {
-                                        ui.position.left = svg_posi.left + path[1].start[0] - parseInt(svg_trans[0]) - Math.abs((path[2].start[0] - path[2].start[0]) / 2)+8;
-                                        ui.position.top = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[2].start[1] - path[1].start[1]) / 2)+8;
+                                        ui.position.left = svg_posi.left + path[1].start[0] - parseInt(svg_trans[0]) - Math.abs((path[2].start[0] - path[2].start[0]) / 2) + 8;
+                                        ui.position.top = svg_posi.top + path[1].start[1] - parseInt(svg_trans[1]) + Math.abs((path[2].start[1] - path[1].start[1]) / 2) + 8;
                                     }
                                 }
                             } else {
@@ -2463,33 +2456,6 @@ var SGI = {
 
     },
 
-    get_eps_by_elem: function (elem) {
-        var eps = [];
-        $.each($(elem).find("[id*=in]"), function () {
-            eps.push($(this).attr("id"));
-        });
-        $.each($(elem).find("[id*=out]"), function () {
-            eps.push($(this).attr("id"));
-        });
-        eps.push($(elem).attr("id"));
-        return eps
-    },
-
-    get_inout_by_element: function (elem) {
-        var eps = {
-            in: [],
-            out: []
-        };
-        $.each($(elem).find("[id*=in]"), function () {
-            eps.in.push($(this).attr("id"));
-        });
-        $.each($(elem).find("[id*=out]"), function () {
-            eps.out.push($(this).attr("id"));
-        });
-
-        return eps
-    },
-
     make_fbs_drag: function (data) {
         var $div = $("#" + data.parent);
         var ep_mbs = [];
@@ -2748,7 +2714,6 @@ var SGI = {
                             var fbs_befor = this.split("_")[1];
                             data[fbs_befor].ebene = ebene - 1
                         });
-
                         i = 0
                     }
                 });
@@ -2769,7 +2734,6 @@ var SGI = {
                     onborder.push({"id": this.fbs_id, left: this.positionX})
                 }
             });
-
 
             function SortByLeft(a, b) {
                 var aName = a.left;
@@ -2905,7 +2869,6 @@ var SGI = {
                 }
             });
         });
-
     },
 
     make_conpanel: function () {
@@ -2920,7 +2883,6 @@ var SGI = {
         }
         catch (e) {
         }
-
 
         $("#inp_con_ip").xs_combo({
             addcssButton: "xs_button_con frame_color ",
@@ -2949,7 +2911,7 @@ var SGI = {
 
         });
 
-        $("#inp_con_ip").bind("keyup", function (e) {
+        $("#inp_con_ip").bind("keyup", function () {
 
             if (SGI.con_data) {
                 SGI.disconnect();
@@ -2962,10 +2924,9 @@ var SGI = {
 
         });
 
-
         var movementTimer = null;
         var panel_open = false;
-        $("#inp_con_ip").mousemove(function (e, x) {
+        $("#inp_con_ip").mousemove(function () {
             clearTimeout(movementTimer);
             movementTimer = setTimeout(function () {
                 if (!panel_open) {
@@ -2976,7 +2937,7 @@ var SGI = {
             }, 150);
         });
 
-        $("#inp_con_ip").mouseout(function (e) {
+        $("#inp_con_ip").mouseout(function () {
             clearTimeout(movementTimer);
         });
 
@@ -2998,9 +2959,11 @@ var SGI = {
 
 //        $.each($('.fbs_selected'), function () {
         $.each($('.jsplumb-drag-selected '), function () {
+            var data;
+            var posi;
             if ($(this).hasClass("fbs_element")) {
-                var posi = $(this).position();
-                var data = {
+                posi = $(this).position();
+                data = {
                     type: $(this).attr("id").split("_")[0],
                     style: {
                         top: posi.top,
@@ -3011,9 +2974,8 @@ var SGI = {
                 };
                 SGI.copy_data.push(data)
             } else if ($(this).hasClass("mbs_element")) {
-                var posi = $(this).position();
-
-                var data = {
+                 posi = $(this).position();
+                 data = {
                     type: $(this).attr("id").split(/_[0-9]+/)[0],
                     style: {
                         top: posi.top,
@@ -3024,13 +2986,10 @@ var SGI = {
                 };
                 SGI.copy_data.push(data)
             }
-
         });
-
-
     },
 
-    paste_selected: function (e) {
+    paste_selected: function () {
 
         var codebox = $(".codebox_active").find(".prg_codebox");
 
@@ -3041,12 +3000,13 @@ var SGI = {
 
         $.each(SGI.copy_data, function () {
 
+            var data;
             if (this.fbs) {
-                var data = this;
+                data = this;
                 data.parent = $(codebox).attr('id');
                 SGI.add_fbs_element(data, data.style.left, data.style.top, true)
             } else {
-                var data = this;
+                data = this;
                 data.parent = "prg_panel";
                 SGI.add_mbs_element(data, data.style.left, data.style.top, true)
             }
@@ -3055,7 +3015,6 @@ var SGI = {
     },
 
     edit_exp: function (data, name, callback) {
-
 
         var h = $(window).height() - 200;
         var v = $(window).width() - 400;
@@ -3206,7 +3165,6 @@ var SGI = {
                 } catch (err) {
                     return "UNGÜLTIGE ID !!!";
                 }
-
             }
         }
     },
@@ -3217,12 +3175,11 @@ var SGI = {
 
             if (key > 99999) {
                 if (this.Name == name) {
-                    id = key
+                    id = key;
                     return false
                 }
             }
         });
-
         return id
     },
 
@@ -3243,18 +3200,14 @@ var SGI = {
                         }
                     }
                 });
-
                 return cb(last_id)
 
             } else {
                 return cb(id_by_name)
             }
-
         } else {
             return cb("undefined")
         }
-
-
     },
 
     find_border_position: function (data) {
@@ -3307,7 +3260,7 @@ var SGI = {
             var aName = a.toString();
             var bName = b.toString();
             return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
-        };
+        }
 
         fs.readdir(scope.setup.datastore + '/ScriptGUI_Data/experts/', function (err, _files) {
             if (err) {
@@ -3330,62 +3283,45 @@ var SGI = {
                             } else {
                                 var data = JSON.parse(data);
                                 SGI.experts[data.name] = data;
-                             //   $("#toolbox_expert").append('\
-                             //   <div id="expert_' + data.name + '" style="width: 60px;height: auto;margin: auto;text-align: center;background-color: #ffffff;border: 1px solid #00ffff;border-radius: 7px;z-index: 50;display: inline-table;margin-top:30px; overflow-x: visible;overflow-y: hidden ;min-height:72px" class="fbs_exp_custom fbs">\
-                             //   <div style="position: relative; height: 100%; width: 100%; display: inline-block;"> \
-                             //   <div  class="div_head" style="background-color: gray;">\
-                             //       <a style="background-color:transparent; border:none; width: 56px; text-align: center;" class="head_font">' + data.name + '</a>\
-                             //   </div>\
-                             //   <div id="left_' + data.name + '" class="div_left_exp">\
-                             //   </div>\
-                             //   <div id="right_' + data.name + '" class="div_right_exp">\
-                             //   </div>\
-                             //   <label class="lab_exp_in">Inputs</label>\
-                             //   <label class="lab_exp_out">Outputs</label>\
-                             //   <a style="color: #000000" id="var_in_' + data.name + '" class="inp_exp_val_in" >' + data.in + '</a>\
-                             //   <a style="color: #000000" id="var_out_' + data.name + '" class="inp_exp_val_out" >' + data.out + '</a>\
-                             //   <button type="button" style="z-index: 2" id="btn_' + data.name + '" class="btn_exp">Edit</button> \
-                             //   </div> \
-                             //</div><br class="expert_br">');
 
                                 $("#toolbox_expert").append(
-                                "<div id='expert_" + data.name + "' style='width: 60px;height: auto;margin: auto;text-align: center;background-color: #ffffff;border-radius: 12px;z-index: 50;display: inline-table;margin-top:30px; overflow-x: visible;overflow-y: hidden ;min-height:72px' class='fbs_exp_custom fbs'> "+
-                                "<div  style=\"width:60px; overflow: visible!important;display: inline-block;  \" class=\"fbs_html fbs_element_exp \" style=\"left: 8px; top: 0px; position: relative;\">" +
-                                    "<div class=\"div_head\" style=\"background-color: gray;overflow: visible!important;height: auto;\">" +
+                                        "<div id='expert_" + data.name + "' style='width: 60px;height: auto;margin: auto;text-align: center;background-color: #ffffff;border-radius: 12px;z-index: 50;display: inline-table;margin-top:30px; overflow-x: visible;overflow-y: hidden ;min-height:72px' class='fbs_exp_custom fbs'> " +
+                                        "<div  style=\"width:60px; overflow: visible!important;display: inline-block;  \" class=\"fbs_html fbs_element_exp \" style=\"left: 8px; top: 0px; position: relative;\">" +
+                                        "<div class=\"div_head\" style=\"background-color: gray;overflow: visible!important;height: auto;\">" +
                                         "<span style=\"background-color:transparent; border:none; width: 56px; text-align: center;\" class=\"head_font \">Expert</span>" +
-                                    "</div>" +
-                                    "<label class=\"lab_exp_in\">Inputs</label>" +
-                                    "<label class=\"lab_exp_out\">Outputs</label>" +
-                                    "<input class=\"inp_exp_val_in \">" +
-                                    "<input class=\"inp_exp_val_out \">" +
-                                    "<div  id='left_" + data.name+ "'  class=\"div_left_exp\">" +
-                                    "</div>" +
-                                    "<div  id='right_" + data.name+ "' class=\"div_right_exp\">" +
-                                    "</div>" +
-                                    "<div style=\"background-color: gray;z-index: 1;height: 15px;\" class=\"btn_exp\"></div>" +
-                                    "<button type=\"button\" class=\"btn_exp\">Edit</button>" +
-                                    "<div style='position: absolute; width: 100%; height: 100%; z-index: -1 ;background-color: #ffffff;top:0;border-radius: 12px' ></div>"+
-                                    "<div class=\"fbs_shadow\"></div>" +
-                                "</div>" +
-                                "</div>"
+                                        "</div>" +
+                                        "<label class=\"lab_exp_in\">Inputs</label>" +
+                                        "<label class=\"lab_exp_out\">Outputs</label>" +
+                                        "<input class=\"inp_exp_val_in \">" +
+                                        "<input class=\"inp_exp_val_out \">" +
+                                        "<div  id='left_" + data.name + "'  class=\"div_left_exp\">" +
+                                        "</div>" +
+                                        "<div  id='right_" + data.name + "' class=\"div_right_exp\">" +
+                                        "</div>" +
+                                        "<div style=\"background-color: gray;z-index: 1;height: 15px;\" class=\"btn_exp\"></div>" +
+                                        "<button type=\"button\" class=\"btn_exp\">Edit</button>" +
+                                        "<div style='position: absolute; width: 100%; height: 100%; z-index: -1 ;background-color: #ffffff;top:0;border-radius: 12px' ></div>" +
+                                        "<div class=\"fbs_shadow\"></div>" +
+                                        "</div>" +
+                                        "</div>"
                                 );
 
-                                  for (var i = 1; i <= parseInt(data.in); i++) {
+                                for (var i = 1; i <= parseInt(data.in); i++) {
                                     $("#left_" + data.name).append(
-                                        "<div  class=\"html_endpoint \" style=\"position: relative; margin-top: 5px; height: 11px; width: 20px; left: -10px; top: 0px;z-index: -1!important;\">" +
-                                    "<svg style=\"position:absolute;left:0px;top:0px\" width=\"20\" height=\"11\" pointer-events=\"all\" position=\"absolute\" version=\"1.1\" xmlns=\"http://www.w3.org/1999/xhtml\">" +
-                                    "<rect width=\"20\" height=\"11\" version=\"1.1\" xmlns=\"http://www.w3.org/1999/xhtml\" fill=\"gray\" stroke=\"none\" style=\"\"></rect>" +
-                                    "</svg>" +
-                                    "</div>"
+                                            "<div  class=\"html_endpoint \" style=\"position: relative; margin-top: 5px; height: 11px; width: 20px; left: -10px; top: 0px;z-index: -1!important;\">" +
+                                            "<svg style=\"position:absolute;left:0px;top:0px\" width=\"20\" height=\"11\" pointer-events=\"all\" position=\"absolute\" version=\"1.1\" xmlns=\"http://www.w3.org/1999/xhtml\">" +
+                                            "<rect width=\"20\" height=\"11\" version=\"1.1\" xmlns=\"http://www.w3.org/1999/xhtml\" fill=\"gray\" stroke=\"none\" style=\"\"></rect>" +
+                                            "</svg>" +
+                                            "</div>"
                                     )
                                 }
                                 for (var i = 1; i <= parseInt(data.out); i++) {
                                     $("#right_" + data.name).append(
-                                    "<div class=\"html_endpoint \" style=\"position: relative; margin-top: 5px;height: 11px; width: 20px; left: 10px; top: 0px;z-index: -1!important;\">" +
-                                    "<svg style=\"position:absolute;left:0px;top:0px\" width=\"20\" height=\"11\" pointer-events=\"all\" position=\"absolute\" version=\"1.1\" xmlns=\"http://www.w3.org/1999/xhtml\">" +
-                                    "<rect width=\"20\" height=\"11\" version=\"1.1\" xmlns=\"http://www.w3.org/1999/xhtml\" fill=\"gray\" stroke=\"none\" style=\"\"></rect>" +
-                                    "</svg>" +
-                                    "</div>"
+                                            "<div class=\"html_endpoint \" style=\"position: relative; margin-top: 5px;height: 11px; width: 20px; left: 10px; top: 0px;z-index: -1!important;\">" +
+                                            "<svg style=\"position:absolute;left:0px;top:0px\" width=\"20\" height=\"11\" pointer-events=\"all\" position=\"absolute\" version=\"1.1\" xmlns=\"http://www.w3.org/1999/xhtml\">" +
+                                            "<rect width=\"20\" height=\"11\" version=\"1.1\" xmlns=\"http://www.w3.org/1999/xhtml\" fill=\"gray\" stroke=\"none\" style=\"\"></rect>" +
+                                            "</svg>" +
+                                            "</div>"
                                     )
                                 }
 
@@ -3436,10 +3372,7 @@ var SGI = {
                 cb()
             }
             catch (e) {
-
-
             }
-
         }
 
         if (scope.setup.datastore == "" || !fs.existsSync(path.resolve(scope.setup.datastore))) {
@@ -3478,7 +3411,7 @@ var SGI = {
 
             $("#btn_datastore_chose").button().click(function () {
                 var chooser = $("#datastore_patch");
-                chooser.change(function (evt) {
+                chooser.change(function () {
                     if ($(this).val() != "") {
                         $("#inp_datastore").val($(this).val());
                     }
