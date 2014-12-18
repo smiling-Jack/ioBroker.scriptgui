@@ -46,6 +46,15 @@ CCU-IO.ScriptGUI ist ein Visueller Script builder auf Node-Webkit basis. Mit ihm
 
 
 ## Changelog
+
+### 0.73.3
+* Bugfixes Trigger Value
+* Clean up
+
+### 0.73.3
+* Save setup in localstorage
+* Clean up
+
 ### 0.73.2
 * Add Livetest parameter
 * Give the Script a Filename

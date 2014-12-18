@@ -892,7 +892,7 @@ body {
 .inp_wert {
     position: relative;
     display: inline-block;
-    height: 12px;
+    height: 13px;
     min-width: 40px;
     width: 40px;
     color: #000000;
@@ -902,7 +902,8 @@ body {
     text-align: center;
     margin-right: 5px;
 
-    border: ridge 2px #00ffff;
+    border: solid 1px rgb(166,166,166);
+    background-color: transparent;
 
 }
 
@@ -923,6 +924,8 @@ body {
 
 .inp_val {
     font-size: 11px;
+    background-color: transparent;
+    height: 17px!important;
 }
 
 .inp_if {

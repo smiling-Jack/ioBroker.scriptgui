@@ -1328,7 +1328,8 @@ if(!SGI.sim_run){
                     className: "item_font ",
                     callback: function (key, opt) {
                         opt.$trigger = $(opt.$trigger).parent().parent().parent();
-                        SGI.add_trigger_hmid(opt.$trigger, "val")
+//                        SGI.add_trigger_hmid(opt.$trigger, "val")
+                        SGI.add_trigger_hmid(opt.$trigger, "singel", "val")
                     }
                 },
                 "Del_id": {

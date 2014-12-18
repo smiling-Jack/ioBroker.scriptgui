@@ -2381,7 +2381,7 @@ SGI = {
 
             add += '<div style="min-width: 100%" class="div_hmid_val_body">';
             add += '<div data-info="' + $this.attr("id") + '"  style="display:inline-block;float: left;" class="div_hmid_val">{{mbs[' + nr + '].name[' + index + '].toString()}}</div>';
-            add += '<div style="float: right; margin-left:5px; display: inline-block">';
+            add += '<div style="float: right; margin-left:5px; display: inline-block; position: relative;z-index: 2">';
             add += '<select  id="val_' + index + '" ng-model="mbs[' + nr + '].val[' + index + ']" class="inp_val">';
             add += '    <option value="val">Gleich</option>';
             add += '    <option value="valNe">Ungleich</option>';
