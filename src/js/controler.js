@@ -2,7 +2,7 @@ angular.module('tutorialApp', [])
     .controller('GUICtrl', function ($scope, $compile) {
 
         var setup_default = {
-            "user_id": (new Date).valueOf().toString('36'),
+            "user_id": "",
             "lang": "de",
             "theme": "dark-hive",
             "snap_grid": "",
@@ -18,16 +18,18 @@ angular.module('tutorialApp', [])
             "last_start": "",
             "last_con": false,
             "auto_con": false,
-            "con_type": ""
+            "con_type": "",
+            "toolbox":["Allgemain", "alg"]
         };
 
 
+
+
         try {
-            fs.readFile(nwDir + '/setup.json', "utf8", function (err, data) {
-                if (!err) {
-                    var load = JSON.parse(data.split("}")[0] + "}");
+
+                    var load = JSON.parse(localStorage.setup.split("}")[0] + "}");
                     $scope.setup = {
-                        "user_id": load.user_id || setup_default.user_id,
+                        "user_id": load.user_id || get_userid(),
                         "lang": load.lang || setup_default.lang,
                         "theme": load.theme || setup_default.theme,
                         "snap_grid": load.snap_grid || setup_default.snap_grid,
@@ -44,20 +46,21 @@ angular.module('tutorialApp', [])
                         "last_con": load.last_con || setup_default.last_con,
                         "auto_con": load.auto_con || setup_default.auto_con,
                         "con_type": load.con_type || setup_default.con_type,
-                    }
-                    angular_init()
-                } else {
-                    fs.writeFile(nwDir + '/setup.json', JSON.stringify(setup_default), function (err) {
-                        $scope.setup = setup_default;
-                        angular_init()
-                    });
-                }
-            });
-        } catch (err) {
-            fs.writeFile(nwDir + '/setup.json', JSON.stringify(setup_default), function (err) {
-                $scope.setup = setup_default;
+                        "toolbox": load.toolbox || setup_default.toolbox,
+                    };
+            setTimeout(function(){
                 angular_init()
-            });
+            },0);
+
+
+
+        } catch (err) {
+            setup_default.user_id = get_userid();
+            localStorage.setup = JSON.stringify(setup_default);
+                $scope.setup = setup_default;
+            setTimeout(function(){
+                angular_init()
+            },0);
         }
 
 

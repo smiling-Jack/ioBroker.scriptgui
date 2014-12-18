@@ -31,6 +31,35 @@ function haveParent(theParent) {
     start_win = theParent;
 }
 
+function get_userid(){
+    var net_inter = os.networkInterfaces();
+
+    function findNested(obj, key, memo) {
+        var i, proto = Object.prototype, ts = proto.toString;
+        ('[object Array]' !== ts.call(memo)) && (memo = []);
+        for (i in obj) {
+            if (proto.hasOwnProperty.call(obj, i)) {
+                if (i === key) {
+                    memo.push(obj[i]);
+                } else if ('[object Array]' === ts.call(obj[i]) || '[object Object]' === ts.call(obj[i])) {
+                    findNested(obj[i], key, memo);
+                }
+            }
+        }
+        return memo;
+    }
+
+    var net_inter_list = findNested(net_inter,"mac");
+    var id = "";
+    $.each(net_inter_list, function(){
+        if(this.toString() !="00:00:00:00:00:00"){
+            id = this.toString().replace(/:/g,"");
+            return false
+        }
+    });
+    return id
+}
+
 var nwDir = upd.getAppPath();
 
 
@@ -75,13 +104,8 @@ SGI = {
     grid: 9,
 
     drop_block: false,
-    str_tollbox: "ScriptGUI_Toolbox",
-
     sim_run: false,
-
     file_name: "",
-    prg_store: "www/ScriptGUI/",
-    example_store: "www/ScriptGUI/example/",
     key: "",
     plumb_inst: {
         inst_mbs: undefined
@@ -119,8 +143,43 @@ SGI = {
     },
 
     Setup: function () {
-        SGI.dev = true;
 
+        //SGI.dev = true;
+
+        main_win.on('close', function () {
+           SGI.save_setup();
+            process.exit();
+        });
+
+        scope = angular.element($('body')).scope();
+        scope.$apply();
+
+        $("#prgopen").attr("nwworkingdir", path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/"));
+        $("#prgsaveas").attr("nwworkingdir", path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/"));
+
+        // Setze Sprache XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        SGI.language = scope.setup.lang;
+
+
+        jsPlumb.ready(function () {
+
+            SGI.mbs_inst();
+
+        });
+        // translate XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+        $.each($(".translate"), function () {
+            var $this = this;
+            $($this).text(SGI.translate($($this).text()))
+
+        });
+        $.each($(".title_translate"), function () {
+            var $this = this;
+            $($this).attr("title", (SGI.translate($($this).attr("title"))))
+
+        });
+
+        // Sim Date  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         var rule = new schedule.RecurrenceRule();
         rule.second = 0;
         schedule.scheduleJob(rule, function () {
@@ -151,35 +210,7 @@ SGI = {
             sim_p.send(["time", sim.time_mode])
         });
 
-
-        scope = angular.element($('body')).scope();
-        scope.$apply();
-
-        $("#prgopen").attr("nwworkingdir", path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/"));
-        $("#prgsaveas").attr("nwworkingdir", path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/"));
-// Setze Sprache
-        SGI.language = scope.setup.lang;
-
-
-        jsPlumb.ready(function () {
-
-            SGI.mbs_inst();
-
-        });
-        // translate XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-        $.each($(".translate"), function () {
-            var $this = this;
-            $($this).text(SGI.translate($($this).text()))
-
-        });
-        $.each($(".title_translate"), function () {
-            var $this = this;
-            $($this).attr("title", (SGI.translate($($this).attr("title"))))
-
-        });
-
-        // slider XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        // slider XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
         $(".prg_body").scrollTop(1000 - ($(".prg_body").height() / 2));
@@ -190,7 +221,7 @@ SGI = {
         //document.styleSheets[1].cssRules[4].style["background-color"] = color;
 
 
-        // Toolbox XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        // Toolbox XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         $(".toolbox").hide();
         $("#sim_output").prepend("<tr><td style='width: 100px'>Script Log</td><td></td></tr>");
         $.each($(".html_element"), function () {
@@ -207,15 +238,15 @@ SGI = {
         });
 
 
-        var box_init = storage.get(SGI.str_tollbox) || ["Allgemain", "alg"];
         // Make btn Toolboxauswahl
+
         $("#toolbox_select").xs_combo({
             addcssButton: "xs_button_toolbox",
             addcssMenu: "xs_menu_toolbox",
             addcssFocus: "xs_focus_toolbox",
             cssText: "xs_text_toolbox item_font",
             time: 750,
-            val: box_init[0],
+            val: scope.setup.toolbox[0],
             data: [
                 SGI.translate("Allgemein"),
                 SGI.translate("Programme"),
@@ -232,7 +263,7 @@ SGI = {
             ]
         });
 
-        $("#toolbox_" + box_init[1]).show();
+        $("#toolbox_" + scope.setup.toolbox[1]).show();
 
         // Toolboxauswahl
         $("#toolbox_select").change(function () {
@@ -278,10 +309,10 @@ SGI = {
 
             $(".toolbox").hide();
             $("#toolbox_" + box).show();
-            storage.set(SGI.str_tollbox, [val, box]);
+            scope.setup.toolbox =  [val, box];
         });
 
-        // Live Test
+        // Live Test XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         $("#clear_force").button()
             .click(function () {
                 $(this).removeClass("ui-state-focus");
@@ -348,7 +379,9 @@ SGI = {
         }
 
 
-        //      Make element draggable
+
+        //  Make element draggable XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 
 
         $(".fbs").draggable({
@@ -387,7 +420,8 @@ SGI = {
             }
         });
 
-        //Make element droppable
+        // Make element droppable XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
         $(".prg_panel")
             .droppable({
                 accept: ".mbs , .fbs",
@@ -441,7 +475,7 @@ SGI = {
         });
 
 
-// SETUP ___________________________________________________________________________________________________________
+        //  Setup XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
         $("#setup_dialog").dialog({
             modal: false,
@@ -493,11 +527,8 @@ SGI = {
 
         setTimeout(function () {
             if (SGI.dev != true) {
-
-
                 if (scope.setup.update) {
                     upd.checkNewVersion(function (error, newVersionExists, manifest) {
-
                         if (!error && newVersionExists) {
                             SGI.update()
                         }
@@ -642,12 +673,7 @@ SGI = {
     },
 
     save_setup: function () {
-        fs.writeFile(nwDir + '/setup.json', JSON.stringify(scope.setup), function (err) {
-            if (!err) {
-            } else {
-
-            }
-        });
+        localStorage.setup = JSON.stringify(scope.setup)
     },
 
     mbs_inst: function () {
