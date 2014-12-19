@@ -12,7 +12,6 @@ var schedule = require('node-schedule');
 var js_beautify = require('js-beautify');
 var html_beautify = require('js-beautify').html;
 
-
 var start_win;
 var main_win = nw_gui.Window.get();
 var main_manifest = nw_gui.App.manifest;
@@ -25,7 +24,7 @@ var upd = new updater(up_pkg);
 
 var bausteine = require('./js/bausteine.json');
 
-main_win.title = main_manifest.name + " " + main_manifest.version + " Beta-Test";
+main_win.title = main_manifest.name + " " + main_manifest.version + " Beta";
 
 function haveParent(theParent) {
     start_win = theParent;
