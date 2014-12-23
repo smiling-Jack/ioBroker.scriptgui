@@ -4,13 +4,13 @@
 
 
 //var vm = require('vm');
-
+var _reguest = require("request");
 
 process.on("uncaughtException", function (e) {
     process.send(["script_err", e.stack]);
     process.exit(9990)
 });
-
+console.log("hallo hier bin ich")
 
 var sim = {
     time_mode: "auto",
@@ -28,7 +28,7 @@ var sim = {
 
 var old_date = Date;
 
-var sd = []
+var sd = [];
 //
 Date = function () {
     if (sim.time_mode == "auto") {
@@ -46,7 +46,6 @@ process.on('message', function (data) {
         sim.regaObjects = data[1].regaObjects;
         sim.regaIndex = data[1].regaIndex;
         sim.datapoints = data[1].uiState;
-
         try {
             run(script);
         } catch (err) {
@@ -71,7 +70,6 @@ process.on('message', function (data) {
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 function run(script) {
-
 
     function step_fbs_highlight(id) {
         var d = (new Date).valueOf() + 800;
@@ -804,6 +802,15 @@ function run(script) {
         }
     }
 
+    function request(data) {
+        if (sim.run_type == "hotrun") {
+       _reguest(data)
+            process.send(["log", "<b style='color: blue'>Request: </b>" + data + ""]);
+        } else {
+            process.send(["log", "<b style='color: blue'>Request: </b>" + data + ""]);
+        }
+    }
+
     function setObject(id, data) {
         if (sim.datapoints["_" + id] == undefined) {
             sim.datapoints.attr("_" + id, {Value: 0, Timestamp: "", LastChange: ""});
@@ -1019,11 +1026,7 @@ function run(script) {
 }
 
 
-process.stdout.on('data', function (data) {
-process.send(data.toString())
-});
 
-setTimeout(function(){console.log("LOG TEST")},500)
 
 
 

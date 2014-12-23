@@ -440,6 +440,9 @@ var Compiler = {
                     output = 'var ' + this.output[0].ausgang;
                 }
 
+                if (step == "true" && (this["type"] == "next" || this["type"] == "next1" || this["type"] == "next0") ) {
+                    Compiler.script += 'step_fbs_highlight("' + this.fbs_id + '");';
+                }
 
                 Compiler.last_fbs = this.fbs_id;
 //                if (sim == "step") {
@@ -974,6 +977,8 @@ process.send(time2);\
 
                 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
+
+
                 if (run_type != false && this.output.length > 0) {
                     $.each(this.output, function () {
                         Compiler.script += 'simout("' + this.ausgang + '",' + this.ausgang + ');';
@@ -1008,7 +1013,7 @@ process.send(time2);\
                     });
                 }
 
-                if (step == "true") {
+                if (step == "true" && (this["type"] != "next" || this["type"] != "next1" || this["type"] != "next0") ) {
                     Compiler.script += 'step_fbs_highlight("' + this.fbs_id + '");';
                 }
             });
@@ -1016,7 +1021,12 @@ process.send(time2);\
         });
 
         Compiler.force += Compiler.script;
-        Compiler.script = "//@ sourceURL=" + SGI.file_name.split(".")[0]+".js \n" + Compiler.force;
+        if (run_type == false){
+            Compiler.script = "//@ sourceURL=" + SGI.file_name.split(".")[0]+".js \n" + Compiler.force;
+        }else{
+            Compiler.script = "//@ sourceURL=s_engine\n" + Compiler.force;
+        }
+
         return (Compiler.script);
     }
 };

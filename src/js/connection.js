@@ -50,24 +50,27 @@ jQuery.extend(true, SGI, {
             url = _url
         }
 
+
         if (scope.setup.last_con != url || scope.setup.con_type != "offline"){
             scope.setup.last_con = url;
             scope.setup.con_type = "offline";
             scope.$apply();
             SGI.save_setup()
         }
+        $('body').css("cursor","wait");
         try {
 
-            var url = $("#inp_con_ip").val().replace(":", "port");
 
             fs.readFile(scope.setup.datastore + '/ScriptGUI_Data/connections/' + url + '.json', function (err, data) {
                 if (!err) {
-
+                    console.log(data)
                     homematic = JSON.parse(data);
+                    console.log(homematic)
                     $("#img_con_state").attr("src", "img/icon/flag-yellow.png");
                     $("#btn_con_offline").parent().addClass("div_img_glass_on");
                     $("#btn_con_online").parent().removeClass("div_img_glass_on");
                     SGI.con_data = true;
+
                     $("#run_step, #run_type1, #img_set_script_play ,#img_set_script_stop").button({disabled:false});
                 } else {
                     alert(err)
@@ -79,13 +82,15 @@ jQuery.extend(true, SGI, {
                         regaIndex: {},
                         regaObjects: {}
                     };
+
                     SGI.con_data = false;
                     throw err
                 }
+                $('body').css("cursor","default");
             });
         }
         catch (err) {
-
+            $('body').css("cursor","default");
             $("#img_con_state").attr("src", "img/icon/flag-red.png");
             $("#btn_con_offline").parent().removeClass("div_img_glass_on");
             $("#btn_con_online").parent().removeClass("div_img_glass_on");
@@ -98,6 +103,7 @@ jQuery.extend(true, SGI, {
             SGI.con_data = false;
             throw err
         }
+
     },
 
     online: function (__url) {
@@ -128,9 +134,6 @@ jQuery.extend(true, SGI, {
 
             $.get(url + "/auth/auth.js", function (data) {
                 var socketSession_id = data.split('\'')[1];
-
-
-
 
 
                 SGI.socket = io.connect(url + "?key=" + socketSession_id, {'force new connection': true});
@@ -175,9 +178,9 @@ jQuery.extend(true, SGI, {
                                     SGI.socket.on('event', function (obj) {
                                         if (homematic.uiState["_" + obj[0]] !== undefined) {
                                             var o = {};
-                                            o["_" + obj[0] + ".Value"] = obj[1];
-                                            o["_" + obj[0] + ".Timestamp"] = obj[2];
-                                            o["_" + obj[0] + ".Certain"] = obj[3];
+                                            o["Value"] = obj[1];
+                                            o["Timestamp"] = obj[2];
+                                            o["Certain"] = obj[3];
                                             homematic.uiState["_" + obj[0]] = o;
 
                                         }

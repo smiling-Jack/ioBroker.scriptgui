@@ -5,13 +5,14 @@
  *  Copyright (c) 2014 Steffen Schorling http://github.com/smiling-Jack
  *  Lizenz: [CC BY-NC 3.0](http://creativecommons.org/licenses/by-nc/3.0/de/)
  */
-
+var xs_combo_ops = {};
 
 (function ($) {
     $.fn.xs_combo = function (_options, _newData) {
 
         if (_newData) {
             if (_options == "setData") {
+                o = xs_combo_ops[$(this).attr("id")];
                 var classes = $(this).find(".xs_list_box").first().attr("data-cssText");
                 $(this).find(".xs_liste").remove();
 
@@ -19,7 +20,25 @@
                 $.each(_newData, function () {
                     liste += ('<p class="' + classes + ' xs_liste">' + this + '</p>')
                 });
-                $(this).find(".xs_list_box").append(liste.toString())
+                $(this).find(".xs_list_box").append(liste.toString());
+                var $this = this;
+                text = this.children("input");
+                var list_elem = this.children("div").children("p");
+                $(list_elem)
+                    .mouseenter(function () {
+                        $(this).addClass(o.cssFocus);
+                    })
+                    .mouseleave(function () {
+                        $(this).removeClass(o.cssFocus)
+                    })
+                    .click(function () {
+                        $($this).val($(this).text());
+                        $(text).val($(this).text());
+                        $($this).trigger("change");
+                        clearTimeout(timer);
+                    });
+
+
             }
 
         } else if (typeof _options == "string") {
@@ -45,7 +64,9 @@
                 val: _options.val || "",
                 combo: _options.combo
             };
+            xs_combo_ops[$(this).attr("id")] = o;
             $(this).val(o.val);
+
             var liste = "";
 
             var timer;

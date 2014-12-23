@@ -13,7 +13,7 @@ function sim_exit(){
     console.log("exit")
     $('#play_overlay').remove();
     $("#run_type").show();
-    $("#prg_panel").find("select, input:not(.force_input)").each(function () {
+    $("#prg_panel").find("select,button, input:not(.force_input)").each(function () {
         $(this).removeAttr('disabled');
     });
 
@@ -23,7 +23,7 @@ function sim_exit(){
         $("#run_type1,#run_type2,#run_type3,#run_step").button({disabled:false});
     }
 
-    $("#prg_body").css("border-color","transparent")
+    $("#prg_body").css("border-color","transparent");
 
     $(".btn_min_trigger").unbind("click");
     $(document).unbind("new_data");
@@ -48,6 +48,7 @@ function sim_exit(){
 }
 
 function start_sim_p() {
+    //sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type],{execArgv: ['--debug=5000']});
     sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type]);
     sim_p.on('close', function (code, signal) {
         console.log('close ' + code + "   " + signal);
@@ -58,7 +59,7 @@ function start_sim_p() {
     sim_p.on('exit', function (code, signal) {
         console.log('exit ' + code + "   " + signal);
 
-sim_exit()
+    sim_exit()
 
     });
     sim_p.on('message', function (data) {
@@ -104,34 +105,25 @@ var sim = {
     script:"",
     script_err: function (err) {
 
-        console.log(err)
-
+console.log(err)
         try{
             sim_p.send(["exit"])
         }
        catch (e){}
 
 
-        var line_number;
-
-        //if(err.split(":")[0] == "s_engine"){
-        //line_number = parseInt(err.split(":")[1].split("=")[0]);
-        //
-        //}else{
-        //line_number = parseInt(err.split("s_engine:")[1].split(":")[0]);
-        //}
-
+        var line_number = parseInt(err.match(/(s_engine:)\w+/)[0].split(":")[1]);
 
 
         var real_script = js_beautify(Compiler.make_prg().toString());
         var _sim_script = sim.script.split(/\n/);
-        var _real_script = real_script.split(/\n/)
+        var _real_script = real_script.split(/\n/);
         var sim_error_line_text = _sim_script[line_number];
         var sim_error_line = _sim_script.indexOf(sim_error_line_text);
         var real_error_line = _real_script.indexOf(sim_error_line_text);
         var real_error_line_text = _real_script[real_error_line-1];
 
-        console.log(sim_error_line)
+
 
         for (var i = sim_error_line; i > 1; i--) {
             if (_sim_script[i].split("xxxxxxxxxxxxxxxxxxxx ").length > 1) {
@@ -144,7 +136,7 @@ var sim = {
 
 
 
-        $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td style='color: red'>" + err + "</td></tr>");
+        $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td style='color: red'>" + err.split(":")[0] + "</td></tr>");
         $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td><b>Fehler in Zeile:</b> " + real_error_line + "</td></tr>");
         $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td><b>Zeilentext:</b>" + real_error_line_text + "</td></tr>");
 
@@ -329,6 +321,7 @@ var sim = {
     simulate: function () {
         if (!SGI.sim_run) {
             try {
+                $(".error_fbs").removeClass("error_fbs");
                 sim.script = js_beautify(Compiler.make_prg(sim.run_type,sim.step).toString());
                 start_sim_p();
 

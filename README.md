@@ -8,8 +8,6 @@ CCU-IO.ScriptGUI ist ein Visueller Script builder auf Node-Webkit basis. Mit ihm
 
 
 ### 0.7
-
-
 * Test Programme
 * Mode umschaltung GUI/EDIT ?
 * Jede Programmbox mit Try Catch wrappen
@@ -46,7 +44,16 @@ CCU-IO.ScriptGUI ist ein Visueller Script builder auf Node-Webkit basis. Mit ihm
 
 
 ## Changelog
-### 0.73.4
+### 0.74.2
+* Bugfix online new data
+
+### 0.74.1
+* Bugfix Sim find error Baustein
+* Bugfix auto_con
+* Bugfix xs_combo (set_data)
+* Add "request" to sim_engine (hotrun fit)
+
+### 0.74.0
 * close Beta-Test go back to open Beta (19.12.2014)
 
 ### 0.73.4

@@ -1,7 +1,7 @@
 {
   "main": "start.html",
   "name": "ScriptGUI",
-  "version": "0.74.0",
+  "version": "0.74.2",
   "description": "Script GUI",
   "keywords": [],
   "window": {
