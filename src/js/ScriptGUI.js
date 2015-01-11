@@ -527,11 +527,15 @@ SGI = {
         setTimeout(function () {
             if (SGI.dev != true) {
                 if (scope.setup.update) {
+                    try{
                     upd.checkNewVersion(function (error, newVersionExists, manifest) {
                         if (!error && newVersionExists) {
                             SGI.update()
                         }
                     });
+                    }catch(err){
+
+                    }
                 }
 
                 if ((new Date).toLocaleDateString() != scope.setup.last_open) {
