@@ -1,16 +1,28 @@
+
+setInterval(function(){
+    console.log("hallo")
+},1000)
+
+
+/*
+
+
 /**
  * Created by jack on 29.11.2014.
- */
+ *//*
+
 
 
 //var vm = require('vm');
 var _reguest = require("request");
 
+
 process.on("uncaughtException", function (e) {
     process.send(["script_err", e.stack]);
     process.exit(9990)
 });
-console.log("hallo hier bin ich")
+
+console.log("hallo hier bin ich");
 
 var sim = {
     time_mode: "auto",
@@ -1035,3 +1047,4 @@ function run(script) {
 
 
 
+*/

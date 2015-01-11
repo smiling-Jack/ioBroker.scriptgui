@@ -3,7 +3,7 @@
  * Lizenz: [CC BY-NC 3.0](http://creativecommons.org/licenses/by-nc/3.0/de/)
  */
 
-
+var dc;
 var cp = require('child_process');
 var stacktrace = require('stack-trace');
 
@@ -48,8 +48,59 @@ function sim_exit(){
 }
 
 function start_sim_p() {
-    //sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type],{execArgv: ['--debug=5000']});
-    sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type]);
+
+    //var options = {
+    //    "title": "ScriptGUI",
+    //    "icon": "img/cube256.png",
+    //    "toolbar": true,
+    //    "frame": true,
+    //    "width": 800,
+    //    "height": 600,
+    //    "min_width": 800,
+    //    "min_height": 600,
+    //    "max_width": "100%",
+    //    "max_height": "100%",
+    //    "resizable": true,
+    //    "show": true,
+    //    "new-instance":true
+    //};
+    //
+    //var s_engine = nw_gui.Window.open('s_engine.html', options);
+//sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type],{execArgv:['--debug-brk=5123']}
+    console.log(nwDir)
+sim_p = cp.spawn("C:\\Users\\jack\\Desktop\\ScriptGUI\\ScriptGUI.exe", ['--debug', './js/sim_process.js' ]);
+
+
+ //   var DebuggerClient = require('_debugger').Client;
+ //dc = new DebuggerClient();
+ //   dc.connect(5858, function(err,data){
+ //       console.log(err)
+ //       console.log(data)
+ //       console.log(dc)
+ //       dc.recContinue()
+ //   });
+ //
+ //   dc.on("break", function(data){
+ //       console.log(data)
+ //
+ //
+
+    //})
+
+    //setTimeout(
+    //    function(){
+    //        var client = require('v8-debugger').createClient({port: 5000});
+    //        client.reqBacktrace(function(err, res) {
+    //            console.log(res)
+    //        });
+    //    },
+    //    1000
+    //)
+
+
+
+
+    //sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type],{Silent:true});
     sim_p.on('close', function (code, signal) {
         console.log('close ' + code + "   " + signal);
     });
@@ -94,7 +145,7 @@ function start_sim_p() {
             console.log(data);
         }
     });
-    sim_p.send(["home", homematic])
+    //sim_p.send(["home", homematic])
 }
 
 var sim = {
