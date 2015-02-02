@@ -48,8 +48,30 @@ function sim_exit(){
 }
 
 function start_sim_p() {
-    //sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type],{execArgv: ['--debug=5000']});
-    sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type]);
+    sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type],{silent:true});
+
+//    var Client = require('v8-debug-protocol');
+//    var client = new Client(5858);
+//
+//    client.on('connect', function() {
+//       console.log("debug connected")
+//
+//        client.continue(function(err, doneOrNot) {
+//console.log(err)
+//console.log(doneOrNot)
+//        });
+//    })
+//    client.on('break', function(breakInfo) {
+//        console.log(breakInfo)
+//        client.continue(function(err, doneOrNot) {
+//            console.log(err)
+//            console.log(doneOrNot)
+//        });
+//    })
+
+
+
+    //sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type],{silent:false});
     sim_p.on('close', function (code, signal) {
         console.log('close ' + code + "   " + signal);
     });

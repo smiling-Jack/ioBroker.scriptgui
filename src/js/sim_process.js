@@ -5,12 +5,14 @@
 
 //var vm = require('vm');
 var _reguest = require("request");
+//var debug = require("debug")
 
 process.on("uncaughtException", function (e) {
     process.send(["script_err", e.stack]);
     process.exit(9990)
 });
-console.log("hallo hier bin ich")
+//console.log("hallo hier bin ich")
+//debug.sb()
 
 var sim = {
     time_mode: "auto",
