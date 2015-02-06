@@ -5,7 +5,6 @@
 
 
 var cp = require('child_process');
-var stacktrace = require('stack-trace');
 
 var sim_p;
 
@@ -47,29 +46,56 @@ function sim_exit(){
     SGI.sim_run = false
 }
 
+var net = require('net');
+
+
+var debug = {
+    socket:null,
+    init: function(){
+        this.socket = new net.Socket();
+
+        this.socket.on("connect", function(){
+            console.log("debug connected");
+        });
+
+        this.socket.on("data", function (data) {
+            var _data = data.split(/\n\r\n/g);
+            console.log("Data:");
+            console.log(_data);
+            $.each(_data,function(){
+                try{
+                    var d = JSON.parse(this);
+                    console.log("event: " + d.event.toString())
+                    if(d.event == "break"){debug.on_brake()}
+                }catch (err){
+                    console.log("parse error: "+ this)
+                }
+            })
+        });
+    },
+    on_brake:function(){
+        debug.send_cont(1000)
+    },
+    send_cont: function(time){
+        setTimeout(function() {
+            var msg = JSON.stringify({
+                "type": "request",
+                "command": "continue"
+            });
+            debug.socket.write("Content-Length: " + msg.length + "\r\n\r\n" + msg);
+        },time);
+    }
+
+};
+
+debug.init();
+
+
 function start_sim_p() {
-    sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type],{silent:true});
+    sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type],{execArgv: ['--debug=5858'], silent:true});
 
-//    var Client = require('v8-debug-protocol');
-//    var client = new Client(5858);
-//
-//    client.on('connect', function() {
-//       console.log("debug connected")
-//
-//        client.continue(function(err, doneOrNot) {
-//console.log(err)
-//console.log(doneOrNot)
-//        });
-//    })
-//    client.on('break', function(breakInfo) {
-//        console.log(breakInfo)
-//        client.continue(function(err, doneOrNot) {
-//            console.log(err)
-//            console.log(doneOrNot)
-//        });
-//    })
-
-
+    debug.socket.connect("5858");
+    debug.socket.setEncoding('utf8');
 
     //sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type],{silent:false});
     sim_p.on('close', function (code, signal) {

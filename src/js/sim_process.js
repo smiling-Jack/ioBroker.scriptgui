@@ -74,10 +74,9 @@ process.on('message', function (data) {
 function run(script) {
 
     function step_fbs_highlight(id) {
-        var d = (new Date).valueOf() + 800;
+
         process.send(["step_fbs_highlight", id]);
-        while (d > (new Date).valueOf()) {
-        }
+        debugger;
     }
 
     function step_mbs_highlight_in(id) {

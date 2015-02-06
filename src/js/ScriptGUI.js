@@ -61,7 +61,6 @@ function get_userid(){
 
 var nwDir = upd.getAppPath();
 
-
 process.on("uncaughtException", function (e) {
     main_win.show();
     SGI.error_box(e.stack)
