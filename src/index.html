@@ -56,6 +56,8 @@
 
 
     <script type="text/javascript" src="js/ScriptGUI.js"></script>
+    <script type="text/javascript" src="js/mode_gui.js"></script>
+    <script type="text/javascript" src="js/mode_editor.js"></script>
     <script type="text/javascript" src="js/Menu.js"></script>
     <script type="text/javascript" src="js/Translate.js"></script>
     <script type="text/javascript" src="js/add_fbs.js"></script>
@@ -137,14 +139,14 @@
                                                                               data-info="vader">vader</a></li>
                     </ul>
                 </li>
-                <!--<li class="ui-state-default frame_color menu_item" style="border: none"><a class="translate">Mode</a>-->
-                    <!--<ul id="ul_mode">-->
-                        <!--<li class="ui-state-default frame_color menu_item"><a id="m_mode_editor" class="translate">Editor</a>-->
-                        <!--</li>-->
-                        <!--<li class="ui-state-default frame_color menu_item"><a id="m_mode_gui"-->
-                                                                              <!--class="item_font   translate">GUI</a></li>-->
-                    <!--</ul>-->
-                <!--</li>-->
+                <li class="ui-state-default frame_color menu_item" style="border: none"><a class="translate">Mode</a>
+                <ul id="ul_mode">
+                <li class="ui-state-default frame_color menu_item"><a id="m_mode_editor" class="translate">Editor</a>
+                </li>
+                <li class="ui-state-default frame_color menu_item"><a id="m_mode_gui"
+                class="item_font   translate">GUI</a></li>
+                </ul>
+                </li>
                 <li class="ui-state-default frame_color menu_item"><a id="m_setup" class="translate">Setup</a></li>
             </ul>
         </li>
@@ -232,7 +234,7 @@
 
 
 </div>
-<div id="main" class="main ui-widget-content">
+<div id="main_gui" class="main_gui ui-widget-content" style="display: none">
     <div id="toolbox_select" class="toolbox_select">
     </div>
 
@@ -392,6 +394,7 @@
         </div>
     </div>
 </div>
+<div id="main_edit" class="main_edit ui-widget-content" style="display: none"></div>
 <div id="sim_log" class="sim_log frame_color ui-state-default">
     <div id="sim_log_head" class="sim_log_head ui-state-default"></div>
     <div class="div_sim_controll">

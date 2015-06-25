@@ -2,6 +2,7 @@ angular.module('tutorialApp', [])
     .controller('GUICtrl', function ($scope, $compile) {
 
         var setup_default = {
+            "mode":"gui",
             "user_id": "",
             "lang": "de",
             "theme": "dark-hive",
@@ -29,6 +30,7 @@ angular.module('tutorialApp', [])
 
                     var load = JSON.parse(localStorage.setup.split("}")[0] + "}");
                     $scope.setup = {
+                        "mode" : load.mode || setup_default.mode,
                         "user_id": load.user_id || get_userid(),
                         "lang": load.lang || setup_default.lang,
                         "theme": load.theme || setup_default.theme,

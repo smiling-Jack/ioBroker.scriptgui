@@ -164,7 +164,16 @@ body {
 
 
 
-.main {
+.main_gui {
+    position: relative;
+    overflow: hidden;
+    left: 0;
+    width: calc(100% - 2px);
+    margin: 0 !important;
+    min-height: 142px;
+    height: calc(100% - 188px);
+}
+.main_edit {
     position: relative;
     overflow: hidden;
     left: 0;
@@ -2375,4 +2384,14 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
     left: 0px;
     top: 0px;
     z-index: 51;
+}
+
+.set_algin{
+    display: none;
+}
+.set_zoom{
+    display: none;
+}
+.set_tooltip{
+    display: none;
 }
