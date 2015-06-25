@@ -2,7 +2,7 @@
  * Copyright (c) 2013 Steffen Schorling http://github.com/smiling-Jack
  * Lizenz: [CC BY-NC 3.0](http://creativecommons.org/licenses/by-nc/3.0/de/)
  */
-
+//
 var os = require('os');
 var net = require('net');
 var path = require('path');
@@ -11,17 +11,17 @@ var nw_gui = require('nw.gui');
 var schedule = require('node-schedule');
 var js_beautify = require('js-beautify');
 var html_beautify = require('js-beautify').html;
-
+//
 var start_win;
 var main_win = nw_gui.Window.get();
 var main_manifest = nw_gui.App.manifest;
-
+//
 var request = require("request");
 var ncp = require('ncp');
 var up_pkg = require('./update.json');
 var updater = require('node-webkit-updater');
 var upd = new updater(up_pkg);
-
+//
 var bausteine = require('./js/bausteine.json');
 
 main_win.title = main_manifest.name + " " + main_manifest.version + " Beta";
@@ -62,10 +62,10 @@ function get_userid(){
 var nwDir = upd.getAppPath();
 
 
-process.on("uncaughtException", function (e) {
-    main_win.show();
-    SGI.error_box(e.stack)
-});
+//process.on("uncaughtException", function (e) {
+//    main_win.show();
+//    SGI.error_box(e.stack)
+//});
 
 //var execPath = path.dirname(process.execPath);
 
@@ -146,7 +146,7 @@ SGI = {
         //SGI.dev = true;
 
         main_win.on('close', function () {
-           SGI.save_setup();
+           //SGI.save_setup();
             process.exit();
         });
 

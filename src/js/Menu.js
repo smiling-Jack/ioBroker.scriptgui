@@ -74,7 +74,7 @@ jQuery.extend(true, SGI, {
         $("#m_show_script").click(function () {
 //            if ($("body").find(".ui-dialog:not(.quick-help)").length == 0) {
 
-            var script = Compiler.make_prg(false,false);
+            var script = Compiler.make_prg(false, false);
             SGI.show_Script(script)
 //            }
         });
@@ -798,13 +798,13 @@ jQuery.extend(true, SGI, {
 
 // Live Test
         $("#img_set_script_play").button().click(function () {
-                if (SGI.con_data ) {
-if(!SGI.sim_run){
-    $("#prg_body").css("border-color","red")
-    $("#img_set_script_play").append('<div id="play_overlay"  ></div>')
-    sim.simulate();
+                if (SGI.con_data) {
+                    if (!SGI.sim_run) {
+                        $("#prg_body").css("border-color", "red")
+                        $("#img_set_script_play").append('<div id="play_overlay"  ></div>')
+                        sim.simulate();
 
-}
+                    }
 
                 } else {
                     alert("Keine Online/Offline daten")
@@ -2100,7 +2100,7 @@ if(!SGI.sim_run){
     },
 
     save_Script: function () {
-        var script = Compiler.make_prg(false,false);
+        var script = Compiler.make_prg(false, false);
         if (SGI.file_name == undefined || SGI.file_name == "Neu" || SGI.file_name == "") {
             alert("Bitte erst Programm Speichern");
 
@@ -2157,7 +2157,7 @@ if(!SGI.sim_run){
     },
 
     error_box: function (data) {
-console.log(data)
+        console.log(data)
         var _data = data.split("\n").join("<br>").replace(/file:\/\/\//g, "").replace(/at HTMLDocument./g, "");
 
         var mail = "";
@@ -2247,7 +2247,7 @@ console.log(data)
                                         $('#update_info').text("Restart");
                                         var _np = newAppPath.split("ScriptGUI.");
                                         var np;
-                                        if (SGI.os == "osx_32" || SGI.os == "osx_64"  ) {
+                                        if (SGI.os == "osx_32" || SGI.os == "osx_64") {
                                             np = newAppPath
                                         } else {
                                             np = _np[0] + "ScriptGUI/ScriptGUI." + _np[1];
@@ -2297,7 +2297,7 @@ console.log(data)
                 left: "182px",
                 right: "auto",
                 width: "200px",
-"z-index": 50
+                "z-index": 50
             });
 
         }
@@ -2340,12 +2340,12 @@ console.log(data)
             intervall: '<div class="quick-help_content">      <H2>Intervall:</H2>               <p>' + SGI.translate("intervall") + '</p></div>',
             loop: '<div class="quick-help_content">      <H2>Loop:</H2>                    <p>' + SGI.translate("loop") + '</p></div>',
 
-            block_t:    '<div class="quick-help_content">      <H2>Block t:</H2>           <p>' + SGI.translate("block_t") + '</p></div>',
-            block_kn:   '<div class="quick-help_content">      <H2>Block &ltn:</H2>           <p>' + SGI.translate("block_kn") + '</p></div>',
-            block_gn:   '<div class="quick-help_content">      <H2>Block &gtn:</H2>           <p>' + SGI.translate("block_gn") + '</p></div>',
-            block_e:    '<div class="quick-help_content">      <H2>Block e:</H2>           <p>' + SGI.translate("block_e") + '</p></div>',
-            block_tn:   '<div class="quick-help_content">      <H2>Block tn:</H2>           <p>' + SGI.translate("block_tn") + '</p></div>',
-            block_tt:   '<div class="quick-help_content">      <H2>Block tt:</H2>           <p>' + SGI.translate("block_tt") + '</p></div>',
+            block_t: '<div class="quick-help_content">      <H2>Block t:</H2>           <p>' + SGI.translate("block_t") + '</p></div>',
+            block_kn: '<div class="quick-help_content">      <H2>Block &ltn:</H2>           <p>' + SGI.translate("block_kn") + '</p></div>',
+            block_gn: '<div class="quick-help_content">      <H2>Block &gtn:</H2>           <p>' + SGI.translate("block_gn") + '</p></div>',
+            block_e: '<div class="quick-help_content">      <H2>Block e:</H2>           <p>' + SGI.translate("block_e") + '</p></div>',
+            block_tn: '<div class="quick-help_content">      <H2>Block tn:</H2>           <p>' + SGI.translate("block_tn") + '</p></div>',
+            block_tt: '<div class="quick-help_content">      <H2>Block tt:</H2>           <p>' + SGI.translate("block_tt") + '</p></div>',
 
 
             next: '<div class="quick-help_content">      <H2>Next:</H2>                    <p>' + SGI.translate("next") + '</p></div>',
@@ -2386,9 +2386,9 @@ console.log(data)
                 var type
 
 
-                if ($(elem.target).hasClass("fbs_element") || $(elem.target).hasClass("mbs_element")|| $(elem.target).hasClass("fbs") || $(elem.target).hasClass("mbs")) {
+                if ($(elem.target).hasClass("fbs_element") || $(elem.target).hasClass("mbs_element") || $(elem.target).hasClass("fbs") || $(elem.target).hasClass("mbs")) {
 
-                    if ($(elem.target).attr("id").split("_")[0] == "trigger" || $(elem.target).attr("id").split("_")[0] == "block" ) {
+                    if ($(elem.target).attr("id").split("_")[0] == "trigger" || $(elem.target).attr("id").split("_")[0] == "block") {
                         type = $(elem.target).attr("id").split("_")[0] + "_" + $(elem.target).attr("id").split("_")[1];
                     } else {
                         type = $(elem.target).attr("id").split("_")[0];
@@ -2397,7 +2397,7 @@ console.log(data)
                     $("#help-content").append(help[type]);
                 } else {
                     $.each($(elem.target).parents(), function () {
-                        if ($(this).hasClass("fbs_element") || $(this).hasClass("mbs_element")||$(this).hasClass("fbs") || $(this).hasClass("mbs")) {
+                        if ($(this).hasClass("fbs_element") || $(this).hasClass("mbs_element") || $(this).hasClass("fbs") || $(this).hasClass("mbs")) {
 
                             if ($(this).attr("id").split("_")[0] == "trigger" || $(this).attr("id").split("_")[0] == "trigger") {
                                 type = $(this).attr("id").split("_")[0] + "_" + $(this).attr("id").split("_")[1];
@@ -2414,8 +2414,6 @@ console.log(data)
                         }
                     });
                 }
-
-
 
 
             }

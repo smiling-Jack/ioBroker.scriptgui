@@ -215,9 +215,9 @@ var Compiler = {
 
             var targets = "";
             if (step == "true") {
-                highlight_in = "step_mbs_highlight_in('"+this.mbs_id+"');";
-                highlight_reset = "step_mbs_highlight_reset('"+this.mbs_id+"');";
-                targets= "step_mbs_highlight_out('"+this.mbs_id+"');";
+                highlight_in = '\n //step_mbs_highlight_in--' + this.mbs_id +'\n debugger;';
+                highlight_reset = '\n //step_mbs_highlight_reset--' + this.mbs_id +'\n debugger;';
+                targets= '\n //step_mbs_highlight_out--' + this.mbs_id +'\n debugger;';
             }
 
 
@@ -441,7 +441,8 @@ var Compiler = {
                 }
 
                 if (step == "true" && (this["type"] == "next" || this["type"] == "next1" || this["type"] == "next0") ) {
-                    Compiler.script += 'step_fbs_highlight("' + this.fbs_id + '");';
+                    Compiler.script += '//step_fbs_highlight--' + this.fbs_id ;
+                    Compiler.script += 'debugger;' ;
                 }
 
                 Compiler.last_fbs = this.fbs_id;
@@ -1014,7 +1015,8 @@ process.send(time2);\
                 }
 
                 if (step == "true" && (this["type"] != "next" || this["type"] != "next1" || this["type"] != "next0") ) {
-                    Compiler.script += 'step_fbs_highlight("' + this.fbs_id + '");';
+                    Compiler.script += '\n //step_fbs_highlight--' + this.fbs_id ;
+                    Compiler.script += '\n debugger;' ;
                 }
             });
             Compiler.script += '};\n';

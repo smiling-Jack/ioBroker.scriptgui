@@ -16,7 +16,7 @@
         var options = {
             "title": "ScriptGUI",
             "icon": "img/cube256.png",
-            "toolbar": false,
+            "toolbar": true,
             "frame": true,
             "width": 800,
             "height": 600,
@@ -25,7 +25,7 @@
             "max_width": "100%",
             "max_height": "100%",
             "resizable": true,
-            "show": false
+            "show": true
         };
 
         setTimeout(function () {

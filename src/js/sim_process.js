@@ -1,28 +1,10 @@
-
-setInterval(function(){
-    console.log("hallo")
-},1000)
-
-
-/*
-
-
-/**
- * Created by jack on 29.11.2014.
- *//*
-
+//setInterval(function () {
+//    debugger;
+//}, 1000)
 
 
 //var vm = require('vm');
 var _reguest = require("request");
-
-
-process.on("uncaughtException", function (e) {
-    process.send(["script_err", e.stack]);
-    process.exit(9990)
-});
-
-console.log("hallo hier bin ich");
 
 var sim = {
     time_mode: "auto",
@@ -35,19 +17,6 @@ var sim = {
     suncalc: require('suncalc'),
     subscribers: [],
     schedules: []
-};
-
-
-var old_date = Date;
-
-var sd = [];
-//
-Date = function () {
-    if (sim.time_mode == "auto") {
-        return new old_date
-    } else {
-        return new old_date(sd[0], sd[1], sd[2], sd[3], sd[4])
-    }
 };
 
 
@@ -79,38 +48,27 @@ process.on('message', function (data) {
         }
     }
 });
+
+process.on("uncaughtException", function (e) {
+    process.send(["script_err", e.stack]);
+    process.exit(9990)
+});
+
+var old_date = Date;
+
+var sd = [];
+//
+Date = function () {
+    if (sim.time_mode == "auto") {
+        return new old_date
+    } else {
+        return new old_date(sd[0], sd[1], sd[2], sd[3], sd[4])
+    }
+};
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
+process.send(["init"]);
 function run(script) {
-
-    function step_fbs_highlight(id) {
-        var d = (new Date).valueOf() + 800;
-        process.send(["step_fbs_highlight", id]);
-        while (d > (new Date).valueOf()) {
-        }
-    }
-
-    function step_mbs_highlight_in(id) {
-        var d = (new Date).valueOf() + 600;
-        process.send(["step_mbs_highlight_in", id]);
-        while (d > (new Date).valueOf()) {
-        }
-    }
-
-    function step_mbs_highlight_out(id) {
-        var d = (new Date).valueOf() + 600;
-        process.send(["step_mbs_highlight_out", id]);
-        while (d > (new Date).valueOf()) {
-        }
-
-    }
-
-    function step_mbs_highlight_reset(id) {
-        var d = (new Date).valueOf() + 1000;
-        process.send(["step_mbs_highlight_reset", id]);
-        while (d > (new Date).valueOf()) {
-        }
-    }
 
     function patternMatching(event, pattern) {
         if (!pattern.logic) {
@@ -816,7 +774,7 @@ function run(script) {
 
     function request(data) {
         if (sim.run_type == "hotrun") {
-       _reguest(data)
+            _reguest(data)
             process.send(["log", "<b style='color: blue'>Request: </b>" + data + ""]);
         } else {
             process.send(["log", "<b style='color: blue'>Request: </b>" + data + ""]);
@@ -1047,4 +1005,4 @@ function run(script) {
 
 
 
-*/
+

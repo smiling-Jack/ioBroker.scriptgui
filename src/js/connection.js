@@ -63,9 +63,9 @@ jQuery.extend(true, SGI, {
 
             fs.readFile(scope.setup.datastore + '/ScriptGUI_Data/connections/' + url + '.json', function (err, data) {
                 if (!err) {
-                    console.log(data)
+                    //console.log(data)
                     homematic = JSON.parse(data);
-                    console.log(homematic)
+                    //console.log(homematic)
                     $("#img_con_state").attr("src", "img/icon/flag-yellow.png");
                     $("#btn_con_offline").parent().addClass("div_img_glass_on");
                     $("#btn_con_online").parent().removeClass("div_img_glass_on");
@@ -344,31 +344,31 @@ jQuery.extend(true, SGI, {
     },
 
     server_homecall: function(){
-
-        var send_data = {
-            typ: 'statistik',
-            data: {
-                user: scope.setup.user_id,
-                os: SGI.os
-            }
-        };
-
-        var client = new net.Socket();
-        client.connect(SGI.HOST_PORT, SGI.HOST, function () {
-            client.write(JSON.stringify(send_data));
-            client.end()
-        });
-
-        client.on('data', function (data) {
-            if (data != "error") {
-
-                scope.setup.last_open = (new Date).toLocaleDateString();
-                scope.$apply();
-                SGI.save_setup();
-
-            }
-            client.destroy();
-        });
+        //
+        //var send_data = {
+        //    typ: 'statistik',
+        //    data: {
+        //        user: scope.setup.user_id,
+        //        os: SGI.os
+        //    }
+        //};
+        //
+        //var client = new net.Socket();
+        //client.connect(SGI.HOST_PORT, SGI.HOST, function () {
+        //    client.write(JSON.stringify(send_data));
+        //    client.end()
+        //});
+        //
+        //client.on('data', function (data) {
+        //    if (data != "error") {
+        //
+        //        scope.setup.last_open = (new Date).toLocaleDateString();
+        //        scope.$apply();
+        //        SGI.save_setup();
+        //
+        //    }
+        //    client.destroy();
+        //});
 
 
     }
