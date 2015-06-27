@@ -61,11 +61,10 @@ function get_userid(){
 
 var nwDir = upd.getAppPath();
 
-
-//process.on("uncaughtException", function (e) {
-//    main_win.show();
-//    SGI.error_box(e.stack)
-//});
+process.on("uncaughtException", function (e) {
+    main_win.show();
+    SGI.error_box(e.stack)
+});
 
 //var execPath = path.dirname(process.execPath);
 
@@ -364,15 +363,14 @@ SGI = {
             if (SGI.dev != true) {
                 if (scope.setup.update) {
                     try{
-                        upd.checkNewVersion(function (error, newVersionExists, manifest) {
-                            if (!error && newVersionExists) {
-                                SGI.update()
-                            }
-                        });
+                    upd.checkNewVersion(function (error, newVersionExists, manifest) {
+                        if (!error && newVersionExists) {
+                            SGI.update()
+                        }
+                    });
                     }catch(err){
 
                     }
-
                 }
 
                 if ((new Date).toLocaleDateString() != scope.setup.last_open) {

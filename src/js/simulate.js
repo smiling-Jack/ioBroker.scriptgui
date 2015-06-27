@@ -5,7 +5,6 @@
 
 var dc;
 var cp = require('child_process');
-var stacktrace = require('stack-trace');
 
 var sim_p;
 
@@ -49,6 +48,51 @@ function sim_exit() {
     $("#toolbox_sim_param").hide();
     SGI.sim_run = false
 }
+
+var net = require('net');
+
+
+var debug = {
+    socket:null,
+    init: function(){
+        this.socket = new net.Socket();
+
+        this.socket.on("connect", function(){
+            console.log("debug connected");
+        });
+
+        this.socket.on("data", function (data) {
+            var _data = data.split(/\n\r\n/g);
+            console.log("Data:");
+            console.log(_data);
+            $.each(_data,function(){
+                try{
+                    var d = JSON.parse(this);
+                    console.log("event: " + d.event.toString())
+                    if(d.event == "break"){debug.on_brake()}
+                }catch (err){
+                    console.log("parse error: "+ this)
+                }
+            })
+        });
+    },
+    on_brake:function(){
+        debug.send_cont(1000)
+    },
+    send_cont: function(time){
+        setTimeout(function() {
+            var msg = JSON.stringify({
+                "type": "request",
+                "command": "continue"
+            });
+            debug.socket.write("Content-Length: " + msg.length + "\r\n\r\n" + msg);
+        },time);
+    }
+
+};
+
+debug.init();
+
 
 function start_sim_p() {
 

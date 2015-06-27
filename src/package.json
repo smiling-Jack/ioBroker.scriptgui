@@ -1,7 +1,7 @@
 {
   "main": "index.html",
   "name": "ScriptGUI",
-  "version": "0.74.3",
+  "version": "0.74.99",
   "description": "Script GUI",
   "keywords": [],
   "window": {
@@ -66,3 +66,4 @@
 //    "v8-debug-protocol": "0.0.20"
 //  }
 //}
+

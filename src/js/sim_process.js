@@ -5,6 +5,8 @@
 
 //var vm = require('vm');
 var _reguest = require("request");
+//var debug = require("debug")
+
 
 var sim = {
     time_mode: "auto",
