@@ -1641,33 +1641,59 @@ jQuery.extend(true, SGI, {
     },
 
     save_as_local: function () {
-        var data = SGI.make_savedata();
-        var chooser = $('#prgsaveas');
-        chooser.change(function () {
-            var filep = $(this).val();
-            fs.writeFile(filep, JSON.stringify(data), function (err) {
-                if (err) {
-                    throw err;
-                } else {
-                    SGI.prg_store = path.dirname(filep);
-                    SGI.file_name = path.basename(filep);
-                    $("#m_file").text(SGI.file_name);
-                    scope.setup.last_file = filep;
-                    scope.$apply()
-                }
+        if (SGI.mode == "gui"){
+            var data = SGI.make_savedata();
+            var chooser = $('#prgsaveas');
+            chooser.change(function () {
+                var filep = $(this).val();
+                fs.writeFile(filep, JSON.stringify(data), function (err) {
+                    if (err) {
+                        throw err;
+                    } else {
+                        SGI.prg_store = path.dirname(filep);
+                        SGI.file_name = path.basename(filep);
+                        $("#m_file").text(SGI.file_name);
+                        scope.setup.last_prg = filep;
+                        scope.$apply()
+                    }
+                });
             });
-        });
-        chooser.trigger('click');
+            chooser.trigger('click');
+        }else{
+            var data = SGI.editor.getValue();
+            var chooser = $('#scriptsaveas');
+            chooser.change(function () {
+                var filep = $(this).val();
+                fs.writeFile(filep, data, function (err) {
+                    if (err) {
+                        throw err;
+                    } else {
+                        SGI.prg_store = path.dirname(filep);
+                        SGI.file_name = path.basename(filep);
+                        $("#m_file").text(SGI.file_name);
+                        scope.setup.last_script = filep;
+                        scope.$apply()
+                    }
+                });
+            });
+            chooser.trigger('click');
+        }
     },
 
     save_local: function () {
         if (SGI.file_name == "") {
             SGI.save_as_local()
         } else {
-            var data = SGI.make_savedata();
+            if (SGI.mode == "gui"){
+                var data = JSON.stringify(SGI.make_savedata());
 
+            }else{
+                var data = SGI.editor.getValue();
+
+            }
             try {
-                fs.writeFile(path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/" + SGI.file_name), JSON.stringify(data), function (err) {
+                console.log(SGI.file_name)
+                fs.writeFile(path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/" + SGI.file_name), data, function (err) {
                     if (err) {
                         throw err;
                     } else {
@@ -1682,65 +1708,123 @@ jQuery.extend(true, SGI, {
     },
 
     open_local: function () {
-        var chooser = $('#prgopen');
-        chooser.val("");
-        chooser.change(function (evt) {
-            var filep = $(this).val();
-            $("#wait_div").show();
-            try {
+        if(SGI.mode == "gui"){
+            var chooser = $('#prgopen');
+            chooser.val("");
+            chooser.change(function (evt) {
+                var filep = $(this).val();
+                $("#wait_div").show();
+                try {
 
-                fs.readFile(filep, function (err, data) {
-                    if (err) {
-                        $("#wait_div").hide();
-                        throw err;
-                    } else {
-                        SGI.clear();
-                        SGI.load_prg(JSON.parse(data));
+                    fs.readFile(filep, function (err, data) {
+                        if (err) {
+                            $("#wait_div").hide();
+                            throw err;
+                        } else {
+                            SGI.clear();
+                            SGI.load_prg(JSON.parse(data));
 
-                        SGI.prg_store = path.dirname(filep);
-                        SGI.file_name = path.basename(filep);
-                        $("#m_file").text(SGI.file_name);
-                        scope.setup.last_file = filep;
-                        scope.$apply();
-                        $("#wait_div").hide();
-                    }
-                });
-            }
-            catch (err) {
-                $("#wait_div").hide();
-                throw err
+                            SGI.prg_store = path.dirname(filep);
+                            SGI.file_name = path.basename(filep);
+                            $("#m_file").text(SGI.file_name);
+                            scope.setup.last_prg = filep;
+                            scope.$apply();
+                            $("#wait_div").hide();
+                        }
+                    });
+                }
+                catch (err) {
+                    $("#wait_div").hide();
+                    throw err
+                }
+            });
 
-            }
+            chooser.trigger('click');
+        }else{
+            var chooser = $('#scriptopen');
+            chooser.val("");
+            chooser.change(function (evt) {
+                var filep = $(this).val();
+                $("#wait_div").show();
+                try {
 
+                    fs.readFile(filep, function (err, data) {
+                        if (err) {
+                            $("#wait_div").hide();
+                            throw err;
+                        } else {
 
-        });
+                            SGI.editor.setValue(data.toString(),-1);
 
-        chooser.trigger('click');
+                            SGI.prg_store = path.dirname(filep);
+                            SGI.file_name = path.basename(filep);
+                            $("#m_file").text(SGI.file_name);
+                            scope.setup.last_script = filep;
+                            scope.$apply();
+                            $("#wait_div").hide();
+                        }
+                    });
+                }
+                catch (err) {
+                    $("#wait_div").hide();
+                    throw err
+                }
+            });
+            chooser.trigger('click');
+        }
     },
 
     open_last: function () {
-        if (scope.setup.last_file != "") {
-            try {
-                $("#wait_div").show();
-                fs.readFile(scope.setup.last_file, function (err, data) {
-                    if (err) {
-                        $("#wait_div").hide();
-                        alert("Datei kann nicht gelesen werden")
-                    } else {
-                        SGI.clear();
-                        SGI.load_prg(JSON.parse(data));
-                        SGI.prg_store = path.dirname(scope.setup.last_file);
-                        SGI.file_name = path.basename(scope.setup.last_file);
-                        $("#m_file").text(SGI.file_name);
-                        $("#wait_div").hide();
-                    }
-                });
+        if(SGI.mode == "gui"){
+            if (scope.setup.last_prg != "") {
+                try {
+                    $("#wait_div").show();
+                    fs.readFile(scope.setup.last_prg, function (err, data) {
+                        if (err) {
+                            $("#wait_div").hide();
+                            alert("Datei kann nicht gelesen werden")
+                        } else {
+                            SGI.clear();
+                            SGI.load_prg(JSON.parse(data));
+                            SGI.prg_store = path.dirname(scope.setup.last_prg);
+                            SGI.file_name = path.basename(scope.setup.last_prg);
+                            $("#m_file").text(SGI.file_name);
+                            $("#wait_div").hide();
+                        }
+                    });
+                }
+                catch (err) {
+                    $("#wait_div").hide();
+                    throw err
+                }
             }
-            catch (err) {
-                $("#wait_div").hide();
-                throw err
+        }else{
+            if (scope.setup.last_script != "") {
+                try {
+                    $("#wait_div").show();
+                    fs.readFile(scope.setup.last_script, function (err, data) {
+                        if (err) {
+                            $("#wait_div").hide();
+                            alert("Datei kann nicht gelesen werden")
+                        } else {
+
+                            SGI.editor.setValue(data.toString());
+                            SGI.editor.gotoLine(0);
+
+                            SGI.prg_store = path.dirname(scope.setup.last_script);
+                            SGI.file_name = path.basename(scope.setup.last_script);
+                            $("#m_file").text(SGI.file_name);
+                            $("#wait_div").hide();
+                        }
+                    });
+                }
+                catch (err) {
+                    $("#wait_div").hide();
+                    throw err
+                }
             }
         }
+
     },
 
     example_ccu_io: function () {
@@ -1762,11 +1846,19 @@ jQuery.extend(true, SGI, {
     },
 
     save_Script: function () {
-        var script = Compiler.make_prg(false, false);
         if (SGI.file_name == undefined || SGI.file_name == "Neu" || SGI.file_name == "") {
-            alert("Bitte erst Programm Speichern");
+            alert("Bitte erst local Speichern");
 
         } else {
+            var script;
+
+            if(SGI.mode == "gui"){
+                script = Compiler.make_prg(false, false);
+            }else{
+                script = SGI.editor.getValue();
+
+            }
+
             try {
                 var name = SGI.file_name.replace('.prg', '.js');
                 SGI.socket.emit("writeRawFile", "scripts/" + name, script);
@@ -1793,7 +1885,7 @@ jQuery.extend(true, SGI, {
 
         $("body").append('\
                    <div id="dialog_code" style="text-align: left" title="Scriptvorschau">\
-                    <textarea id="codemirror" name="codemirror" class="code frame_color ui-corner-all"></textarea>\
+                   <div id="code_prev" style="width: 100%; height: 100%"></div>\
                    </div>');
         $("#dialog_code").dialog({
             height: h,
@@ -1804,17 +1896,27 @@ jQuery.extend(true, SGI, {
             }
         });
 
-        var editor = CodeMirror.fromTextArea(document.getElementById("codemirror"), {
-            mode: {name: "javascript", json: true},
-//            value:data.toString(),
-            lineNumbers: true,
-            readOnly: true,
-            theme: "monokai"
+        var editor = ace.edit("code_prev");
 
+
+        editor.getSession().setMode("ace/mode/javascript")
+        editor.setTheme("ace/theme/monokai");
+        editor.setOptions({
+            showPrintMargin: false,
         });
 
+        editor.$blockScrolling = Infinity;
+        editor.getSession().setUseWrapMode(true);
 
-        editor.setOption("value", js_beautify(data.toString(), {indent_size: 2}));
+
+
+if(SGI.mode == "gui"){
+    editor.setValue(js_beautify(data.toString(), {indent_size: 2}),-1);
+}else{
+    editor.setValue(SGI.editor.getValue(),-1);
+}
+
+        editor.setReadOnly(true)
 
     },
 

@@ -849,7 +849,7 @@ function run(script) {
 
     log("start");
 //    vm.runInThisContext(script, "s_engine")
-    eval(script);
+    eval("//@ sourceURL=s_engine\n"+script);
     process.on('message', function (data) {
         if (data[0] == "trigger") {
             eval(data[1])

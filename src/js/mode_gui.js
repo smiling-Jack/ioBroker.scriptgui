@@ -193,11 +193,12 @@ jQuery.extend(true, SGI, {
     },
     show_gui: function(){
         $("#main_gui").show();
-        $(".set_algin .set_zoom .set_tooltip").show()
+        $(".set_algin, .set_zoom, .set_tooltip").show();
+        SGI.mode = "gui";
     },
     hide_gui: function(){
         $("#main_gui").hide();
-        $(".set_algin .set_zoom .set_tooltip").hide()
+        $(".set_algin, .set_zoom, .set_tooltip").hide()
     },
     mbs_inst: function () {
 
@@ -1167,6 +1168,7 @@ jQuery.extend(true, SGI, {
             RenderMode: "svg",
             Scope: "singel",
             connector: ["Flowchart", {stub: 50, alwaysRespectStubs: true, midpoint: 0.5}]
+            //connector: ["Flowchart", {stub: 50, alwaysRespectStubs: true, midpoint: 0.5}]
 
 
         });

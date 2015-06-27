@@ -36,12 +36,15 @@ function sim_exit() {
         width: "10px"
     });
 
-    $.each(SGI.plumb_inst, function () {
-        var con = this.getAllConnections();
-        $.each(con, function () {
-            this.removeOverlay("sim")
+    if(SGI.mode=="gui"){
+        $.each(SGI.plumb_inst, function () {
+            var con = this.getAllConnections();
+            $.each(con, function () {
+                this.removeOverlay("sim")
+            });
         });
-    });
+    }
+
 
     $("#toolbox_sim_param").hide();
     SGI.sim_run = false
@@ -51,7 +54,7 @@ function start_sim_p() {
 
     sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type], {execArgv: ['--debug']})
 
-    var split_script = sim.script.toString().split("\n");
+    sim.split_script = sim.script.toString().split("\n");
 
     var Client = require('v8-debug-protocol');
     var client = new Client(5858);
@@ -59,18 +62,11 @@ function start_sim_p() {
     client.on('connect', function () {
         console.log("connect")
 
-
-        //client.continue(function (err, doneOrNot) {
-        //    console.log(err)
-        //
-        //
-        //});
-
     });
 
     client.on('break', function (breakInfo) {
 
-        var debug_info = split_script[breakInfo.sourceLine - 1].split("//")[1];
+        var debug_info = sim.split_script[breakInfo.sourceLine - 1].split("//")[1];
         var step = debug_info.split("--")[0]
         var baustein = debug_info.split("--")[1]
 
@@ -173,32 +169,37 @@ var sim = {
         catch (e) {
         }
 
-
         var line_number = parseInt(err.match(/(s_engine:)\w+/)[0].split(":")[1]);
 
+        if(SGI.mode == "gui"){
+            var real_script = js_beautify(Compiler.make_prg().toString());
+            var _sim_script = sim.script.split(/\n/);
+            var _real_script = real_script.split(/\n/);
+            var sim_error_line_text = _sim_script[line_number];
+            var sim_error_line = _sim_script.indexOf(sim_error_line_text);
+            var real_error_line = _real_script.indexOf(sim_error_line_text);
+            var real_error_line_text = _real_script[real_error_line - 1];
 
-        var real_script = js_beautify(Compiler.make_prg().toString());
-        var _sim_script = sim.script.split(/\n/);
-        var _real_script = real_script.split(/\n/);
-        var sim_error_line_text = _sim_script[line_number];
-        var sim_error_line = _sim_script.indexOf(sim_error_line_text);
-        var real_error_line = _real_script.indexOf(sim_error_line_text);
-        var real_error_line_text = _real_script[real_error_line - 1];
 
+            for (var i = sim_error_line; i > 1; i--) {
+                if (_sim_script[i].split("xxxxxxxxxxxxxxxxxxxx ").length > 1) {
+                    $("#" + _sim_script[i].split(" xxxxxxxxxxxxxxxxxxxx ")[1]).addClass("error_fbs");
+                    $("#" + _sim_script[i].split(" xxxxxxxxxxxxxxxxxxxx ")[1]).effect("bounce");
+                    i = 0;
 
-        for (var i = sim_error_line; i > 1; i--) {
-            if (_sim_script[i].split("xxxxxxxxxxxxxxxxxxxx ").length > 1) {
-                $("#" + _sim_script[i].split(" xxxxxxxxxxxxxxxxxxxx ")[1]).addClass("error_fbs");
-                $("#" + _sim_script[i].split(" xxxxxxxxxxxxxxxxxxxx ")[1]).effect("bounce");
-                i = 0;
-
+                }
             }
+
+
+            $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td style='color: red'>" + err.split(":")[0] + "</td></tr>");
+            $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td><b>Fehler in Zeile:</b> " + real_error_line + "</td></tr>");
+            $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td><b>Zeilentext:</b>" + real_error_line_text + "</td></tr>");
+        }else{
+            $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td style='color: red'>" + err.split(":")[0] + "</td></tr>");
+            $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td><b>Fehler in Zeile:</b> " + (parseInt(line_number)-1) + "</td></tr>");
+            $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td><b>Zeilentext:</b>" + sim.split_script[line_number-2] + "</td></tr>");
         }
 
-
-        $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td style='color: red'>" + err.split(":")[0] + "</td></tr>");
-        $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td><b>Fehler in Zeile:</b> " + real_error_line + "</td></tr>");
-        $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td><b>Zeilentext:</b>" + real_error_line_text + "</td></tr>");
 
 //       sim.stopsim()
 
@@ -379,7 +380,12 @@ var sim = {
         if (!SGI.sim_run) {
             try {
                 $(".error_fbs").removeClass("error_fbs");
-                sim.script = js_beautify(Compiler.make_prg(sim.run_type, sim.step).toString());
+                if (SGI.mode == "gui"){
+                    sim.script = js_beautify(Compiler.make_prg(sim.run_type, sim.step).toString());
+                }else{
+                    sim.script = SGI.editor.getValue();
+                }
+
                 start_sim_p();
 
                 $(document).bind("new_data", function (event, data) {

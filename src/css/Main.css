@@ -28,8 +28,8 @@ html {
 }
 
 ::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -173,14 +173,20 @@ body {
     min-height: 142px;
     height: calc(100% - 188px);
 }
-.main_edit {
+.main_editor {
     position: relative;
     overflow: hidden;
     left: 0;
     width: calc(100% - 2px);
     margin: 0 !important;
     min-height: 142px;
-    height: calc(100% - 188px);
+    height: calc(100% - 193px);
+}
+
+.ace_scrollbar-v::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);
+    background-image: none;
 }
 
 .toolbox_body {
@@ -2394,4 +2400,9 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
 }
 .set_tooltip{
     display: none;
+}
+
+.ace_gutter-cell.ace_breakpoint{
+    border-radius: 20px 0px 0px 20px;
+    box-shadow: 0px 0px 1px 1px red inset;
 }

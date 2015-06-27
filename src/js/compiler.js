@@ -7,7 +7,7 @@ var Compiler = {
         Compiler.timeout = "\n// Timeout Variablen\n";
         Compiler.block = "\n// Blocking Variablen\n";
         Compiler.force = "\n// Force Variablen\n";
-        Compiler.script ="";
+        Compiler.script = "";
 
 
         SGI.make_struc();
@@ -215,9 +215,9 @@ var Compiler = {
 
             var targets = "";
             if (step == "true") {
-                highlight_in = '\n //step_mbs_highlight_in--' + this.mbs_id +'\n debugger;';
-                highlight_reset = '\n //step_mbs_highlight_reset--' + this.mbs_id +'\n debugger;';
-                targets= '\n //step_mbs_highlight_out--' + this.mbs_id +'\n debugger;';
+                highlight_in = '\n //step_mbs_highlight_in--' + this.mbs_id + '\n debugger;';
+                highlight_reset = '\n //step_mbs_highlight_reset--' + this.mbs_id + '\n debugger;';
+                targets = '\n //step_mbs_highlight_out--' + this.mbs_id + '\n debugger;';
             }
 
 
@@ -250,7 +250,8 @@ var Compiler = {
 
                 Compiler.timeout += "var " + this.mbs_id + " ;";
                 Compiler.timeout += "function  " + this.mbs_id + "_in1 (data){";
-                Compiler.timeout += highlight_in;;
+                Compiler.timeout += highlight_in;
+                ;
                 Compiler.timeout += "clearInterval(" + this.mbs_id + " );";
                 Compiler.timeout += this.mbs_id + " = setInterval(function(){" + targets + "}," + parseFloat(PRG._scope.mbs[nr].val) * 1000 + ")";
                 Compiler.timeout += "}";
@@ -293,17 +294,17 @@ var Compiler = {
                 Compiler.block += "var " + this.mbs_id + "_t;";
                 Compiler.block += "function  " + this.mbs_id + "_in1 (data){";
                 Compiler.block += highlight_in;
-                Compiler.block += "if(! "+ this.mbs_id +"){";
-                Compiler.block +=     this.mbs_id + "_t = setTimeout(function(){" + this.mbs_id +" = false}," + parseFloat(PRG._scope.mbs[nr].opt1)+");";
-                Compiler.block += this.mbs_id +" = true;";
+                Compiler.block += "if(! " + this.mbs_id + "){";
+                Compiler.block += this.mbs_id + "_t = setTimeout(function(){" + this.mbs_id + " = false}," + parseFloat(PRG._scope.mbs[nr].opt1) + ");";
+                Compiler.block += this.mbs_id + " = true;";
                 Compiler.block += targets;
-                Compiler.block +=     "}";
-                Compiler.block +=  "}";
+                Compiler.block += "}";
+                Compiler.block += "}";
 
                 Compiler.block += "function  " + this.mbs_id + "_in2 (data){";
                 Compiler.block += highlight_reset;
                 Compiler.block += "clearTimeout(" + this.mbs_id + "_t);";
-                Compiler.block += this.mbs_id +" = false;";
+                Compiler.block += this.mbs_id + " = false;";
                 Compiler.block += "}";
             }
             //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -312,15 +313,15 @@ var Compiler = {
                 Compiler.block += "var " + this.mbs_id + " = 1;";
                 Compiler.block += "function  " + this.mbs_id + "_in1 (data){";
                 Compiler.block += highlight_in;
-                Compiler.block += "if("+ this.mbs_id +" < "+ parseInt(PRG._scope.mbs[nr].opt1)+"){";
-                Compiler.block +=    this.mbs_id + " ++;";
+                Compiler.block += "if(" + this.mbs_id + " < " + parseInt(PRG._scope.mbs[nr].opt1) + "){";
+                Compiler.block += this.mbs_id + " ++;";
                 Compiler.block += targets;
-                Compiler.block +=     "}";
-                Compiler.block +=  "}";
+                Compiler.block += "}";
+                Compiler.block += "}";
 
                 Compiler.block += "function  " + this.mbs_id + "_in2 (data){";
                 Compiler.block += highlight_reset;
-                Compiler.block += this.mbs_id +" = 1;";
+                Compiler.block += this.mbs_id + " = 1;";
                 Compiler.block += "}";
             }
             //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -329,15 +330,15 @@ var Compiler = {
                 Compiler.block += "var " + this.mbs_id + " = 1;";
                 Compiler.block += "function  " + this.mbs_id + "_in1 (data){";
                 Compiler.block += highlight_in;
-                Compiler.block += "if("+ this.mbs_id +" > "+ parseInt(PRG._scope.mbs[nr].opt1) +"){";
+                Compiler.block += "if(" + this.mbs_id + " > " + parseInt(PRG._scope.mbs[nr].opt1) + "){";
                 Compiler.block += targets;
-                Compiler.block +=     "}";
-                Compiler.block +=    this.mbs_id + " ++;";
-                Compiler.block +=  "}";
+                Compiler.block += "}";
+                Compiler.block += this.mbs_id + " ++;";
+                Compiler.block += "}";
 
                 Compiler.block += "function  " + this.mbs_id + "_in2 (data){";
                 Compiler.block += highlight_reset;
-                Compiler.block += this.mbs_id +" = 1;";
+                Compiler.block += this.mbs_id + " = 1;";
                 Compiler.block += "}";
             }
             //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -346,15 +347,15 @@ var Compiler = {
                 Compiler.block += "var " + this.mbs_id + " = 1;";
                 Compiler.block += "function  " + this.mbs_id + "_in1 (data){";
                 Compiler.block += highlight_in;
-                Compiler.block += "if("+ this.mbs_id +" == "+ parseInt(PRG._scope.mbs[nr].opt1) +"){";
-                Compiler.block +=    this.mbs_id + " = 1;";
+                Compiler.block += "if(" + this.mbs_id + " == " + parseInt(PRG._scope.mbs[nr].opt1) + "){";
+                Compiler.block += this.mbs_id + " = 1;";
                 Compiler.block += targets;
-                Compiler.block +=     "}else{"+this.mbs_id + " ++;}";
-                Compiler.block +=  "}";
+                Compiler.block += "}else{" + this.mbs_id + " ++;}";
+                Compiler.block += "}";
 
                 Compiler.block += "function  " + this.mbs_id + "_in2 (data){";
                 Compiler.block += highlight_reset;
-                Compiler.block += this.mbs_id +" = 1;";
+                Compiler.block += this.mbs_id + " = 1;";
                 Compiler.block += "}";
             }
             //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -367,48 +368,48 @@ var Compiler = {
 
                 Compiler.block += "function  " + this.mbs_id + "_in1 (data){";
                 Compiler.block += highlight_in;
-                Compiler.block +=      this.mbs_id + "_n ++;";
-                Compiler.block +=   "if("+ this.mbs_id +"_r){";
-                Compiler.block +=       "if("+ this.mbs_id +"_n == "+ parseFloat(PRG._scope.mbs[nr].opt2)+" ){";
-                Compiler.block +=           targets;
-                Compiler.block +=           "clearTimeout(" + this.mbs_id + "_t);";
-                Compiler.block +=           this.mbs_id +"_n = 0;";
-                Compiler.block +=           this.mbs_id +"_r = false;";
-                Compiler.block +=          "}";
-                Compiler.block +=    "}else{";
-                Compiler.block +=          this.mbs_id + "_t = setTimeout(function(){" + this.mbs_id +"_n = 0; " + this.mbs_id +"_r = false }," + parseFloat(PRG._scope.mbs[nr].opt1)+");";
-                Compiler.block +=          this.mbs_id +"_r = true;";
-                Compiler.block +=    "}";
-                Compiler.block +=  "}";
+                Compiler.block += this.mbs_id + "_n ++;";
+                Compiler.block += "if(" + this.mbs_id + "_r){";
+                Compiler.block += "if(" + this.mbs_id + "_n == " + parseFloat(PRG._scope.mbs[nr].opt2) + " ){";
+                Compiler.block += targets;
+                Compiler.block += "clearTimeout(" + this.mbs_id + "_t);";
+                Compiler.block += this.mbs_id + "_n = 0;";
+                Compiler.block += this.mbs_id + "_r = false;";
+                Compiler.block += "}";
+                Compiler.block += "}else{";
+                Compiler.block += this.mbs_id + "_t = setTimeout(function(){" + this.mbs_id + "_n = 0; " + this.mbs_id + "_r = false }," + parseFloat(PRG._scope.mbs[nr].opt1) + ");";
+                Compiler.block += this.mbs_id + "_r = true;";
+                Compiler.block += "}";
+                Compiler.block += "}";
 
                 Compiler.block += "function  " + this.mbs_id + "_in2 (data){";
                 Compiler.block += highlight_reset;
                 Compiler.block += "clearTimeout(" + this.mbs_id + "_t);";
-                Compiler.block += this.mbs_id +"_n = 0;";
-                Compiler.block += this.mbs_id +"_r = false;";
+                Compiler.block += this.mbs_id + "_n = 0;";
+                Compiler.block += this.mbs_id + "_r = false;";
                 Compiler.block += "}";
             }
             //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             if (PRG._scope.mbs[nr].type == "block_tt") {
 
 //                abfarge ob Tegeswechsel
-                if(PRG._scope.mbs[nr].opt1 < PRG._scope.mbs[nr].opt2){
+                if (PRG._scope.mbs[nr].opt1 < PRG._scope.mbs[nr].opt2) {
                     Compiler.block += "function  " + this.mbs_id + "_in1 (data){";
                     Compiler.block += highlight_in;
                     Compiler.block += "var d = new Date;";
                     Compiler.block += "var ts = ('0' + d.getHours()).slice(-2) + ':'+ ('0' + (d.getMinutes())).slice(-2);";
-                    Compiler.block +=    "if(ts > \""+PRG._scope.mbs[nr].opt1.toString()+"\" && ts < \""+PRG._scope.mbs[nr].opt2.toString()+"\"){";
-                    Compiler.block +=       targets;
-                    Compiler.block +=    "}";
+                    Compiler.block += "if(ts > \"" + PRG._scope.mbs[nr].opt1.toString() + "\" && ts < \"" + PRG._scope.mbs[nr].opt2.toString() + "\"){";
+                    Compiler.block += targets;
                     Compiler.block += "}";
-                }else{
+                    Compiler.block += "}";
+                } else {
                     Compiler.block += "function  " + this.mbs_id + "_in1 (data){";
                     Compiler.block += highlight_in;
                     Compiler.block += "var d = new Date;";
                     Compiler.block += "var ts = ('0' + d.getHours()).slice(-2) + ':'+ ('0' + (d.getMinutes())).slice(-2);";
-                    Compiler.block +=    "if(ts < \""+PRG._scope.mbs[nr].opt1.toString()+"\" && ts > \""+PRG._scope.mbs[nr].opt2.toString()+"\"){";
-                    Compiler.block +=       targets;
-                    Compiler.block +=    "}";
+                    Compiler.block += "if(ts < \"" + PRG._scope.mbs[nr].opt1.toString() + "\" && ts > \"" + PRG._scope.mbs[nr].opt2.toString() + "\"){";
+                    Compiler.block += targets;
+                    Compiler.block += "}";
                     Compiler.block += "}";
 
                 }
@@ -440,9 +441,9 @@ var Compiler = {
                     output = 'var ' + this.output[0].ausgang;
                 }
 
-                if (step == "true" && (this["type"] == "next" || this["type"] == "next1" || this["type"] == "next0") ) {
-                    Compiler.script += '//step_fbs_highlight--' + this.fbs_id ;
-                    Compiler.script += 'debugger;' ;
+                if (step == "true" && (this["type"] == "next" || this["type"] == "next1" || this["type"] == "next0")) {
+                    Compiler.script += '//step_fbs_highlight--' + this.fbs_id;
+                    Compiler.script += 'debugger;';
                 }
 
                 Compiler.last_fbs = this.fbs_id;
@@ -979,7 +980,6 @@ process.send(time2);\
                 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
-
                 if (run_type != false && this.output.length > 0) {
                     $.each(this.output, function () {
                         Compiler.script += 'simout("' + this.ausgang + '",' + this.ausgang + ');';
@@ -1014,20 +1014,17 @@ process.send(time2);\
                     });
                 }
 
-                if (step == "true" && (this["type"] != "next" || this["type"] != "next1" || this["type"] != "next0") ) {
-                    Compiler.script += '\n //step_fbs_highlight--' + this.fbs_id ;
-                    Compiler.script += '\n debugger;' ;
+                if (step == "true" && (this["type"] != "next" || this["type"] != "next1" || this["type"] != "next0")) {
+                    Compiler.script += '\n //step_fbs_highlight--' + this.fbs_id;
+                    Compiler.script += '\n debugger;';
                 }
             });
             Compiler.script += '};\n';
         });
 
         Compiler.force += Compiler.script;
-        if (run_type == false){
-            Compiler.script = "//@ sourceURL=" + SGI.file_name.split(".")[0]+".js \n" + Compiler.force;
-        }else{
-            Compiler.script = "//@ sourceURL=s_engine\n" + Compiler.force;
-        }
+        Compiler.script = Compiler.force;
+
 
         return (Compiler.script);
     }

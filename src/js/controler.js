@@ -10,7 +10,8 @@ angular.module('tutorialApp', [])
             "tooltip": "",
             "fbs_wrap": true,
             "LT_open": false,
-            "last_file": "",
+            "last_prg": "",
+            "last_script": "",
             "last_open": "",
             "update": false,
             "user_name": "",
@@ -38,8 +39,9 @@ angular.module('tutorialApp', [])
                         "tooltip": load.tooltip || setup_default.tooltip,
                         "fbs_wrap": load.fbs_wrap || setup_default.fbs_wrap,
                         "LT_open": load.LT_open || setup_default.LT_open,
-                        "last_file": load.last_file || setup_default.last_file,
+                        "last_prg": load.last_prg || setup_default.last_prg,
                         "last_open": load.last_open || setup_default.last_open,
+                        "last_script": load.last_script || setup_default.last_script,
                         "update": load.update || setup_default.update,
                         "user_name": load.user_name || setup_default.user_name,
                         "user_mail": load.user_mail || setup_default.user_mail,
@@ -150,7 +152,7 @@ angular.module('tutorialApp', [])
                 set_theme($scope.setup.theme)
             });
 //-------------------------------------------------------------------------------------------------
-            $scope.$watch("setup.last_file", function (newValue, oldValue) {
+            $scope.$watch("setup.last_prg", function (newValue, oldValue) {
 
                 if (SGI.language && newValue != oldValue) {
                     SGI.save_setup()

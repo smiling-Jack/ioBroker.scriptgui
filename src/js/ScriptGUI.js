@@ -480,6 +480,7 @@ SGI = {
             }
         });
 
+
         $(document).on('click', ".mbs_element", function (target) {
             if (SGI.key == 16) {
                 if ($(this).hasClass("mbs_element")) {
