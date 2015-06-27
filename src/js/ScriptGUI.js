@@ -2465,11 +2465,13 @@ SGI = {
         $.each(scope.mbs[$($this).data("nr")]["astro"], function (index) {
             add += '<div id="tr_ch_body_' + index + '" class="tr_ch_body">';
             add += '<select ng-model="mbs[' + $this.data("nr") + '].astro[' + index + ']" id="astro_' + index + '" class="inp_astro">';
+            add += '    <option value="dawn">Morgendämmerung Start</option>';
             add += '    <option value="sunrise">Sonnenaufgang Start</option>';
             add += '    <option value="sunriseEnd">Sonnenaufgang Ende</option>';
             add += '    <option value="solarNoon">Höchster Sonnenstand</option>';
             add += '    <option value="sunsetStart">Sonnenuntergang Start</option>';
             add += '    <option value="sunset">Sonnenuntergang Ende</option>';
+            add += '    <option value="dusk">Abenddämmerung Ende</option>';
             add += '    <option value="night">Nacht Start</option>';
             add += '    <option value="nightEnd">Nacht Ende</option>';
             add += '    <option value="nadir">Dunkelster moment</option>';
