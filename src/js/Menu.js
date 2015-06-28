@@ -67,6 +67,28 @@ jQuery.extend(true, SGI, {
 
         });
 
+        $("#m_mode_gui").click(function () {
+            if(!SGI.gui_rendered){
+                SGI.load_gui()
+            }
+            SGI.show_gui();
+            SGI.hide_editor();
+            scope.setup.mode = "gui";
+            scope.$apply();
+            SGI.save_setup()
+        });
+
+        $("#m_mode_editor").click(function () {
+            if(!SGI.editor_rendered){
+                SGI.load_editor()
+            }
+           SGI.show_editor();
+            SGI.hide_gui();
+            scope.setup.mode = "editor";
+            scope.$apply();
+            SGI.save_setup()
+        });
+
         $("#m_setup").click(function () {
             $("#setup_dialog").dialog("open");
         });
@@ -74,7 +96,7 @@ jQuery.extend(true, SGI, {
         $("#m_show_script").click(function () {
 //            if ($("body").find(".ui-dialog:not(.quick-help)").length == 0) {
 
-            var script = Compiler.make_prg(false,false);
+            var script = Compiler.make_prg(false, false);
             SGI.show_Script(script)
 //            }
         });
@@ -798,13 +820,13 @@ jQuery.extend(true, SGI, {
 
 // Live Test
         $("#img_set_script_play").button().click(function () {
-                if (SGI.con_data ) {
-if(!SGI.sim_run){
-    $("#prg_body").css("border-color","red")
-    $("#img_set_script_play").append('<div id="play_overlay"  ></div>')
-    sim.simulate();
+                if (SGI.con_data) {
+                    if (!SGI.sim_run) {
+                        $("#prg_body").css("border-color", "red")
+                        $("#img_set_script_play").append('<div id="play_overlay"  ></div>')
+                        sim.simulate();
 
-}
+                    }
 
                 } else {
                     alert("Keine Online/Offline daten")
@@ -1618,394 +1640,60 @@ if(!SGI.sim_run){
 
     },
 
-    add_force: function (con) {
-        var _ep = con.sourceId.split("_");
-        var nr = _ep[1];
-        var parent = scope.fbs[nr].parent.split("_");
-        var codebox = parent[1] + '_' + parent[2];
-        var source = con.sourceId;
-        var cons = SGI.plumb_inst['inst_' + codebox].getConnections({source: source});
-        if (scope.fbs[nr].force == undefined) {
-            scope.fbs[nr].force = "";
-        }
-
-        $.each(cons, function () {
-
-            var con = this;
-            var id = con.id;
-            this.removeOverlay('force');
-            this.addOverlay(
-                ["Custom", {
-                    create: function () {
-                        return $('<div><div class="force_overlay ui-corner-all" style="max-height: 18px">\
-                    <input type="text" value="' + scope.fbs[nr].force + '" data-info="' + source + '" id="overlay_force_' + id + '" class="force_input ui-corner-all"></input>\
-                    </div></div>');
-                    },
-                    id: "force",
-                    location: -25
-                }]
-            );
-
-            $('#overlay_force_' + id).change(function () {
-                scope.fbs[nr].force = $(this).val();
-                SGI.add_force(con);
-            });
-        });
-    },
-
-    del_force: function (con) {
-        var _ep = con.sourceId.split("_");
-        var nr = _ep[1];
-        var parent = scope.fbs[nr].parent.split("_");
-        var codebox = parent[1] + '_' + parent[2];
-
-        var cons = SGI.plumb_inst['inst_' + codebox].getConnections({source: con.sourceId});
-
-        var id = con.id;
-        $("#overlay_force_" + id).val("");
-        $("#overlay_force_" + id).trigger("change");
-        $.each(cons, function () {
-            this.removeOverlay('force');
-            scope.fbs[nr].force = undefined;
-        });
-        scope.$apply();
-
-    },
-
-    del_all_force: function () {
-        var cons = [];
-        $.each(SGI.plumb_inst, function () {
-            var _cons = this.getConnections("*");
-            cons = cons.concat(_cons)
-        });
-
-        $.each(cons, function () {
-            if (this.getOverlay('force')) {
-                this.removeOverlay('force');
-                scope.fbs[this.sourceId.split("_")[1]].force = undefined;
-            }
-        });
-        scope.$apply();
-
-    },
-
-    del_mbs: function (opt) {
-
-        var trigger = $(opt).attr("$trigger");
-        var children = $(trigger).find("div");
-        var nr = $(opt.$trigger).data("nr");
-
-        SGI.plumb_inst.inst_mbs.deleteEndpoint($(opt.$trigger).attr("id"));
-        $.each(children, function () {
-            var ep = SGI.plumb_inst["inst_mbs"].getEndpoints($(this).attr("id"));
-
-            SGI.plumb_inst["inst_mbs"].detachAllConnections(this);
-
-            if (ep != undefined) {
-                SGI.plumb_inst["inst_mbs"].deleteEndpoint($(ep).attr("elementId"));
-            }
-        });
-        $(trigger).remove();
-        delete scope.mbs[nr];
-        scope.$apply()
-    },
-
-    del_fbs: function (opt) {
-
-        var trigger = $(opt).attr("$trigger");
-        var children = $(trigger).find("div");
-        var nr = $(opt.$trigger).data("nr");
-        var parent = scope.fbs[nr]["parent"].split("_");
-
-        $.each(children, function () {
-            var ep = SGI.plumb_inst["inst_" + parent[1] + "_" + parent[2]].getEndpoints($(this).attr("id"));
-
-            SGI.plumb_inst["inst_" + parent[1] + "_" + parent[2]].detachAllConnections(this);
-
-            if (ep != undefined) {
-                SGI.plumb_inst["inst_" + parent[1] + "_" + parent[2]].deleteEndpoint($(ep).attr("elementId"));
-            }
-        });
-        $(trigger).remove();
-        delete scope.fbs[nr];
-        scope.$apply()
-    },
-
-    del_fbs_onborder: function (opt) {
-
-        var trigger = $(opt).attr("$trigger");
-        var id = $(opt.$trigger).attr("id");
-        var nr = $(opt.$trigger).data("nr");
-        var parent = scope.fbs[nr]["parent"].split("_");
-
-
-        SGI.plumb_inst["inst_" + parent[1] + "_" + parent[2]].detachAllConnections(id);
-        SGI.plumb_inst["inst_" + parent[1] + "_" + parent[2]].deleteEndpoint(id);
-        SGI.plumb_inst.inst_mbs.deleteEndpoint(id);
-        $(trigger).remove();
-        delete scope.fbs[nr];
-        scope.$apply()
-    },
-
-    del_codebox: function (opt) {
-        var $this = $(opt).attr("$trigger");
-
-        if (!$($this).hasClass("mbs_element_codebox")) {
-            $this = $(opt).attr("$trigger").parent().parent()
-        }
-
-        var children = $($this).find("div");
-
-        SGI.plumb_inst.inst_mbs.detachAllConnections($($this));
-        $.each(children, function () {
-            var ep = SGI.plumb_inst["inst_" + $($this).attr("id")].getEndpoints($(this).attr("id"));
-
-            SGI.plumb_inst["inst_" + $($this).attr("id")].detachAllConnections(this);
-
-            if (ep != undefined) {
-                SGI.plumb_inst["inst_" + $($this).attr("id")].deleteEndpoint($(ep).attr("elementId"));
-            }
-
-            if ($(this).hasClass("fbs_element")) {
-                delete scope.fbs[$(this).data("nr")];
-            }
-
-        });
-        $($this).remove();
-        delete scope.mbs[$($this).data("nr")];
-        delete scope.con.fbs[$($this).attr("id")];
-
-        scope.$apply();
-
-    },
-
-    del_selected: function () {
-
-        var mbs_sel = $(".mbs_selected");
-        var fbs_sel = $(".jsplumb-drag-selected");
-        var opt = {};
-
-        $.each($(".jsplumb-drag-selected"), function () {
-            if ($(this).hasClass("fbs_element")) {
-                if ($(this).hasClass("fbs_element_onborder")) {
-                    opt.$trigger = this;
-                    SGI.del_fbs_onborder(opt)
-
-                } else {
-                    opt.$trigger = this;
-                    SGI.del_fbs(opt)
-                }
-            } else {
-                if ($(this).hasClass("mbs_element_codebox")) {
-                    opt.$trigger = this;
-                    SGI.del_codebox(opt)
-
-                } else {
-                    opt.$trigger = this;
-                    SGI.del_mbs(opt)
-                }
-            }
-        });
-
-
-    },
-
-    change_id: function (opt) {
-
-        $.id_select({
-            type: "singel",
-            close: function (hmid) {
-                if (hmid != null) {
-
-                    var _name = SGI.get_name(hmid);
-
-                    scope.fbs[$(opt.$trigger).data("nr")]["hmid"] = hmid;
-
-                    $(opt.$trigger).find(".div_hmid").text(_name);
-                    scope.fbs[$(opt.$trigger).data("nr")]["name"] = _name;
-
-                    SGI.plumb_inst["inst_" + $(opt.$trigger).parent().parent().attr("id")].repaintEverything();
-                }
-            }
-        });
-
-    },
-
-    change_i_liste: function (opt) {
-
-        $.id_select({
-            type: "groups",
-            close: function (hmid) {
-                if (hmid != null) {
-
-                    var _name = SGI.get_name(hmid);
-                    scope.fbs[$(opt.$trigger).data("nr")]["hmid"] = hmid;
-                    $(opt.$trigger).find(".div_hmid").text(_name);
-                    scope.fbs[$(opt.$trigger).data("nr")]["name"] = _name;
-
-                    scope.$apply();
-                    SGI.plumb_inst["inst_" + $(opt.$trigger).parent().parent().attr("id")].repaintEverything();
-                }
-            }
-        });
-    },
-
-    change_o_liste: function (opt) {
-
-        $.id_select({
-            type: "obj",
-            close: function (hmid) {
-                if (hmid != null) {
-                    var _name = SGI.get_name(hmid);
-                    scope.fbs[$(opt.$trigger).data("nr")]["hmid"] = hmid;
-                    $(opt.$trigger).find(".div_hmid").text(_name);
-                    scope.fbs[$(opt.$trigger).data("nr")]["name"] = _name;
-
-                    scope.$apply();
-                    SGI.plumb_inst["inst_" + $(opt.$trigger).parent().parent().attr("id")].repaintEverything();
-                }
-            }
-        });
-
-    },
-
-    change_local: function (opt) {
-
-        $.id_select({
-            type: "local",
-            close: function (hmid) {
-                if (hmid != null) {
-
-                    scope.fbs[$(opt.$trigger).data("nr")]["hmid"] = hmid;
-                    $(opt.$trigger).find(".div_hmid").text(hmid);
-                    scope.fbs[$(opt.$trigger).data("nr")]["name"] = hmid;
-
-                    scope.$apply();
-                    SGI.plumb_inst["inst_" + $(opt.$trigger).parent().parent().attr("id")].repaintEverything();
-                }
-            }
-        });
-    },
-
-    del_trigger_hmid: function (opt) {
-        var nr = $("#" + $(opt.$trigger).data("info")).data("nr");
-        var name = $(opt.$trigger).text();
-        var index = $.inArray(name, scope.mbs[nr]["name"]);
-
-        scope.mbs[nr]["name"].splice(index, 1);
-        scope.mbs[nr]["hmid"].splice(index, 1);
-
-        $(opt.$trigger).remove();
-
-        scope.$apply();
-        SGI.plumb_inst.inst_mbs.repaintEverything()
-    },
-
-    del_device_hmid: function (opt) {
-        var nr = $("#" + $(opt.$trigger).data("info")).data("nr");
-        var name = $(opt.$trigger).text();
-        var index = $.inArray(name, scope.fbs[nr]["name"]);
-
-//     scope.fbs[nr]["name"].splice(index, 1);
-        scope.fbs[nr]["hmid"].splice(index, 1);
-
-        $(opt.$trigger).remove();
-
-        scope.$apply();
-        SGI.plumb_inst["inst_" + $("#" + $(opt.$trigger).data("info")).parent().parent().attr("id")].repaintEverything();
-    },
-
-    del_filter_item: function (opt) {
-        var nr = $("#" + $(opt.$trigger).data("info")).data("nr");
-        var name = $(opt.$trigger).text();
-        var index = $.inArray(name, scope.fbs[nr]["hmid"]);
-
-//        PRG.fbs[nr]["name"].splice(index, 1); //todo Remove after ng
-        scope.fbs[nr]["hmid"].splice(index, 1);
-
-        $(opt.$trigger).remove();
-        scope.$apply();
-
-        SGI.plumb_inst["inst_" + $("#" + $(opt.$trigger).data("info")).parent().parent().attr("id")].repaintEverything();
-    },
-
-    del_trigger_val: function (opt) {
-        var nr = $("#" + $(opt.$trigger).data("info")).data("nr");
-        var parrent = $(opt.$trigger).data("info");
-        var name = $(opt.$trigger).text();
-        var index = $.inArray(name, scope.mbs[nr]["name"]);
-
-        scope.mbs[nr]["name"].splice(index, 1);
-        scope.mbs[nr]["hmid"].splice(index, 1);
-        scope.mbs[nr]["val"].splice(index, 1);
-        scope.mbs[nr]["wert"].splice(index, 1);
-
-        $(opt.$trigger).parent().remove();
-        scope.$apply();
-
-        SGI.plumb_inst.inst_mbs.repaintEverything()
-    },
-
-    expert_save: function (opt) {
-        var nr = $(opt.$trigger).data("nr");
-
-        var data = {
-            name: scope.fbs[nr]["opt"],
-            value: scope.fbs[nr]["value"],
-            in: scope.fbs[nr]["exp_in"],
-            out: scope.fbs[nr]["exp_out"]
-        };
-
-        fs.writeFile(scope.setup.datastore + '/ScriptGUI_Data/experts/expert_' + data.name + '.json', JSON.stringify(data), function (err) {
-            if (err) {
-                throw err;
-            } else {
-                SGI.read_experts();
-            }
-
-        });
-    },
-
-    expert_del: function (opt) {
-        var name = $(opt.$trigger).attr("id");
-        fs.unlink(scope.setup.datastore + '/ScriptGUI_Data/experts/' + name + ".json", function (err) {
-            if (err) {
-                throw err;
-            } else {
-                SGI.read_experts();
-            }
-
-        });
-    },
-
     save_as_local: function () {
-        var data = SGI.make_savedata();
-        var chooser = $('#prgsaveas');
-        chooser.change(function () {
-            var filep = $(this).val();
-            fs.writeFile(filep, JSON.stringify(data), function (err) {
-                if (err) {
-                    throw err;
-                } else {
-                    SGI.prg_store = path.dirname(filep);
-                    SGI.file_name = path.basename(filep);
-                    $("#m_file").text(SGI.file_name);
-                    scope.setup.last_file = filep;
-                    scope.$apply()
-                }
+        if (SGI.mode == "gui"){
+            var data = SGI.make_savedata();
+            var chooser = $('#prgsaveas');
+            chooser.change(function () {
+                var filep = $(this).val();
+                fs.writeFile(filep, JSON.stringify(data), function (err) {
+                    if (err) {
+                        throw err;
+                    } else {
+                        SGI.prg_store = path.dirname(filep);
+                        SGI.file_name = path.basename(filep);
+                        $("#m_file").text(SGI.file_name);
+                        scope.setup.last_prg = filep;
+                        scope.$apply()
+                    }
+                });
             });
-        });
-        chooser.trigger('click');
+            chooser.trigger('click');
+        }else{
+            var data = SGI.editor.getValue();
+            var chooser = $('#scriptsaveas');
+            chooser.change(function () {
+                var filep = $(this).val();
+                fs.writeFile(filep, data, function (err) {
+                    if (err) {
+                        throw err;
+                    } else {
+                        SGI.prg_store = path.dirname(filep);
+                        SGI.file_name = path.basename(filep);
+                        $("#m_file").text(SGI.file_name);
+                        scope.setup.last_script = filep;
+                        scope.$apply()
+                    }
+                });
+            });
+            chooser.trigger('click');
+        }
     },
 
     save_local: function () {
         if (SGI.file_name == "") {
             SGI.save_as_local()
         } else {
-            var data = SGI.make_savedata();
+            if (SGI.mode == "gui"){
+                var data = JSON.stringify(SGI.make_savedata());
 
+            }else{
+                var data = SGI.editor.getValue();
+
+            }
             try {
-                fs.writeFile(path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/" + SGI.file_name), JSON.stringify(data), function (err) {
+                console.log(SGI.file_name)
+                fs.writeFile(path.resolve(scope.setup.datastore + "/ScriptGUI_Data/programms/" + SGI.file_name), data, function (err) {
                     if (err) {
                         throw err;
                     } else {
@@ -2020,65 +1708,123 @@ if(!SGI.sim_run){
     },
 
     open_local: function () {
-        var chooser = $('#prgopen');
-        chooser.val("");
-        chooser.change(function (evt) {
-            var filep = $(this).val();
-            $("#wait_div").show();
-            try {
+        if(SGI.mode == "gui"){
+            var chooser = $('#prgopen');
+            chooser.val("");
+            chooser.change(function (evt) {
+                var filep = $(this).val();
+                $("#wait_div").show();
+                try {
 
-                fs.readFile(filep, function (err, data) {
-                    if (err) {
-                        $("#wait_div").hide();
-                        throw err;
-                    } else {
-                        SGI.clear();
-                        SGI.load_prg(JSON.parse(data));
+                    fs.readFile(filep, function (err, data) {
+                        if (err) {
+                            $("#wait_div").hide();
+                            throw err;
+                        } else {
+                            SGI.clear();
+                            SGI.load_prg(JSON.parse(data));
 
-                        SGI.prg_store = path.dirname(filep);
-                        SGI.file_name = path.basename(filep);
-                        $("#m_file").text(SGI.file_name);
-                        scope.setup.last_file = filep;
-                        scope.$apply();
-                        $("#wait_div").hide();
-                    }
-                });
-            }
-            catch (err) {
-                $("#wait_div").hide();
-                throw err
+                            SGI.prg_store = path.dirname(filep);
+                            SGI.file_name = path.basename(filep);
+                            $("#m_file").text(SGI.file_name);
+                            scope.setup.last_prg = filep;
+                            scope.$apply();
+                            $("#wait_div").hide();
+                        }
+                    });
+                }
+                catch (err) {
+                    $("#wait_div").hide();
+                    throw err
+                }
+            });
 
-            }
+            chooser.trigger('click');
+        }else{
+            var chooser = $('#scriptopen');
+            chooser.val("");
+            chooser.change(function (evt) {
+                var filep = $(this).val();
+                $("#wait_div").show();
+                try {
 
+                    fs.readFile(filep, function (err, data) {
+                        if (err) {
+                            $("#wait_div").hide();
+                            throw err;
+                        } else {
 
-        });
+                            SGI.editor.setValue(data.toString(),-1);
 
-        chooser.trigger('click');
+                            SGI.prg_store = path.dirname(filep);
+                            SGI.file_name = path.basename(filep);
+                            $("#m_file").text(SGI.file_name);
+                            scope.setup.last_script = filep;
+                            scope.$apply();
+                            $("#wait_div").hide();
+                        }
+                    });
+                }
+                catch (err) {
+                    $("#wait_div").hide();
+                    throw err
+                }
+            });
+            chooser.trigger('click');
+        }
     },
 
     open_last: function () {
-        if (scope.setup.last_file != "") {
-            try {
-                $("#wait_div").show();
-                fs.readFile(scope.setup.last_file, function (err, data) {
-                    if (err) {
-                        $("#wait_div").hide();
-                        alert("Datei kann nicht gelesen werden")
-                    } else {
-                        SGI.clear();
-                        SGI.load_prg(JSON.parse(data));
-                        SGI.prg_store = path.dirname(scope.setup.last_file);
-                        SGI.file_name = path.basename(scope.setup.last_file);
-                        $("#m_file").text(SGI.file_name);
-                        $("#wait_div").hide();
-                    }
-                });
+        if(SGI.mode == "gui"){
+            if (scope.setup.last_prg != "") {
+                try {
+                    $("#wait_div").show();
+                    fs.readFile(scope.setup.last_prg, function (err, data) {
+                        if (err) {
+                            $("#wait_div").hide();
+                            alert("Datei kann nicht gelesen werden")
+                        } else {
+                            SGI.clear();
+                            SGI.load_prg(JSON.parse(data));
+                            SGI.prg_store = path.dirname(scope.setup.last_prg);
+                            SGI.file_name = path.basename(scope.setup.last_prg);
+                            $("#m_file").text(SGI.file_name);
+                            $("#wait_div").hide();
+                        }
+                    });
+                }
+                catch (err) {
+                    $("#wait_div").hide();
+                    throw err
+                }
             }
-            catch (err) {
-                $("#wait_div").hide();
-                throw err
+        }else{
+            if (scope.setup.last_script != "") {
+                try {
+                    $("#wait_div").show();
+                    fs.readFile(scope.setup.last_script, function (err, data) {
+                        if (err) {
+                            $("#wait_div").hide();
+                            alert("Datei kann nicht gelesen werden")
+                        } else {
+
+                            SGI.editor.setValue(data.toString());
+                            SGI.editor.gotoLine(0);
+
+                            SGI.prg_store = path.dirname(scope.setup.last_script);
+                            SGI.file_name = path.basename(scope.setup.last_script);
+                            $("#m_file").text(SGI.file_name);
+                            $("#wait_div").hide();
+                        }
+                    });
+                }
+                catch (err) {
+                    $("#wait_div").hide();
+                    throw err
+                }
             }
         }
+
     },
 
     example_ccu_io: function () {
@@ -2100,11 +1846,19 @@ if(!SGI.sim_run){
     },
 
     save_Script: function () {
-        var script = Compiler.make_prg(false,false);
         if (SGI.file_name == undefined || SGI.file_name == "Neu" || SGI.file_name == "") {
-            alert("Bitte erst Programm Speichern");
+            alert("Bitte erst local Speichern");
 
         } else {
+            var script;
+
+            if(SGI.mode == "gui"){
+                script = Compiler.make_prg(false, false);
+            }else{
+                script = SGI.editor.getValue();
+
+            }
+
             try {
                 var name = SGI.file_name.replace('.prg', '.js');
                 SGI.socket.emit("writeRawFile", "scripts/" + name, script);
@@ -2131,7 +1885,7 @@ if(!SGI.sim_run){
 
         $("body").append('\
                    <div id="dialog_code" style="text-align: left" title="Scriptvorschau">\
-                    <textarea id="codemirror" name="codemirror" class="code frame_color ui-corner-all"></textarea>\
+                   <div id="code_prev" style="width: 100%; height: 100%"></div>\
                    </div>');
         $("#dialog_code").dialog({
             height: h,
@@ -2142,22 +1896,32 @@ if(!SGI.sim_run){
             }
         });
 
-        var editor = CodeMirror.fromTextArea(document.getElementById("codemirror"), {
-            mode: {name: "javascript", json: true},
-//            value:data.toString(),
-            lineNumbers: true,
-            readOnly: true,
-            theme: "monokai"
+        var editor = ace.edit("code_prev");
 
+
+        editor.getSession().setMode("ace/mode/javascript")
+        editor.setTheme("ace/theme/monokai");
+        editor.setOptions({
+            showPrintMargin: false,
         });
 
+        editor.$blockScrolling = Infinity;
+        editor.getSession().setUseWrapMode(true);
 
-        editor.setOption("value", js_beautify(data.toString(), {indent_size: 2}));
+
+
+if(SGI.mode == "gui"){
+    editor.setValue(js_beautify(data.toString(), {indent_size: 2}),-1);
+}else{
+    editor.setValue(SGI.editor.getValue(),-1);
+}
+
+        editor.setReadOnly(true)
 
     },
 
     error_box: function (data) {
-console.log(data)
+        console.log(data)
         var _data = data.split("\n").join("<br>").replace(/file:\/\/\//g, "").replace(/at HTMLDocument./g, "");
 
         var mail = "";
@@ -2247,7 +2011,7 @@ console.log(data)
                                         $('#update_info').text("Restart");
                                         var _np = newAppPath.split("ScriptGUI.");
                                         var np;
-                                        if (SGI.os == "osx_32" || SGI.os == "osx_64"  ) {
+                                        if (SGI.os == "osx_32" || SGI.os == "osx_64") {
                                             np = newAppPath
                                         } else {
                                             np = _np[0] + "ScriptGUI/ScriptGUI." + _np[1];
@@ -2271,156 +2035,5 @@ console.log(data)
         });
     },
 
-    open_quick_help_dialog: function () {
-
-        if ($("body").find(".quick-help").length < 1) {
-
-            $("body").append('\
-                   <div id="dialog_quick-help" style="text-align: center, " title="Quick Help">\
-                   <input class="focus_dummy" type="button"/>\
-                   <div id="help-content"></div>\
-                   </div>');
-
-            $("#dialog_quick-help").dialog({
-
-                dialogClass: "quick-help",
-                close: function () {
-                    $("#dialog_quick-help").remove();
-                }
-
-            });
-//            $(".ui-tooltip").remove()
-
-            $(".quick-help").css({
-                position: "absolute",
-                top: "58px",
-                left: "182px",
-                right: "auto",
-                width: "200px",
-"z-index": 50
-            });
-
-        }
-
-    },
-
-    quick_help: function () {
-        var help = {
-            toint: '<div class="quick-help_content">      <H2>INT:</H2>                     <p>' + SGI.translate("toint") + '</p></div>',
-            tofloat: '<div class="quick-help_content">      <H2>Float:</H2>                   <p>' + SGI.translate("tofloat") + '</p></div>',
-            tostring: '<div class="quick-help_content">      <H2>String:</H2>                  <p>' + SGI.translate("tostring") + '</p></div>',
-            und: '<div class="quick-help_content">      <H2>and:</H2>                     <p>' + SGI.translate("und") + '</p></div>',
-            oder: '<div class="quick-help_content">      <H2>or:</H2>                      <p>' + SGI.translate("oder") + '</p></div>',
-            not: '<div class="quick-help_content">      <H2>Not:</H2>                     <p>' + SGI.translate("not") + '</p></div>',
-            verketten: '<div class="quick-help_content">      <H2>concate:</H2>                 <p>' + SGI.translate("verketten") + '</p></div>',
-            input: '<div class="quick-help_content">      <H2>Get:</H2>                     <p>' + SGI.translate("input") + '</p></div>',
-            inputliste: '<div class="quick-help_content">      <H2>Get Liste:</H2>               <p>' + SGI.translate("inputliste") + '</p></div>',
-            inputlocal: '<div class="quick-help_content">      <H2>Get Local:</H2>               <p>' + SGI.translate("inputlocal") + '</p></div>',
-            output: '<div class="quick-help_content">      <H2>Set:</H2>                     <p>' + SGI.translate("output") + '</p></div>',
-            outputlocal: '<div class="quick-help_content">      <H2>Set Local:</H2>               <p>' + SGI.translate("outputlocal") + '</p></div>',
-            mail: '<div class="quick-help_content">      <H2>Mail:</H2>                    <p>' + SGI.translate("mail") + '</p></div>',
-            debugout: '<div class="quick-help_content">      <H2>CCU.IO LOG:</H2>              <p>' + SGI.translate("debugout") + '</p></div>',
-            "true": '<div class="quick-help_content">      <H2>true:</H2>                    <p>' + SGI.translate("true") + '</p></div>',
-            "false": '<div class="quick-help_content">      <H2>false:</H2>                   <p>' + SGI.translate("false") + '</p></div>',
-            zahl: '<div class="quick-help_content">      <H2>Number:</H2>                  <p>' + SGI.translate("zahl") + '</p></div>',
-            string: '<div class="quick-help_content">      <H2>Text:</H2>                    <p>' + SGI.translate("string") + '</p></div>',
-            vartime: '<div class="quick-help_content">      <H2>Time:</H2>                    <p>' + SGI.translate("vartime") + '</p></div>',
-            trigvalue: '<div class="quick-help_content">      <H2>Trigger Value:</H2>           <p>' + SGI.translate("trigvalue") + '</p></div>',
-            trigtime: '<div class="quick-help_content">      <H2>Trigger Time:</H2>            <p>' + SGI.translate("trigtime") + '</p></div>',
-            trigoldvalue: '<div class="quick-help_content">      <H2>Trigger old Value:</H2>       <p>' + SGI.translate("trigoldvalue") + '</p></div>',
-            trigoldtime: '<div class="quick-help_content">      <H2>Trigger old Time:</H2>        <p>' + SGI.translate("trigoldtime") + '</p></div>',
-            trigid: '<div class="quick-help_content">      <H2>Trigger ID:</H2>              <p>' + SGI.translate("trigid") + '</p></div>',
-            trigname: '<div class="quick-help_content">      <H2>Trigger Name:</H2>            <p>' + SGI.translate("trigname") + '</p></div>',
-            trigtype: '<div class="quick-help_content">      <H2>Trigger Type:</H2>            <p>' + SGI.translate("trigtype") + '</p></div>',
-            trigdevid: '<div class="quick-help_content">      <H2>Trigger Device ID:</H2>       <p>' + SGI.translate("trigdevid") + '</p></div>',
-            trigdevname: '<div class="quick-help_content">      <H2>Trigger Device Name:</H2>     <p>' + SGI.translate("trigdevname") + '</p></div>',
-            trigdevtype: '<div class="quick-help_content">      <H2>Trigger Device Type:</H2>     <p>' + SGI.translate("trigdevtype") + '</p></div>',
-            codebox: '<div class="quick-help_content">      <H2>Program Box:</H2>             <p>' + SGI.translate("codebox") + '</p></div>',
-            brake: '<div class="quick-help_content">      <H2>Delay:</H2>                   <p>' + SGI.translate("brake") + '</p></div>',
-            intervall: '<div class="quick-help_content">      <H2>Intervall:</H2>               <p>' + SGI.translate("intervall") + '</p></div>',
-            loop: '<div class="quick-help_content">      <H2>Loop:</H2>                    <p>' + SGI.translate("loop") + '</p></div>',
-
-            block_t:    '<div class="quick-help_content">      <H2>Block t:</H2>           <p>' + SGI.translate("block_t") + '</p></div>',
-            block_kn:   '<div class="quick-help_content">      <H2>Block &ltn:</H2>           <p>' + SGI.translate("block_kn") + '</p></div>',
-            block_gn:   '<div class="quick-help_content">      <H2>Block &gtn:</H2>           <p>' + SGI.translate("block_gn") + '</p></div>',
-            block_e:    '<div class="quick-help_content">      <H2>Block e:</H2>           <p>' + SGI.translate("block_e") + '</p></div>',
-            block_tn:   '<div class="quick-help_content">      <H2>Block tn:</H2>           <p>' + SGI.translate("block_tn") + '</p></div>',
-            block_tt:   '<div class="quick-help_content">      <H2>Block tt:</H2>           <p>' + SGI.translate("block_tt") + '</p></div>',
-
-
-            next: '<div class="quick-help_content">      <H2>Next:</H2>                    <p>' + SGI.translate("next") + '</p></div>',
-            next1: '<div class="quick-help_content">      <H2>Next 1:</H2>                  <p>' + SGI.translate("next1") + '</p></div>',
-            next0: '<div class="quick-help_content">      <H2>Next 0:</H2>                  <p>' + SGI.translate("next0") + '</p></div>',
-            komex: '<div class="quick-help_content">      <H2>Comment:</H2>                 <p>' + SGI.translate("komex") + '</p></div>',
-            ccuobj: '<div class="quick-help_content">      <H2>CCU.IO Object:</H2>           <p>' + SGI.translate("ccuobj") + '</p></div>',
-            ccuobjpersi: '<div class="quick-help_content">      <H2>CCU.IO Object persident:</H2> <p>' + SGI.translate("ccuobjpersi") + '</p></div>',
-            trigger_event: '<div class="quick-help_content">      <H2>Trigger --:</H2>              <p>' + SGI.translate("trigger_event") + '</p></div>',
-            trigger_EQ: '<div class="quick-help_content">      <H2>Trigger EQ:</H2>              <p>' + SGI.translate("trigger_EQ") + '</p></div>',
-            trigger_NE: '<div class="quick-help_content">      <H2>Trigger NE:</H2>              <p>' + SGI.translate("trigger_NE") + '</p></div>',
-            trigger_GT: '<div class="quick-help_content">      <H2>Trigger GT:</H2>              <p>' + SGI.translate("trigger_GT") + '</p></div>',
-            trigger_GE: '<div class="quick-help_content">      <H2>Trigger GE:</H2>              <p>' + SGI.translate("trigger_GE") + '</p></div>',
-            trigger_LT: '<div class="quick-help_content">      <H2>Trigger LT:</H2>              <p>' + SGI.translate("trigger_LT") + '</p></div>',
-            trigger_LE: '<div class="quick-help_content">      <H2>Trigger LE:</H2>              <p>' + SGI.translate("trigger_LE") + '</p></div>',
-            trigger_valNe: '<div class="quick-help_content">      <H2>Trigger valNE:</H2>           <p>' + SGI.translate("trigger_valNe") + '</p></div>',
-            trigger_val: '<div class="quick-help_content">      <H2>Trigger VAL:</H2>             <p>' + SGI.translate("trigger_val") + '</p></div>',
-            trigger_time: '<div class="quick-help_content">      <H2>Trigger Time:</H2>            <p>' + SGI.translate("trigger_time") + '</p></div>',
-            trigger_vartime: '<div class="quick-help_content">      <H2>Trigger var. Time:</H2>       <p>' + SGI.translate("trigger_vartime") + '</p></div>',
-            trigger_zykm: '<div class="quick-help_content">      <H2>Trigger Zyklus M:</H2>        <p>' + SGI.translate("trigger_zykm") + '</p></div>',
-            trigger_astro: '<div class="quick-help_content">      <H2>Trigger Astro:</H2>           <p>' + SGI.translate("trigger_astro") + '</p></div>',
-            trigger_start: '<div class="quick-help_content">      <H2>Trigger Start:</H2>           <p>' + SGI.translate("trigger_start") + '</p></div>',
-            wenn: '<div class="quick-help_content">      <H2>IF:</H2>                      <p>' + SGI.translate("wenn") + '</p></div>',
-            timespan: '<div class="quick-help_content">      <H2>Timespan:</H2>                <p>' + SGI.translate("timespan") + '</p></div>',
-            inc: '<div class="quick-help_content">      <H2>+1:</H2>                      <p>' + SGI.translate("inc") + '</p></div>',
-            dec: '<div class="quick-help_content">      <H2>-1:</H2>                      <p>' + SGI.translate("dec") + '</p></div>',
-            summe: '<div class="quick-help_content">      <H2>Sum:</H2>                     <p>' + SGI.translate("summe") + '</p></div>',
-            differenz: '<div class="quick-help_content">      <H2>Difference:</H2>              <p>' + SGI.translate("differenz") + '</p></div>'
-        };
-
-        $(document).click(function (elem) {
-            SGI.klick = elem;
-
-
-            if (SGI.key == 17) {
-                SGI.open_quick_help_dialog();
-                $("#help-content").children().remove();
-                var type
-
-
-                if ($(elem.target).hasClass("fbs_element") || $(elem.target).hasClass("mbs_element")|| $(elem.target).hasClass("fbs") || $(elem.target).hasClass("mbs")) {
-
-                    if ($(elem.target).attr("id").split("_")[0] == "trigger" || $(elem.target).attr("id").split("_")[0] == "block" ) {
-                        type = $(elem.target).attr("id").split("_")[0] + "_" + $(elem.target).attr("id").split("_")[1];
-                    } else {
-                        type = $(elem.target).attr("id").split("_")[0];
-                    }
-
-                    $("#help-content").append(help[type]);
-                } else {
-                    $.each($(elem.target).parents(), function () {
-                        if ($(this).hasClass("fbs_element") || $(this).hasClass("mbs_element")||$(this).hasClass("fbs") || $(this).hasClass("mbs")) {
-
-                            if ($(this).attr("id").split("_")[0] == "trigger" || $(this).attr("id").split("_")[0] == "trigger") {
-                                type = $(this).attr("id").split("_")[0] + "_" + $(this).attr("id").split("_")[1];
-                            } else {
-                                type = $(this).attr("id").split("_")[0];
-                            }
-                            $("#help-content").append(help[type]);
-                            return false
-                        }
-                        if ($(this).hasClass("_jsPlumb_overlay")) {
-                            type = $(this).attr("id").split("_")[0];
-                            $("#help-content").append(help[type]);
-                            return false
-                        }
-                    });
-                }
-
-
-
-
-            }
-
-        });
-    }
 });
 

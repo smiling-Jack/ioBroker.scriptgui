@@ -13,8 +13,7 @@
     <link rel="stylesheet" href="css/jquery.contextMenu.css"/>
     <link rel="stylesheet" media="screen" href="css/superfish/superfish.css"/>
     <!--<link rel="stylesheet" href="css/jquery.selectBoxIt.css"/>-->
-    <link rel="stylesheet" href="css/codemirror.css"/>
-    <link rel="stylesheet" href="theme/monokai.css"/>
+
 
     <script type="text/javascript" src="js/lib/jquery-1.11.0.js"></script>
     <script type="text/javascript" src="js/lib/angular.js"></script>
@@ -42,9 +41,10 @@
     <script type="text/javascript" src="js/lib/dev_lib/canvg/canvg.js"></script>
     <script type="text/javascript" src="js/lib/dev_lib/canvas2image.js"></script>
 
-    <script type="text/javascript" src="js/lib/codemirror.js"></script>
-    <script type="text/javascript" src="js/lib/cm/mode/javascript/javascript.js"></script>
-    <script type="text/javascript" src="js/lib/cm/mode/xml/xml.js"></script>
+    <script type="text/javascript" src="js/lib/ace/ace.js"></script>
+    <script type="text/javascript" src="js/lib/ace/ext-language_tools.js"></script>
+
+
     <script type="text/javascript" src="js/lib/superclick.js"></script>
     <script type="text/javascript" src="js/lib/jquery.numberMask.js"></script>
     <script type="text/javascript" src="js/lib/jquery.autosize.min.js"></script>
@@ -57,6 +57,8 @@
 
 
     <script type="text/javascript" src="js/ScriptGUI.js"></script>
+    <script type="text/javascript" src="js/mode_gui.js"></script>
+    <script type="text/javascript" src="js/mode_editor.js"></script>
     <script type="text/javascript" src="js/Menu.js"></script>
     <script type="text/javascript" src="js/Translate.js"></script>
     <script type="text/javascript" src="js/add_fbs.js"></script>
@@ -138,14 +140,14 @@
                                                                               data-info="vader">vader</a></li>
                     </ul>
                 </li>
-                <!--<li class="ui-state-default frame_color menu_item" style="border: none"><a class="translate">Mode</a>-->
-                    <!--<ul id="ul_mode">-->
-                        <!--<li class="ui-state-default frame_color menu_item"><a id="m_mode_editor" class="translate">Editor</a>-->
-                        <!--</li>-->
-                        <!--<li class="ui-state-default frame_color menu_item"><a id="m_mode_gui"-->
-                                                                              <!--class="item_font   translate">GUI</a></li>-->
-                    <!--</ul>-->
-                <!--</li>-->
+                <li class="ui-state-default frame_color menu_item" style="border: none"><a class="translate">Mode</a>
+                <ul id="ul_mode">
+                <li class="ui-state-default frame_color menu_item"><a id="m_mode_editor" class="translate">Editor</a>
+                </li>
+                <li class="ui-state-default frame_color menu_item"><a id="m_mode_gui"
+                class="item_font   translate">GUI</a></li>
+                </ul>
+                </li>
                 <li class="ui-state-default frame_color menu_item"><a id="m_setup" class="translate">Setup</a></li>
             </ul>
         </li>
@@ -233,7 +235,7 @@
 
 
 </div>
-<div id="main" class="main ui-widget-content">
+<div id="main_gui" class="main_gui ui-widget-content" style="display: none">
     <div id="toolbox_select" class="toolbox_select">
     </div>
 
@@ -393,6 +395,7 @@
         </div>
     </div>
 </div>
+<div id="main_editor" class="main_editor ui-widget-content" style="display: none"></div>
 <div id="sim_log" class="sim_log frame_color ui-state-default">
     <div id="sim_log_head" class="sim_log_head ui-state-default"></div>
     <div class="div_sim_controll">
@@ -557,7 +560,9 @@
 </div>
 <div id="selection" class="selectiondiv"></div>
 <input style="display: none" id="prgopen" type="file" nwworkingdir="" accept=".prg"/>
+<input style="display: none" id="scriptopen" type="file" nwworkingdir="" accept=".script"/>
 <input style="display: none" id="prgsaveas" type="file" nwsaveas accept=".prg"/>
+<input style="display: none" id="scriptsaveas" type="file" nwsaveas accept=".script"/>
 
 <div id="wait_div">
     <div style="width: 100%; height: 100%; opacity: 0.9" class="frame_color ui-state-default"></div>
