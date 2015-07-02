@@ -68,7 +68,7 @@ jQuery.extend(true, SGI, {
         });
 
         $("#m_mode_gui").click(function () {
-            if(!SGI.gui_rendered){
+            if (!SGI.gui_rendered) {
                 SGI.load_gui()
             }
             SGI.show_gui();
@@ -79,10 +79,10 @@ jQuery.extend(true, SGI, {
         });
 
         $("#m_mode_editor").click(function () {
-            if(!SGI.editor_rendered){
+            if (!SGI.editor_rendered) {
                 SGI.load_editor()
             }
-           SGI.show_editor();
+            SGI.show_editor();
             SGI.hide_gui();
             scope.setup.mode = "editor";
             scope.$apply();
@@ -727,6 +727,29 @@ jQuery.extend(true, SGI, {
             });
 
             $(this).stop(true, true).effect("highlight");
+        }).hover(
+            function () {
+                $(this).addClass("ui-state-focus");
+            }, function () {
+                $(this).removeClass("ui-state-focus");
+            }
+        );
+
+
+        $("#img_set_code_format").click(function () {
+            var curser = SGI.editor.selection.getCursor()
+            SGI.editor.setValue(js_beautify(SGI.editor.getValue()), -1);
+            SGI.editor.selection.moveCursorToPosition(curser)
+        }).hover(
+            function () {
+                $(this).addClass("ui-state-focus");
+            }, function () {
+                $(this).removeClass("ui-state-focus");
+            }
+        );
+
+        $("#img_set_show_oid").click(function () {
+
         }).hover(
             function () {
                 $(this).addClass("ui-state-focus");
@@ -1641,7 +1664,7 @@ jQuery.extend(true, SGI, {
     },
 
     save_as_local: function () {
-        if (SGI.mode == "gui"){
+        if (SGI.mode == "gui") {
             var data = SGI.make_savedata();
             var chooser = $('#prgsaveas');
             chooser.change(function () {
@@ -1659,7 +1682,7 @@ jQuery.extend(true, SGI, {
                 });
             });
             chooser.trigger('click');
-        }else{
+        } else {
             var data = SGI.editor.getValue();
             var chooser = $('#scriptsaveas');
             chooser.change(function () {
@@ -1684,10 +1707,10 @@ jQuery.extend(true, SGI, {
         if (SGI.file_name == "") {
             SGI.save_as_local()
         } else {
-            if (SGI.mode == "gui"){
+            if (SGI.mode == "gui") {
                 var data = JSON.stringify(SGI.make_savedata());
 
-            }else{
+            } else {
                 var data = SGI.editor.getValue();
 
             }
@@ -1708,7 +1731,7 @@ jQuery.extend(true, SGI, {
     },
 
     open_local: function () {
-        if(SGI.mode == "gui"){
+        if (SGI.mode == "gui") {
             var chooser = $('#prgopen');
             chooser.val("");
             chooser.change(function (evt) {
@@ -1740,7 +1763,7 @@ jQuery.extend(true, SGI, {
             });
 
             chooser.trigger('click');
-        }else{
+        } else {
             var chooser = $('#scriptopen');
             chooser.val("");
             chooser.change(function (evt) {
@@ -1754,7 +1777,7 @@ jQuery.extend(true, SGI, {
                             throw err;
                         } else {
 
-                            SGI.editor.setValue(data.toString(),-1);
+                            SGI.editor.setValue(data.toString(), -1);
 
                             SGI.prg_store = path.dirname(filep);
                             SGI.file_name = path.basename(filep);
@@ -1775,7 +1798,7 @@ jQuery.extend(true, SGI, {
     },
 
     open_last: function () {
-        if(SGI.mode == "gui"){
+        if (SGI.mode == "gui") {
             if (scope.setup.last_prg != "") {
                 try {
                     $("#wait_div").show();
@@ -1798,7 +1821,7 @@ jQuery.extend(true, SGI, {
                     throw err
                 }
             }
-        }else{
+        } else {
             if (scope.setup.last_script != "") {
                 try {
                     $("#wait_div").show();
@@ -1852,9 +1875,9 @@ jQuery.extend(true, SGI, {
         } else {
             var script;
 
-            if(SGI.mode == "gui"){
+            if (SGI.mode == "gui") {
                 script = Compiler.make_prg(false, false);
-            }else{
+            } else {
                 script = SGI.editor.getValue();
 
             }
@@ -1909,12 +1932,11 @@ jQuery.extend(true, SGI, {
         editor.getSession().setUseWrapMode(true);
 
 
-
-if(SGI.mode == "gui"){
-    editor.setValue(js_beautify(data.toString(), {indent_size: 2}),-1);
-}else{
-    editor.setValue(SGI.editor.getValue(),-1);
-}
+        if (SGI.mode == "gui") {
+            editor.setValue(js_beautify(data.toString(), {indent_size: 2}), -1);
+        } else {
+            editor.setValue(SGI.editor.getValue(), -1);
+        }
 
         editor.setReadOnly(true)
 

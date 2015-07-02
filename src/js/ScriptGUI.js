@@ -429,12 +429,12 @@ SGI = {
         $(document).keydown(function (event) {
             SGI.key = event.keyCode;
 
-            if (SGI.key == 46) {
+            if (SGI.key == 46 && SGI.mode == "gui") {
                 SGI.del_selected()
-            } else if (SGI.key == 67 && event.ctrlKey == true) {
+            } else if (SGI.key == 67 && event.ctrlKey == true && SGI.mode == "gui") {
                 SGI.copy_selected();
                 $("body").css({cursor: "default"});
-            } else if (SGI.key == 86 && event.ctrlKey == true) {
+            } else if (SGI.key == 86 && event.ctrlKey == true && SGI.mode == "gui") {
                 SGI.paste_selected();
                 $("body").css({cursor: "default"});
             } else if (SGI.key == 68 && event.altKey == true) {
@@ -446,7 +446,7 @@ SGI = {
                 main_win.reload();
             } else if (SGI.key == 70 && event.altKey == true) {
                 var test = test_fehler;
-            } else if (SGI.key == 17 || SGI.key == 91 || SGI.key == 93 || event.ctrlKey == true) {
+            } else if ((SGI.key == 17 || SGI.key == 91 || SGI.key == 93 || event.ctrlKey == true)  && SGI.mode == "gui") {
                 $("body").css({cursor: "help"});
                 SGI.key = 17;
             }

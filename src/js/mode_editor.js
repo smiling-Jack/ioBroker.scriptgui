@@ -7,7 +7,7 @@ jQuery.extend(true, SGI, {
 
         SGI.editor_rendered = true;
 
-        SGI.editor = ace.edit("main_editor");
+        SGI.editor = ace.edit("editor_code");
         var editor = SGI.editor;
 
         editor.getSession().setMode("ace/mode/javascript")
@@ -33,15 +33,19 @@ jQuery.extend(true, SGI, {
             e.editor.session.setBreakpoint(row)
             e.stop()
         })
+        
     },
 
     show_editor: function () {
 
         $("#main_editor").show();
+        $(".set_editor").show();
         SGI.mode = "editor";
+
     },
     hide_editor: function () {
         $("#main_editor").hide();
+        $(".set_editor").hide();
     },
 
 });

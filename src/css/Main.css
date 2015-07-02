@@ -37,9 +37,6 @@ html {
     display: none;
 }
 
-
-
-
 #prg_body::-webkit-scrollbar-thumb {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);
@@ -52,10 +49,7 @@ html {
 /*background-image: none;*/
 /*}*/
 
-.CodeMirror-scroll::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);
-}
+
 
 #toolbox_body::-webkit-scrollbar-thumb {
     border-radius: 10px;
@@ -181,11 +175,23 @@ body {
     margin: 0 !important;
     min-height: 142px;
     height: calc(100% - 193px);
+    display: inline-flex;
 }
 
 .ace_scrollbar-v::-webkit-scrollbar-thumb {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);
+    background-image: none;
+}
+
+#editor_oid{
+    overflow: auto;
+    width: 300px;
+}
+
+#editor_oid::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 1), inset 0 0 100px rgba(255, 255, 255, 0.35);
     background-image: none;
 }
 
@@ -2392,17 +2398,58 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
     z-index: 51;
 }
 
-.set_algin{
+.set_gui{
     display: none;
 }
-.set_zoom{
+.set_editor{
     display: none;
 }
-.set_tooltip{
-    display: none;
-}
+
 
 .ace_gutter-cell.ace_breakpoint{
     border-radius: 20px 0px 0px 20px;
     box-shadow: 0px 0px 1px 1px red inset;
+}
+
+#editor_code{
+    height: 100%;
+    width: calc(100% - 300px);
+    display: inline-block;
+}
+#editor_id{
+    height: 100%;
+    width: 300px;
+    border: 1px solid red;
+display: inline-block;
+}
+
+.oid_val{
+    float: right;
+    text-align: right;
+    border: none;
+}
+.oid_titel{
+    width: calc(100% - 41px);
+}
+.oid_add{
+    position: absolute;
+    width: calc(100% - 63px);
+    height: 100%;
+    top: 0;
+    left: -30px;
+}
+span.fancytree-title{
+    width: calc(100% - 41px);
+    color: inherit !important;
+    font-family: inherit!important;
+    position: relative!important;
+}
+
+.fancytree-container{
+    color: inherit !important;
+    font-family: inherit!important;
+    background: transparent!important;
+}
+ul.fancytree-container{
+    border: none!important;
 }

@@ -193,12 +193,12 @@ jQuery.extend(true, SGI, {
     },
     show_gui: function(){
         $("#main_gui").show();
-        $(".set_algin, .set_zoom, .set_tooltip").show();
+        $(".set_gui").show();
         SGI.mode = "gui";
     },
     hide_gui: function(){
         $("#main_gui").hide();
-        $(".set_algin, .set_zoom, .set_tooltip").hide()
+        $(".set_gui").hide()
     },
     mbs_inst: function () {
 
