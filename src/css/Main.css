@@ -28,8 +28,8 @@ html {
 }
 
 ::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -164,7 +164,7 @@ body {
 
 
 
-.main {
+.main_gui {
     position: relative;
     overflow: hidden;
     left: 0;
@@ -172,6 +172,21 @@ body {
     margin: 0 !important;
     min-height: 142px;
     height: calc(100% - 188px);
+}
+.main_editor {
+    position: relative;
+    overflow: hidden;
+    left: 0;
+    width: calc(100% - 2px);
+    margin: 0 !important;
+    min-height: 142px;
+    height: calc(100% - 193px);
+}
+
+.ace_scrollbar-v::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);
+    background-image: none;
 }
 
 .toolbox_body {
@@ -999,24 +1014,24 @@ body {
     left: 0;
     opacity: 0.65;
     z-index: 2;
-    -webkit-animation: blinks 1.5s infinite linear;
+    /*-webkit-animation: blinks 1.5s infinite linear;*/
     border-radius: 16px;
 }
 
-@-webkit-keyframes blinks {
-    0% {
-        box-shadow: 0px 0px 0px 0px red, inset 0px 0px 0px 0px red;
+/*@-webkit-keyframes blinks {*/
+    /*0% {*/
+        /*box-shadow: 0px 0px 0px 0px red, inset 0px 0px 0px 0px red;*/
 
-    }
-    50% {
-        box-shadow: 0px 0px 4px 6px red, inset 0px 0px 4px 3px red;
+    /*}*/
+    /*50% {*/
+        /*box-shadow: 0px 0px 4px 6px red, inset 0px 0px 4px 3px red;*/
 
-    }
-    100% {
-        box-shadow: 0px 0px 0px 0px red, inset 0px 0px 0px 0px red;
+    /*}*/
+    /*100% {*/
+        /*box-shadow: 0px 0px 0px 0px red, inset 0px 0px 0px 0px red;*/
 
-    }
-}
+    /*}*/
+/*}*/
 
 .delay {
     background-color: red;
@@ -2375,4 +2390,19 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
     left: 0px;
     top: 0px;
     z-index: 51;
+}
+
+.set_algin{
+    display: none;
+}
+.set_zoom{
+    display: none;
+}
+.set_tooltip{
+    display: none;
+}
+
+.ace_gutter-cell.ace_breakpoint{
+    border-radius: 20px 0px 0px 20px;
+    box-shadow: 0px 0px 1px 1px red inset;
 }
