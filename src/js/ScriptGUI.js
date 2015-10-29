@@ -253,10 +253,10 @@ SGI = {
                         height: "10px",
                         "min-height": "10px"
                     });
-                    $("#main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
+                    $(".main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
                 } else {
                     $("#sim_log").css({height: "" + log_h + "px"});
-                    $("#main").css({height: 'calc(100% - ' + (58 + log_h) + 'px)'});
+                    $(".main").css({height: 'calc(100% - ' + (58 + log_h) + 'px)'});
                 }
             })
 
@@ -271,10 +271,10 @@ SGI = {
             .drag(function (ev, dd) {
                 if (start_h - dd.deltaY < 130) {
                     $("#sim_log").css({height: "130px"});
-                    $("#main").css({height: 'calc(100% - ' + (58 + 130) + 'px)'});
+                    $(".main").css({height: 'calc(100% - ' + (58 + 130) + 'px)'});
                 } else {
                     $("#sim_log").css({height: start_h - dd.deltaY + "px"});
-                    $("#main").css({height: 'calc(100% - ' + (58 + start_h - dd.deltaY) + 'px)'});
+                    $(".main").css({height: 'calc(100% - ' + (58 + start_h - dd.deltaY) + 'px)'});
                 }
 
             });
@@ -284,7 +284,7 @@ SGI = {
                 height: "10px",
                 "min-height": "10px"
             });
-            $("#main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
+            $(".main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
         }
 
 

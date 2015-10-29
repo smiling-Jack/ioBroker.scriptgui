@@ -2453,3 +2453,7 @@ span.fancytree-title{
 ul.fancytree-container{
     border: none!important;
 }
+
+.sf-menu a {
+    cursor: default;
+}

@@ -10,6 +10,7 @@ var sim_p;
 
 function sim_exit() {
     console.log("exit")
+
     $('#play_overlay').remove();
     $("#run_type").show();
     $("#prg_panel").find("select,button, input:not(.force_input)").each(function () {
@@ -93,7 +94,7 @@ var debug = {
 
 debug.init();
 
-
+var client ;
 function start_sim_p() {
 
     sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type], {execArgv: ['--debug']})
@@ -101,7 +102,8 @@ function start_sim_p() {
     sim.split_script = sim.script.toString().split("\n");
 
     var Client = require('v8-debug-protocol');
-    var client = new Client(5858);
+    client = new Client(5858);
+
 
     client.on('connect', function () {
         console.log("connect")
@@ -172,7 +174,6 @@ function start_sim_p() {
 
     });
     sim_p.on('message', function (data) {
-
         if (typeof data == 'string') {
             console.log("message: " + data);
         } else if (Array.isArray(data)) {

@@ -1695,8 +1695,8 @@ jQuery.extend(true, SGI, {
             add += '<select  id="val_' + index + '" ng-model="mbs[' + nr + '].val[' + index + ']" class="inp_val">';
             add += '    <option value="val">Gleich</option>';
             add += '    <option value="valNe">Ungleich</option>';
-            add += '    <option value="valGt">Größer</option>';
-            add += '    <option value="valGe">Größer =</option>';
+            add += '    <option value="valGt">Grï¿½ï¿½er</option>';
+            add += '    <option value="valGe">Grï¿½ï¿½er =</option>';
             add += '    <option value="valLt">Kleiner</option>';
             add += '    <option value="valLe">Kleiner =</option>';
             add += '</select>';
@@ -1749,7 +1749,7 @@ jQuery.extend(true, SGI, {
             add += '<select ng-model="mbs[' + $this.data("nr") + '].astro[' + index + ']" id="astro_' + index + '" class="inp_astro">';
             add += '    <option value="sunrise">Sonnenaufgang Start</option>';
             add += '    <option value="sunriseEnd">Sonnenaufgang Ende</option>';
-            add += '    <option value="solarNoon">Höchster Sonnenstand</option>';
+            add += '    <option value="solarNoon">Hï¿½chster Sonnenstand</option>';
             add += '    <option value="sunsetStart">Sonnenuntergang Start</option>';
             add += '    <option value="sunset">Sonnenuntergang Ende</option>';
             add += '    <option value="night">Nacht Start</option>';
@@ -2833,15 +2833,16 @@ jQuery.extend(true, SGI, {
 
         $("body").append('\
                    <div id="dialog_code" style="text-align: left; min-width: 520px" title="Expert Editor">\
-                   <button id="btn_exp_id">ID</button>\
-                   <button id="btn_exp_group">Gruppe</button>\
-                   <button id="btn_exp_device">Gerät</button>\
-                   <div style="float: right; margin-top:6px"> \
-                   <span>' + SGI.translate("Name:") + '</span>\
-                   <input id="exp_name" type="text" value="' + name + '"/>\
-                   </div>\
-                   <textarea id="codemirror" name="codemirror" class="code frame_color ui-corner-all"></textarea>\
+                    <button id="btn_exp_id">ID</button>\
+                    <button id="btn_exp_group">Gruppe</button>\
+                    <button id="btn_exp_device">Gerï¿½t</button>\
+                    <div style="float: right; margin-top:6px"> \
+                        <span>' + SGI.translate("Name:") + '</span>\
+                            <input id="exp_name" type="text" value="' + name + '"/>\
+                    </div>\
+                    <div id="expert_ace"   style="width: calc(100% - 0px);height: calc(100% - 50px);margin-top: 10px;" class="code frame_color ui-corner-all"></div>\
                    </div>');
+
         $("#dialog_code").dialog({
             height: h,
             width: v,
@@ -2852,38 +2853,22 @@ jQuery.extend(true, SGI, {
                     value: editor.getValue(),
                     name: $('#exp_name').val()
                 };
-                $.contextMenu('destroy', '.CodeMirror');
                 $("#dialog_code").remove();
                 return callback(data)
             }
         });
 
-        var editor = CodeMirror.fromTextArea(document.getElementById("codemirror"), {
-            mode: {name: "javascript", json: true},
-//            value:data.toString(),
-            lineNumbers: true,
-            readOnly: false,
-            theme: "monokai",
-            extraKeys: {"Ctrl-Space": "autocomplete"}
+        var editor = ace.edit("expert_ace");
+        editor.getSession().setMode("ace/mode/javascript")
+        editor.setTheme("ace/theme/monokai");
+        editor.setOptions({
+            showPrintMargin: false,
         });
 
-        editor.setOption("value", data.toString());
+        editor.$blockScrolling = Infinity;
+        editor.getSession().setUseWrapMode(true);
 
-        $.contextMenu({
-            selector: '.CodeMirror',
-            zIndex: 9999,
-            className: "ui-widget-content ui-corner-all",
-            items: {
-                "format": {
-                    name: SGI.translate("Autoformat"),
-                    className: "item_font ",
-                    callback: function () {
-                        var _data = editor.getSelection();
-                        editor.replaceSelection(js_beautify(_data));
-                    }
-                }
-            }
-        });
+        editor.setValue(js_beautify(data.toString(), {indent_size: 2}), -1);
 
 
         $("#btn_exp_id").button().click(function () {
