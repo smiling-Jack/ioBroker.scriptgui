@@ -208,19 +208,6 @@ SGI = {
             sim_p.send(["time", sim.time_mode])
         });
 
-        // slider XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-
-        $(".prg_body").scrollTop(1000 - ($(".prg_body").height() / 2));
-        $(".prg_body").scrollLeft(2000 - ($(".prg_body").width() / 2));
-
-        //var color = $(".frame_color").css("background-color");
-        //document.styleSheets[1].cssRules[3].style["background-color"] = color;
-        //document.styleSheets[1].cssRules[4].style["background-color"] = color;
-
-
-
-
         // Live Test XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         $("#clear_force").button()
             .click(function () {
@@ -291,6 +278,7 @@ SGI = {
   if(scope.setup.mode == "gui"){
       SGI.load_gui();
       SGI.show_gui();
+
   }else{
       SGI.load_editor();
       SGI.show_editor();
@@ -331,7 +319,6 @@ SGI = {
 
         scope.save_scope_watchers();
 
-
         main_win.focus();
         main_win.show();
         try {
@@ -359,26 +346,26 @@ SGI = {
 //            SGI.server_register()
 //        }, 5000);
 
-        setTimeout(function () {
-            if (SGI.dev != true) {
-                if (scope.setup.update) {
-                    try{
-                    upd.checkNewVersion(function (error, newVersionExists, manifest) {
-                        if (!error && newVersionExists) {
-                            SGI.update()
-                        }
-                    });
-                    }catch(err){
-
-                    }
-                }
-
-                if ((new Date).toLocaleDateString() != scope.setup.last_open) {
-                    SGI.server_homecall()
-                }
-
-            }
-        }, 100);
+        //setTimeout(function () {
+        //    if (SGI.dev != true) {
+        //        if (scope.setup.update) {
+        //            try{
+        //            upd.checkNewVersion(function (error, newVersionExists, manifest) {
+        //                if (!error && newVersionExists) {
+        //                    SGI.update()
+        //                }
+        //            });
+        //            }catch(err){
+        //
+        //            }
+        //        }
+        //
+        //        if ((new Date).toLocaleDateString() != scope.setup.last_open) {
+        //            SGI.server_homecall()
+        //        }
+        //
+        //    }
+        //}, 100);
     },
 
     global_event: function () {

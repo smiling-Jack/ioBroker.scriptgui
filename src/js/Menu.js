@@ -60,8 +60,8 @@ jQuery.extend(true, SGI, {
             $("#theme_css").remove();
             $("head").append('<link id="theme_css" rel="stylesheet" href="css/' + $(this).data('info') + '/jquery-ui.min.css"/>');
             setTimeout(function () {
-                document.styleSheets[1].cssRules[3].style["background-color"] = $(".frame_color").css("background-color");
-                document.styleSheets[1].cssRules[4].style["background-color"] = $(".frame_color").css("background-color");
+                document.styleSheets[1].cssRules[0].style["background-color"] = $(".frame_color").css("background-color");
+                document.styleSheets[1].cssRules[1].style["background-color"] = $(".frame_color").css("background-color");
             }, 300);
 
 

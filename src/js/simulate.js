@@ -53,112 +53,113 @@ function sim_exit() {
 var net = require('net');
 
 
-var debug = {
-    socket:null,
-    init: function(){
-        this.socket = new net.Socket();
+//var debug = {
+//    socket:null,
+//    init: function(){
+//        this.socket = new net.Socket();
+//
+//        this.socket.on("connect", function(){
+//            console.log("debug connected");
+//        });
+//
+//        this.socket.on("data", function (data) {
+//            var _data = data.split(/\n\r\n/g);
+//            console.log("Data:");
+//            console.log(_data);
+//            $.each(_data,function(){
+//                try{
+//                    var d = JSON.parse(this);
+//                    console.log("event: " + d.event.toString())
+//                    if(d.event == "break"){debug.on_brake()}
+//                }catch (err){
+//                    console.log("parse error: "+ this)
+//                }
+//            })
+//        });
+//    },
+//    on_brake:function(){
+//        debug.send_cont(1000)
+//    },
+//    send_cont: function(time){
+//        setTimeout(function() {
+//            var msg = JSON.stringify({
+//                "type": "request",
+//                "command": "continue"
+//            });
+//            debug.socket.write("Content-Length: " + msg.length + "\r\n\r\n" + msg);
+//        },time);
+//    }
+//
+//};
 
-        this.socket.on("connect", function(){
-            console.log("debug connected");
-        });
+//debug.init();
 
-        this.socket.on("data", function (data) {
-            var _data = data.split(/\n\r\n/g);
-            console.log("Data:");
-            console.log(_data);
-            $.each(_data,function(){
-                try{
-                    var d = JSON.parse(this);
-                    console.log("event: " + d.event.toString())
-                    if(d.event == "break"){debug.on_brake()}
-                }catch (err){
-                    console.log("parse error: "+ this)
-                }
-            })
-        });
-    },
-    on_brake:function(){
-        debug.send_cont(1000)
-    },
-    send_cont: function(time){
-        setTimeout(function() {
-            var msg = JSON.stringify({
-                "type": "request",
-                "command": "continue"
-            });
-            debug.socket.write("Content-Length: " + msg.length + "\r\n\r\n" + msg);
-        },time);
-    }
-
-};
-
-debug.init();
-
-var client ;
 function start_sim_p() {
 
-    sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type], {execArgv: ['--debug']})
+    sim_p = cp.fork('./js/sim_process.js', [sim.script, sim.run_type], {execArgv: ['--debug']});
 
     sim.split_script = sim.script.toString().split("\n");
-
     var Client = require('v8-debug-protocol');
-    client = new Client(5858);
+    var client ;
 
+        client = new Client(5858);
 
-    client.on('connect', function () {
-        console.log("connect")
+        client.on('connect', function () {
+            console.log("Debugger connect")
+        });
+        client.on('onerror', function (err) {
+            console.log("Debugger onerror")
+            console.log(err)
+        });
 
-    });
+        client.on('break', function (breakInfo) {
+            var debug_info = sim.split_script[breakInfo.sourceLine - 2].split("//")[1];
+            var step = debug_info.split("--")[0];
+            var baustein = debug_info.split("--")[1];
 
-    client.on('break', function (breakInfo) {
+            if (step == "trigger_highlight") {
+                sim.trigger_highlight(baustein);
+                setTimeout(function () {
+                    client.continue(function (err, doneOrNot) {
+                        if (err)console.log(err);
+                    });
+                }, 1000)
+            } else if (step == "step_fbs_highlight") {
+                sim.step_fbs_highlight(baustein);
+                setTimeout(function () {
+                    client.continue(function (err, doneOrNot) {
+                        if (err)console.log(err);
+                    });
+                }, 1000)
+            } else if (step == "step_mbs_highlight_in") {
+                sim.step_mbs_highlight_in(baustein);
+                setTimeout(function () {
+                    client.continue(function (err, doneOrNot) {
+                        if (err)console.log(err);
+                    });
+                }, 500)
+            } else if (step == "step_mbs_highlight_out") {
+                sim.step_mbs_highlight_out(baustein);
+                setTimeout(function () {
+                    client.continue(function (err, doneOrNot) {
+                        if (err)console.log(err);
+                    });
+                }, 500)
+            } else if (step == "step_mbs_highlight_reset") {
+                sim.step_mbs_highlight_reset(baustein);
+                setTimeout(function () {
+                    client.continue(function (err, doneOrNot) {
+                        if (err)console.log(err);
+                    });
+                }, 2000)
+            } else {
+                //client.continue(function (err, doneOrNot) {
+                //    console.log(err)
+                //    sim_p.send(["home", homematic])
+                //});
+            }
+        });
 
-        var debug_info = sim.split_script[breakInfo.sourceLine - 1].split("//")[1];
-        var step = debug_info.split("--")[0]
-        var baustein = debug_info.split("--")[1]
-
-
-        if (step == "trigger_highlight") {
-            sim.trigger_highlight(baustein)
-            setTimeout(function () {
-                client.continue(function (err, doneOrNot) {
-                    if (err)console.log(err);
-                });
-            }, 1000)
-        } else if (step == "step_fbs_highlight") {
-            sim.step_fbs_highlight(baustein)
-            setTimeout(function () {
-                client.continue(function (err, doneOrNot) {
-                    if (err)console.log(err);
-                });
-            }, 1000)
-        } else if (step == "step_mbs_highlight_in") {
-            sim.step_mbs_highlight_in(baustein)
-            setTimeout(function () {
-                client.continue(function (err, doneOrNot) {
-                    if (err)console.log(err);
-                });
-            }, 500)
-        } else if (step == "step_mbs_highlight_out") {
-            sim.step_mbs_highlight_out(baustein)
-            setTimeout(function () {
-                client.continue(function (err, doneOrNot) {
-                    if (err)console.log(err);
-                });
-            }, 500)
-        } else if (step == "step_mbs_highlight_reset") {
-            sim.step_mbs_highlight_reset(baustein)
-            setTimeout(function () {
-                client.continue(function (err, doneOrNot) {
-                    if (err)console.log(err);
-                });
-            }, 2000)
-        } else {
-            //client.continue(function (err, doneOrNot) {
-            //    console.log(err)
-            //    sim_p.send(["home", homematic])
-            //});
-        }
-    });
 
 
     sim_p.on('close', function (code, signal) {
@@ -377,6 +378,7 @@ var sim = {
             }
         });
         //sim_p.send(["exit"]);
+
         sim_p.kill('SIGINT');
 
         //}

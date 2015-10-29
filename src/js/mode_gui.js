@@ -194,6 +194,15 @@ jQuery.extend(true, SGI, {
     show_gui: function(){
         $("#main_gui").show();
         $(".set_gui").show();
+
+        // slider XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        $(".prg_body").scrollTop(1000 - ($(".prg_body").height() / 2));
+        $(".prg_body").scrollLeft(2000 - ($(".prg_body").width() / 2));
+        setTimeout(function () {
+            document.styleSheets[1].cssRules[0].style["background-color"] = $(".frame_color").css("background-color");
+            document.styleSheets[1].cssRules[1].style["background-color"] = $(".frame_color").css("background-color");
+        }, 100);
+
         SGI.mode = "gui";
     },
     hide_gui: function(){
