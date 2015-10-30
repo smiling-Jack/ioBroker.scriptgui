@@ -36,7 +36,7 @@ function sim_exit() {
         width: "10px"
     });
 
-    if(SGI.mode=="gui"){
+    if (SGI.mode == "gui") {
         $.each(SGI.plumb_inst, function () {
             var con = this.getAllConnections();
             $.each(con, function () {
@@ -100,66 +100,65 @@ function start_sim_p() {
 
     sim.split_script = sim.script.toString().split("\n");
     var Client = require('v8-debug-protocol');
-    var client ;
+    var client;
 
-        client = new Client(5858);
+    client = new Client(5858);
 
-        client.on('connect', function () {
-            console.log("Debugger connect")
-        });
-        client.on('onerror', function (err) {
-            console.log("Debugger onerror")
-            console.log(err)
-        });
+    client.on('connect', function () {
+        console.log("Debugger connect")
+    });
+    client.on('onerror', function (err) {
+        console.log("Debugger onerror");
+        console.log(err)
+    });
 
-        client.on('break', function (breakInfo) {
-            var debug_info = sim.split_script[breakInfo.sourceLine - 2].split("//")[1];
-            var step = debug_info.split("--")[0];
-            var baustein = debug_info.split("--")[1];
+    client.on('break', function (breakInfo) {
+        var debug_info = sim.split_script[breakInfo.sourceLine - 2].split("//")[1];
+        var step = debug_info.split("--")[0];
+        var baustein = debug_info.split("--")[1];
 
-            if (step == "trigger_highlight") {
-                sim.trigger_highlight(baustein);
-                setTimeout(function () {
-                    client.continue(function (err, doneOrNot) {
-                        if (err)console.log(err);
-                    });
-                }, 1000)
-            } else if (step == "step_fbs_highlight") {
-                sim.step_fbs_highlight(baustein);
-                setTimeout(function () {
-                    client.continue(function (err, doneOrNot) {
-                        if (err)console.log(err);
-                    });
-                }, 1000)
-            } else if (step == "step_mbs_highlight_in") {
-                sim.step_mbs_highlight_in(baustein);
-                setTimeout(function () {
-                    client.continue(function (err, doneOrNot) {
-                        if (err)console.log(err);
-                    });
-                }, 500)
-            } else if (step == "step_mbs_highlight_out") {
-                sim.step_mbs_highlight_out(baustein);
-                setTimeout(function () {
-                    client.continue(function (err, doneOrNot) {
-                        if (err)console.log(err);
-                    });
-                }, 500)
-            } else if (step == "step_mbs_highlight_reset") {
-                sim.step_mbs_highlight_reset(baustein);
-                setTimeout(function () {
-                    client.continue(function (err, doneOrNot) {
-                        if (err)console.log(err);
-                    });
-                }, 2000)
-            } else {
-                //client.continue(function (err, doneOrNot) {
-                //    console.log(err)
-                //    sim_p.send(["home", homematic])
-                //});
-            }
-        });
-
+        if (step == "trigger_highlight") {
+            sim.trigger_highlight(baustein);
+            setTimeout(function () {
+                client.continue(function (err, doneOrNot) {
+                    if (err)console.log(err);
+                });
+            }, 1000)
+        } else if (step == "step_fbs_highlight") {
+            sim.step_fbs_highlight(baustein);
+            setTimeout(function () {
+                client.continue(function (err, doneOrNot) {
+                    if (err)console.log(err);
+                });
+            }, 1000)
+        } else if (step == "step_mbs_highlight_in") {
+            sim.step_mbs_highlight_in(baustein);
+            setTimeout(function () {
+                client.continue(function (err, doneOrNot) {
+                    if (err)console.log(err);
+                });
+            }, 500)
+        } else if (step == "step_mbs_highlight_out") {
+            sim.step_mbs_highlight_out(baustein);
+            setTimeout(function () {
+                client.continue(function (err, doneOrNot) {
+                    if (err)console.log(err);
+                });
+            }, 500)
+        } else if (step == "step_mbs_highlight_reset") {
+            sim.step_mbs_highlight_reset(baustein);
+            setTimeout(function () {
+                client.continue(function (err, doneOrNot) {
+                    if (err)console.log(err);
+                });
+            }, 2000)
+        } else {
+            //client.continue(function (err, doneOrNot) {
+            //    console.log(err)
+            //    sim_p.send(["home", homematic])
+            //});
+        }
+    });
 
 
     sim_p.on('close', function (code, signal) {
@@ -174,10 +173,12 @@ function start_sim_p() {
         sim_exit()
 
     });
+
     sim_p.on('message', function (data) {
         if (typeof data == 'string') {
             console.log("message: " + data);
         } else if (Array.isArray(data)) {
+            console.log("message: " + data[0]);
             if (data[0] == "logger") {
                 sim.logger(data[1])
             } else if (data[0] == "log") {
@@ -187,7 +188,7 @@ function start_sim_p() {
             } else if (data[0] == "script_err") {
                 sim.script_err(data[1])
             } else if (data[0] == "init") {
-                sim_p.send(["home", homematic])
+                sim_p.send(["home", homematic]);
             } else if (data[0] == "running") {
                 sim.running();
             } else {
@@ -217,7 +218,7 @@ var sim = {
 
         var line_number = parseInt(err.match(/(s_engine:)\w+/)[0].split(":")[1]);
 
-        if(SGI.mode == "gui"){
+        if (SGI.mode == "gui") {
             var real_script = js_beautify(Compiler.make_prg().toString());
             var _sim_script = sim.script.split(/\n/);
             var _real_script = real_script.split(/\n/);
@@ -240,10 +241,10 @@ var sim = {
             $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td style='color: red'>" + err.split(":")[0] + "</td></tr>");
             $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td><b>Fehler in Zeile:</b> " + real_error_line + "</td></tr>");
             $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td><b>Zeilentext:</b>" + real_error_line_text + "</td></tr>");
-        }else{
+        } else {
             $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td style='color: red'>" + err.split(":")[0] + "</td></tr>");
-            $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td><b>Fehler in Zeile:</b> " + (parseInt(line_number)-1) + "</td></tr>");
-            $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td><b>Zeilentext:</b>" + sim.split_script[line_number-2] + "</td></tr>");
+            $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td><b>Fehler in Zeile:</b> " + (parseInt(line_number) - 1) + "</td></tr>");
+            $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td><b>Zeilentext:</b>" + sim.split_script[line_number - 2] + "</td></tr>");
         }
 
 
@@ -386,7 +387,8 @@ var sim = {
     running: function () {
         console.log("running")
         SGI.sim_run = true;
-        //$("body").css("cursor","not-allowed");
+        $("body").css("cursor","initial");
+        $("#prg_body").css("border-color", "red");
         var scope = angular.element($('body')).scope();
         var that = this;
 
@@ -427,9 +429,9 @@ var sim = {
         if (!SGI.sim_run) {
             try {
                 $(".error_fbs").removeClass("error_fbs");
-                if (SGI.mode == "gui"){
+                if (SGI.mode == "gui") {
                     sim.script = js_beautify(Compiler.make_prg(sim.run_type, sim.step).toString());
-                }else{
+                } else {
                     sim.script = SGI.editor.getValue();
                 }
 

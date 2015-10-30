@@ -845,10 +845,8 @@ jQuery.extend(true, SGI, {
         $("#img_set_script_play").button().click(function () {
                 if (SGI.con_data) {
                     if (!SGI.sim_run) {
-                        $("#prg_body").css("border-color", "red")
-                        $("#img_set_script_play").append('<div id="play_overlay"  ></div>')
                         sim.simulate();
-
+                        $("#img_set_script_play").append('<div id="play_overlay"  ></div>')
                     }
 
                 } else {
