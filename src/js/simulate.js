@@ -9,8 +9,8 @@ var cp = require('child_process');
 var sim_p;
 
 function sim_exit() {
-    console.log("exit")
-
+    console.log("exit");
+$(".menuBlocker").hide();
     $('#play_overlay').remove();
     $("#run_type").show();
     $("#prg_panel").find("select,button, input:not(.force_input)").each(function () {
@@ -379,7 +379,7 @@ var sim = {
             }
         });
         //sim_p.send(["exit"]);
-
+        $("body").css("cursor","default");
         sim_p.kill('SIGINT');
 
         //}
@@ -387,7 +387,8 @@ var sim = {
     running: function () {
         console.log("running")
         SGI.sim_run = true;
-        $("body").css("cursor","initial");
+        $(".menuBlocker").show();
+        $("body").css("cursor","pointer");
         $("#prg_body").css("border-color", "red");
         var scope = angular.element($('body')).scope();
         var that = this;

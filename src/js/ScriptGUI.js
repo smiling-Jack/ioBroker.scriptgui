@@ -208,6 +208,10 @@ SGI = {
             sim_p.send(["time", sim.time_mode])
         });
 
+        // Minimap XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+
         // Live Test XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         $("#clear_force").button()
             .click(function () {
@@ -502,8 +506,6 @@ SGI = {
         localStorage.setup = JSON.stringify(scope.setup)
     },
 
-
-
     load_prg: function (_data) {
         var data = _data;
         try {
@@ -744,7 +746,6 @@ SGI = {
         }
     },
 
-
     get_name: function (hmid) {
         var _name;
         if (hmid == undefined) {
@@ -815,8 +816,6 @@ SGI = {
             return cb("undefined")
         }
     },
-
-
 
     check_fs: function (cb) {
 

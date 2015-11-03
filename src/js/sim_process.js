@@ -7,6 +7,8 @@
 var _reguest = require("request");
 //var debug = require("debug")
 
+var events = require('events');
+var eventEmitter = new events.EventEmitter();
 
 var sim = {
     time_mode: "auto",
@@ -31,12 +33,16 @@ process.on('message', function (data) {
         sim.datapoints = data[1].uiState;
         try {
             run(script);
+            eventEmitter.on('stoppen', function(){
+                a = a-b;
+            })
         } catch (err) {
-            process.send(["script_err", err.stack]);
+            process.send(["stop", err]);
 
         }
     } else if (data[0] == "exit") {
-        process.exit(1000)
+        //process.exit(1000)
+        eventEmitter.emit('stoppen');
     } else if (data[0] == "time") {
         if (data[1] == "manual") {
             sim.time_mode = "manual";
@@ -849,6 +855,8 @@ function run(script) {
         process.send(["simout", key, data]);
     }
 
+
+
     log("start");
 //    vm.runInThisContext(script, "s_engine")
     eval("//@ sourceURL=s_engine\n"+script);
@@ -992,9 +1000,7 @@ function run(script) {
 
         }
     });
-
     process.send(["running"]);
-
 }
 
 
