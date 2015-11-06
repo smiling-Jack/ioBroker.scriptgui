@@ -61,6 +61,8 @@ function get_userid(){
 
 var nwDir = upd.getAppPath();
 
+
+
 process.on("uncaughtException", function (e) {
     main_win.show();
     SGI.error_box(e.stack)
@@ -79,6 +81,7 @@ var PRG = {
 };
 
 var SGI;
+var sim;
 SGI = {
 
     dev: false,
@@ -149,7 +152,6 @@ SGI = {
         //SGI.dev = true;
 
         main_win.on('close', function () {
-           //SGI.save_setup();
             process.exit();
         });
 
@@ -210,6 +212,27 @@ SGI = {
 
         // Minimap XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
+        // todo Später mal
+        //setInterval(function () {
+        //
+        //    $("#minimap_cont").empty();
+        //    var prev = $("#prg_panel").html().toString();
+        //
+        //    prev = prev.replace(/(ng-model="|ng-style=")[A-Za-z0-9\[\].]+"/g, "")
+        //        .replace(/(id=")[A-Za-z0-9\[\]._]+"/g, "")
+        //        .replace(/(<svg)[/\s/\S]+?(svg>)/g, "")
+        //        .replace(/(<a)[/\s/\S]+?(a>)/g, "")
+        //        .replace(/(<input)[/\s/\S]+?(\/>)/g, "")
+        //        .replace(/(<div class="_jsPlumb_endpoint)[/\s/\S]+?(<\/div>)/g, "")
+        //        .replace(/(ng-)[A-Za-z0-9\[\].]+/g, "")
+        //        .replace(/(mbs_shadow)/g, "")
+        //        .replace(/(fbs_shadow)/g, "")
+        //        .replace(/(_jsPlumb_endpoint_anchor_|jsplumb-draggable|jsplumb-droppable)/g, "");
+        //
+        //
+        //    $("#minimap_cont").append(prev);
+        //
+        //}, 1000);
 
 
         // Live Test XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -893,52 +916,6 @@ SGI = {
     }
 };
 
-//window.timeoutList = [];
-//window.intervalList = [];
-//
-//window.oldSetTimeout = window.setTimeout;
-//window.oldSetInterval = window.setInterval;
-//window.oldClearTimeout = window.clearTimeout;
-//window.oldClearInterval = window.clearInterval;
-//
-//window.setTimeout = function (code, delay) {
-//    var retval = window.oldSetTimeout(code, delay);
-//    window.timeoutList.push(retval);
-//    return retval;
-//};
-//window.clearTimeout = function (id) {
-//    var ind = window.timeoutList.indexOf(id);
-//    if (ind >= 0) {
-//        window.timeoutList.splice(ind, 1);
-//    }
-//    var retval = window.oldClearTimeout(id);
-//    return retval;
-//};
-//window.setInterval = function (code, delay) {
-//    var retval = window.oldSetInterval(code, delay);
-//    window.intervalList.push(retval);
-//    return retval;
-//};
-//window.clearInterval = function (id) {
-//    var ind = window.intervalList.indexOf(id);
-//    if (ind >= 0) {
-//        window.intervalList.splice(ind, 1);
-//    }
-//    var retval = window.oldClearInterval(id);
-//    return retval;
-//};
-//window.clearAllTimeouts = function () {
-//    for (var i in window.timeoutList) {
-//        window.oldClearTimeout(window.timeoutList[i]);
-//    }
-//    window.timeoutList = [];
-//};
-//window.clearAllIntervals = function () {
-//    for (var i in window.intervalList) {
-//        window.oldClearInterval(window.intervalList[i]);
-//    }
-//    window.intervalList = [];
-//};
 
 
 var deleteFolderRecursive = function (path) {

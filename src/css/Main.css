@@ -84,9 +84,9 @@ body {
     background-repeat: round;
 }
 
-#body_wrap {
-    visibility: hidden;
-}
+/*#body_wrap {*/
+    /*visibility: hidden;*/
+/*}*/
 
 * {
     outline: none
@@ -99,12 +99,12 @@ body {
     z-index: 81;
 }
 
-.menu {
-    margin-top: 0px !important;
-    height: 16px;
-    border: none !important;
-    overflow: visible !important;
-}
+/*.menu {*/
+    /*margin-top: 0px !important;*/
+    /*height: 16px;*/
+    /*border: none !important;*/
+    /*overflow: visible !important;*/
+/*}*/
 
 .menuBlocker{
     width: 100%;
@@ -484,7 +484,7 @@ body {
 
 .prg_panel {
     position: relative;
-    width: 4000px;
+    width: 2000px;
     height: 2000px;
     padding: 3px;
     /*border: 3px solid #000000;*/
@@ -2467,4 +2467,24 @@ ul.fancytree-container{
 
 .sf-menu a {
     cursor: default;
+}
+
+#minimap{
+    height: 200px;
+    width: 200px;
+    position: absolute;
+    border: 1px solid red;
+    right: 20px;
+    top: 0;
+    z-index: 1000;
+}
+#minimap_cont{
+    zoom: 0.1;
+}
+#stepSpeed{
+    width: 270px;
+    position: absolute;
+    top: 20px;
+    left: 170px;
+    display: flex;
 }

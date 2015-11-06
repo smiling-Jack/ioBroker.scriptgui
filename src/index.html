@@ -5,6 +5,19 @@
 
 <head>
     <title>ScriptGUI</title>
+    <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+    <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+    <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+    <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+    <script type="text/javascript" src="js/lib/dev_lib/html2canvas.min.js"></script>
+    <script type="text/javascript" src="js/lib/dev_lib/canvg/rgbcolor.js"></script>
+    <script type="text/javascript" src="js/lib/dev_lib/canvg/StackBlur.js"></script>
+    <script type="text/javascript" src="js/lib/dev_lib/canvg/canvg.js"></script>
+    <script type="text/javascript" src="js/lib/dev_lib/canvas2image.js"></script>
+    <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+    <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+    <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+    <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
     <link rel="stylesheet" href="css/Main.css"/>
     <link rel="stylesheet" href="js/lib/fm/fm.css"/>
@@ -13,7 +26,7 @@
     <link rel="stylesheet" href="css/jquery.contextMenu.css"/>
     <link rel="stylesheet" media="screen" href="css/superfish/superfish.css"/>
     <!--<link rel="stylesheet" href="css/jquery.selectBoxIt.css"/>-->
-    <link rel="stylesheet" href="css/minimap.css" />
+
 
     <link href="js/lib/fancytree/skin-lion/ui.fancytree.css" rel="stylesheet" type="text/css">
 
@@ -22,9 +35,6 @@
     <!--<script type="text/javascript" src="js/lib/socket.io_09.js"></script>-->
     <script type="text/javascript" src="js/lib/socket.io_10.js"></script>
     <script type="text/javascript" src="js/conn.js"></script>
-
-    <script type="text/javascript" src="js/lib/minimap.js"></script>
-
 
     <script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
     <script type="text/javascript" src="js/lib/jquery-ui-timepicker-addon.js"></script>
@@ -36,15 +46,7 @@
     <!--<script type="text/javascript" src="js/lib/deep-diff.min.js"></script>-->
     <!--<script type="text/javascript" src="js/lib/jquery.selectBoxIt.min.js"></script>-->
 
-    <!--<script type="text/javascript" src="js/lib/plumb/dom.jsPlumb-1.6.3.js"></script>-->
-    <!--<script type="text/javascript" src="js/lib/plumb/dom.jsPlumb-1.7.2.js"></script>-->
     <script type="text/javascript" src="js/lib/plumb/dom.jsPlumb-1.7.3-min.js"></script>
-
-    <script type="text/javascript" src="js/lib/dev_lib/html2canvas.min.js"></script>
-    <script type="text/javascript" src="js/lib/dev_lib/canvg/rgbcolor.js"></script>
-    <script type="text/javascript" src="js/lib/dev_lib/canvg/StackBlur.js"></script>
-    <script type="text/javascript" src="js/lib/dev_lib/canvg/canvg.js"></script>
-    <script type="text/javascript" src="js/lib/dev_lib/canvas2image.js"></script>
 
     <script type="text/javascript" src="js/lib/ace/ace.js"></script>
     <script type="text/javascript" src="js/lib/ace/ext-language_tools.js"></script>
@@ -61,7 +63,6 @@
     <script type="text/javascript" src="js/lib/fm/file_manager.js"></script>
     <script type="text/javascript" src="js/hmSelect_new.js"></script>
     <script type="text/javascript" src="js/xs_combo.js"></script>
-
 
     <script type="text/javascript" src="js/ScriptGUI.js"></script>
     <script type="text/javascript" src="js/mode_gui.js"></script>
@@ -149,12 +150,12 @@
                     </ul>
                 </li>
                 <li class="ui-state-default frame_color menu_item" style="border: none"><a class="translate">Mode</a>
-                <ul id="ul_mode">
-                <li class="ui-state-default frame_color menu_item"><a id="m_mode_editor" class="translate">Editor</a>
-                </li>
-                <li class="ui-state-default frame_color menu_item"><a id="m_mode_gui"
-                class="item_font   translate">GUI</a></li>
-                </ul>
+                    <ul id="ul_mode">
+                        <li class="ui-state-default frame_color menu_item"><a id="m_mode_editor" class="translate">Editor</a>
+                        </li>
+                        <li class="ui-state-default frame_color menu_item"><a id="m_mode_gui"
+                                                                              class="item_font   translate">GUI</a></li>
+                    </ul>
                 </li>
                 <li class="ui-state-default frame_color menu_item"><a id="m_setup" class="translate">Setup</a></li>
             </ul>
@@ -390,6 +391,8 @@
         <button id="btn_sim_time_auto" type="button">Auto</button>
         <hr>
     </div>
+    <div id="minimap"><div id="minimap_cont"></div></div>
+
     <div id="prg_body" class="prg_body">
         <div id="prg_panel" class="prg_panel">
         </div>
@@ -408,8 +411,9 @@
     <div class="div_sim_controll">
         <div style="align-self: flex-start; font-size: 26px;font-weight: bold; padding-bottom: 5px; padding-left: 5px">
             <a class="item_font translate">Live Test</a>
-
-
+        </div>
+        <div style="" id="stepSpeed">Speed:
+            <div style="width: 90px;  margin-left: 11px" id="_stepSpeed"></div>
         </div>
         <div class="div_sim_controll_icons">
             <button style="height: 34px; width: 34px; background-image:url('img/icon/play.png'); background-color: transparent; background-repeat: no-repeat; background-size: contain; border-radius: 16px;"
@@ -418,6 +422,7 @@
             <button style="margin-left: 15px; height: 34px; width: 34px; background-image:url('img/icon/stop.png'); background-color: transparent; background-repeat: no-repeat; background-size: contain;border-radius: 16px;"
                     class="img_iconbar  set_script title_translate" id="img_set_script_stop"
                     title="Stop" disabled></button>
+
             <button class="translate" id="clear_log">Log leeren</button>
             <button class="translate" id="clear_force">Force entfernen</button>
         </div>

@@ -844,10 +844,10 @@ jQuery.extend(true, SGI, {
 // Live Test
         $("#img_set_script_play").button().click(function () {
                 if (SGI.con_data) {
-                    if (!SGI.sim_run) {
+
                         sim.simulate();
                         $("#img_set_script_play").append('<div id="play_overlay"  ></div>')
-                    }
+
 
                 } else {
                     alert("Keine Online/Offline daten")
@@ -862,7 +862,7 @@ jQuery.extend(true, SGI, {
         );
 
         $("#img_set_script_stop").button().click(function () {
-                sim.stopsim();
+                sim_stop();
             }
         ).hover(
             function () {
@@ -881,13 +881,33 @@ jQuery.extend(true, SGI, {
             sim.run_type = $(".run_type:checked").data("info");
         });
 
+        $('#stepSpeed').hide()
         $('#run_step').click(function (id) {
 
             $('#lba_run_step').removeClass("ui-state-focus");
 
             sim.step = $('#lba_run_step').attr("aria-pressed")
 
+            if(sim.step == "true"){
+                $('#stepSpeed').show()
+            }else{
+                $('#stepSpeed').hide()
+            }
         });
+
+        $('#_stepSpeed').slider({
+            min:300,
+            max:1500,
+            step: 300,
+            value: 900,
+            stop: function( event, ui ) {
+                sim.stepSpeed = parseInt(ui.value);
+            },
+            slide:function( event, ui ) {
+                sim.stepSpeed = parseInt(ui.value);
+            }
+        });
+
 
         $("#prg_panel").on("click", ".btn_min_trigger", function () {
             if (!SGI.sim_run) {
