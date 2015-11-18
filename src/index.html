@@ -237,8 +237,20 @@
 
 </div>
 <div id="main_gui" class="main_gui main ui-widget-content" style="display: none">
-    <div id="toolbox_select" class="toolbox_select">
-    </div>
+    <select  id="toolbox_select" class="toolbox_select">
+        <option value="alg" class="translate">Allgemein</option>
+        <option value="prog" class="translate">Programme</option>
+        <option value="block" class="translate">Blocker</option>
+        <option value="logic" class="translate">Logic</option>
+        <!--<option value="filter" class="translate">Listen Filter</option>-->
+        <option value="io" class="translate">Get Set Var</option>
+        <option value="convert" class="translate">Convert</option>
+        <option value="math" class="translate">Math.</option>
+        <option value="s_trigger" class="translate">Singel Trigger</option>
+        <option value="t_trigger" class="translate">Zeit Trigger</option>
+        <option value="trigger_daten" class="translate">Trigger Daten</option>
+        <option value="expert" class="translate">Expert</option>
+    </select >
 
     <div id="toolbox_body" class="toolbox_body frame_color ui-state-default">
         <div id="toolbox_alg" class="toolbox frame_color ui-state-default">
@@ -279,12 +291,12 @@
             <div id="verketten" class="fbs html_element"></div>
         </div>
 
-        <div id="toolbox_filter" class="toolbox frame_color ui-state-default">
-            <div id="lfdevice" class="fbs html_element"></div>
-            <div id="lfchannel" class="fbs html_element"></div>
-            <div id="lfdp" class="fbs html_element"></div>
-            <div id="lfwert" class="fbs html_element"></div>
-        </div>
+        <!--<div id="toolbox_filter" class="toolbox frame_color ui-state-default">-->
+            <!--<div id="lfdevice" class="fbs html_element"></div>-->
+            <!--<div id="lfchannel" class="fbs html_element"></div>-->
+            <!--<div id="lfdp" class="fbs html_element"></div>-->
+            <!--<div id="lfwert" class="fbs html_element"></div>-->
+        <!--</div>-->
 
         <div id="toolbox_io" class="toolbox frame_color ui-state-default">
             <div id="input" class="fbs html_element"></div>
@@ -391,7 +403,7 @@
         <button id="btn_sim_time_auto" type="button">Auto</button>
         <hr>
     </div>
-    <div id="minimap"><div id="minimap_cont"></div></div>
+    <!--<div id="minimap"><div id="minimap_cont"></div></div>-->
 
     <div id="prg_body" class="prg_body">
         <div id="prg_panel" class="prg_panel">

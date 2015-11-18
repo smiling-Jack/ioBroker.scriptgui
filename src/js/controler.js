@@ -21,7 +21,7 @@ angular.module('tutorialApp', [])
             "last_con": false,
             "auto_con": false,
             "con_type": "",
-            "toolbox":["Allgemain", "alg"]
+            "toolbox":"alg"
         };
 
 

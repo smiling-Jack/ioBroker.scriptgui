@@ -32,77 +32,23 @@ jQuery.extend(true, SGI, {
 
         // Make btn Toolboxauswahl
 
-        $("#toolbox_select").xs_combo({
-            addcssButton: "xs_button_toolbox",
-            addcssMenu: "xs_menu_toolbox",
-            addcssFocus: "xs_focus_toolbox",
-            cssText: "xs_text_toolbox item_font",
-            time: 750,
-            val: scope.setup.toolbox[0],
-            data: [
-                SGI.translate("Allgemein"),
-                SGI.translate("Programme"),
-                SGI.translate("Blocker"),
-                SGI.translate("Logic"),
-                SGI.translate("Listen Filter"),
-                SGI.translate("Get Set Var"),
-                SGI.translate("Convert"),
-                SGI.translate("Math."),
-                SGI.translate("Singel Trigger"),
-                SGI.translate("Zeit Trigger"),
-                SGI.translate("Trigger Daten"),
-                SGI.translate("Expert")
-            ]
-        });
 
-        $("#toolbox_" + scope.setup.toolbox[1]).show();
+
+
 
         // Toolboxauswahl
-        $("#toolbox_select").change(function () {
-            var val = $("#toolbox_select").xs_combo();
-            var box = "";
-
-            if (val == SGI.translate("Allgemein")) {
-                box = "alg"
+        $("#toolbox_select").val(scope.setup.toolbox).selectmenu({
+            change : function (event,ui) {
+                var val = $("#toolbox_select").val();
+                $(".toolbox").hide();
+                $("#toolbox_" + val).show();
+                scope.setup.toolbox = val;
+                scope.$apply();
+                SGI.save_setup();
+                $("#toolbox_select ~ span").removeClass("ui-state-focus")
             }
-            if (val == SGI.translate("Programme")) {
-                box = "prog"
-            }
-            if (val == SGI.translate("Blocker")) {
-                box = "block"
-            }
-            if (val == SGI.translate("Logic")) {
-                box = "logic"
-            }
-            if (val == SGI.translate("Listen Filter")) {
-                box = "filter"
-            }
-            if (val == SGI.translate("Get Set Var")) {
-                box = "io"
-            }
-            if (val == SGI.translate("Singel Trigger")) {
-                box = "s_trigger"
-            }
-            if (val == SGI.translate("Zeit Trigger")) {
-                box = "t_trigger"
-            }
-            if (val == SGI.translate("Trigger Daten")) {
-                box = "trigger_daten"
-            }
-            if (val == SGI.translate("Expert")) {
-                box = "expert"
-            }
-            if (val == SGI.translate("Math.")) {
-                box = "math"
-            }
-            if (val == SGI.translate("Convert")) {
-                box = "convert"
-            }
-
-            $(".toolbox").hide();
-            $("#toolbox_" + box).show();
-            scope.setup.toolbox =  [val, box];
         });
+        $("#toolbox_" + scope.setup.toolbox).show();
 
 
         //  Make element draggable XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

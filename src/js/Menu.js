@@ -844,10 +844,10 @@ jQuery.extend(true, SGI, {
 // Live Test
         $("#img_set_script_play").button().click(function () {
                 if (SGI.con_data) {
-
+                    if (!SGI.sim_run) {
                         sim.simulate();
                         $("#img_set_script_play").append('<div id="play_overlay"  ></div>')
-
+                    }
 
                 } else {
                     alert("Keine Online/Offline daten")
@@ -862,7 +862,7 @@ jQuery.extend(true, SGI, {
         );
 
         $("#img_set_script_stop").button().click(function () {
-                sim_stop();
+                sim.stopsim();
             }
         ).hover(
             function () {

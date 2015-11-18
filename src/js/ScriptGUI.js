@@ -8,7 +8,7 @@ var net = require('net');
 var path = require('path');
 var fs = require('fs');
 var nw_gui = require('nw.gui');
-var schedule = require('node-schedule');
+var schedule = require('./js/engine/node_modules/node-schedule');
 var js_beautify = require('js-beautify');
 var html_beautify = require('js-beautify').html;
 //
@@ -16,7 +16,7 @@ var start_win;
 var main_win = nw_gui.Window.get();
 var main_manifest = nw_gui.App.manifest;
 //
-var request = require("request");
+//var request = require("request");
 var ncp = require('ncp');
 var up_pkg = require('./update.json');
 var updater = require('node-webkit-updater');

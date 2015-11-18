@@ -3,23 +3,14 @@
  * Lizenz: [CC BY-NC 3.0](http://creativecommons.org/licenses/by-nc/3.0/de/)
  */
 
-
-
-
 var dc;
 var cp = require('child_process');
-var net = require('net');
 
 var sim_p;
 
-window.addEventListener('beforeunload', function() {
-    sim_p.kill('SIGINT');
-}, false);
-
-
-function sim_stop() {
-    sim_p.send(["stop", true])
-    $(".menuBlocker").hide();
+function sim_exit() {
+    console.log("exit");
+$(".menuBlocker").hide();
     $('#play_overlay').remove();
     $("#run_type").show();
     $("#prg_panel").find("select,button, input:not(.force_input)").each(function () {
@@ -59,14 +50,53 @@ function sim_stop() {
     SGI.sim_run = false
 }
 
+var net = require('net');
 
-function start_sim() {
 
-}
+//var debug = {
+//    socket:null,
+//    init: function(){
+//        this.socket = new net.Socket();
+//
+//        this.socket.on("connect", function(){
+//            console.log("debug connected");
+//        });
+//
+//        this.socket.on("data", function (data) {
+//            var _data = data.split(/\n\r\n/g);
+//            console.log("Data:");
+//            console.log(_data);
+//            $.each(_data,function(){
+//                try{
+//                    var d = JSON.parse(this);
+//                    console.log("event: " + d.event.toString())
+//                    if(d.event == "break"){debug.on_brake()}
+//                }catch (err){
+//                    console.log("parse error: "+ this)
+//                }
+//            })
+//        });
+//    },
+//    on_brake:function(){
+//        debug.send_cont(1000)
+//    },
+//    send_cont: function(time){
+//        setTimeout(function() {
+//            var msg = JSON.stringify({
+//                "type": "request",
+//                "command": "continue"
+//            });
+//            debug.socket.write("Content-Length: " + msg.length + "\r\n\r\n" + msg);
+//        },time);
+//    }
+//
+//};
+
+//debug.init();
 
 function start_sim_p() {
 
-    sim_p = cp.fork('./js/sim_process.js', ["", sim.run_type], {execArgv: ['--debug']});
+    sim_p = cp.fork('./js/engine/sim_process.js', [sim.script, sim.run_type], {execArgv: ['--debug']});
 
     sim.split_script = sim.script.toString().split("\n");
     var Client = require('v8-debug-protocol');
@@ -93,7 +123,7 @@ function start_sim_p() {
                 client.continue(function (err, doneOrNot) {
                     if (err)console.log(err);
                 });
-            }, sim.stepSpeed)
+            }, 1000)
         } else if (step == "step_fbs_highlight") {
             sim.step_fbs_highlight(baustein);
             setTimeout(function () {
@@ -107,21 +137,21 @@ function start_sim_p() {
                 client.continue(function (err, doneOrNot) {
                     if (err)console.log(err);
                 });
-            }, sim.stepSpeed / 2)
+            }, sim.stepSpeed/2)
         } else if (step == "step_mbs_highlight_out") {
             sim.step_mbs_highlight_out(baustein);
             setTimeout(function () {
                 client.continue(function (err, doneOrNot) {
                     if (err)console.log(err);
                 });
-            }, sim.stepSpeed / 2)
+            }, sim.stepSpeed/2)
         } else if (step == "step_mbs_highlight_reset") {
             sim.step_mbs_highlight_reset(baustein);
             setTimeout(function () {
                 client.continue(function (err, doneOrNot) {
                     if (err)console.log(err);
                 });
-            }, sim.stepSpeed * 2)
+            }, sim.stepSpeed*2)
         } else {
             //client.continue(function (err, doneOrNot) {
             //    console.log(err)
@@ -140,16 +170,16 @@ function start_sim_p() {
     sim_p.on('exit', function (code, signal) {
         console.log('exit ' + code + "   " + signal);
 
-        setTimeout(function () {
-            start_sim_p()
-        }, 1000)
+        sim_exit()
 
     });
 
     sim_p.on('message', function (data) {
+        console.log(data)
         if (typeof data == 'string') {
-            console.log("sim_process: " + data);
+            console.log("message: " + data);
         } else if (Array.isArray(data)) {
+            console.log("message: " + data[0]);
             if (data[0] == "logger") {
                 sim.logger(data[1])
             } else if (data[0] == "log") {
@@ -162,8 +192,6 @@ function start_sim_p() {
                 sim_p.send(["home", homematic]);
             } else if (data[0] == "running") {
                 sim.running();
-            } else if (data[0] == "stop") {
-
             } else {
                 sim.script_err(data)
             }
@@ -171,13 +199,7 @@ function start_sim_p() {
             console.log(data);
         }
     });
-
-
-    $(document).bind("new_data", function (event, data) {
-        if (SGI.sim_run) {
-            sim_p.send(["new_data", data])
-        }
-    });
+    //sim_p.send(["home", homematic])
 }
 
 var sim = {
@@ -254,7 +276,7 @@ var sim = {
         var codebox = $("#" + scope.fbs[nr]["parent"]).parent().attr("id");
         var cons = SGI.plumb_inst["inst_" + codebox].getConnections({source: key, scope: "*"});
 
-        // ToDo get All connection zusammen
+
         if (cons.length < 1) {
             cons = SGI.plumb_inst.inst_mbs.getConnections({source: key})
         }
@@ -327,19 +349,19 @@ var sim = {
         $("#sim_output").prepend("<tr><td style='width: 100px'>" + sim.gettime_m() + "</td><td>" + data + "</td></tr>");
     },
     trigger_highlight: function (id) {
-        $("#" + id).stop().animate({boxShadow: '0 0 30px 10px #0f0'}, sim.stepSpeed / 2).animate({boxShadow: '0 0 0px 0px transparent'}, sim.stepSpeed / 2);
+        $("#" + id).stop().animate({boxShadow: '0 0 30px 10px #0f0'}, sim.stepSpeed/2).animate({boxShadow: '0 0 0px 0px transparent'}, sim.stepSpeed/2);
     },
     step_fbs_highlight: function (id) {
-        $("#" + id).stop().animate({boxShadow: '0 0 30px 10px #f00'}, sim.stepSpeed / 2).animate({boxShadow: '0 0 0px 0px transparent'}, sim.stepSpeed / 2);
+        $("#" + id).stop().animate({boxShadow: '0 0 30px 10px #f00'}, sim.stepSpeed/2).animate({boxShadow: '0 0 0px 0px transparent'}, sim.stepSpeed/2);
     },
     step_mbs_highlight_in: function (id) {
-        $("#" + id).stop().animate({boxShadow: '0 0 30px 10px #00f'}, sim.stepSpeed / 3).animate({boxShadow: '0 0 0px 0px transparent'}, sim.stepSpeed / 3);
+        $("#" + id).stop().animate({boxShadow: '0 0 30px 10px #00f'}, sim.stepSpeed/3).animate({boxShadow: '0 0 0px 0px transparent'}, sim.stepSpeed/3);
     },
     step_mbs_highlight_out: function (id) {
-        $("#" + id).stop().animate({boxShadow: '0 0 30px 10px #f00'}, sim.stepSpeed / 3).animate({boxShadow: '0 0 0px 0px transparent'}, sim.stepSpeed / 3);
+        $("#" + id).stop().animate({boxShadow: '0 0 30px 10px #f00'}, sim.stepSpeed/3).animate({boxShadow: '0 0 0px 0px transparent'}, sim.stepSpeed/3);
     },
     step_mbs_highlight_reset: function (id) {
-        $("#" + id).stop().animate({boxShadow: '0 0 30px 10px #ff0'}, sim.stepSpeed / 2).animate({boxShadow: '0 0 0px 0px transparent'}, sim.stepSpeed / 2);
+        $("#" + id).stop().animate({boxShadow: '0 0 30px 10px #ff0'}, sim.stepSpeed/2).animate({boxShadow: '0 0 0px 0px transparent'}, sim.stepSpeed/2);
     },
     logger: function (data) {
         console.log("logger-------------------------------");
@@ -358,9 +380,9 @@ var sim = {
 
             }
         });
-
-        $("body").css("cursor", "default");
-
+        //sim_p.send(["exit"]);
+        $("body").css("cursor","default");
+        sim_p.kill('SIGINT');
 
         //}
     },
@@ -368,7 +390,7 @@ var sim = {
         console.log("running")
         SGI.sim_run = true;
         $(".menuBlocker").show();
-        $("body").css("cursor", "pointer");
+        $("body").css("cursor","pointer");
         $("#prg_body").css("border-color", "red");
         var scope = angular.element($('body')).scope();
         var that = this;
@@ -407,42 +429,49 @@ var sim = {
     },
 
     simulate: function () {
-        try {
-            $(".error_fbs").removeClass("error_fbs");
-            if (SGI.mode == "gui") {
-                sim.script = js_beautify(Compiler.make_prg(sim.run_type, sim.step).toString());
-            } else {
-                sim.script = SGI.editor.getValue();
-            }
-            console.log("send run")
-            sim_p.send(["run", sim.script])
-        }
-        catch (err) {
-            var err_text = "";
+        if (!SGI.sim_run) {
+            try {
+                $(".error_fbs").removeClass("error_fbs");
+                if (SGI.mode == "gui") {
+                    sim.script = js_beautify(Compiler.make_prg(sim.run_type, sim.step).toString());
+                } else {
+                    sim.script = SGI.editor.getValue();
+                }
 
-            if (err.message == "Cannot read property 'ausgang' of undefined") {
-                err_text = " <b style='color: red'>Error:</b> Offenen Ausgang gefunden"
-            } else if (err.message == "Cannot read property 'herkunft' of undefined") {
-                err_text = " <b style='color: red'>Error:</b> Offenen Eingang gefunden"
-            } else {
-                err_text = err.message
-            }
+                start_sim_p();
 
-            //sim.script_err(err.stack)
-            console.log(err)
-            $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td>" + err_text + "</td></tr>");
+                $(document).bind("new_data", function (event, data) {
+                    if (SGI.sim_run) {
+                        sim_p.send(["new_data", data])
+                    }
+                });
+            }
+            catch (err) {
+                var err_text = "";
+
+                if (err.message == "Cannot read property 'ausgang' of undefined") {
+                    err_text = " <b style='color: red'>Error:</b> Offenen Ausgang gefunden"
+                } else if (err.message == "Cannot read property 'herkunft' of undefined") {
+                    err_text = " <b style='color: red'>Error:</b> Offenen Eingang gefunden"
+                } else {
+                    err_text = err.message
+                }
+
+                //sim.script_err(err.stack)
+                console.log(err)
+                $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td>" + err_text + "</td></tr>");
 //                $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td style='color: red'>" + err + "</td></tr>");
 //                $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td><b>Fehler in Zeile:</b> " + real_error_line + "</td></tr>");
 //                $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td><b>Zeilentext:</b>" + real_error_line_text + "</td></tr>");
 
-            $("#" + Compiler.last_fbs).addClass("error_fbs");
-            $("#" + Compiler.last_fbs).effect("bounce");
-            sim_p.send("stop")
+                $("#" + Compiler.last_fbs).addClass("error_fbs");
+                $("#" + Compiler.last_fbs).effect("bounce");
+                sim_exit()
+            }
         }
     }
 };
 
-start_sim_p();
 
 $(document).on("change", '.force_input', function (e) {
     var x = $(e.target).data("info").toString();
