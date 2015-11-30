@@ -127,18 +127,19 @@ jQuery.extend(true, SGI, {
             SGI.save_setup()
         }
 
+        console.log(url)
 
-        $.get("http://127.0.0.1:8082/_socket/info.js", function (data) {
+        $.get(url + "/_socket/info.js", function (data) {
             eval(data)
             console.log(data)
 
 
-            servConn.init({connLink: "http://127.0.0.1:8082"}, {
+            servConn.init({connLink: "http:"+ url.split(":")[1] + socketUrl }, {
                 onConnChange: function (isConnected, isSecure) {
                     console.log(isConnected)
                     servConn.getVersion(function (v) {
                         console.log(v)
-                    })
+                    });
 
                     servConn.getStates("*", function (error, data) {
                         states = data;
@@ -213,7 +214,6 @@ jQuery.extend(true, SGI, {
 
                 },
                 onUpdate: function (id, state) {
-
                 },
                 onAuth: function (message, salt) {
                     console.log(message)
@@ -228,104 +228,7 @@ jQuery.extend(true, SGI, {
             });
 
         })
-
-
-        //$.get(url + "/auth/auth.js", function (data) {
-        //    var socketSession_id = data.split('\'')[1];
-        //
-        //
-        //    SGI.socket = io.connect(url + "?key=" + socketSession_id, {'force new connection': true});
-        //    SGI.socket.on("connect", function (err) {
-        //
-        //        SGI.socket.emit("getSettings", function (data) {
-        //            if (data.basedir.split("/")[2] == "ccu.io") {
-        //                $("#img_set_script_engine").show();
-        //                $("#img_con_state").attr("title", "CCU.IO<br> Version: " + data.version + "<br>Scriptengine: " + data.scriptEngineEnabled);
-        //            }
-        //            SGI.socket.emit("getIndex", function (index) {
-        //                homematic.regaIndex = index;
-        //                SGI.socket.emit("getObjects", function (obj) {
-        //                    homematic.regaObjects = obj;
-        //                    SGI.socket.emit("getDatapoints", function (data) {
-        //
-        //                        for (var dp in data) {
-        //                            homematic.uiState["_" + dp] = { Value: data[dp][0], Timestamp: data[dp][1], LastChange: data[dp][3]};
-        //                        }
-        //
-        //                        // TODO Ist das hier wirklich richtig oder doch eher direkt nach dem laden ?
-        //                        var name = $("#inp_con_ip").val().replace(":", "port");
-        //                        fs.writeFile(scope.setup.datastore + '/ScriptGUI_Data/connections/' + name + '.json', JSON.stringify(homematic), function (err) {
-        //                            if (err){
-        //                                throw err;
-        //                            }else{
-        //                                SGI.con_files = [];
-        //                                try {
-        //                                    $.each(fs.readdirSync(scope.setup.datastore + '/ScriptGUI_Data/connections/'), function () {
-        //                                        var con_name = this.split(".json")[0];
-        //                                        con_name = con_name.replace("port", ":");
-        //                                        SGI.con_files.push(con_name)
-        //                                    });
-        //                                }
-        //                                catch (e) {
-        //                                }
-        //                                $("#inp_con_ip").xs_combo("setData", SGI.con_files);
-        //                                $("#btn_con_offline").parent().show()
-        //                            }
-        //                        });
-        //
-        //                        SGI.socket.on('event', function (obj) {
-        //                            if (homematic.uiState["_" + obj[0]] !== undefined) {
-        //                                var o = {};
-        //                                o["Value"] = obj[1];
-        //                                o["Timestamp"] = obj[2];
-        //                                o["Certain"] = obj[3];
-        //                                homematic.uiState["_" + obj[0]] = o;
-        //
-        //                            }
-        //                            $(document).trigger("new_data",{id:obj[0],value:obj[1],timestamp:obj[2],certain:obj[3],lasttimestamp:obj[4]});
-        //
-        //                        });
-        //
-        //
-        //                        SGI.con_data = true;
-        //                        $("#img_con_state").attr("src", "img/icon/flag-green.png");
-        //
-        //                        $(".run_type,#run_step, #img_set_script_play ,#img_set_script_stop").button({disabled:false});
-        //
-        //
-        //                    });
-        //                });
-        //            });
-        //        });
-        //    });
-        //    SGI.socket.on("error", function (err) {
-        //        alert("fehler");
-        //        SGI.disconnect();
-        //        SGI.offline();
-        //    });
-        //    SGI.socket.on('disconnect', function () {
-        //        $("#img_con_state").attr("src", "img/icon/flag-red.png");
-        //        $("#img_set_script_engine").hide();
-        //        $("#img_con_state").attr(" ");
-        //
-        //    });
-        //
-        //
-        //    $("#btn_con_online").parent().addClass("div_img_glass_on");
-        //    $("#btn_con_offline").parent().removeClass("div_img_glass_on")
-        //})
-        //
-        //    .fail(function (err) {
-        //        SGI.disconnect()
-        //    });
-
         console.log("con1")
-
-
-        //catch (err) {
-        //    console.log(err)
-        //    SGI.disconnect()
-        //}
     },
 
     server_error: function (error) {
