@@ -60,15 +60,15 @@ jQuery.extend(true, SGI, {
             $("#theme_css").remove();
             $("head").append('<link id="theme_css" rel="stylesheet" href="css/' + $(this).data('info') + '/jquery-ui.min.css"/>');
             setTimeout(function () {
-                document.styleSheets[1].cssRules[3].style["background-color"] = $(".frame_color").css("background-color");
-                document.styleSheets[1].cssRules[4].style["background-color"] = $(".frame_color").css("background-color");
+                document.styleSheets[1].cssRules[0].style["background-color"] = $(".frame_color").css("background-color");
+                document.styleSheets[1].cssRules[1].style["background-color"] = $(".frame_color").css("background-color");
             }, 300);
 
 
         });
 
         $("#m_mode_gui").click(function () {
-            if(!SGI.gui_rendered){
+            if (!SGI.gui_rendered) {
                 SGI.load_gui()
             }
             SGI.show_gui();
@@ -79,10 +79,10 @@ jQuery.extend(true, SGI, {
         });
 
         $("#m_mode_editor").click(function () {
-            if(!SGI.editor_rendered){
+            if (!SGI.editor_rendered) {
                 SGI.load_editor()
             }
-           SGI.show_editor();
+            SGI.show_editor();
             SGI.hide_gui();
             scope.setup.mode = "editor";
             scope.$apply();
@@ -735,6 +735,29 @@ jQuery.extend(true, SGI, {
             }
         );
 
+
+        $("#img_set_code_format").click(function () {
+            var curser = SGI.editor.selection.getCursor()
+            SGI.editor.setValue(js_beautify(SGI.editor.getValue()), -1);
+            SGI.editor.selection.moveCursorToPosition(curser)
+        }).hover(
+            function () {
+                $(this).addClass("ui-state-focus");
+            }, function () {
+                $(this).removeClass("ui-state-focus");
+            }
+        );
+
+        $("#img_set_show_oid").click(function () {
+
+        }).hover(
+            function () {
+                $(this).addClass("ui-state-focus");
+            }, function () {
+                $(this).removeClass("ui-state-focus");
+            }
+        );
+
         var script_engine_lock = false;
         $("#img_set_script_engine").click(function () {
             if (!script_engine_lock) {
@@ -822,10 +845,8 @@ jQuery.extend(true, SGI, {
         $("#img_set_script_play").button().click(function () {
                 if (SGI.con_data) {
                     if (!SGI.sim_run) {
-                        $("#prg_body").css("border-color", "red")
-                        $("#img_set_script_play").append('<div id="play_overlay"  ></div>')
                         sim.simulate();
-
+                        $("#img_set_script_play").append('<div id="play_overlay"  ></div>')
                     }
 
                 } else {
@@ -860,13 +881,33 @@ jQuery.extend(true, SGI, {
             sim.run_type = $(".run_type:checked").data("info");
         });
 
+        $('#stepSpeed').hide()
         $('#run_step').click(function (id) {
 
             $('#lba_run_step').removeClass("ui-state-focus");
 
             sim.step = $('#lba_run_step').attr("aria-pressed")
 
+            if(sim.step == "true"){
+                $('#stepSpeed').show()
+            }else{
+                $('#stepSpeed').hide()
+            }
         });
+
+        $('#_stepSpeed').slider({
+            min:300,
+            max:1500,
+            step: 300,
+            value: 900,
+            stop: function( event, ui ) {
+                sim.stepSpeed = parseInt(ui.value);
+            },
+            slide:function( event, ui ) {
+                sim.stepSpeed = parseInt(ui.value);
+            }
+        });
+
 
         $("#prg_panel").on("click", ".btn_min_trigger", function () {
             if (!SGI.sim_run) {
@@ -1641,7 +1682,7 @@ jQuery.extend(true, SGI, {
     },
 
     save_as_local: function () {
-        if (SGI.mode == "gui"){
+        if (SGI.mode == "gui") {
             var data = SGI.make_savedata();
             var chooser = $('#prgsaveas');
             chooser.change(function () {
@@ -1659,7 +1700,7 @@ jQuery.extend(true, SGI, {
                 });
             });
             chooser.trigger('click');
-        }else{
+        } else {
             var data = SGI.editor.getValue();
             var chooser = $('#scriptsaveas');
             chooser.change(function () {
@@ -1684,10 +1725,10 @@ jQuery.extend(true, SGI, {
         if (SGI.file_name == "") {
             SGI.save_as_local()
         } else {
-            if (SGI.mode == "gui"){
+            if (SGI.mode == "gui") {
                 var data = JSON.stringify(SGI.make_savedata());
 
-            }else{
+            } else {
                 var data = SGI.editor.getValue();
 
             }
@@ -1708,7 +1749,7 @@ jQuery.extend(true, SGI, {
     },
 
     open_local: function () {
-        if(SGI.mode == "gui"){
+        if (SGI.mode == "gui") {
             var chooser = $('#prgopen');
             chooser.val("");
             chooser.change(function (evt) {
@@ -1740,7 +1781,7 @@ jQuery.extend(true, SGI, {
             });
 
             chooser.trigger('click');
-        }else{
+        } else {
             var chooser = $('#scriptopen');
             chooser.val("");
             chooser.change(function (evt) {
@@ -1754,7 +1795,7 @@ jQuery.extend(true, SGI, {
                             throw err;
                         } else {
 
-                            SGI.editor.setValue(data.toString(),-1);
+                            SGI.editor.setValue(data.toString(), -1);
 
                             SGI.prg_store = path.dirname(filep);
                             SGI.file_name = path.basename(filep);
@@ -1775,7 +1816,7 @@ jQuery.extend(true, SGI, {
     },
 
     open_last: function () {
-        if(SGI.mode == "gui"){
+        if (SGI.mode == "gui") {
             if (scope.setup.last_prg != "") {
                 try {
                     $("#wait_div").show();
@@ -1798,7 +1839,7 @@ jQuery.extend(true, SGI, {
                     throw err
                 }
             }
-        }else{
+        } else {
             if (scope.setup.last_script != "") {
                 try {
                     $("#wait_div").show();
@@ -1852,9 +1893,9 @@ jQuery.extend(true, SGI, {
         } else {
             var script;
 
-            if(SGI.mode == "gui"){
+            if (SGI.mode == "gui") {
                 script = Compiler.make_prg(false, false);
-            }else{
+            } else {
                 script = SGI.editor.getValue();
 
             }
@@ -1909,12 +1950,11 @@ jQuery.extend(true, SGI, {
         editor.getSession().setUseWrapMode(true);
 
 
-
-if(SGI.mode == "gui"){
-    editor.setValue(js_beautify(data.toString(), {indent_size: 2}),-1);
-}else{
-    editor.setValue(SGI.editor.getValue(),-1);
-}
+        if (SGI.mode == "gui") {
+            editor.setValue(js_beautify(data.toString(), {indent_size: 2}), -1);
+        } else {
+            editor.setValue(SGI.editor.getValue(), -1);
+        }
 
         editor.setReadOnly(true)
 

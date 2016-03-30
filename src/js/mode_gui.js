@@ -32,77 +32,23 @@ jQuery.extend(true, SGI, {
 
         // Make btn Toolboxauswahl
 
-        $("#toolbox_select").xs_combo({
-            addcssButton: "xs_button_toolbox",
-            addcssMenu: "xs_menu_toolbox",
-            addcssFocus: "xs_focus_toolbox",
-            cssText: "xs_text_toolbox item_font",
-            time: 750,
-            val: scope.setup.toolbox[0],
-            data: [
-                SGI.translate("Allgemein"),
-                SGI.translate("Programme"),
-                SGI.translate("Blocker"),
-                SGI.translate("Logic"),
-                SGI.translate("Listen Filter"),
-                SGI.translate("Get Set Var"),
-                SGI.translate("Convert"),
-                SGI.translate("Math."),
-                SGI.translate("Singel Trigger"),
-                SGI.translate("Zeit Trigger"),
-                SGI.translate("Trigger Daten"),
-                SGI.translate("Expert")
-            ]
-        });
 
-        $("#toolbox_" + scope.setup.toolbox[1]).show();
+
+
 
         // Toolboxauswahl
-        $("#toolbox_select").change(function () {
-            var val = $("#toolbox_select").xs_combo();
-            var box = "";
-
-            if (val == SGI.translate("Allgemein")) {
-                box = "alg"
+        $("#toolbox_select").val(scope.setup.toolbox).selectmenu({
+            change : function (event,ui) {
+                var val = $("#toolbox_select").val();
+                $(".toolbox").hide();
+                $("#toolbox_" + val).show();
+                scope.setup.toolbox = val;
+                scope.$apply();
+                SGI.save_setup();
+                $("#toolbox_select ~ span").removeClass("ui-state-focus")
             }
-            if (val == SGI.translate("Programme")) {
-                box = "prog"
-            }
-            if (val == SGI.translate("Blocker")) {
-                box = "block"
-            }
-            if (val == SGI.translate("Logic")) {
-                box = "logic"
-            }
-            if (val == SGI.translate("Listen Filter")) {
-                box = "filter"
-            }
-            if (val == SGI.translate("Get Set Var")) {
-                box = "io"
-            }
-            if (val == SGI.translate("Singel Trigger")) {
-                box = "s_trigger"
-            }
-            if (val == SGI.translate("Zeit Trigger")) {
-                box = "t_trigger"
-            }
-            if (val == SGI.translate("Trigger Daten")) {
-                box = "trigger_daten"
-            }
-            if (val == SGI.translate("Expert")) {
-                box = "expert"
-            }
-            if (val == SGI.translate("Math.")) {
-                box = "math"
-            }
-            if (val == SGI.translate("Convert")) {
-                box = "convert"
-            }
-
-            $(".toolbox").hide();
-            $("#toolbox_" + box).show();
-            scope.setup.toolbox =  [val, box];
         });
+        $("#toolbox_" + scope.setup.toolbox).show();
 
 
         //  Make element draggable XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -193,12 +139,21 @@ jQuery.extend(true, SGI, {
     },
     show_gui: function(){
         $("#main_gui").show();
-        $(".set_algin, .set_zoom, .set_tooltip").show();
+        $(".set_gui").show();
+
+        // slider XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        $(".prg_body").scrollTop(1000 - ($(".prg_body").height() / 2));
+        $(".prg_body").scrollLeft(2000 - ($(".prg_body").width() / 2));
+        setTimeout(function () {
+            document.styleSheets[1].cssRules[0].style["background-color"] = $(".frame_color").css("background-color");
+            document.styleSheets[1].cssRules[1].style["background-color"] = $(".frame_color").css("background-color");
+        }, 100);
+
         SGI.mode = "gui";
     },
     hide_gui: function(){
         $("#main_gui").hide();
-        $(".set_algin, .set_zoom, .set_tooltip").hide()
+        $(".set_gui").hide()
     },
     mbs_inst: function () {
 
@@ -1695,8 +1650,8 @@ jQuery.extend(true, SGI, {
             add += '<select  id="val_' + index + '" ng-model="mbs[' + nr + '].val[' + index + ']" class="inp_val">';
             add += '    <option value="val">Gleich</option>';
             add += '    <option value="valNe">Ungleich</option>';
-            add += '    <option value="valGt">Größer</option>';
-            add += '    <option value="valGe">Größer =</option>';
+            add += '    <option value="valGt">Grï¿½ï¿½er</option>';
+            add += '    <option value="valGe">Grï¿½ï¿½er =</option>';
             add += '    <option value="valLt">Kleiner</option>';
             add += '    <option value="valLe">Kleiner =</option>';
             add += '</select>';
@@ -1749,7 +1704,7 @@ jQuery.extend(true, SGI, {
             add += '<select ng-model="mbs[' + $this.data("nr") + '].astro[' + index + ']" id="astro_' + index + '" class="inp_astro">';
             add += '    <option value="sunrise">Sonnenaufgang Start</option>';
             add += '    <option value="sunriseEnd">Sonnenaufgang Ende</option>';
-            add += '    <option value="solarNoon">Höchster Sonnenstand</option>';
+            add += '    <option value="solarNoon">Hï¿½chster Sonnenstand</option>';
             add += '    <option value="sunsetStart">Sonnenuntergang Start</option>';
             add += '    <option value="sunset">Sonnenuntergang Ende</option>';
             add += '    <option value="night">Nacht Start</option>';
@@ -2833,15 +2788,16 @@ jQuery.extend(true, SGI, {
 
         $("body").append('\
                    <div id="dialog_code" style="text-align: left; min-width: 520px" title="Expert Editor">\
-                   <button id="btn_exp_id">ID</button>\
-                   <button id="btn_exp_group">Gruppe</button>\
-                   <button id="btn_exp_device">Gerät</button>\
-                   <div style="float: right; margin-top:6px"> \
-                   <span>' + SGI.translate("Name:") + '</span>\
-                   <input id="exp_name" type="text" value="' + name + '"/>\
-                   </div>\
-                   <textarea id="codemirror" name="codemirror" class="code frame_color ui-corner-all"></textarea>\
+                    <button id="btn_exp_id">ID</button>\
+                    <button id="btn_exp_group">Gruppe</button>\
+                    <button id="btn_exp_device">Gerï¿½t</button>\
+                    <div style="float: right; margin-top:6px"> \
+                        <span>' + SGI.translate("Name:") + '</span>\
+                            <input id="exp_name" type="text" value="' + name + '"/>\
+                    </div>\
+                    <div id="expert_ace"   style="width: calc(100% - 0px);height: calc(100% - 50px);margin-top: 10px;" class="code frame_color ui-corner-all"></div>\
                    </div>');
+
         $("#dialog_code").dialog({
             height: h,
             width: v,
@@ -2852,38 +2808,22 @@ jQuery.extend(true, SGI, {
                     value: editor.getValue(),
                     name: $('#exp_name').val()
                 };
-                $.contextMenu('destroy', '.CodeMirror');
                 $("#dialog_code").remove();
                 return callback(data)
             }
         });
 
-        var editor = CodeMirror.fromTextArea(document.getElementById("codemirror"), {
-            mode: {name: "javascript", json: true},
-//            value:data.toString(),
-            lineNumbers: true,
-            readOnly: false,
-            theme: "monokai",
-            extraKeys: {"Ctrl-Space": "autocomplete"}
+        var editor = ace.edit("expert_ace");
+        editor.getSession().setMode("ace/mode/javascript")
+        editor.setTheme("ace/theme/monokai");
+        editor.setOptions({
+            showPrintMargin: false,
         });
 
-        editor.setOption("value", data.toString());
+        editor.$blockScrolling = Infinity;
+        editor.getSession().setUseWrapMode(true);
 
-        $.contextMenu({
-            selector: '.CodeMirror',
-            zIndex: 9999,
-            className: "ui-widget-content ui-corner-all",
-            items: {
-                "format": {
-                    name: SGI.translate("Autoformat"),
-                    className: "item_font ",
-                    callback: function () {
-                        var _data = editor.getSelection();
-                        editor.replaceSelection(js_beautify(_data));
-                    }
-                }
-            }
-        });
+        editor.setValue(js_beautify(data.toString(), {indent_size: 2}), -1);
 
 
         $("#btn_exp_id").button().click(function () {
