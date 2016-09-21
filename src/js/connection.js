@@ -2,16 +2,13 @@
  * Created by jack on 17.08.2014.
  */
 
-var homematic = {
-    uiState: {"_65535": {"Value": null}},
-    regaIndex: {},
-    regaObjects: {}
-};
+var objects = {};
+var states = {};
 
 jQuery.extend(true, SGI, {
 
     setup_socket: function () {
-        SGI.socket = io.connect(null, {'force new connection': true});
+        //SGI.socket = io.connect(null, {'force new connection': true});
 
     },
 
@@ -34,7 +31,7 @@ jQuery.extend(true, SGI, {
         $("#img_set_script_engine").hide();
         $("#img_con_state").attr("title", "");
 
-        $(".run_type,#run_step, #img_set_script_play ,#img_set_script_stop").button({disabled:true});
+        $(".run_type,#run_step, #img_set_script_play ,#img_set_script_stop").button({disabled: true});
         $(".run_type").prop("checked", false);
         $("#run_type1").prop("checked", true);
         $(".run_type").button("refresh");
@@ -46,18 +43,18 @@ jQuery.extend(true, SGI, {
     offline: function (_url) {
         var url = $("#inp_con_ip").val().replace(":", "port");
 
-        if (_url){
+        if (_url) {
             url = _url
         }
 
 
-        if (scope.setup.last_con != url || scope.setup.con_type != "offline"){
+        if (scope.setup.last_con != url || scope.setup.con_type != "offline") {
             scope.setup.last_con = url;
             scope.setup.con_type = "offline";
             scope.$apply();
             SGI.save_setup()
         }
-        $('body').css("cursor","wait");
+        $('body').css("cursor", "wait");
         try {
 
 
@@ -71,7 +68,7 @@ jQuery.extend(true, SGI, {
                     $("#btn_con_online").parent().removeClass("div_img_glass_on");
                     SGI.con_data = true;
 
-                    $("#run_step, #run_type1, #img_set_script_play ,#img_set_script_stop").button({disabled:false});
+                    $("#run_step, #run_type1, #img_set_script_play ,#img_set_script_stop").button({disabled: false});
                 } else {
                     alert(err)
                     $("#img_con_state").attr("src", "img/icon/flag-red.png");
@@ -86,11 +83,11 @@ jQuery.extend(true, SGI, {
                     SGI.con_data = false;
                     throw err
                 }
-                $('body').css("cursor","default");
+                $('body').css("cursor", "default");
             });
         }
         catch (err) {
-            $('body').css("cursor","default");
+            $('body').css("cursor", "default");
             $("#img_con_state").attr("src", "img/icon/flag-red.png");
             $("#btn_con_offline").parent().removeClass("div_img_glass_on");
             $("#btn_con_online").parent().removeClass("div_img_glass_on");
@@ -107,128 +104,134 @@ jQuery.extend(true, SGI, {
     },
 
     online: function (__url) {
-        try {
-            var _url = $("#inp_con_ip").val();
-            var url = "";
-            if(__url){
-                url = __url;
-            }else{
-                if (_url.split(":").length < 2) {
-                    url = "http://" + _url + ":8080";
-                } else {
-                    url = "http://" + _url;
-                }
+        //try {
+        var _url = $("#inp_con_ip").val();
+        var url = "";
+        if (__url) {
+            url = __url;
+        } else {
+            if (_url.split(":").length < 2) {
+                url = "http://" + _url + ":8080";
+            } else {
+                url = "http://" + _url;
             }
+        }
 
 
+        $("#img_con_state").attr("src", "img/icon/flag-blue.png");
+
+        if (scope.setup.last_con != url || scope.setup.con_type != "online") {
+            scope.setup.last_con = url;
+            scope.setup.con_type = "online";
+            scope.$apply();
+            SGI.save_setup()
+        }
+
+        console.log(url)
+
+        $.get(url + "/_socket/info.js", function (data) {
+            eval(data)
+            console.log(data)
 
 
-            $("#img_con_state").attr("src", "img/icon/flag-blue.png");
+            servConn.init({connLink: "http:"+ url.split(":")[1] + socketUrl }, {
+                onConnChange: function (isConnected, isSecure) {
+                    console.log(isConnected)
+                    servConn.getVersion(function (v) {
+                        console.log(v)
+                    });
 
-            if (scope.setup.last_con != url || scope.setup.con_type != "online"){
-                scope.setup.last_con = url;
-                scope.setup.con_type = "online";
-                scope.$apply();
-                SGI.save_setup()
-            }
-
-            $.get(url + "/auth/auth.js", function (data) {
-                var socketSession_id = data.split('\'')[1];
+                    servConn.getStates("*", function (error, data) {
+                        states = data;
+                        servConn.getObjects(function (err, data) {
+                            objects = data;
 
 
-                SGI.socket = io.connect(url + "?key=" + socketSession_id, {'force new connection': true});
-                SGI.socket.on("connect", function (err) {
+                            // make fancytree
+                            //var _tree = {};
+                            //                           var last ="";
+                            //                           $.each(objects,function(){
+                            //                               var ids = this._id.split(".")
+                            //
+                            //                               last ="";
+                            //                               $.each(ids, function(){
+                            //                                   if(eval("_tree"+last+"['"+this+"']") == undefined){
+                            //                                       eval("_tree"+last+"['"+this+"'] = {}")
+                            //                                   }
+                            //                                   last = last + "['"+this+"']"
+                            //                               });
+                            //
+                            //                           })
+                            //
+                            //                           $.each(states, function(id){
+                            //                               var _id = "['"+ id.replace(/\./g,"']['") + "']"
+                            //                               var that = this
+                            //                              console.log(this)
+                            //                               console.log()
+                            //                               eval("_tree"+_id.toString()+" = that ")
+                            //                           })
+                            //
+                            //                           console.log(_tree)
 
-                    SGI.socket.emit("getSettings", function (data) {
-                        if (data.basedir.split("/")[2] == "ccu.io") {
-                            $("#img_set_script_engine").show();
-                            $("#img_con_state").attr("title", "CCU.IO<br> Version: " + data.version + "<br>Scriptengine: " + data.scriptEngineEnabled);
-                        }
-                        SGI.socket.emit("getIndex", function (index) {
-                            homematic.regaIndex = index;
-                            SGI.socket.emit("getObjects", function (obj) {
-                                homematic.regaObjects = obj;
-                                SGI.socket.emit("getDatapoints", function (data) {
 
-                                    for (var dp in data) {
-                                        homematic.uiState["_" + dp] = { Value: data[dp][0], Timestamp: data[dp][1], LastChange: data[dp][3]};
+                            $.each(objects, function (id) {
+                                var ids = id.split(".")
+                                var last = "editor"
+                                if (this.type != "enum")
+                                    for (var i = 0; ids.length - 1 > i; i++) {
+
+                                        var _id = last + "_" + ids[i];
+                                        var icon= "";
+                                        if(ids[1] == "adapter" && i == 2){
+                                            icon ="data-icon= 'img/adapter/"+ids[i]+".png'"
+                                        }
+
+                                        if ($("#oid_" + _id).length == 0) {
+                                            $("#oid_" + last + "_ul").append("<li id='oid_" + _id + "' class='folder' "+icon+">" + ids[i] + "<ul id='oid_" + _id + "_ul'></ul></li>")
+                                        }
+                                        last = _id;
                                     }
+                            })
 
-                                    // TODO Ist das hier wirklich richtig oder doch eher direkt nach dem laden ?
-                                    var name = $("#inp_con_ip").val().replace(":", "port");
-                                    fs.writeFile(scope.setup.datastore + '/ScriptGUI_Data/connections/' + name + '.json', JSON.stringify(homematic), function (err) {
-                                        if (err){
-                                            throw err;
-                                        }else{
-                                            SGI.con_files = [];
-                                            try {
-                                                $.each(fs.readdirSync(scope.setup.datastore + '/ScriptGUI_Data/connections/'), function () {
-                                                    var con_name = this.split(".json")[0];
-                                                    con_name = con_name.replace("port", ":");
-                                                    SGI.con_files.push(con_name)
-                                                });
-                                            }
-                                            catch (e) {
-                                            }
-                                            $("#inp_con_ip").xs_combo("setData", SGI.con_files);
-                                            $("#btn_con_offline").parent().show()
-                                        }
-                                    });
+                            $.each(states, function (id) {
+                                var ids = id.split(".")
+                                var _id = ids.pop();
+                                $("#oid_editor_" + ids.join("_") + "_ul").append("<li data-oid='"+id+"' id='oid_" + ids.join("_") + "_" + _id + "'><span calss='oid_titel'>" + _id + " <div data-oid='"+id+"' class='oid_add'> </div><input class='oid_val' size=10 value='" + this.val + "'/></span></li>")
 
-                                    SGI.socket.on('event', function (obj) {
-                                        if (homematic.uiState["_" + obj[0]] !== undefined) {
-                                            var o = {};
-                                            o["Value"] = obj[1];
-                                            o["Timestamp"] = obj[2];
-                                            o["Certain"] = obj[3];
-                                            homematic.uiState["_" + obj[0]] = o;
+                            })
+                            $("#editor_oid").fancytree();
 
-                                        }
-                                        $(document).trigger("new_data",{id:obj[0],value:obj[1],timestamp:obj[2],certain:obj[3],lasttimestamp:obj[4]});
-
-                                    });
-
-
-                                    SGI.con_data = true;
-                                    $("#img_con_state").attr("src", "img/icon/flag-green.png");
-
-                                    $(".run_type,#run_step, #img_set_script_play ,#img_set_script_stop").button({disabled:false});
-
-
-                                });
+                            $("#editor_oid").on('click','.oid_add',function() {
+                                $(this).parent().trigger("click")
+                            });
+                            $("#editor_oid").on('dblclick','.oid_add',function() {
+                                SGI.editor.insert($(this).data("oid"));
                             });
                         });
                     });
-                });
-                SGI.socket.on("error", function (err) {
-                    alert("fehler");
-                    SGI.disconnect();
-                    SGI.offline();
-                });
-                SGI.socket.on('disconnect', function () {
-                    $("#img_con_state").attr("src", "img/icon/flag-red.png");
-                    $("#img_set_script_engine").hide();
-                    $("#img_con_state").attr(" ");
+                },
+                onRefresh: function () {
 
-                });
+                },
+                onUpdate: function (id, state) {
+                },
+                onAuth: function (message, salt) {
+                    console.log(message)
+                    console.log(salt)
+                },
+                onCommand: function (instance, command, data) {
 
+                },
+                onObjectChange: function (id, obj) {
 
-                $("#btn_con_online").parent().addClass("div_img_glass_on");
-                $("#btn_con_offline").parent().removeClass("div_img_glass_on")
-            })
+                }
+            });
 
-                .fail(function (err) {
-                    SGI.disconnect()
-                });
-
-
-        }
-        catch (err) {
-            SGI.disconnect()
-        }
+        })
+        console.log("con1")
     },
 
-    server_error: function(error){
+    server_error: function (error) {
         var send_data = {
             typ: "error",
             error: error,
@@ -273,7 +276,7 @@ jQuery.extend(true, SGI, {
         });
     },
 
-    server_register: function(){
+    server_register: function () {
         try {
             if (scope.setup.user_mail == "" || scope.setup.user_mail == undefined) {
                 $("body").append('\
@@ -343,7 +346,7 @@ jQuery.extend(true, SGI, {
 
     },
 
-    server_homecall: function(){
+    server_homecall: function () {
         //
         //var send_data = {
         //    typ: 'statistik',

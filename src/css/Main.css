@@ -1,3 +1,23 @@
+/* fix positon in css */
+#prg_body::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);
+    background-image: none;
+}
+#toolbox_body::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);
+    background-image: none;
+}
+
+/*#prg_body::-webkit-scrollbar-thumb {*/
+/*border-radius: 10px;*/
+/*-webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);*/
+/*background-image: none;*/
+/*}*/
+
+/* fix positon in css end */
+
 /* css for timepicker */
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
 .ui-timepicker-div dl { text-align: left; }
@@ -37,32 +57,6 @@ html {
     display: none;
 }
 
-
-
-
-#prg_body::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);
-    background-image: none;
-}
-
-/*#prg_body::-webkit-scrollbar-thumb {*/
-/*border-radius: 10px;*/
-/*-webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);*/
-/*background-image: none;*/
-/*}*/
-
-.CodeMirror-scroll::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);
-}
-
-#toolbox_body::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);
-    background-image: none;
-}
-
 #toolbox_body::-webkit-scrollbar-button:end {
     width: 5px;
     height: 5px;
@@ -90,9 +84,9 @@ body {
     background-repeat: round;
 }
 
-#body_wrap {
-    visibility: hidden;
-}
+/*#body_wrap {*/
+    /*visibility: hidden;*/
+/*}*/
 
 * {
     outline: none
@@ -105,11 +99,22 @@ body {
     z-index: 81;
 }
 
-.menu {
-    margin-top: 0px !important;
-    height: 16px;
-    border: none !important;
-    overflow: visible !important;
+/*.menu {*/
+    /*margin-top: 0px !important;*/
+    /*height: 16px;*/
+    /*border: none !important;*/
+    /*overflow: visible !important;*/
+/*}*/
+
+.menuBlocker{
+    width: 100%;
+    height: 59px;
+    z-index: 1000;
+    position: absolute;
+    border: none!important;
+    background-image: none!important;
+    opacity: 0.7;
+    display: none;
 }
 
 #clear_force {
@@ -181,12 +186,28 @@ body {
     margin: 0 !important;
     min-height: 142px;
     height: calc(100% - 193px);
+    display: inline-flex;
 }
 
 .ace_scrollbar-v::-webkit-scrollbar-thumb {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);
     background-image: none;
+}
+
+#editor_oid{
+    overflow: auto;
+    width: 300px;
+}
+
+#editor_oid::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 1), inset 0 0 100px rgba(255, 255, 255, 0.35);
+    background-image: none;
+}
+#toolbox_select  ~ span {
+    width: 180px!important;
+    border-radius: 0;
 }
 
 .toolbox_body {
@@ -2392,17 +2413,82 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
     z-index: 51;
 }
 
-.set_algin{
+.set_gui{
     display: none;
 }
-.set_zoom{
+.set_editor{
     display: none;
 }
-.set_tooltip{
-    display: none;
-}
+
 
 .ace_gutter-cell.ace_breakpoint{
     border-radius: 20px 0px 0px 20px;
     box-shadow: 0px 0px 1px 1px red inset;
+}
+
+#editor_code{
+    height: 100%;
+    width: calc(100% - 300px);
+    display: inline-block;
+}
+#editor_id{
+    height: 100%;
+    width: 300px;
+    border: 1px solid red;
+display: inline-block;
+}
+
+.oid_val{
+    float: right;
+    text-align: right;
+    border: none;
+}
+.oid_titel{
+    width: calc(100% - 41px);
+}
+.oid_add{
+    position: absolute;
+    width: calc(100% - 63px);
+    height: 100%;
+    top: 0;
+    left: -30px;
+}
+span.fancytree-title{
+    width: calc(100% - 41px);
+    color: inherit !important;
+    font-family: inherit!important;
+    position: relative!important;
+}
+
+.fancytree-container{
+    color: inherit !important;
+    font-family: inherit!important;
+    background: transparent!important;
+}
+ul.fancytree-container{
+    border: none!important;
+}
+
+.sf-menu a {
+    cursor: default;
+}
+
+#minimap{
+    height: 200px;
+    width: 200px;
+    position: absolute;
+    border: 1px solid red;
+    right: 20px;
+    top: 0;
+    z-index: 1000;
+}
+#minimap_cont{
+    zoom: 0.1;
+}
+#stepSpeed{
+    width: 270px;
+    position: absolute;
+    top: 20px;
+    left: 170px;
+    display: flex;
 }

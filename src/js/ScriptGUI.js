@@ -8,7 +8,7 @@ var net = require('net');
 var path = require('path');
 var fs = require('fs');
 var nw_gui = require('nw.gui');
-var schedule = require('node-schedule');
+var schedule = require('./js/engine/node_modules/node-schedule');
 var js_beautify = require('js-beautify');
 var html_beautify = require('js-beautify').html;
 //
@@ -16,7 +16,7 @@ var start_win;
 var main_win = nw_gui.Window.get();
 var main_manifest = nw_gui.App.manifest;
 //
-var request = require("request");
+//var request = require("request");
 var ncp = require('ncp');
 var up_pkg = require('./update.json');
 var updater = require('node-webkit-updater');
@@ -61,6 +61,8 @@ function get_userid(){
 
 var nwDir = upd.getAppPath();
 
+
+
 process.on("uncaughtException", function (e) {
     main_win.show();
     SGI.error_box(e.stack)
@@ -79,6 +81,7 @@ var PRG = {
 };
 
 var SGI;
+var sim;
 SGI = {
 
     dev: false,
@@ -149,7 +152,6 @@ SGI = {
         //SGI.dev = true;
 
         main_win.on('close', function () {
-           //SGI.save_setup();
             process.exit();
         });
 
@@ -208,17 +210,29 @@ SGI = {
             sim_p.send(["time", sim.time_mode])
         });
 
-        // slider XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        // Minimap XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-
-        $(".prg_body").scrollTop(1000 - ($(".prg_body").height() / 2));
-        $(".prg_body").scrollLeft(2000 - ($(".prg_body").width() / 2));
-
-        //var color = $(".frame_color").css("background-color");
-        //document.styleSheets[1].cssRules[3].style["background-color"] = color;
-        //document.styleSheets[1].cssRules[4].style["background-color"] = color;
-
-
+        // todo Später mal
+        //setInterval(function () {
+        //
+        //    $("#minimap_cont").empty();
+        //    var prev = $("#prg_panel").html().toString();
+        //
+        //    prev = prev.replace(/(ng-model="|ng-style=")[A-Za-z0-9\[\].]+"/g, "")
+        //        .replace(/(id=")[A-Za-z0-9\[\]._]+"/g, "")
+        //        .replace(/(<svg)[/\s/\S]+?(svg>)/g, "")
+        //        .replace(/(<a)[/\s/\S]+?(a>)/g, "")
+        //        .replace(/(<input)[/\s/\S]+?(\/>)/g, "")
+        //        .replace(/(<div class="_jsPlumb_endpoint)[/\s/\S]+?(<\/div>)/g, "")
+        //        .replace(/(ng-)[A-Za-z0-9\[\].]+/g, "")
+        //        .replace(/(mbs_shadow)/g, "")
+        //        .replace(/(fbs_shadow)/g, "")
+        //        .replace(/(_jsPlumb_endpoint_anchor_|jsplumb-draggable|jsplumb-droppable)/g, "");
+        //
+        //
+        //    $("#minimap_cont").append(prev);
+        //
+        //}, 1000);
 
 
         // Live Test XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -253,10 +267,10 @@ SGI = {
                         height: "10px",
                         "min-height": "10px"
                     });
-                    $("#main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
+                    $(".main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
                 } else {
                     $("#sim_log").css({height: "" + log_h + "px"});
-                    $("#main").css({height: 'calc(100% - ' + (58 + log_h) + 'px)'});
+                    $(".main").css({height: 'calc(100% - ' + (58 + log_h) + 'px)'});
                 }
             })
 
@@ -271,10 +285,10 @@ SGI = {
             .drag(function (ev, dd) {
                 if (start_h - dd.deltaY < 130) {
                     $("#sim_log").css({height: "130px"});
-                    $("#main").css({height: 'calc(100% - ' + (58 + 130) + 'px)'});
+                    $(".main").css({height: 'calc(100% - ' + (58 + 130) + 'px)'});
                 } else {
                     $("#sim_log").css({height: start_h - dd.deltaY + "px"});
-                    $("#main").css({height: 'calc(100% - ' + (58 + start_h - dd.deltaY) + 'px)'});
+                    $(".main").css({height: 'calc(100% - ' + (58 + start_h - dd.deltaY) + 'px)'});
                 }
 
             });
@@ -284,13 +298,14 @@ SGI = {
                 height: "10px",
                 "min-height": "10px"
             });
-            $("#main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
+            $(".main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
         }
 
 
   if(scope.setup.mode == "gui"){
       SGI.load_gui();
       SGI.show_gui();
+
   }else{
       SGI.load_editor();
       SGI.show_editor();
@@ -331,7 +346,6 @@ SGI = {
 
         scope.save_scope_watchers();
 
-
         main_win.focus();
         main_win.show();
         try {
@@ -359,26 +373,26 @@ SGI = {
 //            SGI.server_register()
 //        }, 5000);
 
-        setTimeout(function () {
-            if (SGI.dev != true) {
-                if (scope.setup.update) {
-                    try{
-                    upd.checkNewVersion(function (error, newVersionExists, manifest) {
-                        if (!error && newVersionExists) {
-                            SGI.update()
-                        }
-                    });
-                    }catch(err){
-
-                    }
-                }
-
-                if ((new Date).toLocaleDateString() != scope.setup.last_open) {
-                    SGI.server_homecall()
-                }
-
-            }
-        }, 100);
+        //setTimeout(function () {
+        //    if (SGI.dev != true) {
+        //        if (scope.setup.update) {
+        //            try{
+        //            upd.checkNewVersion(function (error, newVersionExists, manifest) {
+        //                if (!error && newVersionExists) {
+        //                    SGI.update()
+        //                }
+        //            });
+        //            }catch(err){
+        //
+        //            }
+        //        }
+        //
+        //        if ((new Date).toLocaleDateString() != scope.setup.last_open) {
+        //            SGI.server_homecall()
+        //        }
+        //
+        //    }
+        //}, 100);
     },
 
     global_event: function () {
@@ -429,12 +443,12 @@ SGI = {
         $(document).keydown(function (event) {
             SGI.key = event.keyCode;
 
-            if (SGI.key == 46) {
+            if (SGI.key == 46 && SGI.mode == "gui") {
                 SGI.del_selected()
-            } else if (SGI.key == 67 && event.ctrlKey == true) {
+            } else if (SGI.key == 67 && event.ctrlKey == true && SGI.mode == "gui") {
                 SGI.copy_selected();
                 $("body").css({cursor: "default"});
-            } else if (SGI.key == 86 && event.ctrlKey == true) {
+            } else if (SGI.key == 86 && event.ctrlKey == true && SGI.mode == "gui") {
                 SGI.paste_selected();
                 $("body").css({cursor: "default"});
             } else if (SGI.key == 68 && event.altKey == true) {
@@ -446,7 +460,7 @@ SGI = {
                 main_win.reload();
             } else if (SGI.key == 70 && event.altKey == true) {
                 var test = test_fehler;
-            } else if (SGI.key == 17 || SGI.key == 91 || SGI.key == 93 || event.ctrlKey == true) {
+            } else if ((SGI.key == 17 || SGI.key == 91 || SGI.key == 93 || event.ctrlKey == true)  && SGI.mode == "gui") {
                 $("body").css({cursor: "help"});
                 SGI.key = 17;
             }
@@ -514,8 +528,6 @@ SGI = {
     save_setup: function () {
         localStorage.setup = JSON.stringify(scope.setup)
     },
-
-
 
     load_prg: function (_data) {
         var data = _data;
@@ -757,7 +769,6 @@ SGI = {
         }
     },
 
-
     get_name: function (hmid) {
         var _name;
         if (hmid == undefined) {
@@ -828,8 +839,6 @@ SGI = {
             return cb("undefined")
         }
     },
-
-
 
     check_fs: function (cb) {
 
@@ -907,52 +916,6 @@ SGI = {
     }
 };
 
-//window.timeoutList = [];
-//window.intervalList = [];
-//
-//window.oldSetTimeout = window.setTimeout;
-//window.oldSetInterval = window.setInterval;
-//window.oldClearTimeout = window.clearTimeout;
-//window.oldClearInterval = window.clearInterval;
-//
-//window.setTimeout = function (code, delay) {
-//    var retval = window.oldSetTimeout(code, delay);
-//    window.timeoutList.push(retval);
-//    return retval;
-//};
-//window.clearTimeout = function (id) {
-//    var ind = window.timeoutList.indexOf(id);
-//    if (ind >= 0) {
-//        window.timeoutList.splice(ind, 1);
-//    }
-//    var retval = window.oldClearTimeout(id);
-//    return retval;
-//};
-//window.setInterval = function (code, delay) {
-//    var retval = window.oldSetInterval(code, delay);
-//    window.intervalList.push(retval);
-//    return retval;
-//};
-//window.clearInterval = function (id) {
-//    var ind = window.intervalList.indexOf(id);
-//    if (ind >= 0) {
-//        window.intervalList.splice(ind, 1);
-//    }
-//    var retval = window.oldClearInterval(id);
-//    return retval;
-//};
-//window.clearAllTimeouts = function () {
-//    for (var i in window.timeoutList) {
-//        window.oldClearTimeout(window.timeoutList[i]);
-//    }
-//    window.timeoutList = [];
-//};
-//window.clearAllIntervals = function () {
-//    for (var i in window.intervalList) {
-//        window.oldClearInterval(window.intervalList[i]);
-//    }
-//    window.intervalList = [];
-//};
 
 
 var deleteFolderRecursive = function (path) {
