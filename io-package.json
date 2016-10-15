@@ -1,0 +1,37 @@
+{
+  "common": {
+    "name": "scriptgui",
+    "version": "0.8.0",
+    "title": "ScriptGUI",
+    "desc": "ScriptGUI",
+    "authors": [
+      "smiling_Jack <smiling_Jack@iobroker.net>"
+    ],
+    "license": "CC BY-NC",
+    "platform": "Javascript/Node.js",
+    "mode": "daemon",
+    "loglevel": "info",
+    "icon": "cube256.png",
+    "messagebox": true,
+    "keywords": [
+      "Script",
+      "JS",
+      ""
+    ],
+    "localLink":    "%web_protocol%://%ip%:%web_port%/scriptgui/index.html",
+    "enabled": false,
+    "singleton": true,
+    "extIcon": "",
+    "readme": "",
+    "type": "script",
+    "config": {
+      "minWidth": 650,
+      "minHeight": 800,
+      "width ": 800
+    }
+  },
+  "native": {
+
+    }
+
+  }
