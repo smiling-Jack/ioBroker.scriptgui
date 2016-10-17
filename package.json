@@ -1,10 +1,91 @@
 {
-  "name": "ScriptGUI",
+  "_args": [
+    [
+      "iobroker.scriptgui",
+      ""
+    ]
+  ],
+  "_from": "iobroker.scriptgui@*",
+  "_id": "iobroker.scriptgui@0.8.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/iobroker.scriptgui",
+  "_nodeVersion": "4.1.0",
+  "_npmUser": {
+    "email": "steffen.schorling@googlemail.com",
+    "name": "smiling_jack"
+  },
+  "_npmVersion": "2.14.3",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "iobroker.scriptgui",
+    "raw": "iobroker.scriptgui",
+    "rawSpec": "",
+    "scope": null,
+    "spec": "*",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_shasum": "",
+  "_shrinkwrap": null,
+  "_spec": "iobroker.scriptgui",
+  "_where": "",
+  "author": {
+    "email": "smiling_Jack@ioBroker.net",
+    "name": "smiling_Jack"
+  },
+  "bugs": {
+    "url": "https://github.com/ioBroker/ioBroker.scriptgui/issues"
+  },
+  "contributors": [
+    {
+      "name": "smiling_Jack",
+      "email": "smiling_Jack@ioBroker.net"
+    }
+  ],
+  "dependencies": {},
+  "description": "ScriptGUI",
   "devDependencies": {
-    "grunt-contrib-clean": "^0.6.0",
-    "grunt-contrib-compress": "^0.12.0",
-    "grunt-contrib-copy": "^0.7.0",
-    "grunt-node-webkit-builder": "^0.2.1",
-    "node-webkit-builder": "^0.1.3"
-  }
+    "grunt": "~0.4.4",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-compress": "~0.8.0",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-exec": "~0.4.5",
+    "grunt-http": "~1.4.1",
+    "grunt-jscs": "~0.6.1",
+    "grunt-replace": "~0.7.6"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "",
+    "tarball": ""
+  },
+  "gitHead": "",
+  "homepage": "",
+  "keywords": [
+    "Script",
+    "Smart Home",
+    "JS",
+    "home automation",
+    "ioBroker"
+  ],
+  "license": "CC BY-NC 3.0",
+  "maintainers": [
+    {
+      "name": "smiling_jack",
+      "email": "steffen.schorling@googlemail.com"
+    }
+  ],
+  "name": "iobroker.scriptgui",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smiling-Jack/ScriptGUI.app"
+  },
+  "scripts": {},
+  "version": "0.8.0"
 }
