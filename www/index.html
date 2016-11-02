@@ -34,7 +34,7 @@
     <script type="text/javascript" src="js/lib/jquery-1.11.0.js"></script>
     <script type="text/javascript" src="js/lib/angular.js"></script>
     <!--<script type="text/javascript" src="js/lib/socket.io_09.js"></script>-->
-    <!--<script type="text/javascript" src="js/lib/socket.io_10.js"></script>-->
+
     <script type="text/javascript" src="js/conn.js"></script>
 
     <script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
@@ -71,15 +71,32 @@
 
     <script type="text/javascript" src="../../lib/js/selectID.js"></script>
     <script type="text/javascript" src="../../lib/js/socket.io.js"></script>
-    <script type="text/javascript" src="_socket/info.js"></script>
+    <script id="socket_info" type="text/javascript" src="_socket/info.js"></script>
+
+
+    <script type="text/javascript" src="../javascript.admin/google-blockly/blockly_compressed.js"></script>
+    <script type="text/javascript" src="../javascript.admin/google-blockly/blocks_compressed.js"></script>
+    <script type="text/javascript" src="../javascript.admin/google-blockly/javascript_compressed.js"></script>
+    <script type="text/javascript" src="../javascript.admin/google-blockly/own/field_oid.js"></script>
+    <script type="text/javascript" src="../javascript.admin/google-blockly/own/field_cron.js"></script>
+    <script type="text/javascript" src="../javascript.admin/google-blockly/own/field_script.js"></script>
+    <script type="text/javascript" src="../javascript.admin/google-blockly/own/blocks_system.js"></script>
+    <script type="text/javascript" src="../javascript.admin/google-blockly/own/blocks_action.js"></script>
+    <script type="text/javascript" src="../javascript.admin/google-blockly/own/blocks_sendto.js"></script>
+    <script type="text/javascript" src="../javascript.admin/google-blockly/own/blocks_time.js"></script>
+    <script type="text/javascript" src="../javascript.admin/google-blockly/own/blocks_convert.js"></script>
+    <script type="text/javascript" src="../javascript.admin/google-blockly/own/blocks_trigger.js"></script>
+    <script type="text/javascript" src="../javascript.admin/google-blockly/own/blocks_procedures.js"></script>
+    <script type="text/javascript" src="../javascript.admin/google-blockly/own/blocks_timeout.js"></script>
 
     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
     <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
-    <script type="text/javascript" src="js/ScriptGUI.js"></script>
+    <script id ="gui" type="text/javascript" src="js/ScriptGUI.js"></script>
     <script type="text/javascript" src="js/mode_gui.js"></script>
     <script type="text/javascript" src="js/mode_editor.js"></script>
+    <script type="text/javascript" src="js/mode_blockly.js"></script>
     <script type="text/javascript" src="js/Menu.js"></script>
     <script type="text/javascript" src="js/Translate.js"></script>
     <script type="text/javascript" src="js/add_fbs.js"></script>
@@ -92,8 +109,9 @@
 
 </head>
 
-<body id="body" ng-controller="GUICtrl" style="visibility: hidden">
+<body id="body" ng-controller="GUICtrl" style="visibility: hidden" class="ui-widget-content">
 <div class="menuBlocker ui-state-default"></div>
+<div id="logo"></div>
 <div id="menu_body" class="menu_body ui-state-default">
     <ul id="menu" style="margin-top: 1px;" class="sf-menu">
         <li class="ui-state-default ui-corner-all" style="border: none"><a class=" translate">Datei</a>
@@ -138,10 +156,9 @@
                 </li>
                 <li class="ui-state-default frame_color menu_item" style="border: none"><a class="translate">Mode</a>
                     <ul id="ul_mode">
-                        <li class="ui-state-default frame_color menu_item"><a id="m_mode_editor" class="translate">Editor</a>
-                        </li>
-                        <li class="ui-state-default frame_color menu_item"><a id="m_mode_gui"
-                                                                              class="item_font   translate">GUI</a></li>
+                        <li class="ui-state-default frame_color menu_item"><img src="img/js.jpeg"     style="margin-bottom: -3px;height: 30px" alt=""/><a id="m_mode_editor"               class="item_font  translate"  style="display: inline-block;line-height: 30px;margin-left: 5px;vertical-align: bottom;position: relative;left: -30px;padding-left: 40px;">Editor</a></li>
+                        <li class="ui-state-default frame_color menu_item"><img src="img/cube256.png" style="margin-bottom: -3px;height: 30px" alt=""/><a id="m_mode_gui"                  class="item_font  translate"  style="display: inline-block;line-height: 30px;margin-left: 5px;vertical-align: bottom;position: relative;left: -30px;padding-left: 40px;">GUI</a></li>
+                        <li class="ui-state-default frame_color menu_item"><img src="img/blockly.png" style="margin-bottom: -3px;height: 24px; width: 30px" alt=""/><a id="m_mode_Blockly" class="item_font   translate" style="display: inline-block;line-height: 30px;margin-left: 5px;vertical-align: bottom;position: relative;left: -30px;padding-left: 40px;">Blockly</a></li>
                     </ul>
                 </li>
                 <li class="ui-state-default frame_color menu_item"><a id="m_setup" class="translate">Setup</a></li>
@@ -182,7 +199,7 @@
     </ul>
 
     <a id="m_file" class="translate">Neu</a>
-    <a id="m_file_lb" class="translate">Datei:</a>
+    <a id="m_file_lb" class="translate">Script:</a>
 </div>
 
 <div id="icon_bar" class="icon_bar ui-state-default">
@@ -206,18 +223,19 @@
     <img src="img/icon/table.png" class="img_iconbar ui-state-focus set_grid title_translate" id="img_set_grid_on" title="An Grid fangen ON/OFF" style="display:none"/>
     <img src="img/icon/information.png" class="img_iconbar ui-state-focus set_gui title_translate" id="img_set_tooltip_on" title="Tooltip ON/OFF"/>
 
-    <div id="con_body">
-        <div id="inp_con_ip"></div>
-        <div id="con_panel_wrap">
-            <div style="margin-top: 4px">
-                <div id="con_panel" style="display: none" class="ui-state-default frame_color">
-                    <div class="div_img_glass"><img src="img/icon/flag-green.png" id="btn_con_online"></div>
-                    <div class="div_img_glass"><img src="img/icon/flag-yellow.png" id="btn_con_offline"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <img src="img/icon/flag-red.png" class="img_iconbar title_translate" id="img_con_state" title="Status"/>
+    <!--<div id="con_body">-->
+        <!--<div id="inp_con_ip"></div>-->
+        <!--<div id="con_panel_wrap">-->
+            <!--<div style="margin-top: 4px">-->
+                <!--<div id="con_panel" style="display: none" class="ui-state-default frame_color">-->
+                    <!--<div class="div_img_glass"><img src="img/icon/flag-green.png" id="btn_con_online"></div>-->
+                    <!--<div class="div_img_glass"><img src="img/icon/flag-yellow.png" id="btn_con_offline"></div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <img src="img/icon/flag-red.png" class="img_iconbar title_translate" id="img_con_backend" title="Status Backend"/>
+    <img src="img/icon/flag-red.png" class="img_iconbar title_translate" id="img_con_web" title="Status WEB"/>
     <img src="img/icon/cog.png" class="img_iconbar script_engine title_translate" id="img_set_script_engine"
          style="display: none" title="Scriptengine Neustarten"/>
 
@@ -410,8 +428,13 @@
     </div>
     <!--<div id="editor"></div>-->
 </div>
+<div id="main_blockly" class="main_blockly main ui-widget-content" style="display: none"></div>
+<div id="main_brockly" class="main_editor main ui-widget-content" style="display: none">
 
-<div id="sim_log" class="sim_log frame_color ui-state-default">
+
+
+</div>
+<div id="sim_log" class="sim_log frame_color ui-state-default" style="z-index: 4;">
     <div id="sim_log_head" class="sim_log_head ui-state-default"></div>
     <div class="div_sim_controll">
         <div style="align-self: flex-start; font-size: 26px;font-weight: bold; padding-bottom: 5px; padding-left: 5px">
@@ -432,15 +455,15 @@
             <button class="translate" id="clear_force">Force entfernen</button>
         </div>
 
-        <div id="run_type" style="margin-top: 5px; width: 100%; margin-left: 10px;">
+        <div id="run_type" style="margin-top: 5px; width: 100%; display: flex;">
             <input class="step" type="checkbox" id="run_step" disabled data-info="step" name="step"> <label
-                style="width: 81px" id="lba_run_step" for="run_step">Step</label>
+                style="width: 60px" id="lba_run_step" for="run_step">Step</label>
             <input class="run_type" type="radio" id="run_type1" disabled data-info="sim" name="radio" checked="checked">
-            <label style="width: 81px" id="lba_run_type1" for="run_type1">Sim</label>
+            <label style="width: 60px" id="lba_run_type1" for="run_type1">Sim</label>
             <input class="run_type" type="radio" id="run_type2" disabled data-info="trigger" name="radio"> <label
-                style="width: 81px" id="lba_run_type2" for="run_type2">Trigger</label>
+                style="width: 60px" id="lba_run_type2" for="run_type2">Trigger</label>
             <input class="run_type" type="radio" id="run_type3" disabled data-info="hotrun" name="radio"> <label
-                style="width: 81px" id="lba_run_type3" for="run_type3">Hotrun</label>
+                style="width: 60px" id="lba_run_type3" for="run_type3">Hotrun</label>
         </div>
 
     </div>
@@ -576,15 +599,18 @@
     </div>
 </div>
 <div id="selection" class="selectiondiv"></div>
-<input style="display: none" id="prgopen" type="file" nwworkingdir="" accept=".prg"/>
-<input style="display: none" id="scriptopen" type="file" nwworkingdir="" accept=".script"/>
-<input style="display: none" id="prgsaveas" type="file" nwsaveas accept=".prg"/>
-<input style="display: none" id="scriptsaveas" type="file" nwsaveas accept=".script"/>
+
+<!--<input style="display: none" id="prgopen" type="file" nwworkingdir="" accept=".prg"/>-->
+<!--<input style="display: none" id="scriptopen" type="file" nwworkingdir="" accept=".script"/>-->
+<!--<input style="display: none" id="prgsaveas" type="file" nwsaveas accept=".prg"/>-->
+<!--<input style="display: none" id="scriptsaveas" type="file" nwsaveas accept=".script"/>-->
 
 <div id="wait_div">
     <div style="width: 100%; height: 100%; opacity: 0.9" class="frame_color ui-state-default"></div>
     <div class="circle wait_div"></div>
     <div class="circle1 wait_div"></div>
 </div>
+<div id="select_oid"></div>
+<div id="blockly_toolbox" style="visibility: hidden"></div>
 </body>
 </html>

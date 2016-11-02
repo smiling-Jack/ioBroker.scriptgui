@@ -91,9 +91,19 @@ jQuery.extend(true, SGI, {
 
     show_editor: function () {
 
+        if (!SGI.editor_rendered) {
+            SGI.load_editor()
+        }
+
+        SGI.hide_gui();
+
+
         $("#main_editor").show();
         $(".set_editor").show();
         SGI.mode = "editor";
+        scope.setup.mode = "editor";
+        scope.$apply();
+        SGI.save_setup()
 
     },
     hide_editor: function () {

@@ -4,10 +4,10 @@
 
 var objects = {};
 var states = {};
-
-var vis ={
+var web;
+var iob ={
     states: {},
-}
+};
 
 jQuery.extend(true, SGI, {
 
@@ -29,11 +29,11 @@ jQuery.extend(true, SGI, {
             regaIndex: {},
             regaObjects: {}
         };
-        $("#img_con_state").attr("src", "img/icon/flag-red.png");
+        $("#img_con_backend").attr("src", "img/icon/flag-red.png");
         $("#btn_con_online").parent().removeClass("div_img_glass_on");
         $("#btn_con_offline").parent().removeClass("div_img_glass_on");
         $("#img_set_script_engine").hide();
-        $("#img_con_state").attr("title", "");
+
 
         $(".run_type,#run_step, #img_set_script_play ,#img_set_script_stop").button({disabled: true});
         $(".run_type").prop("checked", false);
@@ -44,12 +44,7 @@ jQuery.extend(true, SGI, {
 //        $("#inp_con_ip").unbind("change")
     },
 
-    offline: function (_url) {
-        var url = $("#inp_con_ip").val().replace(":", "port");
-
-        if (_url) {
-            url = _url
-        }
+    offline: function () {
 
 
         if (scope.setup.last_con != url || scope.setup.con_type != "offline") {
@@ -67,7 +62,7 @@ jQuery.extend(true, SGI, {
         //            //console.log(data)
         //            homematic = JSON.parse(data);
         //            //console.log(homematic)
-        //            $("#img_con_state").attr("src", "img/icon/flag-yellow.png");
+        //            $("#img_con_backend").attr("src", "img/icon/flag-yellow.png");
         //            $("#btn_con_offline").parent().addClass("div_img_glass_on");
         //            $("#btn_con_online").parent().removeClass("div_img_glass_on");
         //            SGI.con_data = true;
@@ -75,7 +70,7 @@ jQuery.extend(true, SGI, {
         //            $("#run_step, #run_type1, #img_set_script_play ,#img_set_script_stop").button({disabled: false});
         //        } else {
         //            alert(err)
-        //            $("#img_con_state").attr("src", "img/icon/flag-red.png");
+        //            $("#img_con_backend").attr("src", "img/icon/flag-red.png");
         //            $("#btn_con_offline").parent().removeClass("div_img_glass_on");
         //            $("#btn_con_online").parent().removeClass("div_img_glass_on");
         //            homematic = {
@@ -92,15 +87,10 @@ jQuery.extend(true, SGI, {
         //}
         //catch (err) {
             $('body').css("cursor", "default");
-            $("#img_con_state").attr("src", "img/icon/flag-red.png");
+            $("#img_con_backend").attr("src", "img/icon/flag-red.png");
             $("#btn_con_offline").parent().removeClass("div_img_glass_on");
             $("#btn_con_online").parent().removeClass("div_img_glass_on");
 
-            homematic = {
-                uiState: {"_65535": {"Value": null}},
-                regaIndex: {},
-                regaObjects: {}
-            };
             SGI.con_data = false;
             throw err
         //}
@@ -125,7 +115,7 @@ jQuery.extend(true, SGI, {
         //}
         //
         //
-        //$("#img_con_state").attr("src", "img/icon/flag-blue.png");
+        //$("#img_con_backend").attr("src", "img/icon/flag-blue.png");
         //
         //if (scope.setup.last_con != url || scope.setup.con_type != "connect_backend") {
         //    scope.setup.last_con = url;
@@ -237,12 +227,17 @@ jQuery.extend(true, SGI, {
         //})
         console.log("con1")
 
+        if (!$.fn.selectId) {
+            $("head").append('<script type="text/javascript" src="js/lib/socket.io_10.js"></script>');
+        }
+
+
         SGI.backend = io.connect("127.0.0.1:3000", {'force new connection': false});
-        $("#img_con_state").attr("src", "img/icon/flag-blue.png");
+        $("#img_con_backend").attr("src", "img/icon/flag-blue.png");
        SGI.backend.on("connect", function (err) {
             console.log("connect")
             $("#img_set_script_play,#run_type1,#run_type2,#run_type3,#run_step").button({disabled: false});
-            $("#img_con_state").attr("src", "img/icon/flag-green.png");
+            $("#img_con_backend").attr("src", "img/icon/flag-green.png");
 
            $('window').unload(function() {
                SGI.backend.disconnect()
@@ -326,287 +321,347 @@ jQuery.extend(true, SGI, {
     },
 
     connect_iobroker: function (){
-        vis.conn = servConn;
 
-        vis.conn.init(null, {
-            mayReconnect: null,
-            onConnChange: function (isConnected) {
-                //console.log("onConnChange isConnected="+isConnected);
-                if (isConnected) {
-                    //$('#server-disconnect').dialog('close');
-                    if (vis.isFirstTime) {
-                        vis.conn.getVersion(function (version) {
-                            if (version) {
-                                if (compareVersion(version, vis.requiredServerVersion)) {
-                                    vis.showMessage(_('Warning: requires Server version %s - found Server version %s - please update Server.',  vis.requiredServerVersion, version));
-                                }
-                            }
-                            //else {
-                            // Possible not authenticated, wait for request from server
-                            //}
-                        });
-
-
-                    }
-
-
-                        // Read all states from server
-                        vis.conn.getStates(vis.editMode ? null: vis.IDs, function (error, data) {
-                            if (error) {
-                             console.log(error);
-                            }
-                            if (data) {
-                                for (var id in data) {
-                                    var obj = data[id];
-                                    if (!obj) continue;
-
-                                    try {
-
-                                            vis.states[id + '.val'] = obj.val;
-                                            vis.states[id + '.ts']  = obj.ts;
-                                            vis.states[id + '.ack'] = obj.ack;
-                                            vis.states[id + '.lc']  = obj.lc;
-                                            if (obj.q !== undefined) vis.states[id + '.q'] = obj.q;
-
-                                    } catch (e) {
-                                      console.log('Error: can\'t create states object for ' + id + '(' + e + ')');
-                                    }
-
-
-                                }
-                            }
-
-
-
-                            if (error) {
-                                console.log('Possibly not authenticated, wait for request from server');
-                                // Possibly not authenticated, wait for request from server
-                            } else {
-                                // Get groups info
-                                //vis.conn.getGroups(function (err, groups) {
-                                //    vis.userGroups = groups || {};
-                                //    // Get Server language
-                                //    vis.conn.getConfig(function (err, config) {
-                                //        systemLang = vis.args.lang || config.language || systemLang;
-                                //        vis.language = systemLang;
-                                //        vis.dateFormat = config.dateFormat;
-                                //        vis.isFloatComma = config.isFloatComma;
-                                //        translateAll();
-                                //        if (vis.isFirstTime) {
-                                //            // Init edit dialog
-                                //            if (vis.editMode && vis.editInit) vis.editInit();
-                                //            vis.isFirstTime = false;
-                                //            vis.init();
-                                //        }
-                                //    });
-                                //});
-
-                                // If metaIndex required, load it
-                                //if (vis.editMode) {
-                                //    /* socket.io */
-                                //    if (vis.isFirstTime) vis.showWaitScreen(true, _('Loading data objects...'), null, 20);
-
-                                    // Read all data objects from server
-                                    vis.conn.getObjects(function (err, data) {
-                                        vis.objects = data;
-                                        // Detect if objects are loaded
-                                        for (var ob in data) {
-                                            vis.objectSelector = true;
-                                            break;
-                                        }
-                                        //if (vis.editMode && vis.objectSelector) {
-                                        //    vis.inspectWidgets(true);
-                                        //}
-                                    });
-                                //}
-
-                                //console.log((new Date()) + " socket.io reconnect");
-                                //if (vis.isFirstTime) {
-                                //    setTimeout(function () {
-                                //        if (vis.isFirstTime) {
-                                //            // Init edit dialog
-                                //            if (vis.editMode && vis.editInit) vis.editInit();
-                                //            vis.isFirstTime = false;
-                                //            vis.init();
-                                //        }
-                                //    }, 1000);
-                                //}
-                            }
-                        });
-
-                } else {
-                    //console.log((new Date()) + " socket.io disconnect");
-                    //$('#server-disconnect').dialog('open');
+        // web ? or Local ?
+        if ($.fn.selectId) {
+            $('#select_oid').selectId('init', {
+                filter: {
+                    _id : "javascript"
+                },
+                noMultiselect: true,
+                connCfg: {
+                    socketUrl: socketUrl,
+                    socketSession: socketSession,
+                    socketName: 'scriptGUI',
+                    upgrade: typeof socketForceWebSockets !== 'undefined' ? !socketForceWebSockets : undefined,
+                    rememberUpgrade: typeof socketForceWebSockets !== 'undefined' ? socketForceWebSockets : undefined,
+                    transports: typeof socketForceWebSockets !== 'undefined' ? (socketForceWebSockets ? ['websocket'] : undefined) : undefined
+                },
+                columns: ['name', 'role', 'room', 'value'],
+                texts: {
+                    select: ('Select'),
+                    cancel: ('Cancel'),
+                    all: ('All'),
+                    id: ('ID'),
+                    name: ('Name'),
+                    role: ('Role'),
+                    room: ('Room'),
+                    value: ('Value'),
+                    selectid: ('Select ID'),
+                    from: ('From'),
+                    lc: ('Last changed'),
+                    ts: ('Time stamp'),
+                    wait: ('Processing...'),
+                    ack: ('Acknowledged')
                 }
-            },
-            onRefresh:    function () {
-                window.location.reload();
-            },
-            onUpdate:     function (id, state) {
+            });
 
-            },
-            onAuth:       function (message, salt) {
-                if (vis.authRunning) {
-                    return;
-                }
-                vis.authRunning = true;
-                var users;
-                if (visConfig.auth.users && visConfig.auth.users.length) {
-                    users = '<select id="login-username" value="' + visConfig.auth.users[0] + '" class="login-input-field">';
-                    for (var z = 0; z < visConfig.auth.users.length; z++) {
-                        users += '<option value="' + visConfig.auth.users[z] + '">' + visConfig.auth.users[z] + '</option>';
-                    }
-                    users += '</select>';
-                } else {
-                    users = '<input id="login-username" value="" type="text" autocomplete="on" class="login-input-field" placeholder="' + _('User name') + '">';
-                }
+            web = io.connect(socketUrl, {
+                query:                          'key=' + socketSession,
+                'reconnection limit':           10000,
+                'max reconnection attempts':    Infinity,
+                upgrade:                        typeof socketForceWebSockets !== 'undefined' ? !socketForceWebSockets : undefined,
+                rememberUpgrade:                typeof socketForceWebSockets !== 'undefined' ? socketForceWebSockets  : undefined,
+                transports:                     typeof socketForceWebSockets !== 'undefined' ? (socketForceWebSockets ? ['websocket'] : undefined) : undefined
+            });
 
-                var text = '<div id="login-box" class="login-popup" style="display:none">' +
-                    '<div class="login-message">' + message + '</div>' +
-                    '<div class="login-input-field">' +
-                    '<label class="username">' +
-                    '<span class="_">' + _('User name') + '</span>' +
-                    users +
-                    '</label>' +
-                    '<label class="password">' +
-                    '<span class="_">' + _('Password') + '</span>' +
-                    '<input id="login-password" value="" type="password" class="login-input-field" placeholder="' + _('Password') + '">' +
-                    '</label>' +
-                    '<button class="login-button" type="button"  class="_">' + _('Sign in') + '</button>' +
-                    '</div>' +
-                    '</div>';
+            web.on('connect', function () {
+                this.emit('name', 'Scriptgui');
+                $("#img_con_web").attr("src", "img/icon/flag-green.png");
+            });
 
-                // Add the mask to body
-                $('body')
-                    .append(text)
-                    .append('<div id="login-mask"></div>');
+            web.on('disconnect', function () {
+                $("#img_con_web").attr("src", "img/icon/flag-red.png");
+            });
+        }
 
-                var loginBox = $('#login-box');
 
-                //Fade in the Popup
-                $(loginBox).fadeIn(300);
 
-                //Set the center alignment padding + border see css style
-                var popMargTop = ($(loginBox).height() + 24) / 2;
-                var popMargLeft = ($(loginBox).width() + 24) / 2;
 
-                $(loginBox).css({
-                    'margin-top': -popMargTop,
-                    'margin-left': -popMargLeft
-                });
 
-                $('#login-mask').fadeIn(300);
-                // When clicking on the button close or the mask layer the popup closed
-                $('#login-password').keypress(function (e) {
-                    if (e.which == 13) {
-                        $('.login-button').trigger('click');
-                    }
-                });
-                $('.login-button').bind('click', function () {
-                    var user = $('#login-username').val();
-                    var pass = $('#login-password').val();
-                    $('#login_mask , .login-popup').fadeOut(300, function () {
-                        $('#login-mask').remove();
-                        $('#login-box').remove();
-                    });
-                    setTimeout(function () {
-                        vis.authRunning = false;
-                        console.log('user ' + user + ', ' + pass + ' ' + salt);
-                        vis.conn.authenticate(user, pass, salt);
-                    }, 500);
-                    return true;
-                });
-            },
-            onCommand:    function (instance, command, data) {
-                var parts;
-                if (!instance || (instance != vis.instance && instance != 'FFFFFFFF' && instance.indexOf('*') === -1)) return false;
-                if (command) {
-                    if (vis.editMode && command !== 'tts' && command !== 'playSound') return;
-                    // external Commands
-                    switch (command) {
-                        case 'alert':
-                            parts = data.split(';');
-                            vis.showMessage(parts[0], parts[1], parts[2]);
-                            break;
-                        case 'changedView':
-                            // Do nothing
-                            return false;
-                        case 'changeView':
-                            parts = data.split('/');
-                            //if (parts[1]) {
-                            // Todo switch to desired project
-                            //}
-                            vis.changeView(parts[1] || parts[0]);
-                            break;
-                        case 'refresh':
-                        case 'reload':
-                            setTimeout(function () {
-                                window.location.reload();
-                            }, 1);
-                            break;
-                        case 'dialog':
-                        case 'dialogOpen':
-                            $('#' + data + '_dialog').dialog('open');
-                            break;
-                        case 'dialogClose':
-                            $('#' + data + '_dialog').dialog('close');
-                            break;
-                        case 'popup':
-                            window.open(data);
-                            break;
-                        case 'playSound':
-                            setTimeout(function () {
-                                var href;
-                                if (data.match(/^http(s)?:\/\//)) {
-                                    href = data;
-                                } else {
-                                    href = location.protocol + '//' + location.hostname + ':' + location.port + data;
-                                }
-                                // force read from server
-                                href += '?' + (new Date()).getTime();
 
-                                if (typeof Audio != 'undefined') {
-                                    var snd = new Audio(href); // buffers automatically when created
-                                    snd.play();
-                                } else {
-                                    if (!$('#external_sound').length) {
-                                        $('body').append('<audio id="external_sound"></audio>');
-                                    }
-                                    $('#external_sound').attr('src', href);
-                                    document.getElementById('external_sound').play();
-                                }
-                            }, 1);
-                            break;
-                        case 'tts':
-                            if (typeof app !== 'undefined') {
-                                app.tts(data);
-                            }
-                            break;
-                        default:
-                            vis.conn.logError('unknown external command ' + command);
-                    }
-                }
 
-                return true;
-            },
-            onObjectChange: function(id, obj) {
-                if (!vis.objects || !vis.editMode) return;
-                if (obj) {
-                    vis.objects[id] = obj;
-                } else {
-                    if (vis.objects[id]) delete vis.objects[id];
-                }
-
-                if ($.fn.selectId) $.fn.selectId('objectAll', id, obj);
-            },
-            onError:      function (err) {
-                if (err.arg == 'vis.0.control.instance' || err.arg == 'vis.0.control.data' || err.arg == 'vis.0.control.command') {
-                    console.warn('Cannot set ' + err.arg + ', because of insufficient permissions');
-                } else {
-                    vis.showMessage(_('Cannot execute %s for %s, because of insufficient permissions', err.command, err.arg), _('Insufficient permissions'), 'alert', 600);
-                }
-            }
-        });
+        //iob.conn = servConn;
+        //
+        //iob.conn.init(null, {
+        //    mayReconnect: null,
+        //    onConnChange: function (isConnected) {
+        //        //console.log("onConnChange isConnected="+isConnected);
+        //        if (isConnected) {
+        //            //$('#server-disconnect').dialog('close');
+        //            if (iob.isFirstTime) {
+        //                iob.conn.getVersion(function (version) {
+        //                    if (version) {
+        //                        if (compareVersion(version, iob.requiredServerVersion)) {
+        //                            iob.showMessage(_('Warning: requires Server version %s - found Server version %s - please update Server.',  iob.requiredServerVersion, version));
+        //                        }
+        //                    }
+        //                    //else {
+        //                    // Possible not authenticated, wait for request from server
+        //                    //}
+        //                });
+        //
+        //
+        //            }
+        //
+        //
+        //                // Read all states from server
+        //                iob.conn.getStates(iob.editMode ? null: iob.IDs, function (error, data) {
+        //                    if (error) {
+        //                     console.log(error);
+        //                    }
+        //                    if (data) {
+        //                        for (var id in data) {
+        //                            var obj = data[id];
+        //                            if (!obj) continue;
+        //
+        //                            try {
+        //
+        //                                    iob.states[id + '.val'] = obj.val;
+        //                                    iob.states[id + '.ts']  = obj.ts;
+        //                                    iob.states[id + '.ack'] = obj.ack;
+        //                                    iob.states[id + '.lc']  = obj.lc;
+        //                                    if (obj.q !== undefined) iob.states[id + '.q'] = obj.q;
+        //
+        //                            } catch (e) {
+        //                              console.log('Error: can\'t create states object for ' + id + '(' + e + ')');
+        //                            }
+        //
+        //
+        //                        }
+        //                    }
+        //
+        //
+        //
+        //                    if (error) {
+        //                        console.log('Possibly not authenticated, wait for request from server');
+        //                        // Possibly not authenticated, wait for request from server
+        //                    } else {
+        //                        // Get groups info
+        //                        //iob.conn.getGroups(function (err, groups) {
+        //                        //    iob.userGroups = groups || {};
+        //                        //    // Get Server language
+        //                        //    iob.conn.getConfig(function (err, config) {
+        //                        //        systemLang = iob.args.lang || config.language || systemLang;
+        //                        //        iob.language = systemLang;
+        //                        //        iob.dateFormat = config.dateFormat;
+        //                        //        iob.isFloatComma = config.isFloatComma;
+        //                        //        translateAll();
+        //                        //        if (iob.isFirstTime) {
+        //                        //            // Init edit dialog
+        //                        //            if (iob.editMode && iob.editInit) iob.editInit();
+        //                        //            iob.isFirstTime = false;
+        //                        //            iob.init();
+        //                        //        }
+        //                        //    });
+        //                        //});
+        //
+        //                        // If metaIndex required, load it
+        //                        //if (iob.editMode) {
+        //                        //    /* socket.io */
+        //                        //    if (iob.isFirstTime) iob.showWaitScreen(true, _('Loading data objects...'), null, 20);
+        //
+        //                            // Read all data objects from server
+        //                            iob.conn.getObjects(function (err, data) {
+        //                                iob.objects = data;
+        //                                // Detect if objects are loaded
+        //                                for (var ob in data) {
+        //                                    iob.objectSelector = true;
+        //                                    break;
+        //                                }
+        //                                //if (iob.editMode && iob.objectSelector) {
+        //                                //    iob.inspectWidgets(true);
+        //                                //}
+        //                            });
+        //                        //}
+        //
+        //                        //console.log((new Date()) + " socket.io reconnect");
+        //                        //if (iob.isFirstTime) {
+        //                        //    setTimeout(function () {
+        //                        //        if (iob.isFirstTime) {
+        //                        //            // Init edit dialog
+        //                        //            if (iob.editMode && iob.editInit) iob.editInit();
+        //                        //            iob.isFirstTime = false;
+        //                        //            iob.init();
+        //                        //        }
+        //                        //    }, 1000);
+        //                        //}
+        //                    }
+        //                });
+        //
+        //        } else {
+        //            //console.log((new Date()) + " socket.io disconnect");
+        //            //$('#server-disconnect').dialog('open');
+        //        }
+        //    },
+        //    onRefresh:    function () {
+        //        window.location.reload();
+        //    },
+        //    onUpdate:     function (id, state) {
+        //
+        //    },
+        //    onAuth:       function (message, salt) {
+        //        if (iob.authRunning) {
+        //            return;
+        //        }
+        //        iob.authRunning = true;
+        //        var users;
+        //        if (visConfig.auth.users && visConfig.auth.users.length) {
+        //            users = '<select id="login-username" value="' + visConfig.auth.users[0] + '" class="login-input-field">';
+        //            for (var z = 0; z < visConfig.auth.users.length; z++) {
+        //                users += '<option value="' + visConfig.auth.users[z] + '">' + visConfig.auth.users[z] + '</option>';
+        //            }
+        //            users += '</select>';
+        //        } else {
+        //            users = '<input id="login-username" value="" type="text" autocomplete="on" class="login-input-field" placeholder="' + _('User name') + '">';
+        //        }
+        //
+        //        var text = '<div id="login-box" class="login-popup" style="display:none">' +
+        //            '<div class="login-message">' + message + '</div>' +
+        //            '<div class="login-input-field">' +
+        //            '<label class="username">' +
+        //            '<span class="_">' + _('User name') + '</span>' +
+        //            users +
+        //            '</label>' +
+        //            '<label class="password">' +
+        //            '<span class="_">' + _('Password') + '</span>' +
+        //            '<input id="login-password" value="" type="password" class="login-input-field" placeholder="' + _('Password') + '">' +
+        //            '</label>' +
+        //            '<button class="login-button" type="button"  class="_">' + _('Sign in') + '</button>' +
+        //            '</div>' +
+        //            '</div>';
+        //
+        //        // Add the mask to body
+        //        $('body')
+        //            .append(text)
+        //            .append('<div id="login-mask"></div>');
+        //
+        //        var loginBox = $('#login-box');
+        //
+        //        //Fade in the Popup
+        //        $(loginBox).fadeIn(300);
+        //
+        //        //Set the center alignment padding + border see css style
+        //        var popMargTop = ($(loginBox).height() + 24) / 2;
+        //        var popMargLeft = ($(loginBox).width() + 24) / 2;
+        //
+        //        $(loginBox).css({
+        //            'margin-top': -popMargTop,
+        //            'margin-left': -popMargLeft
+        //        });
+        //
+        //        $('#login-mask').fadeIn(300);
+        //        // When clicking on the button close or the mask layer the popup closed
+        //        $('#login-password').keypress(function (e) {
+        //            if (e.which == 13) {
+        //                $('.login-button').trigger('click');
+        //            }
+        //        });
+        //        $('.login-button').bind('click', function () {
+        //            var user = $('#login-username').val();
+        //            var pass = $('#login-password').val();
+        //            $('#login_mask , .login-popup').fadeOut(300, function () {
+        //                $('#login-mask').remove();
+        //                $('#login-box').remove();
+        //            });
+        //            setTimeout(function () {
+        //                iob.authRunning = false;
+        //                console.log('user ' + user + ', ' + pass + ' ' + salt);
+        //                iob.conn.authenticate(user, pass, salt);
+        //            }, 500);
+        //            return true;
+        //        });
+        //    },
+        //    onCommand:    function (instance, command, data) {
+        //        var parts;
+        //        if (!instance || (instance != iob.instance && instance != 'FFFFFFFF' && instance.indexOf('*') === -1)) return false;
+        //        if (command) {
+        //            if (iob.editMode && command !== 'tts' && command !== 'playSound') return;
+        //            // external Commands
+        //            switch (command) {
+        //                case 'alert':
+        //                    parts = data.split(';');
+        //                    iob.showMessage(parts[0], parts[1], parts[2]);
+        //                    break;
+        //                case 'changedView':
+        //                    // Do nothing
+        //                    return false;
+        //                case 'changeView':
+        //                    parts = data.split('/');
+        //                    //if (parts[1]) {
+        //                    // Todo switch to desired project
+        //                    //}
+        //                    iob.changeView(parts[1] || parts[0]);
+        //                    break;
+        //                case 'refresh':
+        //                case 'reload':
+        //                    setTimeout(function () {
+        //                        window.location.reload();
+        //                    }, 1);
+        //                    break;
+        //                case 'dialog':
+        //                case 'dialogOpen':
+        //                    $('#' + data + '_dialog').dialog('open');
+        //                    break;
+        //                case 'dialogClose':
+        //                    $('#' + data + '_dialog').dialog('close');
+        //                    break;
+        //                case 'popup':
+        //                    window.open(data);
+        //                    break;
+        //                case 'playSound':
+        //                    setTimeout(function () {
+        //                        var href;
+        //                        if (data.match(/^http(s)?:\/\//)) {
+        //                            href = data;
+        //                        } else {
+        //                            href = location.protocol + '//' + location.hostname + ':' + location.port + data;
+        //                        }
+        //                        // force read from server
+        //                        href += '?' + (new Date()).getTime();
+        //
+        //                        if (typeof Audio != 'undefined') {
+        //                            var snd = new Audio(href); // buffers automatically when created
+        //                            snd.play();
+        //                        } else {
+        //                            if (!$('#external_sound').length) {
+        //                                $('body').append('<audio id="external_sound"></audio>');
+        //                            }
+        //                            $('#external_sound').attr('src', href);
+        //                            document.getElementById('external_sound').play();
+        //                        }
+        //                    }, 1);
+        //                    break;
+        //                case 'tts':
+        //                    if (typeof app !== 'undefined') {
+        //                        app.tts(data);
+        //                    }
+        //                    break;
+        //                default:
+        //                    iob.conn.logError('unknown external command ' + command);
+        //            }
+        //        }
+        //
+        //        return true;
+        //    },
+        //    onObjectChange: function(id, obj) {
+        //        if (!iob.objects || !iob.editMode) return;
+        //        if (obj) {
+        //            iob.objects[id] = obj;
+        //        } else {
+        //            if (iob.objects[id]) delete iob.objects[id];
+        //        }
+        //
+        //        if ($.fn.selectId) $.fn.selectId('objectAll', id, obj);
+        //    },
+        //    onError:      function (err) {
+        //        if (err.arg == 'iob.0.control.instance' || err.arg == 'iob.0.control.data' || err.arg == 'iob.0.control.command') {
+        //            console.warn('Cannot set ' + err.arg + ', because of insufficient permissions');
+        //        } else {
+        //            iob.showMessage(_('Cannot execute %s for %s, because of insufficient permissions', err.command, err.arg), _('Insufficient permissions'), 'alert', 600);
+        //        }
+        //    }
+        //});
 
     },
 

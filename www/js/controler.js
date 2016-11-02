@@ -59,7 +59,7 @@ angular.module('tutorialApp', [])
 
 
         } catch (err) {
-            setup_default.user_id = get_userid();
+            //setup_default.user_id = get_userid();
             localStorage.setup = JSON.stringify(setup_default);
                 $scope.setup = setup_default;
             setTimeout(function(){

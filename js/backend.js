@@ -22,6 +22,58 @@ sim = {
 };
 var sim_p;
 var mode;
+
+function addScript(group) {
+    group = group || 'script.js.common';
+    // Find new unique name
+    var newText = _('Script');
+    var idx     = 1;
+    var name    = newText + idx;
+
+    while (that.main.objects[group + '.' + name]) {
+        if (idx === '') idx = 0;
+        idx++;
+        name = newText + idx;
+    }
+    var instance = '';
+    var engineType = '';
+
+    // find first instance
+    for (var i = 0; i < that.main.instances.length; i++) {
+        if (that.main.objects[that.main.instances[i]] && that.main.objects[that.main.instances[i]] && that.main.objects[that.main.instances[i]].common.engineTypes) {
+            instance = that.main.instances[i];
+            if (typeof that.main.objects[main.instances[i]].common.engineTypes === 'string') {
+                engineType = that.main.objects[that.main.instances[i]].common.engineTypes;
+            } else {
+                engineType = that.main.objects[that.main.instances[i]].common.engineTypes[0];
+            }
+            break;
+        }
+    }
+
+    var id = group + '.' + name.replace(/[\s"']/g, '_');
+    that.main.socket.emit('setObject', id, {
+        common: {
+            name:       name,
+            engineType: engineType,
+            source:     '',
+            enabled:    false,
+            engine:     instance
+        },
+        type: 'script'
+    }, function (err) {
+        if (err) {
+            that.main.showError(err);
+            that.init(true);
+        } else {
+            setTimeout(function () {
+                that.$grid.selectId('show', id);
+                editScript(id);
+            }, 500);
+        }
+    });
+}
+
 module.exports = {
 
     debug: undefined,
@@ -51,7 +103,7 @@ module.exports = {
                 debug = new pDebug({
 
                     eventHandler: function (event) {
-                        console.log('Event: ' + event.event + " seq: " + event.seq + " Line: " + event.body.sourceLine + " Column: " + event.body.sourceColumn + " Text: " + event.body.sourceLineText);
+                        //console.log('Event: ' + event.event + " seq: " + event.seq + " Script: "+event.body.script.name + " Line: " + event.body.sourceLine + " Column: " + event.body.sourceColumn + " Text: " + event.body.sourceLineText);
 
 
                         if (event.event == "break") {
@@ -74,8 +126,15 @@ module.exports = {
                             //        }
                             //    }
                             //};
+                            if(first_break && event.body.script.name != "s_engine.js" ){
+                                console.log(event.body.script.name)
+                                debug.send({
+                                    command: 'continue',
+                                    arguments: {"stepaction": "next"}
+                                }, function (req, resp) {
+                                });
 
-                            if (!first_break) {
+                            }else if (!first_break) {
                                 var i = 0;
 
                                 function a() {
