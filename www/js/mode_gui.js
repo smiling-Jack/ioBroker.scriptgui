@@ -137,7 +137,16 @@ jQuery.extend(true, SGI, {
         SGI.make_conpanel();
         SGI.gui_rendered = true;
     },
+
     show_gui: function(){
+        SGI.hide_editor();
+        if (!SGI.gui_rendered) {
+            SGI.load_gui()
+        }
+
+
+
+
         $("#main_gui").show();
         $(".set_gui").show();
 
@@ -150,11 +159,16 @@ jQuery.extend(true, SGI, {
         }, 100);
 
         SGI.mode = "gui";
+        scope.setup.mode = "gui";
+        scope.$apply();
+        SGI.save_setup()
     },
+
     hide_gui: function(){
         $("#main_gui").hide();
         $(".set_gui").hide()
     },
+
     mbs_inst: function () {
 
         SGI.plumb_inst.inst_mbs = jsPlumb.getInstance({
@@ -834,6 +848,7 @@ jQuery.extend(true, SGI, {
 
 
     },
+
     add_input: function (opt) {
 
         var id = $($(opt).attr("$trigger")).attr("id");
@@ -1481,29 +1496,30 @@ jQuery.extend(true, SGI, {
 
     add_trigger_hmid: function (_this, type, type2) {
         var $this = _this;
-        $.id_select({
-            type: type,
-            close: function (hmid) {
-                if (hmid != null) {
-                    var _name = SGI.get_name(hmid);
-                    var nr = $($this).data("nr");
-                    scope.mbs[nr]["hmid"].push(hmid);
-                    if (scope.mbs[nr]["name"][0] == "Rechtsklick") {
-                        scope.mbs[nr]["name"][0] = _name;
-                    } else {
-                        scope.mbs[nr]["name"].push(_name);
-                    }
-                    if (type2 == "val") {
-                        SGI.add_trigger_name_val($this);
-                    } else {
-                        // singel Trigger
-                        SGI.add_trigger_name($this);
-                    }
-                    scope.$apply();
-                    SGI.plumb_inst.inst_mbs.repaintEverything()
+
+        $('#select_oid').selectId('show',{
+                common: {
+                    //custom: instance
                 }
-            }
-        });
+            },
+            function (newId, ignore, obj) {
+                var _name = obj.common.name;
+                var nr = $($this).data("nr");
+                scope.mbs[nr]["hmid"].push(newId);
+                if (scope.mbs[nr]["name"][0] == "Rechtsklick") {
+                    scope.mbs[nr]["name"][0] = _name;
+                } else {
+                    scope.mbs[nr]["name"].push(_name);
+                }
+                if (type2 == "val") {
+                    SGI.add_trigger_name_val($this);
+                } else {
+                    // singel Trigger
+                    SGI.add_trigger_name($this);
+                }
+                scope.$apply();
+                SGI.plumb_inst.inst_mbs.repaintEverything()
+            });
     },
 
     add_trigger_name: function ($this) {
@@ -1522,17 +1538,20 @@ jQuery.extend(true, SGI, {
 
         var $this = _this;
 
-        $.id_select({
-            type: "device",
-            close: function (hmid) {
 
-                if (hmid != null) {
+        $('#select_oid').selectId('show',{
+                common: {
+                    //custom: instance
+                }
+            },
+            function (newId, ignore, obj) {
+                if (newId != null) {
 
-                    scope.fbs[$this.data("nr")]["hmid"].push(hmid);
+                    scope.fbs[$this.data("nr")]["hmid"].push(newId);
                     SGI.add_filter_device_name($this)
                 }
-            }
-        });
+            });
+
 
 
     },
@@ -2618,19 +2637,30 @@ jQuery.extend(true, SGI, {
         $.id_select({
             type: "singel",
             close: function (hmid) {
-                if (hmid != null) {
 
-                    var _name = SGI.get_name(hmid);
-
-                    scope.fbs[$(opt.$trigger).data("nr")]["hmid"] = hmid;
-
-                    $(opt.$trigger).find(".div_hmid").text(_name);
-                    scope.fbs[$(opt.$trigger).data("nr")]["name"] = _name;
-
-                    SGI.plumb_inst["inst_" + $(opt.$trigger).parent().parent().attr("id")].repaintEverything();
-                }
             }
         });
+
+        $('#select_oid').selectId('show',{
+                common: {
+                    //custom: instance
+                }
+            },
+            function (newId, ignore, obj) {
+                if (newId != null) {
+                    if (newId != null) {
+
+                        var _name = obj.common.name;
+
+                        scope.fbs[$(opt.$trigger).data("nr")]["hmid"] = newId;
+
+                        $(opt.$trigger).find(".div_hmid").text(_name);
+                        scope.fbs[$(opt.$trigger).data("nr")]["name"] = _name;
+
+                        SGI.plumb_inst["inst_" + $(opt.$trigger).parent().parent().attr("id")].repaintEverything();
+                    }
+                }
+            });
 
     },
 
@@ -3009,35 +3039,243 @@ jQuery.extend(true, SGI, {
         });
     },
 
-    clear: function () {
-        SGI.plumb_inst.inst_mbs.cleanupListeners();
-//    SGI.plumb_inst.inst_mbs.reset();
-//        SGI.plumb_inst.inst_fbs.reset();
-        $("#prg_panel").children().remove();
-        SGI.mbs_n = 0;
-        SGI.fbs_n = 0;
-        $("#m_file").text("neu");
-        SGI.file_name = "";
+    load_prg: function (_data) {
+        var data = _data;
+        try {
+            if (data.version == undefined) {
 
-        PRG = {
-            struck: {
-                codebox: {},
-                trigger: [],
-                control: []
+                $.each(data.mbs, function () {
+                    this["style"] = {
+                        "left": this.left + "px",
+                        "top": this.top + "px",
+                        "width": this.width + "px",
+                        "height": this.height + "px"
+                    };
+
+                    delete this.left;
+                    delete this.top;
+                    delete this.width;
+                    delete this.height;
+
+
+                    SGI.add_mbs_element(this);
+                    if (this.counter > SGI.mbs_n) {
+                        SGI.mbs_n = this.counter
+                    }
+
+                });
+                $.each(data.fbs, function () {
+                    this["style"] = {
+                        "left": this.left + "px",
+                        "top": this.top + "px"
+                    };
+
+                    delete this.left;
+                    delete this.top;
+
+
+                    SGI.add_fbs_element(this);
+                    if (this.counter > SGI.mbs_n) {
+                        SGI.fbs_n = this.counter
+                    }
+                });
+                $.each(data.connections.mbs, function () {
+                    var source = this.pageSourceId;
+                    var target = this.pageTargetId;
+                    var c;
+                    this["connector"] = {
+                        "stub": [30, 30],
+                        "midpoint": 0.5
+                    };
+
+                    if (target.split("_")[0] == "codebox") {
+                        try {
+                            c = SGI.plumb_inst.inst_mbs.connect({
+                                uuids: [source],
+                                target: target
+
+                            });
+                            c.setConnector(["Flowchart", {
+                                stub: this.connector.stub,
+                                alwaysRespectStubs: true,
+                                midpoint: this.connector.midpoint
+                            }]);
+                            scope.con.mbs[c.id] = {
+                                pageSourceId: c.sourceId,
+                                pageTargetId: c.targetId,
+                                connector: {
+                                    stub: this.connector.stub,
+                                    midpoint: this.connector.midpoint
+                                }
+                            };
+                        } catch (err) {
+                        }
+
+
+                    } else {
+                        try {
+                            c = SGI.plumb_inst.inst_mbs.connect({uuids: [source, target]});
+
+                            c.setConnector(["Flowchart", {
+                                stub: this.connector.stub,
+                                alwaysRespectStubs: true,
+                                midpoint: this.connector.midpoint
+                            }]);
+                            scope.con.mbs[c.id] = {
+                                pageSourceId: c.sourceId,
+                                pageTargetId: c.targetId,
+                                connector: {
+                                    stub: this.connector.stub,
+                                    midpoint: this.connector.midpoint
+                                }
+                            }
+                        } catch (err) {
+                        }
+                    }
+
+                });
+                $.each(data.connections.fbs, function (index) {
+                    $.each(this, function () {
+                        this["connector"] = {
+                            "stub": [30, 30],
+                            "midpoint": 0.5
+                        };
+
+                        try {
+
+                            var source = this.pageSourceId;
+                            var target = this.pageTargetId;
+
+                            var c = SGI.plumb_inst["inst_" + index].connect({
+                                uuids: [source, target]
+
+                            });
+
+                            c.setConnector(["Flowchart", {
+                                stub: this.connector.stub,
+                                alwaysRespectStubs: true,
+                                midpoint: this.connector.midpoint
+                            }]);
+
+                            scope.con.fbs[index][c.id] = {
+                                pageSourceId: c.sourceId,
+                                pageTargetId: c.targetId,
+                                connector: {
+                                    stub: this.connector.stub,
+                                    midpoint: this.connector.midpoint
+                                }
+                            };
+                            scope.$apply()
+
+                        } catch (err) {
+
+                        }
+                    });
+                });
+
+            } else {
+                $.each(data.mbs, function () {
+                    SGI.add_mbs_element(this);
+                    if (this.counter > SGI.mbs_n) {
+                        SGI.mbs_n = this.counter
+                    }
+                });
+                $.each(data.fbs, function () {
+                    SGI.add_fbs_element(this);
+                    if (this.counter > SGI.fbs_n) {
+                        SGI.fbs_n = this.counter
+                    }
+                });
+                $.each(data.con.mbs, function () {
+                    try {
+                        var source = this.pageSourceId;
+                        var target = this.pageTargetId;
+                        var c;
+                        if (target.split("_")[0] == "codebox") {
+                            c = SGI.plumb_inst.inst_mbs.connect({
+                                uuids: [source],
+                                target: target
+
+                            });
+                            c.setConnector(["Flowchart", {
+                                stub: this.connector.stub,
+                                alwaysRespectStubs: true,
+                                midpoint: this.connector.midpoint
+                            }]);
+                            scope.con.mbs[c.id] = {
+                                pageSourceId: c.sourceId,
+                                pageTargetId: c.targetId,
+                                connector: {
+                                    stub: this.connector.stub,
+                                    midpoint: this.connector.midpoint
+                                }
+                            };
+
+                        } else {
+                            c = SGI.plumb_inst.inst_mbs.connect({uuids: [source, target]});
+
+                            c.setConnector(["Flowchart", {
+                                stub: this.connector.stub,
+                                alwaysRespectStubs: true,
+                                midpoint: this.connector.midpoint
+                            }]);
+                            scope.con.mbs[c.id] = {
+                                pageSourceId: c.sourceId,
+                                pageTargetId: c.targetId,
+                                connector: {
+                                    stub: this.connector.stub,
+                                    midpoint: this.connector.midpoint
+                                }
+                            }
+                        }
+
+                    } catch (err) {
+
+                    }
+
+                });
+                $.each(data.con.fbs, function (index) {
+                    $.each(this, function () {
+
+                        try {
+
+                            var source = this.pageSourceId;
+                            var target = this.pageTargetId;
+
+                            var c = SGI.plumb_inst["inst_" + index].connect({
+                                uuids: [source, target]
+
+                            });
+
+                            c.setConnector(["Flowchart", {
+                                stub: this.connector.stub,
+                                alwaysRespectStubs: true,
+                                midpoint: this.connector.midpoint
+                            }]);
+
+                            scope.con.fbs[index][c.id] = {
+                                pageSourceId: c.sourceId,
+                                pageTargetId: c.targetId,
+                                connector: {
+                                    stub: this.connector.stub,
+                                    midpoint: this.connector.midpoint
+                                }
+                            };
+                            scope.$apply()
+
+                        } catch (err) {
+
+                        }
+                    });
+                });
             }
-        };
-        scope.mbs = {};
-        scope.fbs = {};
-        scope.con = {
-            mbs: {},
-            fbs: {}
-        };
 
-        scope.reset_scope_watchers();
-        scope.$apply();
-        SGI.mbs_inst();
-
-        $("#sim_output").children().remove();
-        $("#sim_output").prepend("<tr><td style='width: 100px'>Script Log</td><td></td></tr>");
+            SGI.fbs_n++;
+            SGI.mbs_n++;
+        }
+        catch (err) {
+            $("#wait_div").hide();
+            SGI.error_box("load_prg  <br> " + err.stack)
+        }
     },
 });

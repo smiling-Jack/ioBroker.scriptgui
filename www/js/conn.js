@@ -166,8 +166,8 @@ var servConn = {
         connOptions = connOptions || {};
         if (!connOptions.name) connOptions.name = this.namespace;
 
-        // To start vis as local use one of:
-        // - start vis from directory with name local, e.g. c:/blbla/local/ioBroker.vis/www/index.html
+        // To start iob as local use one of:
+        // - start iob from directory with name local, e.g. c:/blbla/local/ioBroker.iob/www/index.html
         // - do not create "_socket/info.js" file in "www" directory
         // - create "_socket/info.js" file with
         //   var socketUrl = "local"; var socketSession = ""; sysLang="en";
@@ -549,7 +549,7 @@ var servConn = {
             var parts = filename.split('/');
             var adapter = parts[1];
             parts.splice(0, 2);
-            if (adapter === 'vis') {
+            if (adapter === 'iob') {
                 this._socket.emit('writeFile', adapter, parts.join('/'), data, mode ? {mode: this._defaultMode} : {}, callback);
             } else {
                 this._socket.emit('writeFile', this.namespace, filename, data, mode ? {mode: this._defaultMode} : {}, callback);
@@ -909,6 +909,7 @@ var servConn = {
                 objects[id] = obj;
                 storage.set('objects', objects);
             }
+            console.log(obj)
             return callback(null, obj);
         }.bind(this));
     },
@@ -1162,7 +1163,7 @@ var servConn = {
     },
     _detectViews:     function (projectDir, callback) {
         this.readDir('/' + this.namespace + '/' + projectDir, function (err, dirs) {
-            // find vis-views.json
+            // find iob-views.json
             for (var f = 0; f < dirs.length; f++) {
                 if (dirs[f].file === 'vis-views.json' && (!dirs[f].acl || dirs[f].acl.read)) {
                     return callback(err, {name: projectDir, readOnly: (dirs[f].acl && !dirs[f].acl.write), mode: dirs[f].acl ? dirs[f].acl.permissions : 0});

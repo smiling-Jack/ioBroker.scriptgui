@@ -27,6 +27,37 @@ jQuery.extend(true, SGI, {
 //        $("#menu").menu({position: {at: "left bottom"}});
         $("#m_neu").click(function () {
             SGI.clear();
+
+            var x = '<div id="dialog_neu" style="text-align: left ;display: flex;justify-content: space-between;}" title="New Script">' +
+                '<button id="new_gui" style="width: 100px" class="btn_new"><img src="img/cube256.png" style="height: 50px; width: 50px" alt="">GUI </button>' +
+                '<button id="new_js" style="width: 100px" class="btn_new"><img src="img/js.jpeg" style="height: 50px; width: 50px" alt="">EDITOR</button>' +
+                '<button id="new_bl" style="width: 100px" class="btn_new"><img src="img/blockly.png" style="height: 50px; width: 50px" alt="">BLOCKLY</button></div>'
+
+            $("body").append(x)
+
+            $(".btn_new").button().click(function (ev) {
+                console.log(ev.currentTarget.id )
+              if(ev.currentTarget.id == "new_gui" ){
+                  $("#dialog_neu").remove();
+                  SGI.show_gui()
+              }else
+                if(ev.currentTarget.id == "new_js" ){
+                    $("#dialog_neu").remove();
+                    SGI.show_editor()
+                }
+            });
+
+            $("#dialog_neu").dialog({
+                width: "350px",
+                dialogClass: "shortcuts",
+                modal: true,
+                close: function () {
+                    $("#dialog_neu").remove();
+                },
+                open: function () {
+                }
+            });
+
         });
         $("#m_save").click(function () {
 //            if ($("body").find(".ui-dialog:not(.quick-help)").length == 0) {
@@ -39,9 +70,131 @@ jQuery.extend(true, SGI, {
 //            }
         });
         $("#m_open").click(function () {
-//            if ($("body").find(".ui-dialog:not(.quick-help)").length == 0) {
 
-            SGI.open_local();
+            web.emit('getObjectView', 'script', 'javascript', {}, function (err, doc) {
+
+                console.log(doc)
+                var x = '<div id="dialog_open" style="text-align: left" title="Open Script">\
+                    <ol id="table_open">\
+                        <li>\
+                            <span style="display: inline-block; width: 40px"> </span>\
+                            <span style="display: inline-block; width: 340px">Name</span>\
+                            <span style="display: inline-block; width: 60px">Läuft</span>\
+                            <span style="display: inline-block; width: 80px text-align: center">Engine</span>\
+                        </li>'
+
+
+                var engine;
+                var c;
+                var img;
+
+                for (var i = 0; i < doc.rows.length; i++) {
+                    c = doc.rows[i].value.common
+
+                    if (c.engineType == "Blockly") {
+                        engine = '<img src="img/blockly.png" style="height: 30px; width: 30px" alt="">'
+                    } else if (doc.rows[i].value.common.engineType == "GUI") {
+                        engine = '<img src="img/cube32.png" style="height: 30px; width: 30px" alt="">'
+                    } else {
+                        engine = '<img src="img/js.jpeg" style="height: 30px; width: 30px" alt="">'
+                    }
+
+                    if (c.enabled) {
+                        img = '<img src="img/icon/flag-green.png" style="height: 30px; width: 30px" alt="">'
+                    } else {
+                        img = '<img src="img/icon/flag-red.png" style="height: 30px; width: 30px" alt="">'
+                    }
+
+                    x = x + '<li row="' + i + '" class="open_script_tr"><a  style="width: 30px">' + engine + '</a><a style="width: 340px;display: inline-block; margin-left: 10px;">' + doc.rows[i].id + '</a><a style="width: 60px;display: inline-block;text-align: center;">' + img + '</a><a class="open_script_a" style="width: 80px;display: inline-block;text-align: center;">' + c.engine.replace("system.adapter.javascript.", "") + '</a></li>'
+
+                }
+
+                x = x + '</ol></div>'
+
+                $("body").append(x)
+
+
+                $("#dialog_open").dialog({
+                    width: "600px",
+                    dialogClass: "shortcuts",
+                    modal: true,
+                    close: function () {
+                        $("#dialog_open").remove();
+                    },
+                    open: function () {
+
+                        $(".open_script_tr").click(function () {
+
+
+                            $(".open_script_tr, .ui-state-selected").removeClass("ui-state-hover")
+                            $(this).addClass("ui-state-hover")
+                        })
+
+                        $(".open_script_tr").dblclick(function () {
+                                c = doc.rows[$(this).attr("row")]
+                                $("#wait_div").show();
+                                console.log(c)
+
+
+                                if (c.value.common.engineType == "Blockly") {
+                                    console.log("engine not supportet")
+                                    $("#wait_div").hide();
+                                    return
+                                } else if (c.value.common.engineType == "GUI") {
+
+
+                                    if (SGI.mode == "gui") {
+                                        SGI.clear();
+
+                                    } else {
+                                        SGI.show_gui();
+                                        SGI.clear();
+                                    }
+
+                                    SGI.load_prg(c.value.native.prg);
+                                    scope.$apply();
+
+                                } else {
+                                    SGI.show_editor();
+                                    SGI.editor.setValue(c.value.common.source)
+                                    SGI.editor.navigateFileEnd()
+
+                                }
+                                SGI.file_name = c.value.common.name;
+                                $("#m_file").html(SGI.file_name)
+
+                                $("#dialog_open").remove();
+                                $("#wait_div").hide();
+                            }
+                        )
+
+
+                    }
+                });
+
+            })
+            //web.emit("getObject","script.js.blockly", function (x, obj) {
+            //    console.log(x)
+            //    console.log(obj)
+            //})
+            //
+            //
+            //
+            //
+            //    web.emit('getObjectView', 'system', 'state'/*,*/ /*{startkey: '', endkey: '\u9999'}*/, function (err, res) {
+            //        console.log(res)
+            //
+            //    });
+
+            //$('#select_oid').selectId('show', {
+            //    filter:{
+            //        _id:"javascript.0"
+            //    },
+            //
+            //    },
+            //    function (newId, ignore, obj) {
+            //        SGI.editor.insert(newId + ' /*' + obj.common.name + '*/')
+            //    });
 
 //            }
         });
@@ -68,25 +221,16 @@ jQuery.extend(true, SGI, {
         });
 
         $("#m_mode_gui").click(function () {
-            if (!SGI.gui_rendered) {
-                SGI.load_gui()
-            }
+
             SGI.show_gui();
-            SGI.hide_editor();
-            scope.setup.mode = "gui";
-            scope.$apply();
-            SGI.save_setup()
+
         });
 
         $("#m_mode_editor").click(function () {
-            if (!SGI.editor_rendered) {
-                SGI.load_editor()
-            }
             SGI.show_editor();
-            SGI.hide_gui();
-            scope.setup.mode = "editor";
-            scope.$apply();
-            SGI.save_setup()
+        });
+        $("#m_mode_Blockly").click(function () {
+            SGI.show_blockly();
         });
 
         $("#m_setup").click(function () {
@@ -748,7 +892,16 @@ jQuery.extend(true, SGI, {
             }
         );
 
+
         $("#img_set_show_oid").click(function () {
+            $('#select_oid').selectId('show', {
+                    common: {
+                        custom: "javascript.0"
+                    }
+                },
+                function (newId, ignore, obj) {
+                    SGI.editor.insert(newId + ' /*' + obj.common.name + '*/')
+                });
 
         }).hover(
             function () {
@@ -758,31 +911,31 @@ jQuery.extend(true, SGI, {
             }
         );
 
-        var script_engine_lock = false;
-        $("#img_set_script_engine").click(function () {
-            if (!script_engine_lock) {
-                try {
-
-                    SGI.socket.emit("reloadScriptEngine");
-
-
-                } catch (err) {
-                    alert("Keine Verbindung zu CCU.IO");
-                }
-
-                script_engine_lock = true;
-                $(this).stop(true, true).effect("highlight", "linear", 6000, function () {
-                    script_engine_lock = false;
-                })
-
-            }
-        }).hover(
-            function () {
-                $(this).addClass("ui-state-focus");
-            }, function () {
-                $(this).removeClass("ui-state-focus");
-            }
-        );
+        //var script_engine_lock = false;
+        //$("#img_set_script_engine").click(function () {
+        //    if (!script_engine_lock) {
+        //        try {
+        //
+        //            SGI.socket.emit("reloadScriptEngine");
+        //
+        //
+        //        } catch (err) {
+        //            alert("Keine Verbindung zu CCU.IO");
+        //        }
+        //
+        //        script_engine_lock = true;
+        //        $(this).stop(true, true).effect("highlight", "linear", 6000, function () {
+        //            script_engine_lock = false;
+        //        })
+        //
+        //    }
+        //}).hover(
+        //    function () {
+        //        $(this).addClass("ui-state-focus");
+        //    }, function () {
+        //        $(this).removeClass("ui-state-focus");
+        //    }
+        //);
 
 // Grid
         $("#img_set_grid_on").click(function () {
@@ -879,7 +1032,7 @@ jQuery.extend(true, SGI, {
 
         $('#stepSpeed').hide()
         $('#run_step').click(function (id) {
-            setTimeout(function(){
+            setTimeout(function () {
                 sim.step = $('#lba_run_step').attr("aria-pressed")
                 if (sim.step == "true") {
                     $('#stepSpeed').show()
@@ -887,10 +1040,7 @@ jQuery.extend(true, SGI, {
                     $('#stepSpeed').hide()
                 }
                 $('#lba_run_step').removeClass("ui-state-focus");
-            },0)
-
-
-
+            }, 0)
 
 
         });
@@ -927,63 +1077,61 @@ jQuery.extend(true, SGI, {
         });
 
 
-        $('#img_set_editor_deb_play').click(function(){
-            try{
+        $('#img_set_editor_deb_play').click(function () {
+            try {
                 $(".img_debug").button({disabled: true});
 
                 SGI.clear_mark();
-                    SGI.backend.emit("next",function(err) {
-                        console.log(err)
+                SGI.backend.emit("next", function (err) {
+                    console.log(err)
 
-                    });
+                });
             }
-            catch(err){
+            catch (err) {
             }
         });
 
-        $('#img_set_editor_deb_next_step').click(function(){
+        $('#img_set_editor_deb_next_step').click(function () {
             console.log("setp")
-            try{
+            try {
                 SGI.clear_mark();
                 $(".img_debug").button({disabled: true});
                 SGI.backend.emit("deb_step")
 
             }
-            catch(err){
+            catch (err) {
             }
         });
-        $('#img_set_editor_deb_into').click(function(){
-            try{
+        $('#img_set_editor_deb_into').click(function () {
+            try {
                 SGI.clear_mark();
                 $(".img_debug").button({disabled: true});
                 SGI.backend.emit("deb_into")
 
             }
-            catch(err){
+            catch (err) {
             }
         });
-        $('#img_set_editor_deb_out').click(function(){
+        $('#img_set_editor_deb_out').click(function () {
             try {
                 SGI.clear_mark();
                 $(".img_debug").button({disabled: true});
                 SGI.backend.emit("deb_out")
 
             }
-            catch(err){
+            catch (err) {
             }
         });
-        $('#img_set_editor_deb_over').click(function(){
-            try{
+        $('#img_set_editor_deb_over').click(function () {
+            try {
                 SGI.clear_mark();
                 $(".img_debug").button({disabled: true});
                 SGI.backend.emit("deb_over")
 
             }
-            catch(err){
+            catch (err) {
             }
         });
-
-
 
 
         $('.img_debug').click(function () {
@@ -1755,11 +1903,11 @@ jQuery.extend(true, SGI, {
         // todo local is dead
         //if (SGI.mode == "gui") {
         if (SGI.mode == "gui") {
-            localStorage.setItem("script_gui",JSON.stringify(SGI.make_savedata()));
+            localStorage.setItem("script_gui", JSON.stringify(SGI.make_savedata()));
 
         } else {
 
-            localStorage.setItem("script_editor",SGI.editor.getValue());
+            localStorage.setItem("script_editor", SGI.editor.getValue());
         }
         //} else {
         //    var data = SGI.editor.getValue();
@@ -1785,12 +1933,12 @@ jQuery.extend(true, SGI, {
     save_local: function () {
 
         if (SGI.mode == "gui") {
-                    localStorage.setItem("script_gui",JSON.stringify(SGI.make_savedata()));
+            localStorage.setItem("script_gui", JSON.stringify(SGI.make_savedata()));
 
-                } else {
+        } else {
 
-            localStorage.setItem("script_editor",SGI.editor.getValue());
-                }
+            localStorage.setItem("script_editor", SGI.editor.getValue());
+        }
         // todo local is dead
         //if (SGI.file_name == "") {
         //    SGI.save_as_local()
@@ -1821,10 +1969,16 @@ jQuery.extend(true, SGI, {
     open_local: function () {
         // todo local is dead
         //if (SGI.mode == "gui") {
+        if (!SGI.mode) {
+            if (scope.setup.mode == "gui") {
+                SGI.show_gui();
 
+            } else {
+                SGI.show_editor();
+            }
+        }
         if (SGI.mode == "gui") {
             SGI.clear();
-            console.log()
             SGI.load_prg(JSON.parse(localStorage.getItem("script_gui")));
 
             //$("#m_file").text(SGI.file_name);
@@ -1838,11 +1992,8 @@ jQuery.extend(true, SGI, {
         }
 
 
-
-
 //});
-},
-
+    },
 
 
 //    chooser.trigger('click');
@@ -1880,171 +2031,166 @@ jQuery.extend(true, SGI, {
 //}
 //},
 
-open_last: function () {
-    SGI.open_local();
-    // todo local is dead
-    //if (SGI.mode == "gui") {
-    //    if (scope.setup.last_prg != "") {
-    //        try {
-    //            $("#wait_div").show();
-    //            fs.readFile(scope.setup.last_prg, function (err, data) {
-    //                if (err) {
-    //                    $("#wait_div").hide();
-    //                    alert("Datei kann nicht gelesen werden")
-    //                } else {
-    //                    SGI.clear();
-    //                    SGI.load_prg(JSON.parse(data));
-    //                    SGI.prg_store = path.dirname(scope.setup.last_prg);
-    //                    SGI.file_name = path.basename(scope.setup.last_prg);
-    //                    $("#m_file").text(SGI.file_name);
-    //                    $("#wait_div").hide();
-    //                }
-    //            });
-    //        }
-    //        catch (err) {
-    //            $("#wait_div").hide();
-    //            throw err
-    //        }
-    //    }
-    //} else {
-    //    if (scope.setup.last_script != "") {
-    //        try {
-    //            $("#wait_div").show();
-    //            fs.readFile(scope.setup.last_script, function (err, data) {
-    //                if (err) {
-    //                    $("#wait_div").hide();
-    //                    alert("Datei kann nicht gelesen werden")
-    //                } else {
-    //
-    //                    SGI.editor.setValue(data.toString());
-    //                    SGI.editor.gotoLine(0);
-    //
-    //                    SGI.prg_store = path.dirname(scope.setup.last_script);
-    //                    SGI.file_name = path.basename(scope.setup.last_script);
-    //                    $("#m_file").text(SGI.file_name);
-    //                    $("#wait_div").hide();
-    //                }
-    //            });
-    //        }
-    //        catch (err) {
-    //            $("#wait_div").hide();
-    //            throw err
-    //        }
-    //    }
-    //}
+    open_last: function () {
+        SGI.open_local();
+        // todo local is dead
+        //if (SGI.mode == "gui") {
+        //    if (scope.setup.last_prg != "") {
+        //        try {
+        //            $("#wait_div").show();
+        //            fs.readFile(scope.setup.last_prg, function (err, data) {
+        //                if (err) {
+        //                    $("#wait_div").hide();
+        //                    alert("Datei kann nicht gelesen werden")
+        //                } else {
+        //                    SGI.clear();
+        //                    SGI.load_prg(JSON.parse(data));
+        //                    SGI.prg_store = path.dirname(scope.setup.last_prg);
+        //                    SGI.file_name = path.basename(scope.setup.last_prg);
+        //                    $("#m_file").text(SGI.file_name);
+        //                    $("#wait_div").hide();
+        //                }
+        //            });
+        //        }
+        //        catch (err) {
+        //            $("#wait_div").hide();
+        //            throw err
+        //        }
+        //    }
+        //} else {
+        //    if (scope.setup.last_script != "") {
+        //        try {
+        //            $("#wait_div").show();
+        //            fs.readFile(scope.setup.last_script, function (err, data) {
+        //                if (err) {
+        //                    $("#wait_div").hide();
+        //                    alert("Datei kann nicht gelesen werden")
+        //                } else {
+        //
+        //                    SGI.editor.setValue(data.toString());
+        //                    SGI.editor.gotoLine(0);
+        //
+        //                    SGI.prg_store = path.dirname(scope.setup.last_script);
+        //                    SGI.file_name = path.basename(scope.setup.last_script);
+        //                    $("#m_file").text(SGI.file_name);
+        //                    $("#wait_div").hide();
+        //                }
+        //            });
+        //        }
+        //        catch (err) {
+        //            $("#wait_div").hide();
+        //            throw err
+        //        }
+        //    }
+        //}
 
-}
-,
+    },
 
-example_ccu_io: function () {
-    $.fm({
-        lang: SGI.language,
-        path: "www/ScriptGUI/example/",
-        file_filter: ["prg"],
-        folder_filter: true,
-        mode: "open"
+    example_ccu_io: function () {
+        $.fm({
+            lang: SGI.language,
+            path: "www/ScriptGUI/example/",
+            file_filter: ["prg"],
+            folder_filter: true,
+            mode: "open"
 
-    }, function (_data) {
-        SGI.socket.emit("readJsonFile", _data.path + _data.file, function (data) {
-            SGI.clear();
-            SGI.load_prg(data);
-            SGI.file_name = _data.file;
-            $("#m_file").text(SGI.file_name);
+        }, function (_data) {
+            SGI.socket.emit("readJsonFile", _data.path + _data.file, function (data) {
+                SGI.clear();
+                SGI.load_prg(data);
+                SGI.file_name = _data.file;
+                $("#m_file").text(SGI.file_name);
+            });
         });
-    });
-}
-,
+    },
 
-save_Script: function () {
-    // todo make new
-    //if (SGI.file_name == undefined || SGI.file_name == "Neu" || SGI.file_name == "") {
-    //    alert("Bitte erst local Speichern");
-    //
-    //} else {
-    //    var script;
-    //
-    //    if (SGI.mode == "gui") {
-    //        script = Compiler.make_prg(false, false);
-    //    } else {
-    //        script = SGI.editor.getValue();
-    //
-    //    }
-    //
-    //    try {
-    //        var name = SGI.file_name.replace('.prg', '.js');
-    //        SGI.socket.emit("writeRawFile", "scripts/" + name, script);
-    //    } catch (err) {
-    //        alert("Keine Verbindung zu CCU.IO")
-    //    }
-    //}
-}
-,
+    save_Script: function () {
+        // todo make new
+        //if (SGI.file_name == undefined || SGI.file_name == "Neu" || SGI.file_name == "") {
+        //    alert("Bitte erst local Speichern");
+        //
+        //} else {
+        //    var script;
+        //
+        //    if (SGI.mode == "gui") {
+        //        script = Compiler.make_prg(false, false);
+        //    } else {
+        //        script = SGI.editor.getValue();
+        //
+        //    }
+        //
+        //    try {
+        //        var name = SGI.file_name.replace('.prg', '.js');
+        //        SGI.socket.emit("writeRawFile", "scripts/" + name, script);
+        //    } catch (err) {
+        //        alert("Keine Verbindung zu CCU.IO")
+        //    }
+        //}
+    },
 
-del_script: function () {
-    // todo make new
-    //$.fm({
-    //    lang: SGI.language,
-    //    path: "scripts/",
-    //    file_filter: ["js", "js_"],
-    //    folder_filter: true,
-    //    mode: "show"
-    //});
-}
-,
+    del_script: function () {
+        // todo make new
+        //$.fm({
+        //    lang: SGI.language,
+        //    path: "scripts/",
+        //    file_filter: ["js", "js_"],
+        //    folder_filter: true,
+        //    mode: "show"
+        //});
+    },
 
-show_Script: function (data) {
+    show_Script: function (data) {
 
-    var h = $(window).height() - 200;
-    var v = $(window).width() - 400;
+        var h = $(window).height() - 200;
+        var v = $(window).width() - 400;
 
-    $("body").append('\
+        $("body").append('\
                    <div id="dialog_code" style="text-align: left" title="Scriptvorschau">\
                    <div id="code_prev" style="width: 100%; height: 100%"></div>\
                    </div>');
-    $("#dialog_code").dialog({
-        height: h,
-        width: v,
-        resizable: true,
-        close: function () {
-            $("#dialog_code").remove();
+        $("#dialog_code").dialog({
+            height: h,
+            width: v,
+            resizable: true,
+            close: function () {
+                $("#dialog_code").remove();
+            }
+        });
+
+        var editor = ace.edit("code_prev");
+
+
+        editor.getSession().setMode("ace/mode/javascript")
+        editor.setTheme("ace/theme/monokai");
+        editor.setOptions({
+            showPrintMargin: false,
+        });
+
+        editor.$blockScrolling = Infinity;
+        editor.getSession().setUseWrapMode(true);
+
+
+        if (SGI.mode == "gui") {
+            //editor.setValue(js_beautify(data.toString(), {indent_size: 2}), -1);
+            editor.setValue(data.toString(), {indent_size: 2}, -1);
+        } else {
+            editor.setValue(SGI.editor.getValue(), -1);
         }
-    });
 
-    var editor = ace.edit("code_prev");
+        editor.setReadOnly(true)
 
+    },
 
-    editor.getSession().setMode("ace/mode/javascript")
-    editor.setTheme("ace/theme/monokai");
-    editor.setOptions({
-        showPrintMargin: false,
-    });
+    error_box: function (data) {
+        console.log(data)
+        var _data = data.split("\n").join("<br>").replace(/file:\/\/\//g, "").replace(/at HTMLDocument./g, "");
 
-    editor.$blockScrolling = Infinity;
-    editor.getSession().setUseWrapMode(true);
+        var mail = "";
+        if (scope.setup.user_mail.split("@").length > 1) {
+            mail = scope.setup.user_mail;
+        }
 
-
-    if (SGI.mode == "gui") {
-        //editor.setValue(js_beautify(data.toString(), {indent_size: 2}), -1);
-        editor.setValue(data.toString(), {indent_size: 2}, -1);
-    } else {
-        editor.setValue(SGI.editor.getValue(), -1);
-    }
-
-    editor.setReadOnly(true)
-
-}
-,
-
-error_box: function (data) {
-    console.log(data)
-    var _data = data.split("\n").join("<br>").replace(/file:\/\/\//g, "").replace(/at HTMLDocument./g, "");
-
-    var mail = "";
-    if (scope.setup.user_mail.split("@").length > 1) {
-        mail = scope.setup.user_mail;
-    }
-
-    $("body").append('\
+        $("body").append('\
                    <div id="dialog_info"  title="Info">\
                    <div class="ui-state-error">' + SGI.translate("Es ist ein Fehler aufgetreten") + '</div>\
                    <hr>\
@@ -2061,24 +2207,23 @@ error_box: function (data) {
         </div>\
         </div>');
 
-    $("#dialog_info").dialog({
-        dialogClass: "error_box",
-        maxWidth: "90%",
-        width: "auto",
-        close: function () {
+        $("#dialog_info").dialog({
+            dialogClass: "error_box",
+            maxWidth: "90%",
+            width: "auto",
+            close: function () {
+                $("#dialog_info").remove();
+            }
+        });
+        $("#btn_info_close").button().click(function () {
             $("#dialog_info").remove();
-        }
-    });
-    $("#btn_info_close").button().click(function () {
-        $("#dialog_info").remove();
-    });
+        });
 
-    $("#btn_info_send").button().click(function () {
-        SGI.server_error(_data);
-        $("#dialog_info").remove();
-    });
-}
-,
+        $("#btn_info_send").button().click(function () {
+            SGI.server_error(_data);
+            $("#dialog_info").remove();
+        });
+    },
 
 //update: function (show) {
 //    $("#dialog_update").remove();
