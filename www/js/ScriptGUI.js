@@ -15,6 +15,7 @@ var PRG = {
     }
 };
 
+var systemLang
 var SGI;
 var sim;
 SGI = {
@@ -371,6 +372,12 @@ SGI = {
             } else if ((SGI.key == 17 || SGI.key == 91 || SGI.key == 93 || event.ctrlKey == true) && SGI.mode == "gui") {
                 $("body").css({cursor: "help"});
                 SGI.key = 17;
+            } else if (SGI.key == 81 && event.altKey == true) {
+                SGI.backend.emit("next", function (err) {
+                    console.log(err)
+
+                });
+
             }
         });
 
@@ -438,7 +445,7 @@ SGI = {
     },
 
     clear: function () {
-        if(SGI.mode == "gui"){
+        if (SGI.mode == "gui") {
             SGI.plumb_inst.inst_mbs.cleanupListeners();
 //    SGI.plumb_inst.inst_mbs.reset();
 //        SGI.plumb_inst.inst_fbs.reset();
@@ -465,9 +472,9 @@ SGI = {
             scope.reset_scope_watchers();
             scope.$apply();
             SGI.mbs_inst();
-        } else if( SGI.mode == "blockly"){
+        } else if (SGI.mode == "blockly") {
 
-        }else if( SGI.mode == "editor"){
+        } else if (SGI.mode == "editor") {
             SGI.editor.setValue("")
         }
 

@@ -5,7 +5,7 @@
 var objects = {};
 var states = {};
 var web;
-var iob ={
+var iob = {
     states: {},
 };
 
@@ -19,7 +19,7 @@ jQuery.extend(true, SGI, {
     disconnect: function () {
 
         if (!SGI.socket) {
-           SGI.backend.disconnect()
+            SGI.backend.disconnect()
         }
 
         SGI.con_data = false;
@@ -47,52 +47,52 @@ jQuery.extend(true, SGI, {
     offline: function () {
 
 
-        if (scope.setup.last_con != url || scope.setup.con_type != "offline") {
-            scope.setup.last_con = url;
-            scope.setup.con_type = "offline";
-            scope.$apply();
-            SGI.save_setup()
-        }
-        $('body').css("cursor", "wait");
-        //try {
-        //
-        //
-        //    fs.readFile(scope.setup.datastore + '/ScriptGUI_Data/connections/' + url + '.json', function (err, data) {
-        //        if (!err) {
-        //            //console.log(data)
-        //            homematic = JSON.parse(data);
-        //            //console.log(homematic)
-        //            $("#img_con_backend").attr("src", "img/icon/flag-yellow.png");
-        //            $("#btn_con_offline").parent().addClass("div_img_glass_on");
-        //            $("#btn_con_online").parent().removeClass("div_img_glass_on");
-        //            SGI.con_data = true;
-        //
-        //            $("#run_step, #run_type1, #img_set_script_play ,#img_set_script_stop").button({disabled: false});
-        //        } else {
-        //            alert(err)
-        //            $("#img_con_backend").attr("src", "img/icon/flag-red.png");
-        //            $("#btn_con_offline").parent().removeClass("div_img_glass_on");
-        //            $("#btn_con_online").parent().removeClass("div_img_glass_on");
-        //            homematic = {
-        //                uiState: {"_65535": {"Value": null}},
-        //                regaIndex: {},
-        //                regaObjects: {}
-        //            };
-        //
-        //            SGI.con_data = false;
-        //            throw err
-        //        }
-        //        $('body').css("cursor", "default");
-        //    });
+        //if (scope.setup.last_con != url || scope.setup.con_type != "offline") {
+        //    scope.setup.last_con = url;
+        //    scope.setup.con_type = "offline";
+        //    scope.$apply();
+        //    SGI.save_setup()
         //}
-        //catch (err) {
-            $('body').css("cursor", "default");
-            $("#img_con_backend").attr("src", "img/icon/flag-red.png");
-            $("#btn_con_offline").parent().removeClass("div_img_glass_on");
-            $("#btn_con_online").parent().removeClass("div_img_glass_on");
-
-            SGI.con_data = false;
-            throw err
+        //$('body').css("cursor", "wait");
+        ////try {
+        ////
+        ////
+        ////    fs.readFile(scope.setup.datastore + '/ScriptGUI_Data/connections/' + url + '.json', function (err, data) {
+        ////        if (!err) {
+        ////            //console.log(data)
+        ////            homematic = JSON.parse(data);
+        ////            //console.log(homematic)
+        ////            $("#img_con_backend").attr("src", "img/icon/flag-yellow.png");
+        ////            $("#btn_con_offline").parent().addClass("div_img_glass_on");
+        ////            $("#btn_con_online").parent().removeClass("div_img_glass_on");
+        ////            SGI.con_data = true;
+        ////
+        ////            $("#run_step, #run_type1, #img_set_script_play ,#img_set_script_stop").button({disabled: false});
+        ////        } else {
+        ////            alert(err)
+        ////            $("#img_con_backend").attr("src", "img/icon/flag-red.png");
+        ////            $("#btn_con_offline").parent().removeClass("div_img_glass_on");
+        ////            $("#btn_con_online").parent().removeClass("div_img_glass_on");
+        ////            homematic = {
+        ////                uiState: {"_65535": {"Value": null}},
+        ////                regaIndex: {},
+        ////                regaObjects: {}
+        ////            };
+        ////
+        ////            SGI.con_data = false;
+        ////            throw err
+        ////        }
+        ////        $('body').css("cursor", "default");
+        ////    });
+        ////}
+        ////catch (err) {
+        //$('body').css("cursor", "default");
+        //$("#img_con_backend").attr("src", "img/icon/flag-red.png");
+        //$("#btn_con_offline").parent().removeClass("div_img_glass_on");
+        //$("#btn_con_online").parent().removeClass("div_img_glass_on");
+        //
+        //SGI.con_data = false;
+        //throw err
         //}
 
     },
@@ -234,61 +234,65 @@ jQuery.extend(true, SGI, {
 
         SGI.backend = io.connect("127.0.0.1:3000", {'force new connection': false});
         $("#img_con_backend").attr("src", "img/icon/flag-blue.png");
-       SGI.backend.on("connect", function (err) {
+        SGI.backend.on("connect", function (err) {
             console.log("connect")
             $("#img_set_script_play,#run_type1,#run_type2,#run_type3,#run_step").button({disabled: false});
             $("#img_con_backend").attr("src", "img/icon/flag-green.png");
 
-           $('window').unload(function() {
-               SGI.backend.disconnect()
-           });
+            $('window').unload(function () {
+                SGI.backend.disconnect()
+            });
 
 
         });
-       SGI.backend.on('disconnect', function () {
+        SGI.backend.on('disconnect', function () {
             SGI.offline()
         });
 
 
-           //SGI.backend.emit("next");
+        //SGI.backend.emit("next");
 
 
-       SGI.backend.on("trigger_highlight", function (baustein) {
-           sim.trigger_highlight(baustein);
-           //SGI.backend.emit("next");
-       })
-       SGI.backend.on("step_fbs_highlight", function (baustein) {
-           sim.step_fbs_highlight(baustein)
-           //SGI.backend.emit("next");
-       })
-       SGI.backend.on("step_mbs_highlight_in", function (baustein) {
-           sim.step_mbs_highlight_in(baustein)
-           //SGI.backend.emit("next");
-       })
-       SGI.backend.on("step_mbs_highlight_out", function (baustein) {
-           sim.step_mbs_highlight_out(baustein)
-           //SGI.backend.emit("next");
-       })
-       SGI.backend.on("step_mbs_highlight_reset", function (baustein) {
-           sim.step_mbs_highlight_reset(baustein)
-           //SGI.backend.emit("next");
-       })
-       SGI.backend.on("brake", function (data) {
-           console.log(data.sourceLine)
+        SGI.backend.on("trigger_highlight", function (baustein) {
+            sim.trigger_highlight(baustein);
+            //SGI.backend.emit("next");
+        })
+        SGI.backend.on("step_fbs_highlight", function (baustein) {
+            sim.step_fbs_highlight(baustein)
+            //SGI.backend.emit("next");
+        })
+        SGI.backend.on("step_mbs_highlight_in", function (baustein) {
+            sim.step_mbs_highlight_in(baustein)
+            //SGI.backend.emit("next");
+        })
+        SGI.backend.on("step_mbs_highlight_out", function (baustein) {
+            sim.step_mbs_highlight_out(baustein)
+            //SGI.backend.emit("next");
+        })
+        SGI.backend.on("step_mbs_highlight_reset", function (baustein) {
+            sim.step_mbs_highlight_reset(baustein)
+            //SGI.backend.emit("next");
+        })
+        SGI.backend.on("brake", function (data) {
+            console.log(data.sourceLine)
 
-           SGI.set_mark(data.sourceLine)
+            SGI.set_mark(data.sourceLine)
 
-           $(".img_debug").button({disabled: false});
-       })
-       SGI.backend.on("connect", function (err) {})
-       SGI.backend.on("connect", function (err) {})
-       SGI.backend.on("connect", function (err) {})
-       SGI.backend.on("connect", function (err) {})
+            $(".img_debug").button({disabled: false});
+        })
+        SGI.backend.on("connect", function (err) {
+        })
+        SGI.backend.on("connect", function (err) {
+        })
+        SGI.backend.on("connect", function (err) {
+        })
+        SGI.backend.on("connect", function (err) {
+        })
 
-       SGI.backend.on("sim_exit", function (err) {
+        SGI.backend.on("sim_exit", function (err) {
             sim_exit();
         });
-       SGI.backend.on("message", function (data) {
+        SGI.backend.on("message", function (data) {
             console.log(data)
             if (typeof data == 'string') {
                 console.log("message: " + data);
@@ -316,17 +320,27 @@ jQuery.extend(true, SGI, {
             console.log("---------- Log from backend -----------");
             console.log(data);
         })
+        SGI.backend.on("_jlog", function (data) {
+            console.log("---------- jLog from backend -----------");
+            try {
+                console.log(JSON.parse(data));
+            }catch (err){
+                console.log(err)
+                console.log(data)
+            }
+
+        })
 
         SGI.connect_iobroker();
     },
 
-    connect_iobroker: function (){
+    connect_iobroker: function () {
 
         // web ? or Local ?
         if ($.fn.selectId) {
             $('#select_oid').selectId('init', {
                 filter: {
-                    _id : "javascript"
+                    _id: "javascript"
                 },
                 noMultiselect: true,
                 connCfg: {
@@ -357,12 +371,12 @@ jQuery.extend(true, SGI, {
             });
 
             web = io.connect(socketUrl, {
-                query:                          'key=' + socketSession,
-                'reconnection limit':           10000,
-                'max reconnection attempts':    Infinity,
-                upgrade:                        typeof socketForceWebSockets !== 'undefined' ? !socketForceWebSockets : undefined,
-                rememberUpgrade:                typeof socketForceWebSockets !== 'undefined' ? socketForceWebSockets  : undefined,
-                transports:                     typeof socketForceWebSockets !== 'undefined' ? (socketForceWebSockets ? ['websocket'] : undefined) : undefined
+                query: 'key=' + socketSession,
+                'reconnection limit': 10000,
+                'max reconnection attempts': Infinity,
+                upgrade: typeof socketForceWebSockets !== 'undefined' ? !socketForceWebSockets : undefined,
+                rememberUpgrade: typeof socketForceWebSockets !== 'undefined' ? socketForceWebSockets : undefined,
+                transports: typeof socketForceWebSockets !== 'undefined' ? (socketForceWebSockets ? ['websocket'] : undefined) : undefined
             });
 
             web.on('connect', function () {
@@ -374,11 +388,6 @@ jQuery.extend(true, SGI, {
                 $("#img_con_web").attr("src", "img/icon/flag-red.png");
             });
         }
-
-
-
-
-
 
 
         //iob.conn = servConn;

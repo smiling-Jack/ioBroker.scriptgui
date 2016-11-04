@@ -30,9 +30,10 @@ angular.module('tutorialApp', [])
         try {
 
                     var load = JSON.parse(localStorage.setup.split("}")[0] + "}");
+
                     $scope.setup = {
                         "mode" : load.mode || setup_default.mode,
-                        "user_id": load.user_id || get_userid(),
+                        "user_id": load.user_id || "",
                         "lang": load.lang || setup_default.lang,
                         "theme": load.theme || setup_default.theme,
                         "snap_grid": load.snap_grid || setup_default.snap_grid,
@@ -53,6 +54,7 @@ angular.module('tutorialApp', [])
                         "toolbox": load.toolbox || setup_default.toolbox,
                     };
             setTimeout(function(){
+
                 angular_init()
             },0);
 
@@ -60,7 +62,7 @@ angular.module('tutorialApp', [])
 
         } catch (err) {
             //setup_default.user_id = get_userid();
-            localStorage.setup = JSON.stringify(setup_default);
+            //localStorage.setup = JSON.stringify(setup_default);
                 $scope.setup = setup_default;
             setTimeout(function(){
                 angular_init()
@@ -155,7 +157,7 @@ angular.module('tutorialApp', [])
             $scope.$watch("setup.last_prg", function (newValue, oldValue) {
 
                 if (SGI.language && newValue != oldValue) {
-                    SGI.save_setup()
+                    //SGI.save_setup()
                 }
             });
 //-------------------------------------------------------------------------------------------------

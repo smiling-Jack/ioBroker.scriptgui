@@ -2,15 +2,21 @@
  * Created by Schorling on 07.10.2016.
  */
 
+var web;
+function l(data) {
+    web.emit("_log", data);
+};
 
-
+function jl(data){
+    web.emit("_jlog", data);
+};
 var io = require('socket.io')();
 var path = require('path');
 var fs = require('fs');
 
 
 var cp = require('child_process');
-var pDebug = require('../js/pDebug.js').pDebug;
+
 var debug;
 sim = {
     run_type: "sim",
@@ -23,56 +29,147 @@ sim = {
 var sim_p;
 var mode;
 
-function addScript(group) {
-    group = group || 'script.js.common';
-    // Find new unique name
-    var newText = _('Script');
-    var idx     = 1;
-    var name    = newText + idx;
+var pDebug = function(obj) {
+    this.port = obj && obj.port || 5858;
+    this.host = obj && obj.host || 'localhost';
+    this.seq  = 0;
+    this.outstandingRequests = {};
+    this.eventHandler = obj && obj.eventHandler;
+};
 
-    while (that.main.objects[group + '.' + name]) {
-        if (idx === '') idx = 0;
-        idx++;
-        name = newText + idx;
+
+pDebug.prototype = {
+    connect: function(callback) {
+
+        var net             = require('net');
+        var  inHeader      = true;
+        var  body          = '';
+        var  currentLength = 0;
+        var  _this         = this;
+
+
+        this.client = net.connect(this.port, this.host, callback);
+
+
+        this.client.on('data', function(data0) {
+
+            var data1 = data0.toString().split('Content-Length:')
+
+            data1.forEach(function(data){
+                if(data == "") return;
+
+                data = 'Content-Length:'+data;
+
+
+                var lines = data.toString().replace('"success":true,"running":true}', '"success":true,"running":true}\r\n').split('\r\n');
+                var response;
+                var requestSeq;
+                var req;
+
+
+                lines.forEach(function (line) {
+                    var vals;
+
+                    try {
+                        response = JSON.parse(line);
+                        //{
+                        //    seq: 8,
+                        //    type: 'event',
+                        //    event: 'break',
+                        //    body: {
+                        //        invocationText: '[anonymous](//@ sourceURL=s_engine\nvar a = 0\n\nfor (var i = 0; i < 10; i++){\n debugger;\n log(... (length: 1111))',
+                        //        sourceLine: 4,
+                        //        sourceColumn: 1,
+                        //        sourceLineText: ' debugger;',
+                        //        script: {
+                        //            id: 103,
+                        //            name: 's_engine',
+                        //            lineOffset: 0,
+                        //            columnOffset: 0,
+                        //            lineCount: 45
+                        //        }
+                        //    }
+                        //};
+
+
+                        if (response.type == "response") {
+                            var requestSeq = response.request_seq;
+
+                            if (_this.outstandingRequests[requestSeq]) {
+                                var cb = _this.outstandingRequests[requestSeq];
+                                if (cb) {
+                                    cb.call();
+                                }
+                                delete _this.outstandingRequests[requestSeq];
+                            }
+                        } else {
+                            _this.eventHandler.call(_this, response);
+                        }
+
+
+
+
+
+                    } catch (err) {
+
+                    }
+
+
+                });
+
+
+                //if (body.length === currentLength) {
+                //    inHeader = true;
+                //    if (body) {
+                //        response = JSON.parse(body);
+                //        l(response)
+                //        requestSeq = response.request_seq;
+                //        if (_this.outstandingRequests[requestSeq]) {
+                //            req = _this.outstandingRequests[requestSeq];
+                //            if (req.callback) {
+                //                req.callback.call(req.thisp || _this, req, response);
+                //            }
+                //            delete _this.outstandingRequests[requestSeq];
+                //        } else {
+                //            if (response.type === 'event' && _this.eventHandler) {
+                //                _this.eventHandler.call(_this, response);
+                //            } else if (response.type !== 'event') {
+                //                console.log('unknown/unexpected message from server!');
+                //                console.log(response);
+                //            } else {
+                //                // an event w/no event listener - eat it
+                //            }
+                //        }
+                //        body = '';
+                //    }
+                //}
+            });
+        });
+
+
+        this.client.on('end', function() {
+            console.log('client disconnected');
+        });
     }
-    var instance = '';
-    var engineType = '';
-
-    // find first instance
-    for (var i = 0; i < that.main.instances.length; i++) {
-        if (that.main.objects[that.main.instances[i]] && that.main.objects[that.main.instances[i]] && that.main.objects[that.main.instances[i]].common.engineTypes) {
-            instance = that.main.instances[i];
-            if (typeof that.main.objects[main.instances[i]].common.engineTypes === 'string') {
-                engineType = that.main.objects[that.main.instances[i]].common.engineTypes;
-            } else {
-                engineType = that.main.objects[that.main.instances[i]].common.engineTypes[0];
-            }
-            break;
-        }
+    , disconnect: function() {
+        this.client.end();
     }
+    , send: function(obj, callback, thisp) {
+        var str
+            , cL = "Content-Length:"
+            ;
 
-    var id = group + '.' + name.replace(/[\s"']/g, '_');
-    that.main.socket.emit('setObject', id, {
-        common: {
-            name:       name,
-            engineType: engineType,
-            source:     '',
-            enabled:    false,
-            engine:     instance
-        },
-        type: 'script'
-    }, function (err) {
-        if (err) {
-            that.main.showError(err);
-            that.init(true);
-        } else {
-            setTimeout(function () {
-                that.$grid.selectId('show', id);
-                editScript(id);
-            }, 500);
-        }
-    });
-}
+        obj.seq = ++this.seq;
+        obj.type = 'request';
+
+        str = JSON.stringify(obj);
+        this.client.write(cL + str.length + "\r\n\r\n" + str);
+
+        this.outstandingRequests[this.seq] = callback;
+
+    }
+};
+
 
 module.exports = {
 
@@ -82,11 +179,10 @@ module.exports = {
 
     intio: function () {
         io.listen(3000);
-        io.on('connection', function (web) {
+        io.on('connection', function (w) {
+            web = w;
             console.log("connect");
-            function l(data){
-                web.emit("_log", data);
-            };
+
             web.on("start", function (script) {
                 //console.log(script);
                 mode = script[2];
@@ -94,20 +190,18 @@ module.exports = {
                 console.log("Runtype: " + script[1] + " Mode: " + script[2] + " Script: " + script[0]);
 
                 sim.stepSpeed = script[2] + 100;
-                sim_p = cp.fork(__dirname +'/engine/sim_process.js', [script[0], script[1]], {execArgv: ['--debug-brk']});
+                sim_p = cp.fork(__dirname + '/engine/sim_process.js', [script[0], script[1]], {execArgv: ['--debug-brk']});
 
 
                 sim.split_script = script.toString().split("\n");
-
                 var first_break = false;
                 debug = new pDebug({
 
                     eventHandler: function (event) {
-                        //console.log('Event: ' + event.event + " seq: " + event.seq + " Script: "+event.body.script.name + " Line: " + event.body.sourceLine + " Column: " + event.body.sourceColumn + " Text: " + event.body.sourceLineText);
+                        console.log('Event: ' + event.event + " seq: " + event.seq + " Script: "+event.body.script.name + " Line: " + event.body.sourceLine + " Column: " + event.body.sourceColumn + " Text: " + event.body.sourceLineText);
 
 
                         if (event.event == "break") {
-                            //console.log(event)
                             //{
                             //    seq: 8,
                             //    type: 'event',
@@ -126,17 +220,9 @@ module.exports = {
                             //        }
                             //    }
                             //};
-                            if(first_break && event.body.script.name != "s_engine.js" ){
-                                console.log(event.body.script.name)
-                                debug.send({
-                                    command: 'continue',
-                                    arguments: {"stepaction": "next"}
-                                }, function (req, resp) {
-                                });
 
-                            }else if (!first_break) {
+                            if (!first_break) {
                                 var i = 0;
-
                                 function a() {
                                     if (i < script[3].length) {
                                         if (script[3][i]) {
@@ -148,28 +234,38 @@ module.exports = {
                                                     "line": i,
                                                     "column": 0,
                                                 }
-                                            }, function (req, resp) {
-                                                console.log(resp)
+                                            }, function () {
+
                                                 i++;
                                                 a()
                                             });
 
                                         } else {
                                             i++;
+
                                             a()
                                         }
 
                                     } else {
-                                        debug.send({command: 'continue'}, function (req, resp) {
-                                            first_break = true;
+                                        first_break = true;
+                                        debug.send({command: 'continue'}, function () {
+                                 
                                         });
                                     }
                                 }
 
-                                a();
+                                if (script[3]) {
+                                    a();
+                                } else {
+                                    first_break = true;
+                                    debug.send({command: 'continue'}, function () {
+
+                                    });
+                                }
+
                             } else {
                                 if (mode == "gui") {
-                                    var debug_info = sim.split_script[event.body.sourceLine - 2].split("//")[1];
+                                    var debug_info = sim.split_script[event.body.sourceLine - 1].split("//")[1];
                                     var step = debug_info.split("--")[0];
                                     var baustein = debug_info.split("--")[1];
                                     if (step == "trigger_highlight") {
@@ -191,11 +287,10 @@ module.exports = {
                                 } else {
                                     web.emit("brake", event.body);
                                     debug.send({
-                                        "command":"scope",
-                                        "arguments" : {number: 1}
-                                    }, function (req, resp) {
-                                        l(req);
-                                        l(resp);
+                                        "command": "scope",
+                                        "arguments": {number: 1}
+                                    }, function () {
+                          
                                     });
 
 
@@ -214,7 +309,9 @@ module.exports = {
 
                     console.log("Debugger connect")
 
-                    debug.send({command: 'continue'}, function (req, resp) {});
+                    debug.send({command: 'continue'}, function () {
+                 
+                    });
 
                     sim_p.on('close', function (code, signal) {
                         console.log('close ' + code + "   " + signal);
@@ -266,7 +363,8 @@ module.exports = {
 
                 web.on("next", function () {
                     //console.log("next")
-                    debug.send({command: 'continue'}, function (req, resp) {
+                    debug.send({command: 'continue'}, function () {
+      
                     });
                 });
 
@@ -275,7 +373,8 @@ module.exports = {
                     debug.send({
                         command: 'continue',
                         arguments: {"stepaction": "next"}
-                    }, function (req, resp) {
+                    }, function () {
+     
                     });
                 });
 

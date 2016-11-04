@@ -44,7 +44,7 @@ jQuery.extend(true, SGI, {
                 $("#toolbox_" + val).show();
                 scope.setup.toolbox = val;
                 scope.$apply();
-                SGI.save_setup();
+                //SGI.save_setup();
                 $("#toolbox_select ~ span").removeClass("ui-state-focus")
             }
         });
@@ -161,7 +161,7 @@ jQuery.extend(true, SGI, {
         SGI.mode = "gui";
         scope.setup.mode = "gui";
         scope.$apply();
-        SGI.save_setup()
+        //SGI.save_setup()
     },
 
     hide_gui: function(){
@@ -3279,3 +3279,9 @@ jQuery.extend(true, SGI, {
         }
     },
 });
+var main = {
+    a: "x",
+    initSelectId : function(er){
+        console.log("x")
+    },
+};

@@ -276,12 +276,11 @@ console.log("simout")
             effect: "highlight",
             complete: function () {
                 $("*").finish();
-
             }
         });
         //sim_p.send(["exit"]);
         $("body").css("cursor","default");
-            SGI.clear_mark();
+            //SGI.clear_mark();
         SGI.backend.emit("kill")
         }
     },

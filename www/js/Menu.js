@@ -1970,12 +1970,13 @@ jQuery.extend(true, SGI, {
         // todo local is dead
         //if (SGI.mode == "gui") {
         if (!SGI.mode) {
-            if (scope.setup.mode == "gui") {
+            SGI.mode = "gui"
+            //if (scope.setup.mode == "gui") {
                 SGI.show_gui();
 
-            } else {
-                SGI.show_editor();
-            }
+            //} else {
+                //SGI.show_editor();
+            //}
         }
         if (SGI.mode == "gui") {
             SGI.clear();

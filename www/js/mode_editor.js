@@ -103,7 +103,7 @@ jQuery.extend(true, SGI, {
         SGI.mode = "editor";
         scope.setup.mode = "editor";
         scope.$apply();
-        SGI.save_setup()
+        //SGI.save_setup()
 
     },
     hide_editor: function () {
