@@ -144,11 +144,14 @@ jQuery.extend(true, SGI, {
             SGI.load_gui()
         }
 
+        $(".main").css({height: 'calc(100% - ' + (61 + $('#sim_log').height())+ 'px)'});
+        $(".main").css({width: 'calc(100% - ' + (2 + $('#right_panel').width())+ 'px)'});
 
 
 
         $("#main_gui").show();
         $(".set_gui").show();
+
 
         // slider XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         $(".prg_body").scrollTop(1000 - ($(".prg_body").height() / 2));
@@ -3279,9 +3282,3 @@ jQuery.extend(true, SGI, {
         }
     },
 });
-var main = {
-    a: "x",
-    initSelectId : function(er){
-        console.log("x")
-    },
-};

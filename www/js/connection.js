@@ -324,7 +324,7 @@ jQuery.extend(true, SGI, {
             console.log("---------- jLog from backend -----------");
             try {
                 console.log(JSON.parse(data));
-            }catch (err){
+            } catch (err) {
                 console.log(err)
                 console.log(data)
             }
@@ -382,6 +382,270 @@ jQuery.extend(true, SGI, {
             web.on('connect', function () {
                 this.emit('name', 'Scriptgui');
                 $("#img_con_web").attr("src", "img/icon/flag-green.png");
+
+
+                web.emit("getObjects", function (err, data) {
+
+                    main.objects = data
+
+                    web.emit('getObjectView', 'script', 'javascript', {}, function (err, doc) {
+
+                        console.log(doc)
+                        // assemble global script
+                        for (var g = 0; g < doc.rows.length; g++) {
+                            main.objects[doc.rows[g].value._id] = doc.rows[g].value;
+                        }
+
+
+                        console.log(main.objects)
+                        $('#grid-scripts').selectId('init', {
+                            objects: main.objects,
+                            noDialog: true,
+                            texts: {
+                                select: ('Select'),
+                                cancel: ('Cancel'),
+                                all: ('All'),
+                                id: ('Scripts'),
+                                name: ('Name'),
+                                role: ('Role'),
+                                room: ('Room'),
+                                value: ('Value'),
+                                type: ('Type'),
+                                selectid: ('Select ID'),
+                                from: ('From'),
+                                lc: ('Last changed'),
+                                ts: ('Time stamp'),
+                                wait: ('Processing...'),
+                                ack: ('Acknowledged'),
+                                edit: ('Edit'),
+                                ok: ('Ok'),
+                                enum: ('Members')
+                            },
+                            noCopyToClipboard: true,
+                            root: 'script.js.',
+                            useNameAsId: true,
+                            noColumnResize: true,
+                            firstMinWidth: '*',
+                            columns: [
+                                {
+                                    name: 'instance',
+                                    data: function (id, name) {
+
+                                        return data[id] && data[id].common && data[id].common.engine ? data[id].common.engine.substring('system.adapter.javascript.'.length) : '';
+                                    },
+                                    title: function (id, name) {
+                                        return data[id] && data[id].common && data[id].common.engine ? ('Instance') + ' ' + data[id].common.engine : '';
+                                    },
+                                },
+                                {
+                                    name: 'x',
+                                    data: function (id, name) {
+                                        if (data[id]) {
+                                            if (data[id].common.engineType == "Blockly") {
+                                                return '<img src="img/blockly.png" style="height: 18px; width: 18px" alt="">'
+                                            } else if (data[id].common.engineType == "GUI") {
+                                                return '<img src="img/cube32.png" style="height: 18px; width: 18px" alt="">'
+                                            } else {
+                                                return '<img src="img/js.jpeg" style="height: 18px; width: 18px" alt="">'
+                                            }
+                                        }
+
+                                        else {
+                                            return ""
+                                        }
+                                    },
+                                    title: function (id, name) {
+                                        return data[id] && data[id].common && data[id].common.engine ? ('Instance') + ' ' + data[id].common.engine : '';
+                                    },
+                                },
+                                'button'
+                            ],
+                            widths: ['30px', '30px', '150px'],
+                            buttons: [
+                                {
+                                    text: false,
+                                    icons: {
+                                        primary: 'ui-icon-play'
+                                    },
+                                    click: function (id) {
+                                        if (this.length == 1) this.button('disable');
+                                        // toggle state
+                                        that.main.socket.emit('extendObject', id, {
+                                            common: {
+                                                enabled: !(data[id] && data[id].common && data[id].common.enabled)
+                                            }
+                                        }, function (err) {
+                                            if (err) {
+                                                that.main.showError(err);
+                                                that.init(true);
+                                            }
+                                        });
+                                    },
+                                    match: function (id) {
+                                        if (data[id] && data[id].type === 'script') {
+                                            if (data[id] && data[id].common && data[id].common.enabled) {
+                                                this.button('option', 'icons', {
+                                                    primary: 'ui-icon-pause'
+                                                }).attr('title', ('Activated. Click to stop.')).css({'background-color': 'lightgreen'});
+                                            } else {
+                                                this.button('option', 'icons', {
+                                                    primary: 'ui-icon-play'
+                                                }).attr('title', ('Deactivated. Click to start.')).css({'background-color': '#FF9999'});
+                                            }
+                                        } else {
+                                            this.hide();
+                                        }
+                                    },
+                                    width: 26,
+                                    height: 20
+                                },
+                                {
+                                    text: false,
+                                    icons: {
+                                        primary: 'ui-icon-trash'
+                                    },
+                                    click: function (id) {
+                                        if (!data[id] || data[id].type !== 'script') {
+                                            deleteId(id);
+                                        } else {
+                                            that.main.confirmMessage(('Are you sure to delete script %s?', data[id].common.name), null, 'help', function (result) {
+                                                if (result) that.main.socket.emit('delObject', id);
+                                            });
+                                        }
+                                    },
+                                    match: function (id) {
+                                        if (!main.objects[id] || !main.objects[id].common || main.objects[id].common.nondeletable) this.hide();
+                                    },
+                                    width: 26,
+                                    height: 20
+                                },
+                                {
+                                    text: false,
+                                    icons: {
+                                        primary: 'ui-icon-copy'
+                                    },
+                                    click: function (id) {
+                                        that.main.socket.emit('getObject', id, function (err, obj) {
+                                            if (err) {
+                                                that.main.showError(err);
+                                                return;
+                                            }
+                                            // find new name
+                                            var i = 0;
+                                            //build name
+                                            var newId;
+                                            do {
+                                                i++;
+                                                if (obj._id.match(/\(\d+\)/)) {
+                                                    newId = obj._id.replace(/\(\d+\)/, '(' + i + ')');
+                                                } else {
+                                                    newId = obj._id + '(' + i + ')';
+                                                }
+                                            } while (that.list.indexOf(newId) != -1);
+
+                                            obj._id = newId;
+                                            that.main.socket.emit('setObject', newId, obj, function (err, obj) {
+                                                if (err) {
+                                                    that.main.showError(err);
+                                                    return;
+                                                }
+                                            });
+                                        });
+                                    },
+                                    match: function (id) {
+                                        if (!data[id] || data[id].type !== 'script') this.hide();
+                                    },
+                                    width: 26,
+                                    height: 20
+                                },
+
+                            ],
+                            panelButtons: [
+                                {
+                                    text: false,
+                                    title: 'New script',
+                                    icons: {
+                                        primary: 'ui-icon-document'
+                                    },
+                                    click: function () {
+                                        var group = that.currentId || 'script.js';
+                                        if (data[group] && data[group].type === 'script') group = getGroup(group);
+
+                                        addScript(group);
+                                    }
+                                },
+                                {
+                                    text: false,
+                                    title: 'New group',
+                                    icons: {
+                                        primary: 'ui-icon-circle-plus'
+                                    },
+                                    click: function () {
+                                        addScriptInGroup(that.currentId);
+                                    }
+                                },
+                                {
+                                    text: false,
+                                    title: 'Export',
+                                    icons: {
+                                        primary: 'ui-icon-arrowthickstop-1-s'
+                                    },
+                                    click: function () {
+                                        exportScripts();
+                                    }
+                                },
+                                {
+                                    text: false,
+                                    title: 'Import',
+                                    icons: {
+                                        primary: 'ui-icon-arrowthickstop-1-n'
+                                    },
+                                    click: function () {
+                                        importScripts();
+                                    }
+                                }
+                            ],
+                            onChange: function (id, oldId) {
+                                console.log(id)
+                                if (id !== oldId) {
+                                    SGI.open(id)
+                                }
+                            },
+                            quickEdit: [{
+                                name: 'instance',
+                                options: function (id, name) {
+                                    var ins = {};
+                                    if (data[id].type !== 'script') {
+                                        return false;
+                                    }
+                                    for (var i = 0; i < main.instances.length; i++) {
+                                        if (main.instances[i].substring(0, 'system.adapter.javascript.'.length) === 'system.adapter.javascript.') {
+                                            var inst = main.instances[i].substring('system.adapter.javascript.'.length);
+                                            ins[inst] = inst;
+                                        }
+                                    }
+                                    return ins;
+                                }
+                            }],
+                            quickEditCallback: function (id, attr, newValue, oldValue) {
+                                main.socket.emit('getObject', id, function (err, _obj) {
+                                    if (err) return that.main.showError(err);
+
+                                    _obj.common.engine = 'system.adapter.javascript.' + newValue;
+                                    main.socket.emit('setObject', _obj._id, _obj, function (err) {
+                                        if (err) that.main.showError(err);
+                                    });
+                                });
+                            }
+                        }).selectId('show');
+
+
+                        $("#1-div > div:nth-child(2)").addClass("script_list")
+                    })
+
+                });
+
+
             });
 
             web.on('disconnect', function () {
@@ -402,7 +666,7 @@ jQuery.extend(true, SGI, {
         //                iob.conn.getVersion(function (version) {
         //                    if (version) {
         //                        if (compareVersion(version, iob.requiredServerVersion)) {
-        //                            iob.showMessage(_('Warning: requires Server version %s - found Server version %s - please update Server.',  iob.requiredServerVersion, version));
+        //                            iob.showMessage(('Warning: requires Server version %s - found Server version %s - please update Server.',  iob.requiredServerVersion, version));
         //                        }
         //                    }
         //                    //else {
@@ -468,7 +732,7 @@ jQuery.extend(true, SGI, {
         //                        // If metaIndex required, load it
         //                        //if (iob.editMode) {
         //                        //    /* socket.io */
-        //                        //    if (iob.isFirstTime) iob.showWaitScreen(true, _('Loading data objects...'), null, 20);
+        //                        //    if (iob.isFirstTime) iob.showWaitScreen(true, ('Loading data objects...'), null, 20);
         //
         //                            // Read all data objects from server
         //                            iob.conn.getObjects(function (err, data) {
@@ -522,21 +786,21 @@ jQuery.extend(true, SGI, {
         //            }
         //            users += '</select>';
         //        } else {
-        //            users = '<input id="login-username" value="" type="text" autocomplete="on" class="login-input-field" placeholder="' + _('User name') + '">';
+        //            users = '<input id="login-username" value="" type="text" autocomplete="on" class="login-input-field" placeholder="' + ('User name') + '">';
         //        }
         //
         //        var text = '<div id="login-box" class="login-popup" style="display:none">' +
         //            '<div class="login-message">' + message + '</div>' +
         //            '<div class="login-input-field">' +
         //            '<label class="username">' +
-        //            '<span class="_">' + _('User name') + '</span>' +
+        //            '<span class="_">' + ('User name') + '</span>' +
         //            users +
         //            '</label>' +
         //            '<label class="password">' +
-        //            '<span class="_">' + _('Password') + '</span>' +
-        //            '<input id="login-password" value="" type="password" class="login-input-field" placeholder="' + _('Password') + '">' +
+        //            '<span class="_">' + ('Password') + '</span>' +
+        //            '<input id="login-password" value="" type="password" class="login-input-field" placeholder="' + ('Password') + '">' +
         //            '</label>' +
-        //            '<button class="login-button" type="button"  class="_">' + _('Sign in') + '</button>' +
+        //            '<button class="login-button" type="button"  class="_">' + ('Sign in') + '</button>' +
         //            '</div>' +
         //            '</div>';
         //
@@ -667,7 +931,7 @@ jQuery.extend(true, SGI, {
         //        if (err.arg == 'iob.0.control.instance' || err.arg == 'iob.0.control.data' || err.arg == 'iob.0.control.command') {
         //            console.warn('Cannot set ' + err.arg + ', because of insufficient permissions');
         //        } else {
-        //            iob.showMessage(_('Cannot execute %s for %s, because of insufficient permissions', err.command, err.arg), _('Insufficient permissions'), 'alert', 600);
+        //            iob.showMessage(('Cannot execute %s for %s, because of insufficient permissions', err.command, err.arg), ('Insufficient permissions'), 'alert', 600);
         //        }
         //    }
         //});

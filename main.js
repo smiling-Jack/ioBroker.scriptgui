@@ -11,7 +11,6 @@ function init (){
    adapter.getForeignObject('*', function (err, obj) {
        main.objects = obj;
    });
-    main.instances = adapter.getInstances();
     adapter.subscribeStates('*');
     back.intio();
 }

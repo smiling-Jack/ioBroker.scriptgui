@@ -18,6 +18,18 @@ var PRG = {
 var systemLang
 var SGI;
 var sim;
+var engines;
+var scripts;
+
+var main = {
+    objects:        {},
+    states:         {},
+    currentHost:    '',
+    instances:      [],
+    objectsLoaded:  false,
+    waitForRestart: false,
+    selectId:       null
+}
 SGI = {
 
     dev: false,
@@ -86,6 +98,29 @@ SGI = {
     },
 
     Setup: function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         //SGI.dev = true;
 
@@ -208,10 +243,10 @@ SGI = {
                         height: "10px",
                         "min-height": "10px"
                     });
-                    $(".main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
+                    $(".main ,#right_panel").css({height: 'calc(100% - ' + (61 + 10) + 'px)'});
                 } else {
                     $("#sim_log").css({height: "" + log_h + "px"});
-                    $(".main").css({height: 'calc(100% - ' + (58 + log_h) + 'px)'});
+                    $(".main ,#right_panel ").css({height: 'calc(100% - ' + (61 + log_h) + 'px)'});
                 }
             })
 
@@ -226,7 +261,7 @@ SGI = {
             .drag(function (ev, dd) {
                 if (start_h - dd.deltaY < 130) {
                     $("#sim_log").css({height: "130px"});
-                    $(".main").css({height: 'calc(100% - ' + (58 + 130) + 'px)'});
+                    $(".main,#right_panel").css({height: 'calc(100% - ' + (58 + 130) + 'px)'});
                 } else {
                     $("#sim_log").css({height: start_h - dd.deltaY + "px"});
                     $(".main").css({height: 'calc(100% - ' + (58 + start_h - dd.deltaY) + 'px)'});
@@ -239,8 +274,33 @@ SGI = {
                 height: "10px",
                 "min-height": "10px"
             });
-            $(".main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
+            $(".main #right_panel").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
         }
+
+
+
+        $("#right_panel_head")
+            .hover(
+                function () {
+                    $(this).addClass("ui-state-focus");
+                }, function () {
+                    $(this).removeClass("ui-state-focus");
+                })
+            .dblclick(function () {
+                $(this).removeClass("ui-state-focus");
+                if ($("#right_panel").width() > 10) {
+                    $("#right_panel").css({
+                        width: "10px",
+                    });
+                    $(".main").css({width: 'calc(100% - 10px)'});
+                } else {
+                    $("#right_panel").css({
+                        width: "400px" });
+                    $('.main ').css({width: 'calc(100% - 400px)'});
+
+                }
+            })
+
 
 
         //if (scope.setup.mode == "gui") {
@@ -553,6 +613,48 @@ SGI = {
             return cb("undefined")
         }
     },
+
+    open:function(id){
+        var c = main.objects[id]
+        $("#wait_div").show();
+        console.log(c)
+
+        if(c){
+            if (c.common.engineType == "Blockly") {
+                console.log("engine not supportet")
+                $("#wait_div").hide();
+                return
+            } else if (c.common.engineType == "GUI") {
+
+
+                if (SGI.mode == "gui") {
+                    SGI.clear();
+
+                } else {
+                    SGI.show_gui();
+                    SGI.clear();
+                }
+
+                SGI.load_prg(c.native.prg);
+                scope.$apply();
+
+            } else {
+                SGI.show_editor();
+                SGI.editor.setValue(c.common.source)
+                SGI.editor.navigateFileEnd()
+
+            }
+            SGI.file_name = c.common.name;
+            $("#m_file").html(SGI.file_name)
+        }
+
+
+
+
+
+
+        $("#wait_div").hide();
+    }
 
 };
 

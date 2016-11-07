@@ -96,10 +96,15 @@ jQuery.extend(true, SGI, {
         }
 
         SGI.hide_gui();
-
+        $(".main").css({height: 'calc(100% - ' + (61 + $('#sim_log').height())+ 'px)'});
+        $(".main").css({width: 'calc(100% - ' + (2 + $('#right_panel').width())+ 'px)'});
 
         $("#main_editor").show();
         $(".set_editor").show();
+
+
+
+
         SGI.mode = "editor";
         scope.setup.mode = "editor";
         scope.$apply();

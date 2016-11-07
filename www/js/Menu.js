@@ -131,40 +131,7 @@ jQuery.extend(true, SGI, {
                         })
 
                         $(".open_script_tr").dblclick(function () {
-                                c = doc.rows[$(this).attr("row")]
-                                $("#wait_div").show();
-                                console.log(c)
 
-
-                                if (c.value.common.engineType == "Blockly") {
-                                    console.log("engine not supportet")
-                                    $("#wait_div").hide();
-                                    return
-                                } else if (c.value.common.engineType == "GUI") {
-
-
-                                    if (SGI.mode == "gui") {
-                                        SGI.clear();
-
-                                    } else {
-                                        SGI.show_gui();
-                                        SGI.clear();
-                                    }
-
-                                    SGI.load_prg(c.value.native.prg);
-                                    scope.$apply();
-
-                                } else {
-                                    SGI.show_editor();
-                                    SGI.editor.setValue(c.value.common.source)
-                                    SGI.editor.navigateFileEnd()
-
-                                }
-                                SGI.file_name = c.value.common.name;
-                                $("#m_file").html(SGI.file_name)
-
-                                $("#dialog_open").remove();
-                                $("#wait_div").hide();
                             }
                         )
 

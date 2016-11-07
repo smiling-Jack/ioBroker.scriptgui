@@ -57,7 +57,7 @@ var __engine = {
 var  _script = process.argv[2];
 
 process.on('message', function (data) {
-    console.log("massage")
+    console.log("message : " + data)
     if (data[0] == "home") {
         //objects = data[1].regaObjects;
         //sim.regaIndex = data[1].regaIndex;

@@ -64,7 +64,10 @@ jQuery.extend(true, SGI, {
             SGI.load_blockly()
         }
 
-        $("#logo").hide()
+        $("#logo").hide();
+
+        $(".main").css({height: 'calc(100% - ' + (61 + $('#sim_log').height())+ 'px)'});
+        $(".main").css({width: 'calc(100% - ' + (2 + $('#right_panel').width())+ 'px)'});
 
         SGI.mode = "blockly";
         scope.setup.mode = "blockly";
