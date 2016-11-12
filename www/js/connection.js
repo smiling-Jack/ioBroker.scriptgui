@@ -2,49 +2,43 @@
  * Created by jack on 17.08.2014.
  */
 
-var objects = {};
-var states = {};
 var web;
-var iob = {
-    states: {},
-};
+var backend;
+var $newGroupDialog;
+//var groups = {'script.js': 'script.js', 'script.js.common': 'script.js.common', 'script.js.global': 'script.js.global'};
 
 jQuery.extend(true, SGI, {
 
-    setup_socket: function () {
-        //SGI.socket = io.connect(null, {'force new connection': true});
 
-    },
+//    disconnect: function () {
+//
+//        if (!SGI.socket) {
+//            backend.disconnect()
+//        }
+//
+//        SGI.con_data = false;
+//
+//        homematic = {
+//            uiState: {"_65535": {"Value": null}},
+//            regaIndex: {},
+//            regaObjects: {}
+//        };
+//        $("#img_con_backend").attr("src", "img/icon/flag-red.png");
+//        $("#btn_con_online").parent().removeClass("div_img_glass_on");
+//        $("#btn_con_offline").parent().removeClass("div_img_glass_on");
+//        $("#img_set_script_engine").hide();
+//
+//
+//        $(".run_type,#run_step, #img_set_script_play ,#img_set_script_stop").button({disabled: true});
+//        $(".run_type").prop("checked", false);
+//        $("#run_type1").prop("checked", true);
+//        $(".run_type").button("refresh");
+//        sim.run_type = "sim";
+//
+////        $("#inp_con_ip").unbind("change")
+//    },
 
-    disconnect: function () {
-
-        if (!SGI.socket) {
-            SGI.backend.disconnect()
-        }
-
-        SGI.con_data = false;
-
-        homematic = {
-            uiState: {"_65535": {"Value": null}},
-            regaIndex: {},
-            regaObjects: {}
-        };
-        $("#img_con_backend").attr("src", "img/icon/flag-red.png");
-        $("#btn_con_online").parent().removeClass("div_img_glass_on");
-        $("#btn_con_offline").parent().removeClass("div_img_glass_on");
-        $("#img_set_script_engine").hide();
-
-
-        $(".run_type,#run_step, #img_set_script_play ,#img_set_script_stop").button({disabled: true});
-        $(".run_type").prop("checked", false);
-        $("#run_type1").prop("checked", true);
-        $(".run_type").button("refresh");
-        sim.run_type = "sim";
-
-//        $("#inp_con_ip").unbind("change")
-    },
-
-    offline: function () {
+    //offline: function () {
 
 
         //if (scope.setup.last_con != url || scope.setup.con_type != "offline") {
@@ -95,204 +89,131 @@ jQuery.extend(true, SGI, {
         //throw err
         //}
 
-    },
+    //},
 
     connect_backend: function (__url) {
-
-
-
-        ////try {
-        //var _url = $("#inp_con_ip").val();
-        //var url = "";
-        //if (__url) {
-        //    url = __url;
-        //} else {
-        //    if (_url.split(":").length < 2) {
-        //        url = "http://" + _url + ":8080";
-        //    } else {
-        //        url = "http://" + _url;
-        //    }
-        //}
-        //
-        //
-        //$("#img_con_backend").attr("src", "img/icon/flag-blue.png");
-        //
-        //if (scope.setup.last_con != url || scope.setup.con_type != "connect_backend") {
-        //    scope.setup.last_con = url;
-        //    scope.setup.con_type = "connect_backend";
-        //    scope.$apply();
-        //    SGI.save_setup()
-        //}
-        //
-        //console.log(url)
-        //
-        //$.get(url + "/_socket/info.js", function (data) {
-        //    eval(data)
-        //    console.log(data)
-        //
-        //
-        //    servConn.init({connLink: "http:"+ url.split(":")[1] + socketUrl }, {
-        //        onConnChange: function (isConnected, isSecure) {
-        //            console.log(isConnected)
-        //            servConn.getVersion(function (v) {
-        //                console.log(v)
-        //            });
-        //
-        //            servConn.getStates("*", function (error, data) {
-        //                states = data;
-        //                servConn.getObjects(function (err, data) {
-        //                    objects = data;
-        //
-        //
-        //                    // make fancytree
-        //                    //var _tree = {};
-        //                    //                           var last ="";
-        //                    //                           $.each(objects,function(){
-        //                    //                               var ids = this._id.split(".")
-        //                    //
-        //                    //                               last ="";
-        //                    //                               $.each(ids, function(){
-        //                    //                                   if(eval("_tree"+last+"['"+this+"']") == undefined){
-        //                    //                                       eval("_tree"+last+"['"+this+"'] = {}")
-        //                    //                                   }
-        //                    //                                   last = last + "['"+this+"']"
-        //                    //                               });
-        //                    //
-        //                    //                           })
-        //                    //
-        //                    //                           $.each(states, function(id){
-        //                    //                               var _id = "['"+ id.replace(/\./g,"']['") + "']"
-        //                    //                               var that = this
-        //                    //                              console.log(this)
-        //                    //                               console.log()
-        //                    //                               eval("_tree"+_id.toString()+" = that ")
-        //                    //                           })
-        //                    //
-        //                    //                           console.log(_tree)
-        //
-        //
-        //                    $.each(objects, function (id) {
-        //                        var ids = id.split(".")
-        //                        var last = "editor"
-        //                        if (this.type != "enum")
-        //                            for (var i = 0; ids.length - 1 > i; i++) {
-        //
-        //                                var _id = last + "_" + ids[i];
-        //                                var icon= "";
-        //                                if(ids[1] == "adapter" && i == 2){
-        //                                    icon ="data-icon= 'img/adapter/"+ids[i]+".png'"
-        //                                }
-        //
-        //                                if ($("#oid_" + _id).length == 0) {
-        //                                    $("#oid_" + last + "_ul").append("<li id='oid_" + _id + "' class='folder' "+icon+">" + ids[i] + "<ul id='oid_" + _id + "_ul'></ul></li>")
-        //                                }
-        //                                last = _id;
-        //                            }
-        //                    })
-        //
-        //                    $.each(states, function (id) {
-        //                        var ids = id.split(".")
-        //                        var _id = ids.pop();
-        //                        $("#oid_editor_" + ids.join("_") + "_ul").append("<li data-oid='"+id+"' id='oid_" + ids.join("_") + "_" + _id + "'><span calss='oid_titel'>" + _id + " <div data-oid='"+id+"' class='oid_add'> </div><input class='oid_val' size=10 value='" + this.val + "'/></span></li>")
-        //
-        //                    })
-        //                    $("#editor_oid").fancytree();
-        //
-        //                    $("#editor_oid").on('click','.oid_add',function() {
-        //                        $(this).parent().trigger("click")
-        //                    });
-        //                    $("#editor_oid").on('dblclick','.oid_add',function() {
-        //                        SGI.editor.insert($(this).data("oid"));
-        //                    });
-        //                });
-        //            });
-        //        },
-        //        onRefresh: function () {
-        //
-        //        },
-        //        onUpdate: function (id, state) {
-        //        },
-        //        onAuth: function (message, salt) {
-        //            console.log(message)
-        //            console.log(salt)
-        //        },
-        //        onCommand: function (instance, command, data) {
-        //
-        //        },
-        //        onObjectChange: function (id, obj) {
-        //
-        //        }
-        //    });
-        //
-        //})
-        console.log("con1")
-
         if (!$.fn.selectId) {
             $("head").append('<script type="text/javascript" src="js/lib/socket.io_10.js"></script>');
         }
-
-
-        SGI.backend = io.connect("127.0.0.1:3000", {'force new connection': false});
         $("#img_con_backend").attr("src", "img/icon/flag-blue.png");
-        SGI.backend.on("connect", function (err) {
-            console.log("connect")
+
+        backend = io.connect(window.location.hostname + ":" + 3000, {'force new connection': false});
+
+        backend.on("connect", function (err) {
             $("#img_set_script_play,#run_type1,#run_type2,#run_type3,#run_step").button({disabled: false});
             $("#img_con_backend").attr("src", "img/icon/flag-green.png");
 
             $('window').unload(function () {
-                SGI.backend.disconnect()
+                backend.disconnect()
             });
-
-
-        });
-        SGI.backend.on('disconnect', function () {
-            SGI.offline()
         });
 
+        backend.on('disconnect', function () {
+            sim_exit()
+        });
 
-        //SGI.backend.emit("next");
-
-
-        SGI.backend.on("trigger_highlight", function (baustein) {
+        backend.on("trigger_highlight", function (baustein) {
             sim.trigger_highlight(baustein);
-            //SGI.backend.emit("next");
+            //backend.emit("next");
         })
-        SGI.backend.on("step_fbs_highlight", function (baustein) {
+
+        backend.on("step_fbs_highlight", function (baustein) {
             sim.step_fbs_highlight(baustein)
-            //SGI.backend.emit("next");
+            //backend.emit("next");
         })
-        SGI.backend.on("step_mbs_highlight_in", function (baustein) {
+
+        backend.on("step_mbs_highlight_in", function (baustein) {
             sim.step_mbs_highlight_in(baustein)
-            //SGI.backend.emit("next");
+            //backend.emit("next");
         })
-        SGI.backend.on("step_mbs_highlight_out", function (baustein) {
+
+        backend.on("step_mbs_highlight_out", function (baustein) {
             sim.step_mbs_highlight_out(baustein)
-            //SGI.backend.emit("next");
+            //backend.emit("next");
         })
-        SGI.backend.on("step_mbs_highlight_reset", function (baustein) {
+
+        backend.on("step_mbs_highlight_reset", function (baustein) {
             sim.step_mbs_highlight_reset(baustein)
-            //SGI.backend.emit("next");
+            //backend.emit("next");
         })
-        SGI.backend.on("brake", function (data) {
+
+        backend.on("brake", function (data) {
             console.log(data.sourceLine)
 
             SGI.set_mark(data.sourceLine)
 
             $(".img_debug").button({disabled: false});
         })
-        SGI.backend.on("connect", function (err) {
-        })
-        SGI.backend.on("connect", function (err) {
-        })
-        SGI.backend.on("connect", function (err) {
-        })
-        SGI.backend.on("connect", function (err) {
+
+        backend.on("scopes", function (data) {
+            console.log(data)
+
+            var scopes = {
+                0: "Global",
+                1: "Local",
+                2: "With",
+                3: "Closure",
+                4: "Catch",
+                5: "?",
+                6: "??",
+                7: "???"
+            }
+
+            var tree = {}
+
+            $.each(data.body.scopes, function () {
+                var scope = scopes[this.type]
+                if (this.object.properties.length > 0) {
+                    if (tree[scope]) {
+                        function _x(i) {
+                            if (tree[scope + " " + i]) {
+                                _x(i + 1)
+                            } else {
+                                scope = scope + " " + i;
+                                tree[scope] = {};
+                            }
+                        }
+
+                        _x(1)
+                    } else {
+                        scope = scope;
+                        tree[scope] = {};
+                    }
+
+
+                    $.each(this.object.properties, function (e) {
+                        if (this.value.value) {
+                            tree[scope][this.name] = this.value.value
+                        } else if (this.value.type == "function") {
+                            tree[scope][this.name] = "function()..."
+                        } else {
+                            tree[scope][this.name] = "§§" + this.value.ref
+                        }
+                        tree[scope][this.name]["value"] = this.value.value;
+                        tree[scope][this.name]["type"] = this.value.type;
+                    })
+                }
+
+            })
+            console.log(tree)
+            const formatter = new JSONFormatter(tree);
+            $("#editor_deb_scopes").html(
+                formatter.render()
+            );
+            formatter.openAtDepth(1);
+            $("#editor_deb_scopes > div > a").hide()
+
+
+        });
+
+        backend.on("????", function (err) {
         })
 
-        SGI.backend.on("sim_exit", function (err) {
+        backend.on("sim_exit", function (err) {
             sim_exit();
         });
-        SGI.backend.on("message", function (data) {
+
+        backend.on("message", function (data) {
             console.log(data)
             if (typeof data == 'string') {
                 console.log("message: " + data);
@@ -316,16 +237,16 @@ jQuery.extend(true, SGI, {
             }
         })
 
-        SGI.backend.on("_log", function (data) {
+        backend.on("_log", function (data) {
             console.log("---------- Log from backend -----------");
             console.log(data);
         })
-        SGI.backend.on("_jlog", function (data) {
+
+        backend.on("_jlog", function (data) {
             console.log("---------- jLog from backend -----------");
             try {
                 console.log(JSON.parse(data));
             } catch (err) {
-                console.log(err)
                 console.log(data)
             }
 
@@ -390,14 +311,279 @@ jQuery.extend(true, SGI, {
 
                     web.emit('getObjectView', 'script', 'javascript', {}, function (err, doc) {
 
-                        console.log(doc)
+                        web.emit('getObjectView', 'system', 'instance', {
+                            startkey: 'system.adapter.javascript',
+                            endkey: 'system.adapter.javascript.\u9999'
+                        }, function (err, doc) {
+                            main.instances = doc.rows
+                            main.first_inst = 999;
+                            for (var i in main.instances) {
+
+                                var x = parseInt(main.instances[i].id.split(".").pop());
+                                if (x < main.first_inst) {
+                                    main.first_inst = x;
+                                }
+                            }
+
+                        })
+
+
                         // assemble global script
+                        console.log(doc)
                         for (var g = 0; g < doc.rows.length; g++) {
+                            var group = doc.rows[g].value._id.split(".");
+                            group.pop()
+                            group = group.join(".")
+                            groups[group] = group;
+
                             main.objects[doc.rows[g].value._id] = doc.rows[g].value;
                         }
 
 
-                        console.log(main.objects)
+                        function getGroup(id) {
+                            var parts = id.split('.');
+                            parts.pop();
+                            return parts.join('.');
+                        }
+
+                        function addScript(group) {
+                            group = group || 'script.js';
+                            // Find new unique name
+                            var newText = _('Script');
+                            var idx = 1;
+                            var name = newText + idx;
+
+                            while (main.objects[group + '.' + name]) {
+                                if (idx === '') idx = 0;
+                                idx++;
+                                name = newText + idx;
+                            }
+                            var instance = 'system.adapter.javascript.' + main.first_inst;
+                            var engineType = "Blockly";
+
+
+                            var data = {
+                                common: {
+                                    name: name,
+                                    engineType: engineType,
+                                    source: '',
+                                    enabled: false,
+                                    engine: instance
+                                },
+                                type: 'script'
+                            }
+
+                            var x = '<div id="dialog_neu" style="" title="New Script">' +
+                                '<button id="new_gui" style="width: 100px" class="btn_new"><img src="img/cube256.png" style="height: 50px; width: 50px" alt="">GUI </button>' +
+                                '<button id="new_js" style="width: 100px" class="btn_new"><img src="img/js.jpeg" style="height: 50px; width: 50px" alt="">EDITOR</button>' +
+                                '<button id="new_bl" style="width: 100px" class="btn_new"><img src="img/blockly.png" style="height: 50px; width: 50px" alt="">BLOCKLY</button><br><br>' +
+                                '<span>Name </span><input type="text" id="new_name" value="' + name + '"></div> '
+
+                            $("body").append(x)
+
+                            function add() {
+                                name = $("#new_name").val();
+                                $("#dialog_neu").remove();
+                                idx = 1
+                                while (main.objects[group + '.' + name]) {
+                                    if (idx === '') idx = 0;
+                                    idx++;
+                                    name = name + idx;
+                                }
+
+                                data.common.name = name;
+                                var id = group + '.' + name.replace(/[\s"']/g, '_');
+
+                                web.emit('setObject', id, data, function (err) {
+                                    if (err) {
+                                        main.showError(err);
+                                        that.init(true);
+                                    } else {
+
+                                        main.objects[id] = data;
+                                        main.objects[id]._id = id;
+
+                                        $("#btn_refresh_1").trigger("click")
+                                        setTimeout(function () {
+                                            console.log("--------OK")
+                                            //SGI.open(id);
+                                        }, 500);
+                                    }
+                                });
+                            }
+
+
+                            $(".btn_new").button().click(function (ev) {
+                                if (ev.currentTarget.id == "new_gui") {
+                                    data.common.engineType = "Javascript/js";
+                                    data.native = {
+                                        editor: 'ScriptGUI',
+                                        prg: {}
+                                    }
+                                    add()
+
+                                }
+                                if (ev.currentTarget.id == "new_js") {
+                                    data.common.engineType = "Javascript/js";
+                                    add()
+                                }
+                                if (ev.currentTarget.id == "new_bl") {
+                                    data.common.engineType = "Blockly";
+                                    add()
+                                }
+                            });
+
+                            $("#dialog_neu").dialog({
+                                width: "350px",
+                                dialogClass: "shortcuts",
+                                modal: true,
+                                close: function () {
+                                    $("#dialog_neu").remove();
+                                },
+                                open: function () {
+                                }
+                            });
+
+
+                        }
+
+                        function fillGroups(elemName) {
+                            var groups = ['script.js', 'script.js.common', 'script.js.global'];
+
+                            //for (var i = 0; i < that.list.length; i++) {
+                            //    var g = getGroup(that.list[i]);
+                            //    if (groups.indexOf(g) === -1) groups.push(g);
+                            //}
+                            //for (var j = 0; j < that.groups.length; j++) {
+                            //    if (groups.indexOf(that.groups[j]) === -1) groups.push(that.groups[j]);
+                            //}
+                            var text = '';
+
+                            for (g = 0; g < groups.length; g++) {
+                                var name = groups[g].substring('script.js.'.length);
+                                if (name === 'global' || name === 'common') {
+                                    name = _(name);
+                                }
+
+                                if (!name) name = _('no group');
+
+                                if (main.objects[groups[g]] && main.objects[groups[g]].common && main.objects[groups[g]].common.name) {
+                                    name = main.objects[groups[g]].common.name;
+                                }
+
+                                text += '<option value="' + groups[g] + '">' + name + '</option>\n';
+                                // create group if not exists
+                                if (groups[g] !== 'script.js' && groups[g] !== 'script' && (!main.objects[groups[g]] || !main.objects[groups[g]].common)) {
+                                    web.emit('setObject', groups[g], {
+                                        common: {
+                                            name: groups[g].split('.').pop()
+                                        },
+                                        type: 'channel'
+                                    }, function (err) {
+                                        if (err) {
+                                            main.showError(err);
+                                            that.init(true);
+                                        }
+                                    });
+                                }
+                            }
+
+                            if (elemName) {
+                                var val = $('#' + elemName).val();
+                                $('#' + elemName).html(text).val(val);
+                            }
+                        }
+
+                        function addScriptInGroup(_group) {
+                            fillGroups('edit-new-group-group');
+
+                            if (main.objects[_group] && that.main.objects[_group].type === 'script') {
+                                _group = getGroup(_group);
+                            }
+                            $('#edit-new-group-group').val(_group || 'script.js');
+
+                            if (!$newGroupDialog) {
+                                $newGroupDialog = $('#dialog-new-group').dialog({
+                                    autoOpen: false,
+                                    modal: true,
+                                    width: 400,
+                                    height: 220,
+                                    resizable: false,
+                                    title: _('Create new group'),
+                                    buttons: [
+                                        {
+                                            id: 'script-group-button-save',
+                                            text: _('Ok'),
+                                            click: function () {
+                                                var group = $('#edit-new-group-group').val() || 'script.js';
+                                                var name = $('#edit-new-group-name').val();
+                                                if (!name) {
+                                                    that.main.showError(_('No group name'));
+                                                    that.$newGroupDialog.dialog('close');
+                                                    return;
+                                                }
+                                                group += '.' + name.replace(/["'\s.]+/g, '_');
+
+                                                $('#script-group-button-save').button('disable');
+                                                $('#script-group-button-cancel').button('disable');
+
+                                                // check if object with such name exists
+                                                if (main.objects[group]) {
+                                                    SGI.showMessage(_('Object %s yet exists', group));
+                                                    $newGroupDialog.dialog('close');
+                                                } else {
+                                                    web.emit('setObject', group, {
+                                                        common: {
+                                                            name: name
+                                                        },
+                                                        type: 'channel'
+                                                    }, function (err) {
+                                                        $newGroupDialog.dialog('close');
+                                                        if (err) {
+                                                            that.main.showError(err);
+                                                            that.init(true);
+                                                        } else {
+                                                            setTimeout(function () {
+                                                                that.$grid.selectId('show', group);
+                                                                editScript(group);
+                                                            }, 500);
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        },
+                                        {
+                                            id: 'script-group-button-cancel',
+                                            text: _('Cancel'),
+                                            click: function () {
+                                                that.$newGroupDialog.dialog('close');
+                                            }
+                                        }
+                                    ],
+                                    open: function () {
+                                        $(event.target).parent().find('.ui-dialog-titlebar-close .ui-button-text').html('');
+                                        $('#script-group-button-save').button('disable');
+                                        $('#script-group-button-cancel').button('enable');
+                                        $('#edit-new-group-name').val('');
+                                    }
+                                });
+
+                                $('#edit-new-group-name').change(function () {
+                                    if ($(this).val()) {
+                                        $('#script-group-button-save').button('enable');
+                                    } else {
+                                        $('#script-group-button-save').button('disable');
+                                    }
+                                }).keyup(function (e) {
+                                    $(this).trigger('change');
+                                    if (e.keyCode == 13) $('#script-group-button-save').trigger('click');
+                                });
+                            }
+
+                            $newGroupDialog.dialog('open');
+                        }
+
+
                         $('#grid-scripts').selectId('init', {
                             objects: main.objects,
                             noDialog: true,
@@ -443,7 +629,7 @@ jQuery.extend(true, SGI, {
                                         if (data[id]) {
                                             if (data[id].common.engineType == "Blockly") {
                                                 return '<img src="img/blockly.png" style="height: 18px; width: 18px" alt="">'
-                                            } else if (data[id].common.engineType == "GUI") {
+                                            } else if (data[id].native && data[id].native.editor == "ScriptGUI") {
                                                 return '<img src="img/cube32.png" style="height: 18px; width: 18px" alt="">'
                                             } else {
                                                 return '<img src="img/js.jpeg" style="height: 18px; width: 18px" alt="">'
@@ -470,13 +656,13 @@ jQuery.extend(true, SGI, {
                                     click: function (id) {
                                         if (this.length == 1) this.button('disable');
                                         // toggle state
-                                        that.main.socket.emit('extendObject', id, {
+                                        main.socket.emit('extendObject', id, {
                                             common: {
                                                 enabled: !(data[id] && data[id].common && data[id].common.enabled)
                                             }
                                         }, function (err) {
                                             if (err) {
-                                                that.main.showError(err);
+                                                main.showError(err);
                                                 that.init(true);
                                             }
                                         });
@@ -505,13 +691,15 @@ jQuery.extend(true, SGI, {
                                         primary: 'ui-icon-trash'
                                     },
                                     click: function (id) {
-                                        if (!data[id] || data[id].type !== 'script') {
-                                            deleteId(id);
-                                        } else {
-                                            that.main.confirmMessage(('Are you sure to delete script %s?', data[id].common.name), null, 'help', function (result) {
-                                                if (result) that.main.socket.emit('delObject', id);
-                                            });
-                                        }
+                                        console.log(id)
+                                        SGI.confirmMessage(('Are you sure to delete script ' + main.objects[id].common.name) + ' ?', null, 'help', function (result) {
+                                            if (result) {
+                                                backend.emit('delObject', id);
+                                                delete main.objects[id]
+                                                $("#btn_refresh_1").trigger("click");
+                                            }
+                                        });
+
                                     },
                                     match: function (id) {
                                         if (!main.objects[id] || !main.objects[id].common || main.objects[id].common.nondeletable) this.hide();
@@ -525,9 +713,9 @@ jQuery.extend(true, SGI, {
                                         primary: 'ui-icon-copy'
                                     },
                                     click: function (id) {
-                                        that.main.socket.emit('getObject', id, function (err, obj) {
+                                        main.socket.emit('getObject', id, function (err, obj) {
                                             if (err) {
-                                                that.main.showError(err);
+                                                main.showError(err);
                                                 return;
                                             }
                                             // find new name
@@ -544,9 +732,9 @@ jQuery.extend(true, SGI, {
                                             } while (that.list.indexOf(newId) != -1);
 
                                             obj._id = newId;
-                                            that.main.socket.emit('setObject', newId, obj, function (err, obj) {
+                                            main.socket.emit('setObject', newId, obj, function (err, obj) {
                                                 if (err) {
-                                                    that.main.showError(err);
+                                                    main.showError(err);
                                                     return;
                                                 }
                                             });
@@ -568,7 +756,7 @@ jQuery.extend(true, SGI, {
                                         primary: 'ui-icon-document'
                                     },
                                     click: function () {
-                                        var group = that.currentId || 'script.js';
+                                        var group = main.currentId || 'script.js';
                                         if (data[group] && data[group].type === 'script') group = getGroup(group);
 
                                         addScript(group);
@@ -581,7 +769,7 @@ jQuery.extend(true, SGI, {
                                         primary: 'ui-icon-circle-plus'
                                     },
                                     click: function () {
-                                        addScriptInGroup(that.currentId);
+                                        addScriptInGroup(main.currentId);
                                     }
                                 },
                                 {
@@ -629,11 +817,11 @@ jQuery.extend(true, SGI, {
                             }],
                             quickEditCallback: function (id, attr, newValue, oldValue) {
                                 main.socket.emit('getObject', id, function (err, _obj) {
-                                    if (err) return that.main.showError(err);
+                                    if (err) return main.showError(err);
 
                                     _obj.common.engine = 'system.adapter.javascript.' + newValue;
                                     main.socket.emit('setObject', _obj._id, _obj, function (err) {
-                                        if (err) that.main.showError(err);
+                                        if (err) main.showError(err);
                                     });
                                 });
                             }
@@ -938,150 +1126,150 @@ jQuery.extend(true, SGI, {
 
     },
 
-    server_error: function (error) {
-        //todo speicher error in log datei
-        //var send_data = {
-        //    typ: "error",
-        //    error: error,
-        //    user: scope.user_name,
-        //    mail: $("#inp_error_mail").val(),
-        //    komment: $("#txt_error_comment").val(),
-        //    prg_data: "nicht mitgesendet",
-        //    datapoints: "nicht mitgesendet",
-        //    os: SGI.os
-        //};
-        //
-        //if (send_data.mail == "") {
-        //    send_data.mail = scope.user_mail;
-        //}
-        //
-        //
-        //if ($("#inp_prg_data").val() == true || $("#inp_prg_data").val() == "true") {
-        //    send_data.prg_data = JSON.stringify({
-        //        version: main_manifest.version,
-        //        mbs: scope.mbs,
-        //        fbs: scope.fbs,
-        //        con: scope.con
-        //    });
-        //
-        //    send_data.datapoints = JSON.stringify(homematic);
-        //}
-        //
-        //
-        //var client = new net.Socket();
-        //client.connect(SGI.HOST_PORT, SGI.HOST, function () {
-        //    client.write(JSON.stringify(send_data));
-        //    client.end()
-        //});
-        //
-        //client.on('data', function (data) {
-        //    if (data != "error") {
-        //        alert("Ticketnummer: " + data)
-        //    } else {
-        //        alert("Daten konnten nicht gesendet werden")
-        //    }
-        //    client.destroy();
-        //});
-    },
-
-    server_register: function () {
-        try {
-            if (scope.setup.user_mail == "" || scope.setup.user_mail == undefined) {
-                $("body").append('\
-                <div id="dialog_register" style="text-align: center" title="' + SGI.translate("Register") + '">\
-                <img src="./img/logo.png" style="width: 300px"/><br><br>\
-                <div style="font-size: 20px; font-weight: 900;">' + SGI.translate("register_info") + '</div><br><br>\
-                <div style="width: 80px; display: inline-block;text-align: left">' + SGI.translate("Name:") + '  </div><input id="inp_register_name" style="width: 300px" type="text"/><br>\
-                <div style="width: 80px; display: inline-block;text-align: left">' + SGI.translate("E-Mail:") + '</div><input id="inp_register_mail" style="width: 300px" type="text"/><br><br>\
-                <button id="btn_register">' + SGI.translate("register") + '</button>\
-                   </div>');
-
-                $("#dialog_register").dialog({
-                    width: "auto",
-                    dialogClass: "update",
-                    modal: true,
-                    close: function () {
-                        $("#dialog_register").remove();
-                    }
-                });
-
-                $("#btn_register").button().click(function () {
-
-                    var send_data = {
-                        typ: "register",
-                        data: {
-                            name: $("#inp_register_name").val(),
-                            mail: $("#inp_register_mail").val(),
-                            os: SGI.os
-                        }
-                    };
-
-                    function send_to_server(data) {
-
-                        var client = new net.Socket();
-                        client.connect(SGI.HOST_PORT, SGI.HOST, function () {
-                            client.write(JSON.stringify(send_data));
-
-                        });
-
-                        client.on('data', function (data) {
-                            if (data != "error") {
-                                scope.setup.user_name = send_data.data.name;
-                                scope.setup.user_mail = send_data.data.mail;
-                                scope.$apply();
-                                $("#dialog_register").dialog("close")
-                            } else {
-                                alert("Daten konnten nicht gesendet werden. Bitte überprüfen sie ihre Internetverbindung")
-                            }
-                            client.destroy();
-                        });
-                    }
-
-                    if (send_data.data.mail == "" || send_data.data.mail == undefined) {
-                        getmac.getMac(function (err, macAddress) {
-                            if (err)  throw err;
-                            send_data.data.mail = macAddress;
-                            send_to_server(send_data)
-                        })
-                    } else {
-                        send_to_server(send_data)
-                    }
-                });
-            }
-        } catch (err) {
-            console.log("register nicht möglich");
-        }
-
-    },
-
-    server_homecall: function () {
-        //
-        //var send_data = {
-        //    typ: 'statistik',
-        //    data: {
-        //        user: scope.setup.user_id,
-        //        os: SGI.os
-        //    }
-        //};
-        //
-        //var client = new net.Socket();
-        //client.connect(SGI.HOST_PORT, SGI.HOST, function () {
-        //    client.write(JSON.stringify(send_data));
-        //    client.end()
-        //});
-        //
-        //client.on('data', function (data) {
-        //    if (data != "error") {
-        //
-        //        scope.setup.last_open = (new Date).toLocaleDateString();
-        //        scope.$apply();
-        //        SGI.save_setup();
-        //
-        //    }
-        //    client.destroy();
-        //});
-
-
-    }
+    //server_error: function (error) {
+    //    //todo speicher error in log datei
+    //    //var send_data = {
+    //    //    typ: "error",
+    //    //    error: error,
+    //    //    user: scope.user_name,
+    //    //    mail: $("#inp_error_mail").val(),
+    //    //    komment: $("#txt_error_comment").val(),
+    //    //    prg_data: "nicht mitgesendet",
+    //    //    datapoints: "nicht mitgesendet",
+    //    //    os: SGI.os
+    //    //};
+    //    //
+    //    //if (send_data.mail == "") {
+    //    //    send_data.mail = scope.user_mail;
+    //    //}
+    //    //
+    //    //
+    //    //if ($("#inp_prg_data").val() == true || $("#inp_prg_data").val() == "true") {
+    //    //    send_data.prg_data = JSON.stringify({
+    //    //        version: main_manifest.version,
+    //    //        mbs: scope.mbs,
+    //    //        fbs: scope.fbs,
+    //    //        con: scope.con
+    //    //    });
+    //    //
+    //    //    send_data.datapoints = JSON.stringify(homematic);
+    //    //}
+    //    //
+    //    //
+    //    //var client = new net.Socket();
+    //    //client.connect(SGI.HOST_PORT, SGI.HOST, function () {
+    //    //    client.write(JSON.stringify(send_data));
+    //    //    client.end()
+    //    //});
+    //    //
+    //    //client.on('data', function (data) {
+    //    //    if (data != "error") {
+    //    //        alert("Ticketnummer: " + data)
+    //    //    } else {
+    //    //        alert("Daten konnten nicht gesendet werden")
+    //    //    }
+    //    //    client.destroy();
+    //    //});
+    //},
+    //
+    //server_register: function () {
+    //    try {
+    //        if (scope.setup.user_mail == "" || scope.setup.user_mail == undefined) {
+    //            $("body").append('\
+    //            <div id="dialog_register" style="text-align: center" title="' + SGI.translate("Register") + '">\
+    //            <img src="./img/logo.png" style="width: 300px"/><br><br>\
+    //            <div style="font-size: 20px; font-weight: 900;">' + SGI.translate("register_info") + '</div><br><br>\
+    //            <div style="width: 80px; display: inline-block;text-align: left">' + SGI.translate("Name:") + '  </div><input id="inp_register_name" style="width: 300px" type="text"/><br>\
+    //            <div style="width: 80px; display: inline-block;text-align: left">' + SGI.translate("E-Mail:") + '</div><input id="inp_register_mail" style="width: 300px" type="text"/><br><br>\
+    //            <button id="btn_register">' + SGI.translate("register") + '</button>\
+    //               </div>');
+    //
+    //            $("#dialog_register").dialog({
+    //                width: "auto",
+    //                dialogClass: "update",
+    //                modal: true,
+    //                close: function () {
+    //                    $("#dialog_register").remove();
+    //                }
+    //            });
+    //
+    //            $("#btn_register").button().click(function () {
+    //
+    //                var send_data = {
+    //                    typ: "register",
+    //                    data: {
+    //                        name: $("#inp_register_name").val(),
+    //                        mail: $("#inp_register_mail").val(),
+    //                        os: SGI.os
+    //                    }
+    //                };
+    //
+    //                function send_to_server(data) {
+    //
+    //                    var client = new net.Socket();
+    //                    client.connect(SGI.HOST_PORT, SGI.HOST, function () {
+    //                        client.write(JSON.stringify(send_data));
+    //
+    //                    });
+    //
+    //                    client.on('data', function (data) {
+    //                        if (data != "error") {
+    //                            scope.setup.user_name = send_data.data.name;
+    //                            scope.setup.user_mail = send_data.data.mail;
+    //                            scope.$apply();
+    //                            $("#dialog_register").dialog("close")
+    //                        } else {
+    //                            alert("Daten konnten nicht gesendet werden. Bitte überprüfen sie ihre Internetverbindung")
+    //                        }
+    //                        client.destroy();
+    //                    });
+    //                }
+    //
+    //                if (send_data.data.mail == "" || send_data.data.mail == undefined) {
+    //                    getmac.getMac(function (err, macAddress) {
+    //                        if (err)  throw err;
+    //                        send_data.data.mail = macAddress;
+    //                        send_to_server(send_data)
+    //                    })
+    //                } else {
+    //                    send_to_server(send_data)
+    //                }
+    //            });
+    //        }
+    //    } catch (err) {
+    //        console.log("register nicht möglich");
+    //    }
+    //
+    //},
+    //
+    //server_homecall: function () {
+    //    //
+    //    //var send_data = {
+    //    //    typ: 'statistik',
+    //    //    data: {
+    //    //        user: scope.setup.user_id,
+    //    //        os: SGI.os
+    //    //    }
+    //    //};
+    //    //
+    //    //var client = new net.Socket();
+    //    //client.connect(SGI.HOST_PORT, SGI.HOST, function () {
+    //    //    client.write(JSON.stringify(send_data));
+    //    //    client.end()
+    //    //});
+    //    //
+    //    //client.on('data', function (data) {
+    //    //    if (data != "error") {
+    //    //
+    //    //        scope.setup.last_open = (new Date).toLocaleDateString();
+    //    //        scope.$apply();
+    //    //        SGI.save_setup();
+    //    //
+    //    //    }
+    //    //    client.destroy();
+    //    //});
+    //
+    //
+    //}
 });
 

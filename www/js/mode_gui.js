@@ -147,8 +147,15 @@ jQuery.extend(true, SGI, {
         $(".main").css({height: 'calc(100% - ' + (61 + $('#sim_log').height())+ 'px)'});
         $(".main").css({width: 'calc(100% - ' + (2 + $('#right_panel').width())+ 'px)'});
 
-
-
+        sim.step = $('#lba_run_step').attr("aria-pressed")
+        if (sim.step == "true") {
+            $('#stepSpeed').show()
+        } else {
+            $('#stepSpeed').hide()
+        }
+        $("#lba_run_step").show();
+        $("#lba_run_type2").show();
+        $("#lba_run_type1").trigger("click");
         $("#main_gui").show();
         $(".set_gui").show();
 
@@ -3042,10 +3049,10 @@ jQuery.extend(true, SGI, {
         });
     },
 
-    load_prg: function (_data) {
-        var data = _data;
+    load_prg: function (script) {
+        var data = script.native.prg;
         try {
-            if (data.version == undefined) {
+            if (script.native.version == undefined || script.native.version == "old") {
 
                 $.each(data.mbs, function () {
                     this["style"] = {
