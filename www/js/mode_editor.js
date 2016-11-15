@@ -21,7 +21,7 @@ jQuery.extend(true, SGI, {
 
         editor.$blockScrolling = Infinity;
         SGI.editor.session.setUseWrapMode(true);
-        editor.session.on('changeBackMarker', function(){
+        editor.session.on('changeBackMarker', function () {
 
         })
         editor.on("guttermousedown", function (e) {
@@ -38,10 +38,10 @@ jQuery.extend(true, SGI, {
 
 
             if (editor.session.getBreakpoints()[row]) {
+                SGI.clearBP(row)
                 e.editor.session.clearBreakpoint(row)
             } else {
-
-
+                SGI.setBP(row)
                 e.editor.session.setBreakpoint(row)
             }
 
@@ -49,42 +49,100 @@ jQuery.extend(true, SGI, {
         });
 
 
-            editor.on("change", function (e) {
-                var breakpointsArray = editor.session.getBreakpoints();
-                if (Object.keys(editor.session.getBreakpoints()).length > 0) {
-                    if (e.lines.length > 1) {
-                        var breakpoint = parseInt(Object.keys(breakpointsArray)[0]);
-                        var lines = e.lines.length - 1;
-                        var start = e.start.row;
-                        var end = e.end.row;
-                        if (e.action === 'insert') {
-                            console.log('new lines', breakpoint, start, end);
-                            if (breakpoint > start) {
-                                console.log('breakpoint forward');
-                                editor.session.clearBreakpoint(breakpoint);
-                                editor.session.setBreakpoint(breakpoint + lines);
-                            }
-                        } else if (e.action === 'remove') {
-                            console.log('removed lines', breakpoint, start, end);
-                            if (breakpoint > start && breakpoint < end) {
-                                console.log('breakpoint remove');
-                                editor.session.clearBreakpoint(breakpoint);
-                            }
-                            if (breakpoint >= end) {
-                                console.log('breakpoint behind');
-                                editor.session.clearBreakpoint(breakpoint);
-                                editor.session.setBreakpoint(breakpoint - lines);
-                            }
+        editor.on("change", function (e) {
+            var breakpointsArray = editor.session.getBreakpoints();
+            if (Object.keys(editor.session.getBreakpoints()).length > 0) {
+                if (e.lines.length > 1) {
+                    var breakpoint = parseInt(Object.keys(breakpointsArray)[0]);
+                    var lines = e.lines.length - 1;
+                    var start = e.start.row;
+                    var end = e.end.row;
+                    if (e.action === 'insert') {
+                        console.log('new lines', breakpoint, start, end);
+                        if (breakpoint > start) {
+                            console.log('breakpoint forward');
+                            editor.session.clearBreakpoint(breakpoint);
+                            editor.session.setBreakpoint(breakpoint + lines);
+                        }
+                    } else if (e.action === 'remove') {
+                        console.log('removed lines', breakpoint, start, end);
+                        if (breakpoint > start && breakpoint < end) {
+                            console.log('breakpoint remove');
+                            editor.session.clearBreakpoint(breakpoint);
+                        }
+                        if (breakpoint >= end) {
+                            console.log('breakpoint behind');
+                            editor.session.clearBreakpoint(breakpoint);
+                            editor.session.setBreakpoint(breakpoint - lines);
                         }
                     }
                 }
-            });
+            }
+        });
 
 
+        $('#img_set_editor_deb_play').click(function () {
+            try {
+                $(".img_debug").button({disabled: true});
+
+                SGI.clear_mark();
+                backend.emit("next", function (err) {
+                    console.log(err)
+
+                });
+            }
+            catch (err) {
+            }
+        });
+        $('#img_set_editor_deb_next_step').click(function () {
+            console.log("setp")
+            try {
+                SGI.clear_mark();
+                $(".img_debug").button({disabled: true});
+                backend.emit("deb_step")
+
+            }
+            catch (err) {
+            }
+        });
+        $('#img_set_editor_deb_into').click(function () {
+            try {
+                SGI.clear_mark();
+                $(".img_debug").button({disabled: true});
+                backend.emit("deb_into")
+
+            }
+            catch (err) {
+            }
+        });
+        $('#img_set_editor_deb_out').click(function () {
+            try {
+                SGI.clear_mark();
+                $(".img_debug").button({disabled: true});
+                backend.emit("deb_out")
+
+            }
+            catch (err) {
+            }
+        });
+        $('#img_set_editor_deb_over').click(function () {
+            try {
+                SGI.clear_mark();
+                $(".img_debug").button({disabled: true});
+                backend.emit("deb_over")
+
+            }
+            catch (err) {
+            }
+        });
 
 
+        $(".img_debug").click(function () {
 
 
+                $("#editor_deb_scopes").html("")
+            }
+        )
 
 
     },
@@ -96,37 +154,81 @@ jQuery.extend(true, SGI, {
         }
 
         SGI.hide_gui();
-
-
+        $(".main").css({height: 'calc(100% - ' + (61 + $('#sim_log').height()) + 'px)'});
+        $(".main").css({width: 'calc(100% - ' + (2 + $('#right_panel').width()) + 'px)'});
+        $("#lba_run_step").hide();
+        $("#lba_run_type2").hide();
+        $('#stepSpeed').hide()
+        $("#lba_run_type1").trigger("click");
         $("#main_editor").show();
         $(".set_editor").show();
+
+
         SGI.mode = "editor";
         scope.setup.mode = "editor";
         scope.$apply();
-        SGI.save_setup()
+        //SGI.save_setup()
 
     },
     hide_editor: function () {
         $("#main_editor").hide();
         $(".set_editor").hide();
     },
-    clear_mark: function(){
-        var m =  SGI.editor.getSession().getMarkers()
-        $.each(m, function(marker){
-            if(this.clazz == "ace-related-code-highlight" ){
+    clear_mark: function () {
+        var m = SGI.editor.getSession().getMarkers()
+        $.each(m, function (marker) {
+            if (this.clazz == "ace-related-code-highlight") {
                 SGI.editor.getSession().removeMarker(this.id)
             }
         });
 
     },
-    set_mark: function(line){
+    set_mark: function (line) {
         SGI.clear_mark();
-        var range = new Range(line,1,line,0);
+        var range = new Range(line, 1, line, 0);
         SGI.editor.getSession().addMarker(range, "ace-related-code-highlight", "fullLine");
-        setTimeout(function(){
+        setTimeout(function () {
             $(".ace-related-code-highlight").effect("highlight", 250)
-        },100)
+        }, 100)
+    },
+
+    deb_lookup: function (ref) {
+        var handel = parseInt(ref.replace("§§", ""));
+        backend.emit("deb_lookup", handel, function (data) {
+            console.log(data);
+            var obj = {};
+
+            $.each(data.body[handel].properties, function () {
+                if (this.value.value) {
+                    obj[this.name] = this.value.value
+                } else if (this.value.type == "function") {
+                    obj[this.name] = "function()..."
+                } else {
+                    obj[this.name] = "§§" + this.value.ref
+                }
+
+                obj[this.name]["value"] = this.value.value;
+                obj[this.name]["type"] = this.value.type;
+            })
+
+            const formatter = new JSONFormatter(obj);
+            $("#" + ref).html(
+                formatter.render()
+            ).removeAttr("onclick").removeAttr("id");
+        })
+    },
+
+    clearBP: function (row) {
+        if (SGI.sim_run) {
+            backend.emit("clearBP", row)
+        }
+    },
+    setBP: function (row) {
+        if (SGI.sim_run) {
+            backend.emit("setBP", row)
+        }
     }
 
 
 });
+

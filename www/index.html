@@ -1,6 +1,4 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+﻿
 <html id="html" ng-app="tutorialApp">
 
 <head>
@@ -60,6 +58,7 @@
     <script type="text/javascript" src="js/lib/jquery.animate-shadow-min.js"></script>
 
     <script src="js/lib/fancytree/jquery.fancytree-all.min.js" type="text/javascript"></script>
+    <script src="js/lib/json-formatter.js" type="text/javascript"></script>
 
     <script type="text/javascript" src="js/lib/fm/file_manager.js"></script>
     <script type="text/javascript" src="js/hmSelect_new.js"></script>
@@ -201,7 +200,6 @@
     <a id="m_file" class="translate">Neu</a>
     <a id="m_file_lb" class="translate">Script:</a>
 </div>
-
 <div id="icon_bar" class="icon_bar ui-state-default">
 
     <img src="img/icon/move_to_folder.png" class="img_iconbar set_local title_translate" id="img_save_local" title="Speicher"/>
@@ -240,6 +238,14 @@
          style="display: none" title="Scriptengine Neustarten"/>
 
 
+</div>
+
+
+<div id="right_panel" class="frame_color  ui-state-default" style="z-index: 4;">
+    <div id="right_panel_head" class="ui-state-default"></div>
+    <div id="grid-scripts" class="frame_color  ui-state-default"
+         style="height: 100%;             width: 30%; padding-right: 8px"><span class="translate">Loading...</span>
+    </div>
 </div>
 <div id="main_gui" class="main_gui main ui-widget-content" style="display: none">
     <select id="toolbox_select" class="toolbox_select">
@@ -417,7 +423,7 @@
 </div>
 <div id="main_editor" class="main_editor main ui-widget-content" style="display: none">
     <div id="editor_code"></div>
-    <div id="editor_deb" class="ui-widget-content">
+    <div id="editor_deb" class="frame_color  ui-state-default">
         <div id="editor_deb_head">
             <button style="background-image:url('img/icon/deb_next.png'); " class="img_iconbar img_debug title_translate ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-button-disabled ui-state-disabled" id="img_set_editor_deb_play" disabled title="Weiter"></button>
             <button style="background-image:url('img/icon/deb_step.png'); " class="img_iconbar img_debug title_translate ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-button-disabled ui-state-disabled" id="img_set_editor_deb_next_step" disabled title="Step"></button>
@@ -425,15 +431,15 @@
             <button style="background-image:url('img/icon/debug-step-out.png'); " class="img_iconbar img_debug title_translate ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-button-disabled ui-state-disabled" id="img_set_editor_deb_out" disabled title="Out"></button>
             <button style="background-image:url('img/icon/debug-step-over.png'); " class="img_iconbar img_debug title_translate ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-button-disabled ui-state-disabled" id="img_set_editor_deb_over" disabled title="Over"></button>
         </div>
+        <div id="editor_deb_scopes"></div>
     </div>
     <!--<div id="editor"></div>-->
 </div>
-<div id="main_blockly" class="main_blockly main ui-widget-content" style="display: none"></div>
-<div id="main_brockly" class="main_editor main ui-widget-content" style="display: none">
-
-
-
+<div id="main_blockly" class="main_blockly main ui-widget-content" style="display: none">
+    <div id="blockly_toolbox" style="visibility: hidden"></div>
 </div>
+
+
 <div id="sim_log" class="sim_log frame_color ui-state-default" style="z-index: 4;">
     <div id="sim_log_head" class="sim_log_head ui-state-default"></div>
     <div class="div_sim_controll">
@@ -455,7 +461,7 @@
             <button class="translate" id="clear_force">Force entfernen</button>
         </div>
 
-        <div id="run_type" style="margin-top: 5px; width: 100%; display: flex;">
+        <div id="run_type" style="margin-top: 5px; width: 100%; display: flex;justify-content: space-around;">
             <input class="step" type="checkbox" id="run_step" disabled data-info="step" name="step"> <label
                 style="width: 60px" id="lba_run_step" for="run_step">Step</label>
             <input class="run_type" type="radio" id="run_type1" disabled data-info="sim" name="radio" checked="checked">
@@ -611,6 +617,23 @@
     <div class="circle1 wait_div"></div>
 </div>
 <div id="select_oid"></div>
-<div id="blockly_toolbox" style="visibility: hidden"></div>
+<div id="dialogConfirm" title="Question" style="display: none">
+    <p>
+        <span id="dialog-confirm-icon" class="ui-icon ui-icon-circle-check" style="float: left; margin: 0 7px 50px 0;"></span>
+        <span id="dialog-confirm-text"></span>
+    </p>
+</div>
+<div id="dialog-new-group" style="display: none">
+    <table style="width: 100%">
+        <tr>
+            <td class="translate">new group name</td>
+            <td><input style="display: inline-block; width: 200px" id="edit-new-group-name"></td>
+        </tr>
+        <tr>
+            <td class="translate">Create in:</td>
+            <td><select id="edit-new-group-group"></select></td>
+        </tr>
+    </table>
+</div>
 </body>
 </html>

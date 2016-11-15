@@ -10,7 +10,13 @@
     background-image: none;
 }
 
-#dialog_open::-webkit-scrollbar-thumb {
+.script_list::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);
+    background-image: none;
+}
+
+#editor_deb_scopes::-webkit-scrollbar-thumb {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(255, 255, 255, 0.35);
     background-image: none;
@@ -114,6 +120,7 @@ body {
     width: 100% !important;
     min-height: 20px;
     z-index: 81;
+    position: relative;
 }
 
 /*.menu {*/
@@ -2547,10 +2554,13 @@ ul.fancytree-container{
     position: absolute;
     background-color: rgba(0,255,255,0.2);
     /* opacity: 0.3; */
-    border: 1px solid cyan
+    border: 1px solid cyan;
+    z-index:10
 }
 
-
+.ace_active-line{
+    z-index: 2;
+}
 .open_script_tr{
     height: 30px;
 }
@@ -2559,3 +2569,63 @@ ul.fancytree-container{
 #table_open .ui-selected { background: #F39814; color: white; }
 #table_open { list-style-type: none; margin: 0; padding: 0; }
 #table_open li { display: flex; padding: 0.1em; font-size: 1.4em; }
+
+
+
+/*Script && Object Panel*/
+#grid-scripts{
+    height: 100%;
+    width: calc(100% - 10px)!Important;
+    padding-right: 8px;
+    position: absolute;
+    top: 0;
+    left: 10px;
+    border: none;
+}
+
+#right_panel{
+    height: 100%;
+    position: absolute;
+    right: 0px;
+    width: 400px;
+    z-index: 100;
+    max-width: 400px;
+}
+
+#right_panel_head{
+    height: 10px;
+    width: 2000px;
+    position: absolute;
+    left: -996px;
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+    top: 990px;
+}
+
+
+
+#selectID_1 > tbody > tr {
+    border: none!important;
+    height:25px;
+
+}
+
+
+
+#editor_deb_scopes{
+    overflow: scroll;
+    height: calc(100% - 50px);
+    width: 245;
+    margin-top: 10px;
+}
+
+#lba_run_step ,#lba_run_type1, #lba_run_type2, #lba_run_type3 {
+    border-radius: 6px;
+}
+
+.json-formatter-row .json-formatter-number {
+    color: #00bfff!important;
+}

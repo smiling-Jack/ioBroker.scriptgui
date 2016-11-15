@@ -3,25 +3,20 @@
  * Lizenz: [CC BY-NC 3.0](http://creativecommons.org/licenses/by-nc/3.0/de/)
  */
 
-var dc;
-//var cp = require('child_process');
 
 var sim_p;
 
 function sim_exit() {
-    console.log("exit");
-$(".menuBlocker").hide();
+    $(".menuBlocker").hide();
     $('#play_overlay').remove();
-    $("#run_type").show();
+    $("#run_type").show() ;
     $("#prg_panel").find("select,button, input:not(.force_input)").each(function () {
         $(this).removeAttr('disabled');
     });
 
-    if ($("#img_con_state").attr("src") == "img/icon/flag-yellow.png") {
-        $("#run_type1,#run_step").button({disabled: false});
-    } else if ($("#img_con_state").attr("src") == "img/icon/flag-green.png") {
-        $("#run_type1,#run_type2,#run_type3,#run_step").button({disabled: false});
-    }
+    $("#run_type1,#run_type2,#run_type3,#run_step,#img_set_script_play").button({disabled: false});
+    $("#img_set_script_stop").button({disabled: true});
+    //}
 
     $("#prg_body").css("border-color", "transparent");
 
@@ -50,50 +45,6 @@ $(".menuBlocker").hide();
     SGI.sim_run = false
 }
 
-//var net = require('net');
-
-
-//var debug = {
-//    socket:null,
-//    init: function(){
-//        this.socket = new net.Socket();
-//
-//        this.socket.on("connect", function(){
-//            console.log("debug connected");
-//        });
-//
-//        this.socket.on("data", function (data) {
-//            var _data = data.split(/\n\r\n/g);
-//            console.log("Data:");
-//            console.log(_data);
-//            $.each(_data,function(){
-//                try{
-//                    var d = JSON.parse(this);
-//                    console.log("event: " + d.event.toString())
-//                    if(d.event == "break"){debug.on_brake()}
-//                }catch (err){
-//                    console.log("parse error: "+ this)
-//                }
-//            })
-//        });
-//    },
-//    on_brake:function(){
-//        debug.send_cont(1000)
-//    },
-//    send_cont: function(time){
-//        setTimeout(function() {
-//            var msg = JSON.stringify({
-//                "type": "request",
-//                "command": "continue"
-//            });
-//            debug.socket.write("Content-Length: " + msg.length + "\r\n\r\n" + msg);
-//        },time);
-//    }
-//
-//};
-
-//debug.init();
-
 
 
 var sim = {
@@ -112,7 +63,8 @@ var sim = {
         catch (e) {
         }
 
-        var line_number = parseInt(err.match(/(s_engine:)\w+/)[0].split(":")[1]);
+        console.log(err.match(/(s_engine.js:)\w+/))
+        var line_number = parseInt(err.match(/(s_engine.js:)\w+/)[0].split(":")[1]);
 
         if (SGI.mode == "gui") {
             var real_script = js_beautify(Compiler.make_prg().toString());
@@ -244,23 +196,23 @@ console.log("simout")
     },
     trigger_highlight: function (id,cb) {
        $("#" + id).stop().animate({boxShadow: '0 0 30px 10px #0f0'}, sim.stepSpeed/2).animate({boxShadow: '0 0 0px 0px transparent'}, sim.stepSpeed/2);
-        $("#" + id).promise().done(function(){ SGI.backend.emit("next")});
+        $("#" + id).promise().done(function(){ backend.emit("next")});
     },
     step_fbs_highlight: function (id,cb) {
         $("#" + id).stop().animate({boxShadow: '0 0 30px 10px #f00'}, sim.stepSpeed/2).animate({boxShadow: '0 0 0px 0px transparent'}, sim.stepSpeed/2);
-        $("#" + id).promise().done(function(){ SGI.backend.emit("next")});
+        $("#" + id).promise().done(function(){ backend.emit("next")});
     },
     step_mbs_highlight_in: function (id,cb) {
        $("#" + id).stop().animate({boxShadow: '0 0 30px 10px #00f'}, sim.stepSpeed/3).animate({boxShadow: '0 0 0px 0px transparent'}, sim.stepSpeed/3);
-        $("#" + id).promise().done(function(){ SGI.backend.emit("next")});
+        $("#" + id).promise().done(function(){ backend.emit("next")});
     },
     step_mbs_highlight_out: function (id,cb) {
          $("#" + id).stop().animate({boxShadow: '0 0 30px 10px #f00'}, sim.stepSpeed/3).animate({boxShadow: '0 0 0px 0px transparent'}, sim.stepSpeed/3);
-        $("#" + id).promise().done(function(){ SGI.backend.emit("next")});
+        $("#" + id).promise().done(function(){ backend.emit("next")});
     },
     step_mbs_highlight_reset: function (id,cb) {
         $("#" + id).stop().animate({boxShadow: '0 0 30px 10px #ff0'}, sim.stepSpeed/2).animate({boxShadow: '0 0 0px 0px transparent'}, sim.stepSpeed/2);
-        $("#" + id).promise().done(function(){ SGI.backend.emit("next")});
+        $("#" + id).promise().done(function(){ backend.emit("next")});
     },
     logger: function (data) {
         console.log("logger-------------------------------");
@@ -276,13 +228,12 @@ console.log("simout")
             effect: "highlight",
             complete: function () {
                 $("*").finish();
-
             }
         });
         //sim_p.send(["exit"]);
         $("body").css("cursor","default");
-            SGI.clear_mark();
-        SGI.backend.emit("kill")
+            //SGI.clear_mark();
+        backend.emit("kill")
         }
     },
     running: function () {
@@ -318,7 +269,7 @@ console.log("simout")
                 $.each(PRG.struck.trigger, function () {
                     if (this.mbs_id == trigger) {
                         $.each(this.target, function () {
-                            SGI.backend.emit("trigger", this + "(" + JSON.stringify(SGI.start_data.valueOf()) + ")")
+                            backend.emit("trigger", this + "(" + JSON.stringify(SGI.start_data.valueOf()) + ")")
                             //sim_p.send(["trigger", this + "(" + JSON.stringify(SGI.start_data.valueOf()) + ")"]);
                         });
                         return false
@@ -328,7 +279,6 @@ console.log("simout")
         });
 
     },
-
     simulate: function () {
         if (!SGI.sim_run) {
             try {
@@ -342,9 +292,9 @@ console.log("simout")
                         if(sim.script == "" || sim.script == undefined){
                             sim.script = " ";
                         }
-                        SGI.backend.emit("start", [sim.script, sim.run_type, SGI.mode])
+                        backend.emit("start", [sim.script, sim.run_type, SGI.mode])
                     }, 0)
-                    console.log(sim.script)
+                    //console.log(sim.script)
                 } else {
 
 
@@ -364,7 +314,7 @@ console.log("simout")
                         if(sim.script == "" || sim.script == undefined){
                             sim.script = " ";
                         }
-                        SGI.backend.emit("start", [sim.script, sim.run_type, SGI.mode,bp])
+                        backend.emit("start", [sim.script, sim.run_type, SGI.mode,bp])
                     }, 0)
 
                     console.log(sim.script)

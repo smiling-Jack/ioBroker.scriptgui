@@ -1,11 +1,14 @@
 /**
  * Created by Schorling on 01.11.2016.
  */
+
+
+
 jQuery.extend(true, SGI, {
     load_blockly: function () {
 
-
         SGI.blockly_rendered = true;
+        //$("#main_blockly").load( "../javascript.admin/tab.html style" , function( data, textStatus, jqxhr ){})
        $("#blockly_toolbox").load( "../javascript.admin/tab.html #toolbox" , function( data, textStatus, jqxhr ) {
 
            var toolboxText = document.getElementById('toolbox').outerHTML;
@@ -49,6 +52,9 @@ jQuery.extend(true, SGI, {
            );
         });
 
+        $("#main_blockly").show();
+        $("window").trigger("resize")
+
 
     },
 
@@ -58,11 +64,15 @@ jQuery.extend(true, SGI, {
             SGI.load_blockly()
         }
 
+        $("#logo").hide();
+
+        $(".main").css({height: 'calc(100% - ' + (61 + $('#sim_log').height())+ 'px)'});
+        $(".main").css({width: 'calc(100% - ' + (2 + $('#right_panel').width())+ 'px)'});
 
         SGI.mode = "blockly";
         scope.setup.mode = "blockly";
         scope.$apply();
-        SGI.save_setup()
+        //SGI.save_setup()
 
     },
     hide_blockly: function () {

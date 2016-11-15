@@ -15,9 +15,27 @@ var PRG = {
     }
 };
 
-var SGI;
+var systemLang
 var sim;
-SGI = {
+var engines;
+var scripts;
+
+var $dialogConfirm;
+
+function _(data) {
+    return data
+}
+
+var main = {
+    objects: {},
+    states: {},
+    currentHost: '',
+    instances: [],
+    objectsLoaded: false,
+    waitForRestart: false,
+    selectId: null
+}
+var SGI = {
 
     dev: false,
     //version: main_manifest.version,
@@ -85,6 +103,36 @@ SGI = {
     },
 
     Setup: function () {
+
+
+        $dialogConfirm = $("#dialogConfirm")
+
+        $dialogConfirm.dialog({
+            autoOpen: false,
+            modal: true,
+            width: 400,
+            height: 200,
+            buttons: [
+                {
+                    text: _('Ok'),
+                    click: function () {
+                        var cb = $(this).data('callback');
+                        $(this).dialog('close');
+                        if (cb) cb(true);
+                    }
+                },
+                {
+                    text: _('Cancel'),
+                    click: function () {
+                        var cb = $(this).data('callback');
+                        $(this).dialog('close');
+                        if (cb) cb(false);
+                    }
+                }
+
+            ]
+        });
+
 
         //SGI.dev = true;
 
@@ -207,10 +255,10 @@ SGI = {
                         height: "10px",
                         "min-height": "10px"
                     });
-                    $(".main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
+                    $(".main ,#right_panel").css({height: 'calc(100% - ' + (61 + 10) + 'px)'});
                 } else {
                     $("#sim_log").css({height: "" + log_h + "px"});
-                    $(".main").css({height: 'calc(100% - ' + (58 + log_h) + 'px)'});
+                    $(".main ,#right_panel ").css({height: 'calc(100% - ' + (61 + log_h) + 'px)'});
                 }
             })
 
@@ -225,7 +273,7 @@ SGI = {
             .drag(function (ev, dd) {
                 if (start_h - dd.deltaY < 130) {
                     $("#sim_log").css({height: "130px"});
-                    $(".main").css({height: 'calc(100% - ' + (58 + 130) + 'px)'});
+                    $(".main,#right_panel").css({height: 'calc(100% - ' + (58 + 130) + 'px)'});
                 } else {
                     $("#sim_log").css({height: start_h - dd.deltaY + "px"});
                     $(".main").css({height: 'calc(100% - ' + (58 + start_h - dd.deltaY) + 'px)'});
@@ -238,8 +286,32 @@ SGI = {
                 height: "10px",
                 "min-height": "10px"
             });
-            $(".main").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
+            $(".main #right_panel").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
         }
+
+
+        $("#right_panel_head")
+            .hover(
+            function () {
+                $(this).addClass("ui-state-focus");
+            }, function () {
+                $(this).removeClass("ui-state-focus");
+            })
+            .dblclick(function () {
+                $(this).removeClass("ui-state-focus");
+                if ($("#right_panel").width() > 13) {
+                    $("#right_panel").css({
+                        width: "10px",
+                    });
+                    $(".main").css({width: 'calc(100% - 10px)'});
+                } else {
+                    $("#right_panel").css({
+                        width: "400px"
+                    });
+                    $('.main ').css({width: 'calc(100% - 400px)'});
+
+                }
+            })
 
 
         //if (scope.setup.mode == "gui") {
@@ -256,7 +328,6 @@ SGI = {
         SGI.menu_iconbar();
         SGI.context_menu();
         SGI.quick_help();
-        SGI.setup_socket();
         SGI.global_event();
         //SGI.check_fs(function () {
         //    //SGI.read_experts();
@@ -371,6 +442,12 @@ SGI = {
             } else if ((SGI.key == 17 || SGI.key == 91 || SGI.key == 93 || event.ctrlKey == true) && SGI.mode == "gui") {
                 $("body").css({cursor: "help"});
                 SGI.key = 17;
+            } else if (SGI.key == 81 && event.altKey == true) {
+                backend.emit("next", function (err) {
+                    console.log(err)
+
+                });
+
             }
         });
 
@@ -438,7 +515,7 @@ SGI = {
     },
 
     clear: function () {
-        if(SGI.mode == "gui"){
+        if (SGI.mode == "gui") {
             SGI.plumb_inst.inst_mbs.cleanupListeners();
 //    SGI.plumb_inst.inst_mbs.reset();
 //        SGI.plumb_inst.inst_fbs.reset();
@@ -465,9 +542,9 @@ SGI = {
             scope.reset_scope_watchers();
             scope.$apply();
             SGI.mbs_inst();
-        } else if( SGI.mode == "blockly"){
+        } else if (SGI.mode == "blockly") {
 
-        }else if( SGI.mode == "editor"){
+        } else if (SGI.mode == "editor") {
             SGI.editor.setValue("")
         }
 
@@ -546,6 +623,97 @@ SGI = {
             return cb("undefined")
         }
     },
+
+    confirmMessage: function (message, title, icon, buttons, callback) {
+        //from Blufox
+        if (typeof buttons === 'function') {
+            callback = buttons;
+            $dialogConfirm.dialog('option', 'buttons', [
+                {
+                    text: _('Ok'),
+                    click: function () {
+                        var cb = $(this).data('callback');
+                        $(this).dialog('close');
+                        if (cb) cb(true);
+                    }
+                },
+                {
+                    text: _('Cancel'),
+                    click: function () {
+                        var cb = $(this).data('callback');
+                        $(this).dialog('close');
+                        if (cb) cb(false);
+                    }
+                }
+
+            ]);
+        } else if (typeof buttons === 'object') {
+            for (var b = 0; b < buttons.length; b++) {
+                buttons[b] = {
+                    text: buttons[b],
+                    id: 'dialog-confirm-button-' + b,
+                    click: function (e) {
+                        var id = parseInt(e.currentTarget.id.substring('dialog-confirm-button-'.length), 10);
+                        var cb = $(this).data('callback');
+                        $(this).dialog('close');
+                        if (cb) cb(id);
+                    }
+                }
+            }
+            $dialogConfirm.dialog('option', 'buttons', buttons);
+        }
+
+        $dialogConfirm.dialog('option', 'title', title || _('Message'));
+        $('#dialog-confirm-text').html(message);
+        if (icon) {
+            $('#dialog-confirm-icon').show();
+            $('#dialog-confirm-icon').attr('class', '');
+            $('#dialog-confirm-icon').addClass('ui-icon ui-icon-' + icon);
+        } else {
+            $('#dialog-confirm-icon').hide();
+        }
+        $dialogConfirm.data('callback', callback);
+        $dialogConfirm.dialog('open');
+    },
+
+    open: function (id) {
+        var script = main.objects[id]
+        $("#wait_div").show();
+        console.log(script)
+
+        if (script) {
+            if (script.common.engineType == "Blockly") {
+                console.log("engine not supportet")
+                $("#wait_div").hide();
+                return
+            } else if (script.native && script.native.editor == "ScriptGUI") {
+
+                if (SGI.mode == "gui") {
+                    SGI.clear();
+
+                } else {
+                    SGI.show_gui();
+                    SGI.clear();
+                }
+
+                SGI.load_prg(script);
+                scope.$apply();
+
+            } else {
+                SGI.show_editor();
+                SGI.editor.setValue(script.common.source)
+                SGI.editor.navigateFileEnd()
+
+            }
+            SGI.file_name = script.common.name;
+            main.currentId = script._id;
+            $("#m_file").html(SGI.file_name)
+        }
+
+
+        $("#wait_div").hide();
+    }
+
 
 };
 

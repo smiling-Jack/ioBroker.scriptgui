@@ -25,40 +25,40 @@ jQuery.extend(true, SGI, {
 
 //        $("#img_iconbar").tooltip();
 //        $("#menu").menu({position: {at: "left bottom"}});
-        $("#m_neu").click(function () {
-            SGI.clear();
-
-            var x = '<div id="dialog_neu" style="text-align: left ;display: flex;justify-content: space-between;}" title="New Script">' +
-                '<button id="new_gui" style="width: 100px" class="btn_new"><img src="img/cube256.png" style="height: 50px; width: 50px" alt="">GUI </button>' +
-                '<button id="new_js" style="width: 100px" class="btn_new"><img src="img/js.jpeg" style="height: 50px; width: 50px" alt="">EDITOR</button>' +
-                '<button id="new_bl" style="width: 100px" class="btn_new"><img src="img/blockly.png" style="height: 50px; width: 50px" alt="">BLOCKLY</button></div>'
-
-            $("body").append(x)
-
-            $(".btn_new").button().click(function (ev) {
-                console.log(ev.currentTarget.id )
-              if(ev.currentTarget.id == "new_gui" ){
-                  $("#dialog_neu").remove();
-                  SGI.show_gui()
-              }else
-                if(ev.currentTarget.id == "new_js" ){
-                    $("#dialog_neu").remove();
-                    SGI.show_editor()
-                }
-            });
-
-            $("#dialog_neu").dialog({
-                width: "350px",
-                dialogClass: "shortcuts",
-                modal: true,
-                close: function () {
-                    $("#dialog_neu").remove();
-                },
-                open: function () {
-                }
-            });
-
-        });
+//        $("#m_neu").click(function () {
+//            SGI.clear();
+//
+//            var x = '<div id="dialog_neu" style="text-align: left ;display: flex;justify-content: space-between;}" title="New Script">' +
+//                '<button id="new_gui" style="width: 100px" class="btn_new"><img src="img/cube256.png" style="height: 50px; width: 50px" alt="">GUI </button>' +
+//                '<button id="new_js" style="width: 100px" class="btn_new"><img src="img/js.jpeg" style="height: 50px; width: 50px" alt="">EDITOR</button>' +
+//                '<button id="new_bl" style="width: 100px" class="btn_new"><img src="img/blockly.png" style="height: 50px; width: 50px" alt="">BLOCKLY</button></div>'
+//
+//            $("body").append(x)
+//
+//            $(".btn_new").button().click(function (ev) {
+//                console.log(ev.currentTarget.id )
+//                if(ev.currentTarget.id == "new_gui" ){
+//                    $("#dialog_neu").remove();
+//                    SGI.show_gui()
+//                }else
+//                if(ev.currentTarget.id == "new_js" ){
+//                    $("#dialog_neu").remove();
+//                    SGI.show_editor()
+//                }
+//            });
+//
+//            $("#dialog_neu").dialog({
+//                width: "350px",
+//                dialogClass: "shortcuts",
+//                modal: true,
+//                close: function () {
+//                    $("#dialog_neu").remove();
+//                },
+//                open: function () {
+//                }
+//            });
+//
+//        });
         $("#m_save").click(function () {
 //            if ($("body").find(".ui-dialog:not(.quick-help)").length == 0) {
             SGI.save_local();
@@ -131,40 +131,7 @@ jQuery.extend(true, SGI, {
                         })
 
                         $(".open_script_tr").dblclick(function () {
-                                c = doc.rows[$(this).attr("row")]
-                                $("#wait_div").show();
-                                console.log(c)
 
-
-                                if (c.value.common.engineType == "Blockly") {
-                                    console.log("engine not supportet")
-                                    $("#wait_div").hide();
-                                    return
-                                } else if (c.value.common.engineType == "GUI") {
-
-
-                                    if (SGI.mode == "gui") {
-                                        SGI.clear();
-
-                                    } else {
-                                        SGI.show_gui();
-                                        SGI.clear();
-                                    }
-
-                                    SGI.load_prg(c.value.native.prg);
-                                    scope.$apply();
-
-                                } else {
-                                    SGI.show_editor();
-                                    SGI.editor.setValue(c.value.common.source)
-                                    SGI.editor.navigateFileEnd()
-
-                                }
-                                SGI.file_name = c.value.common.name;
-                                $("#m_file").html(SGI.file_name)
-
-                                $("#dialog_open").remove();
-                                $("#wait_div").hide();
                             }
                         )
 
@@ -999,6 +966,8 @@ jQuery.extend(true, SGI, {
 
                 if (!SGI.sim_run) {
                     $("#img_set_script_play").append('<div id="play_overlay"  ></div>')
+                    $("#img_set_script_play").button({disabled: true});
+                    $("#img_set_script_stop").button({disabled: false});
                     sim.simulate();
                 }
             }
@@ -1028,9 +997,11 @@ jQuery.extend(true, SGI, {
         $('.run_type').click(function (id) {
 
             sim.run_type = $(".run_type:checked").data("info");
-        });
 
+            sim.step = $('#lba_run_step').attr("aria-pressed")
+        });
         $('#stepSpeed').hide()
+
         $('#run_step').click(function (id) {
             setTimeout(function () {
                 sim.step = $('#lba_run_step').attr("aria-pressed")
@@ -1077,61 +1048,7 @@ jQuery.extend(true, SGI, {
         });
 
 
-        $('#img_set_editor_deb_play').click(function () {
-            try {
-                $(".img_debug").button({disabled: true});
 
-                SGI.clear_mark();
-                SGI.backend.emit("next", function (err) {
-                    console.log(err)
-
-                });
-            }
-            catch (err) {
-            }
-        });
-
-        $('#img_set_editor_deb_next_step').click(function () {
-            console.log("setp")
-            try {
-                SGI.clear_mark();
-                $(".img_debug").button({disabled: true});
-                SGI.backend.emit("deb_step")
-
-            }
-            catch (err) {
-            }
-        });
-        $('#img_set_editor_deb_into').click(function () {
-            try {
-                SGI.clear_mark();
-                $(".img_debug").button({disabled: true});
-                SGI.backend.emit("deb_into")
-
-            }
-            catch (err) {
-            }
-        });
-        $('#img_set_editor_deb_out').click(function () {
-            try {
-                SGI.clear_mark();
-                $(".img_debug").button({disabled: true});
-                SGI.backend.emit("deb_out")
-
-            }
-            catch (err) {
-            }
-        });
-        $('#img_set_editor_deb_over').click(function () {
-            try {
-                SGI.clear_mark();
-                $(".img_debug").button({disabled: true});
-                SGI.backend.emit("deb_over")
-
-            }
-            catch (err) {
-            }
-        });
 
 
         $('.img_debug').click(function () {
@@ -1969,13 +1886,19 @@ jQuery.extend(true, SGI, {
     open_local: function () {
         // todo local is dead
         //if (SGI.mode == "gui") {
-        if (!SGI.mode) {
-            if (scope.setup.mode == "gui") {
+   /*     if (!SGI.mode) {
+            SGI.mode = "gui"
+            //if (scope.setup.mode == "gui") {
                 SGI.show_gui();
 
-            } else {
-                SGI.show_editor();
-            }
+            //} else {
+                //SGI.show_editor();
+            //}
+        }*/
+        if (!SGI.mode) {
+            SGI.mode = "editor"
+            SGI.show_editor();
+
         }
         if (SGI.mode == "gui") {
             SGI.clear();
@@ -1989,6 +1912,7 @@ jQuery.extend(true, SGI, {
         } else {
             SGI.editor.setValue(localStorage.getItem("script_editor"))
             SGI.editor.navigateFileEnd()
+            setTimeout()
         }
 
 

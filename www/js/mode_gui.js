@@ -44,7 +44,7 @@ jQuery.extend(true, SGI, {
                 $("#toolbox_" + val).show();
                 scope.setup.toolbox = val;
                 scope.$apply();
-                SGI.save_setup();
+                //SGI.save_setup();
                 $("#toolbox_select ~ span").removeClass("ui-state-focus")
             }
         });
@@ -144,11 +144,21 @@ jQuery.extend(true, SGI, {
             SGI.load_gui()
         }
 
+        $(".main").css({height: 'calc(100% - ' + (61 + $('#sim_log').height())+ 'px)'});
+        $(".main").css({width: 'calc(100% - ' + (2 + $('#right_panel').width())+ 'px)'});
 
-
-
+        sim.step = $('#lba_run_step').attr("aria-pressed")
+        if (sim.step == "true") {
+            $('#stepSpeed').show()
+        } else {
+            $('#stepSpeed').hide()
+        }
+        $("#lba_run_step").show();
+        $("#lba_run_type2").show();
+        $("#lba_run_type1").trigger("click");
         $("#main_gui").show();
         $(".set_gui").show();
+
 
         // slider XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         $(".prg_body").scrollTop(1000 - ($(".prg_body").height() / 2));
@@ -161,7 +171,7 @@ jQuery.extend(true, SGI, {
         SGI.mode = "gui";
         scope.setup.mode = "gui";
         scope.$apply();
-        SGI.save_setup()
+        //SGI.save_setup()
     },
 
     hide_gui: function(){
@@ -3039,10 +3049,10 @@ jQuery.extend(true, SGI, {
         });
     },
 
-    load_prg: function (_data) {
-        var data = _data;
+    load_prg: function (script) {
+        var data = script.native.prg;
         try {
-            if (data.version == undefined) {
+            if (script.native.version == undefined || script.native.version == "old") {
 
                 $.each(data.mbs, function () {
                     this["style"] = {
