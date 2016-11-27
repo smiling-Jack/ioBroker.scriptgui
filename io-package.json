@@ -31,7 +31,18 @@
     }
   },
   "native": {
+    "port":                     8088,
+    "auth":                     false,
+    "secure":                   false,
+    "bind":                     "0.0.0.0",
+    "ttl":                      3600,
+    "certPublic":               "",
+    "certPrivate":              "",
+    "certChained":              "",
 
+    "leEnabled":                false,
+    "leUpdate":                 false,
+    "leCheckPort":              80
     }
 
   }
