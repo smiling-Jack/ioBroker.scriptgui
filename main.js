@@ -11,9 +11,10 @@ var cp = require('child_process');
 //var back = require(__dirname +'/js/backend.js');
 //var back = require(__dirname +'/js/backend.js');
 
-var main = {}
+var main = {};
 var web;
 var debug;
+var running_id;
 var sim = {
     run_type: "sim",
     time_mode: "auto",
@@ -37,26 +38,6 @@ process.on("uncaughtException", function (err) {
     //    sim_p.kill('SIGINT');
     //});
 });
-
-function readDirs(dirs, cb, result) {
-    result = result || [];
-    if (!dirs || !dirs.length) {
-        return cb && cb(result);
-    }
-    var dir = dirs.shift();
-    adapter.readDir(dir, '', function (err, files) {
-        if (!err && files && files.length) {
-            for (var f = 0; f < files.length; f++) {
-                if (files[f].file.match(/\.html$/)) {
-                    result.push(dir + '/' + files[f].file);
-                }
-            }
-        }
-        setTimeout(function () {
-            readDirs(dirs, cb, result);
-        }, 0);
-    });
-}
 
 var getMimeType = function (ext) {
     if (ext instanceof Array) ext = ext[0];
@@ -135,20 +116,40 @@ var getMimeType = function (ext) {
     }
 
     return {mimeType: _mimeType, isBinary: isBinary};
+};
+
+
+function readDirs(dirs, cb, result) {
+    result = result || [];
+    if (!dirs || !dirs.length) {
+        return cb && cb(result);
+    }
+    var dir = dirs.shift();
+    adapter.readDir(dir, '', function (err, files) {
+        if (!err && files && files.length) {
+            for (var f = 0; f < files.length; f++) {
+                if (files[f].file.match(/\.html$/)) {
+                    result.push(dir + '/' + files[f].file);
+                }
+            }
+        }
+        setTimeout(function () {
+            readDirs(dirs, cb, result);
+        }, 0);
+    });
 }
 
 function l(data) {
     console.log("-------- l ----------");
-    console.log(data)
+    console.log(data);
     //web.emit("_log", data);
 };
 
 function jl(data) {
     console.log("-------- jl ----------");
-    console.log(data)
+    console.log(data);
     //socket.emit("_jlog", data);
 };
-
 
 var pDebug = function (obj) {
     this.port = obj && obj.port || 5858;
@@ -188,7 +189,7 @@ function parse_data(_this, data) {
             if (_this.outstandingRequests[requestSeq]) {
                 var cb = _this.outstandingRequests[requestSeq];
                 if (cb) {
-                    console.log('Respoce: ' + response.command + " seq: " + response.seq + "\n");
+                    console.log('Responce: ' + response.command + " seq: " + response.seq + "\n");
                     cb.call(_this, response);
                 }
                 delete _this.outstandingRequests[requestSeq];
@@ -199,9 +200,9 @@ function parse_data(_this, data) {
         }
     } catch (err) {
 
-        console.log("parse error")
-        console.log(err)
-        jl(data)
+        console.log("parse error");
+        console.log(err);
+        jl(data);
     }
 }
 
@@ -259,10 +260,10 @@ pDebug.prototype = {
                 } else {
 
                     buffer = buffer + _data[0].toString();
-                    console.log("len: " + len + " buffer: " + buffer.length)
+                    console.log("len: " + len + " buffer: " + buffer.length);
 
 
-                    if (len <= buffer.length) {
+                    if (len <= buffer.length + 40) {
                         parse_data(_this, buffer)
 
                     }
@@ -329,17 +330,17 @@ function init_web(settings) {
         }
         server.app = express();
         if (settings.auth) {
-            session = require('express-session');
-            cookieParser = require('cookie-parser');
-            bodyParser = require('body-parser');
-            AdapterStore = require(utils.controllerDir + '/lib/session.js')(session, settings.ttl);
-            passportSocketIo = require('passport.socketio');
-            password = require(utils.controllerDir + '/lib/password.js');
-            passport = require('passport');
-            LocalStrategy = require('passport-local').Strategy;
-            flash = require('connect-flash'); // TODO report error to user
+           var session = require('express-session');
+           var cookieParser = require('cookie-parser');
+           var bodyParser = require('body-parser');
+           var AdapterStore = require(utils.controllerDir + '/lib/session.js')(session, settings.ttl);
+           var passportSocketIo = require('passport.socketio');
+           var password = require(utils.controllerDir + '/lib/password.js');
+           var passport = require('passport');
+           var LocalStrategy = require('passport-local').Strategy;
+           var flash = require('connect-flash'); // TODO report error to user
 
-            store = new AdapterStore({adapter: adapter});
+           var store = new AdapterStore({adapter: adapter});
 
             passport.use(new LocalStrategy(
                 function (username, password, done) {
@@ -496,7 +497,12 @@ function init_web(settings) {
     socketSettings.forceWebSockets = settings.forceWebSockets || false;
 
     socketSettings.extensions = function (socket) {
-        socket.on("start", function (script) {
+        socket.on("start", function (script, callback) {
+            if(debug){
+          socket.emit("already_running")
+            }else{
+
+
             bp = {};
             mode = script[2];
 
@@ -606,7 +612,7 @@ function init_web(settings) {
 
                             } else {
                                 socket.emit("brake", event.body);
-
+console.log("emit scope")
                                 debug.send({
                                     "command": "scopes",
                                     "arguments": {
@@ -614,7 +620,7 @@ function init_web(settings) {
                                         inlineRefs: true
                                     }
                                 }, function (data) {
-
+                                    console.log("scope")
                                     socket.emit("scopes", data)
                                     //console.dir(data, {depth: null})
 
@@ -638,7 +644,7 @@ function init_web(settings) {
             debug.connect(function () {
 
                 console.log("Debugger connect")
-
+                running_id = socket.id;
                 debug.send({command: 'continue'}, function () {
 
                 });
@@ -691,29 +697,34 @@ function init_web(settings) {
 
             });
 
-
+            }
         });
         socket.on("delObject", function (id) {
             adapter.delForeignObject(id, "", function (err, data) {
             })
-        })
+        });
         socket.on("kill", function () {
-            debug.disconnect(function () {
-                sim_p.kill('SIGINT');
+            if (debug && running_id == socket.id){
+                debug.disconnect(function () {
+                    sim_p.kill('SIGINT');
+                    debug  = undefined;
+                });
+            }
 
-            });
         });
         socket.on("disconnect", function () {
-            debug.disconnect(function () {
-                sim_p.kill('SIGINT');
-
-            });
+            if (debug && running_id == socket.id) {
+                debug.disconnect(function () {
+                    sim_p.kill('SIGINT');
+                    debug  = undefined;
+                });
+            }
         });
         socket.on("trigger", function (data) {
             sim_p.send(["trigger", data]);
         });
         socket.on("next", function () {
-            console.log("---------------NEXT CONTINUE-----------------")
+            console.log("---------------NEXT CONTINUE-----------------");
             debug.send({command: 'continue'}, function () {
 
             });
@@ -737,7 +748,7 @@ function init_web(settings) {
             }, function (data) {
                 callback(data)
             });
-        })
+        });
         socket.on("clearBP", function (data, callback) {
 
             debug.send({
@@ -746,10 +757,10 @@ function init_web(settings) {
                     "breakpoint": bp[data]
                 }
             }, function (data) {
-                delete (data.body.line)
+                delete (data.body.line);
                 callback(data)
             });
-        })
+        });
         socket.on("setBP", function (data, callback) {
             console.log(data)
             debug.send({
@@ -765,12 +776,15 @@ function init_web(settings) {
                 jl(data)
 
             });
-        })
+        });
         socket.on("time", function (data, callback) {
-            console.log(data)
+            console.log(data);
             sim_p.send(["time", data])
+        });
+        socket.on("play_subscribe", function(data){
+            sim_p.send(["play_subscribe", data])
         })
-    }
+    };
 
     server.io = new IOSocket(server.server, socketSettings, adapter);
 
@@ -791,6 +805,8 @@ if (process.argv[2] == "local") {
     adapter.on('ready', function () {
         //console.log("--------ioBroker--------")
         //init();
+
+        socketUrl = ":" + (adapter.config.port || 8088);
 
         if (adapter.config.secure) {
             // Load certificates
