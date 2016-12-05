@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "scriptgui",
-    "version": "0.8.0",
+    "version": "0.8.1",
     "title": "ScriptGUI",
     "desc": "ScriptGUI",
     "authors": [
@@ -18,10 +18,10 @@
       "JS",
       ""
     ],
-    "localLink":    "%web_protocol%://%ip%:%web_port%/scriptgui/index.html",
+    "localLink": "http://%ip%:%port%/index.html",
     "enabled": false,
     "singleton": true,
-    "extIcon": "",
+    "extIcon": "https://raw.githubusercontent.com/smiling-Jack/ioBroker.scriptgui/master/public/img/cube32.png",
     "readme": "",
     "type": "script",
     "config": {
@@ -31,18 +31,18 @@
     }
   },
   "native": {
-    "port":                     8088,
-    "auth":                     false,
-    "secure":                   false,
-    "bind":                     "0.0.0.0",
-    "ttl":                      3600,
-    "certPublic":               "",
-    "certPrivate":              "",
-    "certChained":              "",
-
-    "leEnabled":                false,
-    "leUpdate":                 false,
-    "leCheckPort":              80
+    "bind": "0.0.0.0",
+    "port": "8088",
+    "secure": false,
+    "certPublic": "",
+    "certPrivate": "",
+    "certChained": "",
+    "auth": false,
+    "ttl": "",
+    "defaultUser": "admin",
+    "leEnabled": false,
+    "leUpdate": false,
+    "lePort": "80"
     }
 
   }

@@ -18,32 +18,20 @@ var mods = {
     //'coffee-compiler':  require('coffee-compiler'),
 
     'node-schedule': require('node-schedule'),
-    //'suncalc': require('suncalc'),
-    //'request': require('request'),
+    'suncalc': require('suncalc'),
+    'request': require('request'),
     //'wake_on_lan': require('wake_on_lan')
 }
 process.send(__dirname)
 var run_type = process.argv[3];
 var _script = process.argv[2];
 var _time_mode = "auto";
-var objects = {};
-var states = {};
+
 var script = {
     subscriptions: [],
     schedules: []
 };
-var subscriptions = [];
-var isEnums = false; // If some subscription wants enum
-var enums = [];
-var cacheObjectEnums = {};
-var channels = null;
-var devices = null;
-var fs = null;
-var attempts = {};
-var globalScript = '';
-var names = {};
-var timers = {};
-var timerId = 0;
+
 var name = "s_engine";
 var verbose = true;
 
@@ -95,10 +83,106 @@ setInterval(function(){
 
 
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+var objects = {};
+var states = {};
+var stateIds = [];
+var scripts = {};
+var subscriptions = [];
+var subscribedPatterns = {};
+var adapterSubs = {};
+var isEnums = false; // If some subscription wants enum
+var enums = [];
+var cacheObjectEnums = {};
+var channels = null;
+var devices = null;
+var fs = null;
+var attempts = {};
+var globalScript = '';
+var globalScriptLines = 0;
+var names = {};
+var timers = {};
+var timerId = 0;
+var activeRegEx = null;
 
 process.send(["init"]);
 function run(script) {
     var adapter = {
+        stateChange: function (id, state) {
+
+            if (id.match(/^messagebox\./) || id.match(/^log\./)) return;
+
+            var oldState = states[id] || {};
+            if (state) {
+
+                // enable or disable script
+                if (!state.ack && activeRegEx.test(id)) {
+                    adapter.extendForeignObject(objects[id].native.script, {common: {enabled: state.val}});
+                }
+                if (stateIds.indexOf(id) === -1) {
+                    stateIds.push(id);
+                    stateIds.sort();
+                }
+
+                // monitor if adapter is alive and send all subscriptions once more, after adapter goes online
+                if (states[id] && states[id].val === false && id.match(/\.alive$/) && state.val) {
+                    if (adapterSubs[id]) {
+                        var parts = id.split('.');
+                        var a = parts[2] + '.' + parts[3];
+                        for (var t = 0; t < adapterSubs[id].length; t++) {
+                            adapter.log.info('Detected coming adapter "' + a + '". Send subscribe: ' + adapterSubs[id][t]);
+                            adapter.sendTo(a, 'subscribe', adapterSubs[id][t]);
+                        }
+                    }
+                }
+
+                states[id] = state;
+            } else {
+                if (states[id]) delete states[id];
+                state = {};
+                var pos = stateIds.indexOf(id);
+                if (pos !== -1) {
+                    stateIds.splice(pos, 1);
+                }
+            }
+
+            var eventObj = {
+                id: id,
+                //name: name,
+                //common: common,
+                //native: nativeObj,
+                //channelId: channelId,
+                //channelName: channelName,
+                //deviceId: deviceId,
+                //deviceName: deviceName,
+                //enumIds: enumIds,       // Array of Strings
+                //enumNames: enumNames,     // Array of Strings
+                newState: {
+                    val: state.val,
+                    ts: state.ts,
+                    ack: state.ack,
+                    lc: state.lc,
+                    from: state.from
+                },
+                oldState: {
+                    val: oldState.val,
+                    ts: oldState.ts,
+                    ack: oldState.ack,
+                    lc: oldState.lc,
+                    from: oldState.from
+                }
+            };
+            eventObj.state = eventObj.newState;
+
+            if (isEnums) {
+                getObjectEnums(id, function (enumIds, enumNames) {
+                    eventObj.enumIds = enumIds;
+                    eventObj.enumNames = enumNames;
+                    checkPatterns(eventObj);
+                });
+            } else {
+                checkPatterns(eventObj);
+            }
+        },
         log: {
             log: function (msg) {
                 process.send(['log', msg])
@@ -648,7 +732,7 @@ function run(script) {
         return result;
     };
     function log(msg, sev) {
-        if (!sev) sev = 'info';
+        if (!sev) sev = 'log';
         if (!adapter.log[sev]) {
             msg = 'Unknown severity level "' + sev + '" by log of [' + msg + ']';
             sev = 'warn';
@@ -722,7 +806,7 @@ function run(script) {
         var subs = {
             pattern: pattern,
             callback: function (obj) {
-                if (callback) callback.call(sandbox, obj);
+                if (callback) callback.call(obj);
             },
             name: name
         };
@@ -851,7 +935,7 @@ function run(script) {
             }
 
             setTimeout(function () {
-                callback.call(sandbox);
+                callback.call();
                 // Reschedule in 2 seconds
                 setTimeout(function () {
                     if (__engine.__schedules > 0) __engine.__schedules--;
@@ -870,7 +954,7 @@ function run(script) {
                 pattern = parts.join(' ');
             }
             var schedule = mods['node-schedule'].scheduleJob(pattern, function () {
-                callback.call(sandbox);
+                callback.call();
             });
 
             script.schedules.push(schedule);
@@ -2621,6 +2705,11 @@ function run(script) {
     }
 
 
+
+    function simout(key, data) {
+        process.send(["simout", key, data]);
+    }
+
     process.send(["running"]);
     //vm.runInThisContext(script, "s_engine")
 
@@ -2642,6 +2731,18 @@ function run(script) {
             } else {
                 _time_mode = "auto"
             }
+        } else if (data[0] == "play_subscribe") {
+            //var _data = JSON.parse(data[1])
+            //todo make it with real value
+            adapter.stateChange(data[1], {
+                ack: true,
+                val: 0,
+                ts: 1,
+                lc: 0,
+                from: "test",
+                q: 0
+            })
+
         }
         else if (data[0] == "new_data") {
             //    var obj = [data[1].id, data[1].value, data[1].timestamp, data[1].certain, data[1].lasttimestamp];

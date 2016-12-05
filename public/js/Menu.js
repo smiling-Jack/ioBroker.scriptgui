@@ -2038,7 +2038,7 @@ jQuery.extend(true, SGI, {
             obj.common.source = SGI.editor.getValue();
         }
 
-        web.emit('setObject', main.currentId, obj, function (err) {
+        backend.emit('setObject', main.currentId, obj, function (err) {
             console.log(err)
         })
 
@@ -2098,48 +2098,7 @@ jQuery.extend(true, SGI, {
 
     },
 
-    error_box: function (data) {
-        var _data = data.split("\n").join("<br>").replace(/file:\/\/\//g, "").replace(/at HTMLDocument./g, "");
 
-        var mail = "";
-        if (scope.setup.user_mail.split("@").length > 1) {
-            mail = scope.setup.user_mail;
-        }
-
-        $("body").append('\
-                   <div id="dialog_info"  title="Info">\
-                   <div class="ui-state-error">' + SGI.translate("Es ist ein Fehler aufgetreten") + '</div>\
-                   <hr>\
-                   <div class="err_text">' + _data + '</div>\
-                   <hr>\
-                   <span>' + SGI.translate("Die Folgenden angaben sind optional:") + '</span><br><br>\
-                   <span style="width: 150px; display: inline-block">' + SGI.translate("E-Mail Adresse : ") + '</span><input id="inp_error_mail" value="' + mail + '" style="width: 317px; "type="email"/><br>\
-                   <div style="display: flex; align-items: center"><span style="width: 150px ; display: inline-block">' + SGI.translate("Kommentar : ") + '</span><textarea id="txt_error_comment" style="width: 315px; height: 60px; max-width: 315px"></textarea></div>\
-                   <span style="width: 150px; display: inline-block">' + SGI.translate("Programm Daten: ") + '</span></span><input id="inp_prg_data" style="height:20px; width:20px; margin-left: 0; vertical-align: middle;" checked value="true" type="checkbox"/><br>\
-                   <br><br>\
-                   <div style="text-align: center">\
-                   <button id="btn_info_send" >' + SGI.translate("Senden") + '</button>\
-                   <button style="margin-left: 20px" id="btn_info_close" >' + SGI.translate("Schliesen") + '</button>\
-        </div>\
-        </div>');
-
-        $("#dialog_info").dialog({
-            dialogClass: "error_box",
-            maxWidth: "90%",
-            width: "auto",
-            close: function () {
-                $("#dialog_info").remove();
-            }
-        });
-        $("#btn_info_close").button().click(function () {
-            $("#dialog_info").remove();
-        });
-
-        $("#btn_info_send").button().click(function () {
-            SGI.server_error(_data);
-            $("#dialog_info").remove();
-        });
-    },
 
 })
 ;

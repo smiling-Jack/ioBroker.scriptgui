@@ -645,6 +645,7 @@ jQuery.extend(true, SGI, {
         })
 
         backend.on("scopes", function (data) {
+            console.log("scope")
             var scopes = {
                 0: "Global",
                 1: "Local",
@@ -772,6 +773,11 @@ jQuery.extend(true, SGI, {
                 console.log(data)
             }
 
+        })
+        backend.on("already_running", function (data) {
+console.log("already_running")
+            SGI.confirmMessage("<div style='width: 100%; text-align: center; font-weight: bold; font-size: 14px'><p style='color: red; font-size: 22px'>Es wurde bereits eine Simulation gestartet </p><br> eventual durch einen anderen Browser ?</div>","info",false,{})
+            sim_exit()
         })
     },
 

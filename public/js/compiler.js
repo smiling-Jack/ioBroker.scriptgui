@@ -41,43 +41,43 @@ var Compiler = {
 
             if (PRG._scope.mbs[nr].type == "trigger_valNe") {
                 $.each(PRG._scope.mbs[nr].oid, function () {
-                    Compiler.trigger = 'subscribe({id:" ' + this + '" , valNe:false}, function (data){' + targets + ' }' + mbs_nr + '); ' + Compiler.script;
+                    Compiler.trigger = 'subscribe({id:"' + this + '" , valNe:false}, function (data){' + targets + ' }' + mbs_nr + '); ' + Compiler.script;
                 });
             }
             if (PRG._scope.mbs[nr].type == "trigger_event") {
 
                 $.each(PRG._scope.mbs[nr].oid, function () {
-                    Compiler.trigger += 'subscribe({id: ' + this + '}, function (data){' + targets + ' }' + mbs_nr + '); '
+                    Compiler.trigger += 'subscribe({id: "' + this + '"}, function (data){' + targets + ' }' + mbs_nr + '); '
                 });
             }
             if (PRG._scope.mbs[nr].type == "trigger_EQ") {
 
                 $.each(PRG._scope.mbs[nr].oid, function () {
-                    Compiler.trigger += 'subscribe({id:" ' + this + '" , change:"eq"}, function (data){' + targets + ' }' + mbs_nr + '); '
+                    Compiler.trigger += 'subscribe({id:"' + this + '" , change:"eq"}, function (data){' + targets + ' }' + mbs_nr + '); '
                 });
             }
             if (PRG._scope.mbs[nr].type == "trigger_NE") {
 
                 $.each(PRG._scope.mbs[nr].oid, function () {
-                    Compiler.trigger += 'subscribe({id:" ' + this + '" , change:"ne"}, function (data){' + targets + ' }' + mbs_nr + '); '
+                    Compiler.trigger += 'subscribe({id:"' + this + '" , change:"ne"}, function (data){' + targets + ' }' + mbs_nr + '); '
                 });
             }
             if (PRG._scope.mbs[nr].type == "trigger_GT") {
 
                 $.each(PRG._scope.mbs[nr].oid, function () {
-                    Compiler.trigger += 'subscribe({id:" ' + this + '" , change:"gt"}, function (data){' + targets + ' }' + mbs_nr + '); '
+                    Compiler.trigger += 'subscribe({id:"' + this + '" , change:"gt"}, function (data){' + targets + ' }' + mbs_nr + '); '
                 });
             }
             if (PRG._scope.mbs[nr].type == "trigger_GE") {
 
                 $.each(PRG._scope.mbs[nr].oid, function () {
-                    Compiler.trigger += 'subscribe({id:" ' + this + '" , change:"ge"}, function (data){' + targets + ' }' + mbs_nr + '); '
+                    Compiler.trigger += 'subscribe({id:"' + this + '" , change:"ge"}, function (data){' + targets + ' }' + mbs_nr + '); '
                 });
             }
             if (PRG._scope.mbs[nr].type == "trigger_LT") {
 
                 $.each(PRG._scope.mbs[nr].oid, function () {
-                    Compiler.trigger += 'subscribe({id:" ' + this + '" , change:"lt"}, function (data){' + targets + ' }' + mbs_nr + '); '
+                    Compiler.trigger += 'subscribe({id:"' + this + '" , change:"lt"}, function (data){' + targets + ' }' + mbs_nr + '); '
                 });
             }
             if (PRG._scope.mbs[nr].type == "trigger_LE") {
@@ -89,7 +89,7 @@ var Compiler = {
             if (PRG._scope.mbs[nr].type == "trigger_val") {
 
                 $.each(PRG._scope.mbs[nr].oid, function (index) {
-                    Compiler.trigger += 'subscribe({id:" ' + this + '" , ' + PRG._scope.mbs[nr]["val"][index] + ':' + PRG._scope.mbs[nr]["wert"][index] + '}, function (data){' + targets + ' }' + mbs_nr + '); '
+                    Compiler.trigger += 'subscribe({id:"' + this + '" , ' + PRG._scope.mbs[nr]["val"][index] + ':' + PRG._scope.mbs[nr]["wert"][index] + '}, function (data){' + targets + ' }' + mbs_nr + '); '
                 });
             }
             if (PRG._scope.mbs[nr].type == "trigger_time") {
@@ -160,7 +160,7 @@ var Compiler = {
                 Compiler.trigger += 'var now = h.toString() + ":" + m.toString() +":00";';
                 Compiler.trigger += 'if(';
                 $.each(PRG._scope.mbs[nr].oid, function (index) {
-
+                    // todo remove homematic !!!
                     Compiler.trigger += 'homematic.uiState["_"+' + this + '] == now';
                     if (index + 1 < n) {
                         Compiler.trigger += ' || ';

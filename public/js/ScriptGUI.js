@@ -22,6 +22,7 @@ var scripts;
 
 var $dialogConfirm;
 
+
 function _(data) {
     return data
 }
@@ -36,6 +37,7 @@ var main = {
     selectId: null,
     watcher: {}
 }
+
 var SGI = {
 
     dev: false,
@@ -613,47 +615,6 @@ var SGI = {
         }
     },
 
-    //get_id_by_name: function (name) {
-    //    var id = 0;
-    //    $.each(main.objects, function (key) {
-    //
-    //        if (key > 99999) {
-    //            if (this.Name == name) {
-    //                id = key;
-    //                return false
-    //            }
-    //        }
-    //    });
-    //    return id
-    //},
-
-    //get_lowest_obj_id: function (name, cb) {
-    //
-    //    if (SGI.con_data) {
-    //        var last_id = 100000;
-    //        var id_by_name = SGI.get_id_by_name(name);
-    //        if (id_by_name == 0) {
-    //            $.each(Object.keys(main.objects).sort(), function () {
-    //
-    //                var id = parseInt(this);
-    //                if (id > 99999) {
-    //                    if (id == last_id) {
-    //                        last_id++;
-    //                    } else {
-    //                        return false
-    //                    }
-    //                }
-    //            });
-    //            return cb(last_id)
-    //
-    //        } else {
-    //            return cb(id_by_name)
-    //        }
-    //    } else {
-    //        return cb("undefined")
-    //    }
-    //},
-
     confirmMessage: function (message, title, icon, buttons, callback) {
         //from Blufox
         if (typeof buttons === 'function') {
@@ -761,6 +722,7 @@ var SGI = {
 
 
     },
+
     play_subscribe: function (id) {
         backend.emit("play_subscribe", id)
     },
@@ -769,12 +731,70 @@ var SGI = {
         SGI.log_nr++;
         $("#sim_output").prepend("<tr id='log_nr" + SGI.log_nr + "'><td style='width: 100px'>" + sim.gettime_m() + "</td><td class='log_" + type + "'>" + type + ": " + data + "</td></tr>")
 
-        if(SGI.log_nr >= 100){
-            $("#log_nr" + (SGI.log_nr-100)).remove();
+        if (SGI.log_nr >= 100) {
+            $("#log_nr" + (SGI.log_nr - 100)).remove();
         }
     }
 };
 
+
+function error_box(data) {
+    var _data = data.toString().split("\n").join("<br>").replace(/file:\/\/\//g, "").replace(/at HTMLDocument./g, "");
+
+    var mail = "";
+
+
+    $("body").append('\
+                   <div id="dialog_info"  title="Info">\
+                   <div class="ui-state-error">' + SGI.translate("Es ist ein Fehler aufgetreten") + '</div>\
+                   <hr>\
+                   <div class="err_text">' + _data + '</div>\
+                   <hr>\
+                   <span>' + SGI.translate("Die Folgenden angaben sind optional:") + '</span><br><br>\
+                   <span style="width: 150px; display: inline-block">' + SGI.translate("E-Mail Adresse : ") + '</span><input id="inp_error_mail" value="' + mail + '" style="width: 317px; "type="email"/><br>\
+                   <div style="display: flex; align-items: center"><span style="width: 150px ; display: inline-block">' + SGI.translate("Kommentar : ") + '</span><textarea id="txt_error_comment" style="width: 315px; height: 60px; max-width: 315px"></textarea></div>\
+                   <br><br>\
+                   <div style="text-align: center">\
+                   <button id="btn_info_send" >' + SGI.translate("Senden") + '</button>\
+                   <button style="margin-left: 20px" id="btn_info_close" >' + SGI.translate("Schliesen") + '</button>\
+        </div>\
+        </div>');
+
+    $("#dialog_info").dialog({
+        dialogClass: "error_box",
+        maxWidth: "90%",
+        width: "auto",
+        close: function () {
+            $("#dialog_info").remove();
+        }
+    });
+    $("#btn_info_close").button().click(function () {
+        $("#dialog_info").remove();
+    });
+
+    $("#btn_info_send").button().click(function () {
+
+        var mail = $("#inp_error_mail").val();
+        var komment = $("#txt_error_comment").val();
+
+        var send_data = {
+            subject: data.toString().split("\n")[0],
+            text: data + "\n\nKommentar: " + komment + "\n\nE-mail: " + mail
+
+        };
+        console.log(send_data)
+        $.get("http://37.120.169.17:3500/send", send_data, function (data) {
+        });
+        $("#dialog_info").remove();
+
+    });
+}
+
+
+window.onerror = function (messageOrEvent, source, lineno, colno, error) {
+    error_box(error.stack)
+    return true
+}
 
 // Prototypes  todo make more
 

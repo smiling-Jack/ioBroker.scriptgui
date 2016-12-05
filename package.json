@@ -46,15 +46,24 @@
     }
   ],
   "dependencies": {
-    "iobroker.socketio": "*"
+    "iobroker.socketio": "*",
+    "express": "^4.14.0",
+    "cookie-parser": "^1.4.3",
+    "body-parser": "^1.15.2",
+    "express-session": "^1.14.0",
+    "passport-local": "^1.0.0",
+    "passport.socketio": "^3.6.2",
+    "passport": "^0.3.2",
+    "request": "^2.73.0",
+    "connect-flash": "^0.1.1",
+    "xtend": "^4.0.1",
+    "letsencrypt": "^2.1.5",
+    "le-challenge-fs": "^2.0.4",
+    "le-sni-auto": "^2.0.1",
+    "le-store-certbot": "^2.0.3"
   },
   "description": "ScriptGUI",
   "devDependencies": {
-    "grunt": "~0.4.4",
-    "grunt-contrib-clean": "~0.5.0",
-    "grunt-contrib-compress": "~0.8.0",
-    "grunt-contrib-copy": "~0.5.0",
-    "grunt-contrib-jshint": "~0.10.0"
   },
   "directories": {},
   "dist": {
@@ -85,5 +94,5 @@
     "url": "git+https://github.com/smiling-Jack/ScriptGUI.app"
   },
   "scripts": {},
-  "version": "0.8.0"
+  "version": "0.8.1"
 }
