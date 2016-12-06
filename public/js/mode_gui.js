@@ -2645,19 +2645,13 @@ jQuery.extend(true, SGI, {
 
     change_id: function (opt) {
 
-        $.id_select({
-            type: "singel",
-            close: function (oid) {
-
-            }
-        });
-
         $('#select_oid').selectId('show',{
                 common: {
                     //custom: instance
                 }
             },
             function (newId, ignore, obj) {
+
                 if (newId != null) {
                     if (newId != null) {
 

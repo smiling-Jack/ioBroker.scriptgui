@@ -1,5 +1,3 @@
-
-
 var mods = {
     //'vm':               require('vm'),
     //'fs': require('fs'),
@@ -44,13 +42,11 @@ var old_date = Date;
 var sd = [];
 
 
-
 process.on('message', function (data) {
-    console.log("message : " + data)
-    if (data[0] == "home") {
-        //objects = data[1].regaObjects;
-        //sim.regaIndex = data[1].regaIndex;
-        //states = data[1].uiState;
+    //console.log("message : " + data)
+    if (data[0] == "iobroker") {
+        objects = data[1];
+        states = data[2];
 
         run(script);
 
@@ -75,11 +71,11 @@ Date = function () {
 };
 
 
-setInterval(function(){
+setInterval(function () {
     var d = new Date
 
     process.send(["sim_Time", d.valueOf()])
-},1000)
+}, 1000)
 
 
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -833,7 +829,7 @@ function run(script) {
         if (verbose) log('subscribe: ' + JSON.stringify(subs), 'info');
 
         subscriptions.push(subs);
-        process.send(["add_subscribe",JSON.stringify(subs)])
+        process.send(["add_subscribe", JSON.stringify(subs)])
         if (pattern.enumName || pattern.enumId) isEnums = true;
         return subs;
     };
@@ -2705,7 +2701,6 @@ function run(script) {
     }
 
 
-
     function simout(key, data) {
         process.send(["simout", key, data]);
     }
@@ -2722,8 +2717,7 @@ function run(script) {
 
         }
         else if (data[0] == "time") {
-            if (data[1][0] == "manual")
-            {
+            if (data[1][0] == "manual") {
                 _time_mode = "manual";
 
                 sd = new old_date(data[1][1])
@@ -2744,137 +2738,10 @@ function run(script) {
             })
 
         }
-        else if (data[0] == "new_data") {
-            //    var obj = [data[1].id, data[1].value, data[1].timestamp, data[1].certain, data[1].lasttimestamp];
-            //
-            //    var o = {
-            //        Value: data[1].value,
-            //        Timestamp: data[1].timestamp,
-            //        Certain: data[1].certain
-            //    };
-            //
-            //
-            //    if (!obj) {
-            //        return;
-            //    }
-            //    var id = obj[0];
-            //
-            //    var name,
-            //        parent,
-            //        channelName,
-            //        deviceName,
-            //        channelType,
-            //        deviceType,
-            //        rooms = [],
-            //        funcs = [],
-            //        roomNames = [],
-            //        funcNames = [];
-            //
-            //
-            //    if (objects[id]) {
-            //        name = objects[id].Name;
-            //        parent = objects[id].Parent;
-            //    }
-            //
-            //    if (parent) {
-            //
-            //        channelName = objects[parent].Name;
-            //        channelType = objects[parent].HssType;
-            //
-            //        // Räume finden
-            //        var roomIndex = sim.regaIndex.ENUM_ROOMS;
-            //        for (var i = 0; i < roomIndex.length; i++) {
-            //            var room = roomIndex[i];
-            //            if (objects[room].Channels.indexOf(parent) != -1) {
-            //                rooms.push(room);
-            //                roomNames.push(objects[room].Name);
-            //            }
-            //        }
-            //
-            //        // Gewerke finden
-            //        var funcIndex = sim.regaIndex.ENUM_FUNCTIONS;
-            //        for (var i = 0; i < funcIndex.length; i++) {
-            //            var func = funcIndex[i];
-            //            if (objects[func].Channels.indexOf(parent) != -1) {
-            //                funcs.push(func);
-            //                funcNames.push(objects[func].Name);
-            //            }
-            //        }
-            //
-            //        // Gerät
-            //        var device = objects[parent].Parent;
-            //        deviceName = (objects[device] ? objects[device].Name : undefined);
-            //        deviceType = (objects[device] ? objects[device].HssType : undefined);
-            //
-            //    }
-            //
-            //
-            //    var oldObj = states[id];
-            //
-            //    if (!oldObj) {
-            //        oldObj = [];
-            //    }
-            //
-            //    states[id] = [obj[1], obj[2], obj[3], obj[4]];
-            //
-            //    var eventObj = {
-            //        id: id,
-            //        name: name,
-            //        newState: {
-            //            value: obj[1],
-            //            timestamp: obj[2],
-            //            ack: obj[3],
-            //            lastchange: obj[4]
-            //        },
-            //        oldState: {
-            //            value: oldObj[0],
-            //            timestamp: oldObj[1],
-            //            ack: oldObj[2],
-            //            lastchange: oldObj[3]
-            //        },
-            //        channel: {
-            //            id: parent,
-            //            name: channelName,
-            //            type: channelType,
-            //            funcIds: funcs,
-            //            roomIds: rooms,
-            //            funcNames: funcNames,
-            //            roomNames: roomNames
-            //        },
-            //        device: {
-            //            id: device,
-            //            name: deviceName,
-            //            type: deviceType
-            //        }
-            //
-            //    };
-            //
-            //
-            //    var length = subscribers.length;
-            //    for (var i = 0; i < length; i++) {
-            //        //
-            //        if (patternMatching(eventObj, subscribers[i].pattern)) {
-            //            //$("#" + scope.mbs[subscribers[i].mbs_nr].mbs_id).children().effect("highlight", {color: "green"}, 800);
-            //            process.send(["trigger_highlight", subscribers[i].mbs_nr]);
-            //            subscribers[i].callback(eventObj);
-            //
-            //        }
-            //    }
-            //}
-            //else if (data[0] == "force") {
-            //    var x = data[2];
-            //    var force = data[1];
-            //    if (force == "" || force == undefined || force == "undefined" || force == NaN) {
-            //        eval(x + "_force = undefined ;");
-            //    } else if (force == "true") {
-            //        eval(x + "_force = 1 ;");
-            //    } else if (force == "false") {
-            //        eval(x + "_force = 0 ;");
-            //    } else if (isNaN(force)) {
-            //        eval(x + "_force = '" + force.toString() + "';");
-            //    } else {
-            //        eval(x + "_force = " + force + ";");
-            //    }
+        else if (data[0] == "stateChange") {
+            adapter.stateChange(data[1], data[2])
+        } else if (data[0] == "objectChange") {
+            objects[data[1]] = data[2]
         }
     });
 }

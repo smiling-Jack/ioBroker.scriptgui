@@ -186,12 +186,12 @@ var Compiler = {
             }
             if (PRG._scope.mbs[nr].type == "ccuobj") {
 
-                Compiler.obj += 'setObject(' + PRG._scope.mbs[nr].oid + ', { Name: "' + PRG._scope.mbs[nr]["name"] + '", TypeName: "VARDP"}); '
+                Compiler.obj += 'setObject("' + PRG._scope.mbs[nr].oid + '", { Name: "' + PRG._scope.mbs[nr]["name"] + '", TypeName: "VARDP"}); '
 
             }
             if (PRG._scope.mbs[nr].type == "ccuobjpersi") {
 
-                Compiler.obj += 'setObject(' + PRG._scope.mbs[nr].oid + ', { Name: "' + PRG._scope.mbs[nr]["name"] + '", TypeName: "VARDP" , _persistent:true}); '
+                Compiler.obj += 'setObject("' + PRG._scope.mbs[nr].oid + '", { Name: "' + PRG._scope.mbs[nr]["name"] + '", TypeName: "VARDP" , _persistent:true}); '
 
             }
             if (PRG._scope.mbs[nr].type == "trigger_start") {
@@ -460,16 +460,16 @@ var Compiler = {
                 }
                 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                 if (this["type"] == "input") {
-                    Compiler.script += output + ' = getState(' + PRG._scope.fbs[nr].oid + ');';
+                    Compiler.script += output + ' = getState("' + PRG._scope.fbs[nr].oid + '").val;';
                 }
                 if (this["type"] == "inputlocal") {
-                    Compiler.script += output + ' = ' + this.oid + ';';
+                    Compiler.script += output + ' = "' + this.oid + '";';
                 }
                 if (this["type"] == "output") {
-                    Compiler.script += 'setState(' + this.oid + ',' + this["input"][0]["herkunft"] + ');';
+                    Compiler.script += 'setState("' + this.oid + '",' + this["input"][0]["herkunft"] + ');';
                 }
                 if (this["type"] == "outputlocal") {
-                    Compiler.script += this.oid + ' = ' + this["input"][0]["herkunft"] + ' ;';
+                    Compiler.script +='"'+ this.oid + '" = ' + this["input"][0]["herkunft"] + ' ;';
                 }
                 if (this["type"] == "debugout") {
                     Compiler.script += 'log("' + SGI.file_name + ' -> ' + PRG._scope.mbs[PRG._scope.fbs[nr]["parent"].split("_").pop()].titel + ' -> " + ' + this["input"][0]["herkunft"] + ');';
@@ -882,7 +882,7 @@ process.send(time2);\
                 }
                 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                 if (this["type"] == "linput") {
-                    Compiler.script += output + ' = regaObjects[' + this.oid + ']["Channels"];';
+                    Compiler.script += output + ' = regaObjects["' + this.oid + '"]["Channels"];';
                 }
                 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                 if (this["type"] == "lfdevice") {
@@ -951,9 +951,9 @@ process.send(time2);\
                     Compiler.script += 'var _out3 = [];';
                     Compiler.script += 'for(var i = 0;i<' + this["input"][0].herkunft + '.length;i++){';
                     Compiler.script += 'if (regaObjects[' + this["input"][0].herkunft + '[i]]["ValueType"] == 4){';
-                    Compiler.script += ' var val = getState(' + this["input"][0].herkunft + '[i]).toFixed(1) ';
+                    Compiler.script += ' var val = getState(' + this["input"][0].herkunft + '[i]).val.toFixed(1) ';
                     Compiler.script += '}else{';
-                    Compiler.script += ' var val = getState(' + this["input"][0].herkunft + '[i]) ';
+                    Compiler.script += ' var val = getState(' + this["input"][0].herkunft + '[i]).val ';
                     Compiler.script += '}';
                     Compiler.script += '    if(val ' + PRG._scope.fbs[nr]["opt"] + ' ' + PRG._scope.fbs[nr]["opt2"].toString() + '  || ' + PRG._scope.fbs[nr]["opt2"].toString() + ' == ""){';
                     Compiler.script += '    _out1.push(val.toString());';
