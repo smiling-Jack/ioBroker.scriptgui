@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "scriptgui",
-    "version": "0.8.1",
+    "version": "0.8.2",
     "title": "ScriptGUI",
     "desc": "ScriptGUI",
     "authors": [
@@ -44,5 +44,4 @@
     "leUpdate": false,
     "lePort": "80"
     }
-
   }

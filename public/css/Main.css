@@ -304,7 +304,7 @@ body {
     z-index: 100;
     width: calc(100% - 10px);
     right: -1px;
-    height: calc(100% - 6px);
+    height: calc(100% - 2px);
 }
 
 .xs_button_toolbox {
@@ -468,7 +468,7 @@ body {
     min-height: 100px;
     align-self: flex-end;
     display: block;
-    bottom: 0;
+    bottom: 0px;
     max-height: calc(100% - 200px);
     position: absolute;
 }
@@ -559,10 +559,10 @@ body {
 
 .prg_body {
     position: relative !important;
-    top: -32px;
+    top: -30px;
     left: 182px;
-    width: calc(100% - 192px);
-    height: calc(100% - 14px);
+    width: calc(100% - 195px);
+    height: calc(100% - 11px);
     overflow: scroll;
     max-height: 100%;
     border: 5px solid transparent;
