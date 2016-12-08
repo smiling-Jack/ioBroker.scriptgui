@@ -314,14 +314,14 @@ function init() {
 
             adapter.on('stateChange', function (id, state) {
                 main.states[id] = state;
-                if(debug){
-                    sim_p.send(["stateChange",id, state])
+                if (debug) {
+                    sim_p.send(["stateChange", id, state])
                 }
             });
             adapter.on('objectChange', function (id, obj) {
                 main.objects[id] = obj;
-                if(debug){
-                    sim_p.send(["objectChange",id, obj])
+                if (debug) {
+                    sim_p.send(["objectChange", id, obj])
                 }
             });
 
@@ -806,6 +806,17 @@ function init_web(settings) {
         socket.on("play_subscribe", function (data) {
             sim_p.send(["play_subscribe", data])
         })
+        socket.on("getObjectList", function (callback) {
+            adapter.objects.getObjectList({include_docs: true}, function (err, res) {
+                res = res.rows;
+                var objects = {};
+                for (var i = 0; i < res.length; i++) {
+                    objects[res[i].doc._id] = res[i].doc;
+                }
+                callback(objects)
+            });
+        })
+
     };
 
     server.io = new IOSocket(server.server, socketSettings, adapter);
