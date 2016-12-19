@@ -2084,8 +2084,16 @@ jQuery.extend(true, SGI, {
         if (SGI.mode == "gui") {
             //editor.setValue(js_beautify(data.toString(), {indent_size: 2}), -1);
             editor.setValue(data.toString(), {indent_size: 2}, -1);
-        } else {
+        } else if(SGI.mode == "editor") {
             editor.setValue(SGI.editor.getValue(), -1);
+        }else if (SGI.mode == "blockly"){
+
+            var code = Blockly.JavaScript.workspaceToCode(scripts.blocklyWorkspac);
+
+            code = code+ "\n\n\n"
+            code = code + SGI.jsCode2Blockly(code);
+
+            editor.setValue(code);
         }
 
         editor.setReadOnly(true)

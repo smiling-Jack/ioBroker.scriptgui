@@ -145,8 +145,7 @@ jQuery.extend(true, SGI, {
             SGI.load_gui()
         }
 
-        $(".main").css({height: 'calc(100% - ' + (61 + $('#sim_log').height())+ 'px)'});
-        $(".main").css({width: 'calc(100% - ' + (2 + $('#right_panel').width())+ 'px)'});
+        SGI.setMain();
 
         sim.step = $('#lba_run_step').attr("aria-pressed")
         if (sim.step == "true") {

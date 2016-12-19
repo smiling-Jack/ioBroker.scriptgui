@@ -19,7 +19,7 @@ function sim_exit() {
     $("#img_set_script_stop").button({disabled: true});
     //}
 
-    $("#prg_body").css("border-color", "transparent");
+    $(".main").removeClass("main_runShadow")
 
     $(".btn_min_trigger").unbind("click");
     $(document).unbind("new_data");
@@ -263,6 +263,7 @@ var sim = {
             //sim_p.send(["exit"]);
             $("body").css("cursor", "default");
             //SGI.clear_mark();
+            console.log("kill")
             backend.emit("kill")
         }
     },
@@ -270,7 +271,7 @@ var sim = {
         SGI.sim_run = true;
         $(".menuBlocker").show();
         $("body").css("cursor", "pointer");
-        $("#prg_body").css("border-color", "red");
+        $(".main").addClass("main_runShadow")
         var scope = angular.element($('body')).scope();
         var that = this;
 

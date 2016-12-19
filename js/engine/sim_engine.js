@@ -20,7 +20,7 @@ var mods = {
     'request': require('request'),
     //'wake_on_lan': require('wake_on_lan')
 }
-process.send(__dirname)
+//process.send(__dirname)
 var run_type = process.argv[3];
 var _script = process.argv[2];
 var _time_mode = "auto";
@@ -71,11 +71,7 @@ Date = function () {
 };
 
 
-setInterval(function () {
-    var d = new Date
 
-    process.send(["sim_Time", d.valueOf()])
-}, 1000)
 
 
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2708,6 +2704,11 @@ function run(script) {
     process.send(["running"]);
     //vm.runInThisContext(script, "s_engine")
 
+    setInterval(function () {
+        var d = new Date
+
+        process.send(["sim_Time", d.valueOf()])
+    }, 1000)
 
     eval(_script + "//# sourceURL=s_engine.js");
 

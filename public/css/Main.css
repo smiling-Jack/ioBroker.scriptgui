@@ -241,24 +241,35 @@ body {
     border-radius: 4px;
 }
 
-.main_gui {
+.main{
+    border: 0px solid transparent !important;
     position: relative;
     overflow: hidden;
     left: 0;
-    width: calc(100% - 2px);
+    width: 10px;
     margin: 0 !important;
     min-height: 142px;
-    height: calc(100% - 188px);
+    height: 10px;
+    z-index: 10
+}
+.main_runShadow::after{
+    content: " ";
+    width: 100%;
+    height: 100%;
+    -webkit-box-shadow: inset 0px 0px 0px 3px rgba(255, 0, 0, 1);
+    -moz-box-shadow: inset 0px 0px 0px 3px rgba(255, 0, 0, 1);
+    box-shadow: inset 0px 0px 0px 3px rgba(255, 0, 0, 1);
+    position: absolute;
+    top: 0;
+    z-index: 235;
+    pointer-events: none;
+}
+
+.main_gui {
+
 }
 
 .main_editor {
-    position: relative;
-    overflow: hidden;
-    left: 0;
-    width: calc(100% - 2px);
-    margin: 0 !important;
-    min-height: 142px;
-    height: calc(100% - 193px);
     display: inline-flex;
 }
 
@@ -561,12 +572,10 @@ body {
     position: relative !important;
     top: -30px;
     left: 182px;
-    width: calc(100% - 195px);
-    height: calc(100% - 11px);
+    width: calc(100% - 184px);
+    height: calc(100% - 2px);
     overflow: scroll;
     max-height: 100%;
-    border: 5px solid transparent;
-
 }
 
 .prg_panel {
@@ -2516,9 +2525,10 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
 }
 
 #editor_code {
-    height: 100%;
+    height: calc(100% - 7px);
     width: calc(100% - 250px);
     display: inline-block;
+    border: 3px solid transparent;
 }
 
 .img_debug {
