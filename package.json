@@ -61,7 +61,6 @@
     "le-challenge-fs": "^2.0.4",
     "le-sni-auto": "^2.0.1",
     "le-store-certbot": "^2.0.3",
-    "node-portfinder":"*"
   },
   "description": "ScriptGUI",
   "devDependencies": {
