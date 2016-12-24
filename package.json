@@ -60,8 +60,7 @@
     "letsencrypt": "^2.1.5",
     "le-challenge-fs": "^2.0.4",
     "le-sni-auto": "^2.0.1",
-    "le-store-certbot": "^2.0.3",
-    "node-portfinder":"*"
+    "le-store-certbot": "^2.0.3"
   },
   "description": "ScriptGUI",
   "devDependencies": {
