@@ -8,6 +8,7 @@ var $newGroupDialog;
 var groups = {'script.js': 'script.js', 'script.js.common': 'script.js.common', 'script.js.global': 'script.js.global'};
 var open_timeout;
 var list;
+var oid_dialog
 jQuery.extend(true, SGI, {
 
 
@@ -18,37 +19,40 @@ jQuery.extend(true, SGI, {
         $("#img_con_backend").attr("src", "img/icon/flag-blue.png");
 
 
-        $('#select_oid').selectId('init', {
-            filter: {
-                _id: "javascript"
-            },
-            noMultiselect: true,
-            connCfg: {
-                socketUrl: socketUrl,
-                socketSession: socketSession,
-                socketName: 'scriptGUI',
-                upgrade: typeof socketForceWebSockets !== 'undefined' ? !socketForceWebSockets : undefined,
-                rememberUpgrade: typeof socketForceWebSockets !== 'undefined' ? socketForceWebSockets : undefined,
-                transports: typeof socketForceWebSockets !== 'undefined' ? (socketForceWebSockets ? ['websocket'] : undefined) : undefined
-            },
-            columns: ['name', 'role', 'room', 'value'],
-            texts: {
-                select: ('Select'),
-                cancel: ('Cancel'),
-                all: ('All'),
-                id: ('ID'),
-                name: ('Name'),
-                role: ('Role'),
-                room: ('Room'),
-                value: ('Value'),
-                selectid: ('Select ID'),
-                from: ('From'),
-                lc: ('Last changed'),
-                ts: ('Time stamp'),
-                wait: ('Processing...'),
-                ack: ('Acknowledged')
-            }
-        });
+
+
+
+      // $('#select_oid').selectId('init', {
+      //       filter: {
+      //           _id: "javascript"
+      //       },
+      //       noMultiselect: true,
+      //       connCfg: {
+      //           socketUrl: socketUrl,
+      //           socketSession: socketSession,
+      //           socketName: 'scriptGUI',
+      //           upgrade: typeof socketForceWebSockets !== 'undefined' ? !socketForceWebSockets : undefined,
+      //           rememberUpgrade: typeof socketForceWebSockets !== 'undefined' ? socketForceWebSockets : undefined,
+      //           transports: typeof socketForceWebSockets !== 'undefined' ? (socketForceWebSockets ? ['websocket'] : undefined) : undefined
+      //       },
+      //       columns: ['name', 'role', 'room', 'value'],
+      //       texts: {
+      //           select: ('Select'),
+      //           cancel: ('Cancel'),
+      //           all: ('All'),
+      //           id: ('ID'),
+      //           name: ('Name'),
+      //           role: ('Role'),
+      //           room: ('Room'),
+      //           value: ('Value'),
+      //           selectid: ('Select ID'),
+      //           from: ('From'),
+      //           lc: ('Last changed'),
+      //           ts: ('Time stamp'),
+      //           wait: ('Processing...'),
+      //           ack: ('Acknowledged')
+      //       }
+      //   });
 
         backend = io.connect(socketUrl, {
             query: 'key=' + socketSession,
@@ -61,7 +65,8 @@ jQuery.extend(true, SGI, {
 
         backend.on('connect', function () {
             $("#img_set_script_play,#run_type1,#run_type2,#run_type3,#run_step").button({disabled: false});
-            $("#img_con_backend").attr("src", "img/icon/flag-green.png");
+            $("#flag_red").hide()
+            $("#flag_green").show()
 
             $('window').unload(function () {
                 backend.disconnect()
@@ -84,7 +89,7 @@ jQuery.extend(true, SGI, {
                             main.first_inst = x;
                         }
                     }
-
+                    main.initSelectId();
                 })
 
                 // assemble global script
@@ -606,13 +611,17 @@ jQuery.extend(true, SGI, {
 
 
         backend.on('disconnect', function () {
-            $("#img_con_web").attr("src", "img/icon/flag-red.png");
-        });
+            $("#flag_green").hide()
+            $("#flag_red").show()
 
-
-        backend.on('disconnect', function () {
             sim_exit()
         });
+
+        backend.on('reconnect_failed', function () {
+            $("#img_con_backend").attr("src", "img/icon/flag-red.png");
+            sim_exit()
+        });
+
 
         backend.on("trigger_highlight", function (baustein) {
             sim.trigger_highlight(baustein);
@@ -640,7 +649,7 @@ jQuery.extend(true, SGI, {
         })
 
         backend.on("brake", function (data) {
-            SGI.set_mark(data.sourceLine)
+            SGI.set_mark(data.sourceLine - 1)
             $(".img_debug").button({disabled: false});
         })
 

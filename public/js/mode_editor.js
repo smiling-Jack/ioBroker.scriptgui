@@ -34,14 +34,14 @@ jQuery.extend(true, SGI, {
                 return;
 
 
-            var row = e.getDocumentPosition().row
+            var row = e.getDocumentPosition().row;
 
 
             if (editor.session.getBreakpoints()[row]) {
-                SGI.clearBP(row)
+                SGI.clearBP(row);
                 e.editor.session.clearBreakpoint(row)
             } else {
-                SGI.setBP(row)
+                SGI.setBP(row);
                 e.editor.session.setBreakpoint(row)
             }
 
@@ -147,6 +147,8 @@ jQuery.extend(true, SGI, {
         }
 
         SGI.hide_gui();
+        SGI.hide_blockly();
+
 SGI.setMain();
         $("#lba_run_step").hide();
         $('#stepSpeed').hide()
@@ -185,6 +187,7 @@ SGI.setMain();
 
     deb_lookup: function (ref) {
         var handel = parseInt(ref.replace("§§", ""));
+        console.log("deb_lookup")
         backend.emit("deb_lookup", handel, function (data) {
             var obj = {};
 

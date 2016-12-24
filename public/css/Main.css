@@ -250,7 +250,7 @@ body {
     margin: 0 !important;
     min-height: 142px;
     height: 10px;
-    z-index: 10
+
 }
 .main_runShadow::after{
     content: " ";
@@ -634,8 +634,7 @@ body {
     border-right: 1px solid;
 }
 
-#m_file_lb {
-    float: right;
+.m_file_lb {
     margin-right: 3px;
     font-size: 14px !important;
     line-height: 1.4 !important;
@@ -643,11 +642,28 @@ body {
 }
 
 #m_file {
-    float: right;
     margin-right: 20px;
-    font-size: 14px !important;
+    font-size: 11px !important;
     line-height: 1.4 !important;
-    width: auto !important;
+    width: 100px;
+    border-radius: 7px;
+    padding-left: 3px;
+    font-weight: bold;
+
+    color: inherit;
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+}
+#m_engine{
+    margin-right: 20px;
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+    width: 20px;
+    border-radius: 7px;
+    font-weight: bold;
+    text-align: center;
+
+    color: inherit;
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
 }
 
 .ui-helper-hidden {
@@ -2272,15 +2288,13 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
 }
 
-#img_con_backend {
+.img_flag {
     position: absolute;
-    right: 10px;
+    right: 20px;
+    top: 0px;
 }
 
-#img_con_web {
-    position: absolute;
-    right: 10px;
-}
+
 
 #con_panel {
 
@@ -2746,3 +2760,7 @@ ul.fancytree-container {
 .log_warn{color:orange}
 .log_error{color:red}
 .log_debug{color:darkblue}
+
+.blocklySvg {
+    position: absolute;
+}

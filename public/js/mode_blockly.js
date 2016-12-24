@@ -1,16 +1,54 @@
-/**
- * Created by Schorling on 01.11.2016.
- */
-
 var scripts = {
-    blocklyWorkspace: false
+    blocklyWorkspace : null,
+    blocklyCode2JSCode :  function(oneWay, justConvert) {
+        var code = Blockly.JavaScript.workspaceToCode(scripts.blocklyWorkspace);
+        if (!oneWay) {
+            code += '\n';
+            var dom = Blockly.Xml.workspaceToDom(scripts.blocklyWorkspace);
+            var text = Blockly.Xml.domToText(dom);
+            code += '//' + btoa(encodeURIComponent(text));
+        }
+
+        if (!justConvert) that.editor.setValue(code, -1);
+        return code;
+    },
+    jsCode2Blockly: function (text) {
+        text = text || '';
+        var lines = text.split(/[\r\n|\r|\n]+/g);
+        var xml = '';
+        for (var l = lines.length - 1; l >= 0; l--) {
+            if (lines[l].substring(0, 2) === '//') {
+                xml = lines[l].substring(2);
+                break;
+            }
+        }
+        if (xml.substring(0, 4) === '<xml') {
+            return xml;
+        } else {
+            var code;
+            try {
+                code = decodeURIComponent(atob(xml));
+            } catch (e) {
+                code = null;
+                console.error('cannot decode: ' + xml);
+                console.error(e);
+            }
+            return code;
+        }
+    },
 };
+
+
+
 var systemLang = "de"
 jQuery.extend(true, SGI, {
-    load_blockly: function () {
-        //scripts = scripts;
+    load_blockly: function (callback) {
 
-        SGI.blockly_rendered = true;
+        // MSG.catSystem = Blockly.Words['System']["de"];
+        // MSG.catSendto = Blockly.Words['Sendto']["de"];
+
+        // console.log(MSG)
+        //scripts = scripts;
 
         var fileLang = document.createElement('script');
         fileLang.setAttribute('type', 'text/javascript');
@@ -50,12 +88,16 @@ jQuery.extend(true, SGI, {
         //});
         $("#blockly_toolbox").load("../javascript.admin/tab.html #toolbox", function (data, textStatus, jqxhr) {
 
+            setTimeout(function () {
             var toolboxText = document.getElementById('toolbox').outerHTML;
-             //toolboxText = toolboxText.replace(/{(\w+)}/g,
-                //function(m, p1) {return MSG[p1]}
-                 //todo MSG muss her
-             //);
+            toolboxText = toolboxText.replace(/{(\w+)}/g,
+                function(m, p1) {
 
+                    console.log(MSG)
+                    console.log(p1)
+                    console.log(MSG[p1])
+                    return MSG[p1]});
+            toolboxText = toolboxText
             var blocks = '';
             for (var cb = 0; cb < Blockly.CustomBlocks.length; cb++) {
                 var name = Blockly.CustomBlocks[cb];
@@ -67,6 +109,9 @@ jQuery.extend(true, SGI, {
                 blocks += '</category>';
             }
             toolboxText = toolboxText.replace('<category><block>%%CUSTOM_BLOCKS%%</block></category>', blocks);
+
+
+
 
             var toolboxXml = Blockly.Xml.textToDom(toolboxText);
             scripts.blocklyWorkspace = Blockly.inject(
@@ -91,61 +136,63 @@ jQuery.extend(true, SGI, {
                     }
                 }
             );
+            SGI.blockly_rendered = true;
+            $(".blocklyToolboxDiv").addClass("frame_color ui-state-default");
+
+
+            },0)
+
+            setTimeout(function () {
+                callback()
+            },0)
+
+
+
         });
 
-        $("#main_blockly").show();
-        $("window").trigger("resize")
 
 
     },
+    show_blockly: function (cb) {
 
-    show_blockly: function () {
+        function show(){
+            $("#logo").hide();
+            SGI.hide_gui();
+            SGI.hide_editor();
 
-        if (!SGI.blockly_rendered) {
-            SGI.load_blockly()
+            SGI.setMain();
+
+            SGI.mode = "blockly";
+            scope.setup.mode = "blockly";
+            scope.$apply();
+
+            $("#main_blockly").show();
+
+            Blockly.svgResize(scripts.blocklyWorkspace)
         }
 
-        $("#logo").hide();
-        SGI.hide_gui();
-        SGI.hide_editor();
-
-SGI.setMain();
-
-        SGI.mode = "blockly";
-        scope.setup.mode = "blockly";
-        scope.$apply();
-        //SGI.save_setup()
-
+        if (!SGI.blockly_rendered) {
+            SGI.load_blockly(function(){
+                show()
+                cb();
+            })
+        }else{
+            $(".blocklyWidgetDiv").show();
+            $(".blocklyTooltipDiv").show();
+            $(".blocklyToolboxDiv").show();
+            show()
+            cb()
+        }
     },
     hide_blockly: function () {
         //$("#main_editor").hide();
         //$(".set_editor").hide();
+
+        $(".blocklyWidgetDiv").hide();
+        $(".blocklyTooltipDiv").hide();
+        $(".blocklyToolboxDiv").hide();
     },
-    jsCode2Blockly: function (text) {
-        text = text || '';
-        var lines = text.split(/[\r\n|\r|\n]+/g);
-        var xml = '';
-        for (var l = lines.length - 1; l >= 0; l--) {
-            if (lines[l].substring(0, 2) === '//') {
-                xml = lines[l].substring(2);
-                break;
-            }
-        }
-        if (xml.substring(0, 4) === '<xml') {
-            return xml;
-        } else {
-            var code;
-            try {
-                code = decodeURIComponent(atob(xml));
-            } catch (e) {
-                code = null;
-                console.error('cannot decode: ' + xml);
-                console.error(e);
-            }
-            return code;
-        }
-    },
+
 
 
 });
-

@@ -230,24 +230,24 @@ function run(script) {
                 process.send(["log", "<b style='color: blue'>Pushover: </b>" + msg.message + ""]);
             }
         }
-    }
-    console = {
+    };
+    var console = {
         log: function (msg) {
-            log('log', msg)
+            log(msg, 'log')
         },
         info: function (msg) {
-            log('info', msg)
+            log( msg,'info')
         },
         warn: function (msg) {
-            log('warn', msg)
+            log(msg,'warn')
         },
         error: function (msg) {
-            log('error', msg)
+            log(msg,'error')
         },
         debug: function (msg) {
-            log('debug', msg)
+            log(msg,'debug')
         }
-    }
+    };
 
     function $(selector) {
         // following is supported
@@ -798,7 +798,7 @@ function run(script) {
         var subs = {
             pattern: pattern,
             callback: function (obj) {
-                if (callback) callback.call(obj);
+                if (callback) callback.call("sandbox",obj);
             },
             name: name
         };
@@ -2704,13 +2704,16 @@ function run(script) {
     process.send(["running"]);
     //vm.runInThisContext(script, "s_engine")
 
-    setInterval(function () {
-        var d = new Date
+    // setInterval(function () {
+    //     var d = new Date
+    //
+    //     process.send(["sim_Time", d.valueOf()])
+    // }, 1000)
 
-        process.send(["sim_Time", d.valueOf()])
-    }, 1000)
+    setTimeout(function () {
+        eval("//# sourceURL=s_engine.js\n" + _script );
+    },500)
 
-    eval(_script + "//# sourceURL=s_engine.js");
 
     process.on('message', function (data) {
         if (data[0] == "trigger") {
@@ -2740,9 +2743,15 @@ function run(script) {
 
         }
         else if (data[0] == "stateChange") {
-            adapter.stateChange(data[1], data[2])
+    if(run_type == "trigger" || run_type == "hotrun"){
+        adapter.stateChange(data[1], data[2])
+    }
+
         } else if (data[0] == "objectChange") {
-            objects[data[1]] = data[2]
+            if(run_type == "trigger" || run_type == "hotrun"){
+                objects[data[1]] = data[2]
+            }
+
         }
     });
 }

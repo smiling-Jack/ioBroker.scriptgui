@@ -38,26 +38,33 @@ var main = {
     watcher: {},
     initSelectId: function () {
         if (main.selectId) return main.selectId;
-        main.selectId = $('#dialog-select-member').selectId('init',  {
-            objects: main.objects,
-            states:  main.states,
+        main.selectId = $('#select_oid').selectId('init', {
+            connCfg: {
+                          socketUrl: socketUrl,
+                          socketSession: socketSession,
+                          socketName: 'scriptGUI',
+                          upgrade: typeof socketForceWebSockets !== 'undefined' ? !socketForceWebSockets : undefined,
+                          rememberUpgrade: typeof socketForceWebSockets !== 'undefined' ? socketForceWebSockets : undefined,
+                          transports: typeof socketForceWebSockets !== 'undefined' ? (socketForceWebSockets ? ['websocket'] : undefined) : undefined
+                      },
+            noMultiselect: true,
             filter: {type: 'state'},
-            name:   'admin-select-member',
+            name: 'admin-select-member',
             texts: {
-                select:   _('Select'),
-                cancel:   _('Cancel'),
-                all:      _('All'),
-                id:       _('ID'),
-                name:     _('Name'),
-                role:     _('Role'),
-                room:     _('Room'),
-                value:    _('Value'),
+                select: _('Select'),
+                cancel: _('Cancel'),
+                all: _('All'),
+                id: _('ID'),
+                name: _('Name'),
+                role: _('Role'),
+                room: _('Room'),
+                value: _('Value'),
                 selectid: _('Select ID'),
-                from:     _('From'),
-                lc:       _('Last changed'),
-                ts:       _('Time stamp'),
-                wait:     _('Processing...'),
-                ack:      _('Acknowledged')
+                from: _('From'),
+                lc: _('Last changed'),
+                ts: _('Time stamp'),
+                wait: _('Processing...'),
+                ack: _('Acknowledged')
             },
             columns: ['image', 'name', 'role', 'room', 'value']
         });
@@ -490,7 +497,7 @@ var SGI = {
             } else if (SGI.key == 86 && event.ctrlKey == true && SGI.mode == "gui") {
                 SGI.paste_selected();
                 $("body").css({cursor: "default"});
-            }else if (SGI.key == 83 && event.ctrlKey == true) {
+            } else if (SGI.key == 83 && event.ctrlKey == true) {
                 //SGI.save_Script();
                 $("#img_save_local").trigger("click")
                 return false;
@@ -586,7 +593,7 @@ var SGI = {
             $("#prg_panel").children().remove();
             SGI.mbs_n = 0;
             SGI.fbs_n = 0;
-            $("#m_file").text("neu");
+            $("#m_file").val("neu");
             SGI.file_name = "";
 
             PRG = {
@@ -708,9 +715,23 @@ var SGI = {
             $("#wait_div").show();
             if (script) {
                 if (script.common.engineType == "Blockly") {
-                    console.log("engine not supportet")
-                    $("#wait_div").hide();
-                    return
+
+                    SGI.show_blockly(function () {
+
+
+                            scripts.blocklyWorkspace.clear();
+                                try {
+                                    var xml = scripts.jsCode2Blockly(script.common.source) || '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>';
+                                    var dom = Blockly.Xml.textToDom(xml);
+                                    Blockly.Xml.domToWorkspace(dom, scripts.blocklyWorkspace);
+                                } catch (e) {
+                                    console.error(e);
+                                    window.alert('Cannot extract Blockly code!');
+                                }
+
+
+                        }
+                    )
                 } else if (script.native && script.native.editor == "ScriptGUI") {
 
                     if (SGI.mode == "gui") {
@@ -733,7 +754,8 @@ var SGI = {
                 SGI.file_name = script.common.name;
                 main.currentId = id;
 
-                $("#m_file").html(SGI.file_name)
+                $("#m_file").val(SGI.file_name)
+                $("#m_engine").val(script.common.engine.replace("system.adapter.javascript.", ""))
             }
 
 
@@ -753,7 +775,7 @@ var SGI = {
     add_subscribe: function (data) {
         var _data = JSON.parse(data)
         var name = _data.pattern.id.replace(/\./g, "").replace(/\-/g, "")
-        $('#toolbox_sim_param').append('<div style="width: 100%" class="subscriber"><button class="subscriber_btn" onclick="SGI.play_subscribe(\'' + _data.pattern.id + '\')"  id="btn_play_' + name + '"></button><span class="subscribe_pattern">' + _data.pattern.id + '</span><input style="width: 60px" id="ino_play_' + name + '" val="0"></></div>');
+        $('#toolbox_sim_param').append('<div style="width: 100%" class="subscriber"><button class="subscriber_btn" onclick="SGI.play_subscribe(\'' + _data.pattern.id + '\')"  id="btn_play_' + name + '"></button><span class="subscribe_pattern">' + _data.pattern.id + '</span><input style="width: 60px" id="ino_play_' + name + '" val="0"></div>');
         $("#btn_play_" + name).button()
 
 
@@ -772,7 +794,7 @@ var SGI = {
         }
     },
 
-    setMain:function() {
+    setMain: function () {
         $(".main").css({height: 'calc(100% - ' + (61 + $('#sim_log').height()) + 'px)'});
         $(".main").css({width: 'calc(100% - ' + (3 + $('#right_panel').width()) + 'px)'});
 

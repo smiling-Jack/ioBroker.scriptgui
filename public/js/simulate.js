@@ -19,26 +19,30 @@ function sim_exit() {
     $("#img_set_script_stop").button({disabled: true});
     //}
 
-    $(".main").removeClass("main_runShadow")
+    $(".main").removeClass("main_runShadow");
 
-    $(".btn_min_trigger").unbind("click");
-    $(document).unbind("new_data");
-    $('.force_input').unbind("change");
 
-    $(".btn_min_trigger").attr("src", "img/icon/bullet_toggle_minus.png");
-    $(".btn_min_trigger").css({
-        height: "10px",
-        top: 3,
-        width: "10px"
-    });
 
     if (SGI.mode == "gui") {
+        $(".btn_min_trigger").unbind("click");
+        $('.force_input').unbind("change");
+
+        $(".btn_min_trigger").attr("src", "img/icon/bullet_toggle_minus.png");
+        $(".btn_min_trigger").css({
+            height: "10px",
+            top: 3,
+            width: "10px"
+        });
         $.each(SGI.plumb_inst, function () {
             var con = this.getAllConnections();
             $.each(con, function () {
                 this.removeOverlay("sim")
             });
         });
+    }else if(SGI.mode == "editor"){
+        $(".img_debug").button({disabled: true});
+        SGI.clear_mark();
+        $("#editor_deb_scopes").html("");
     }
 
 
@@ -324,7 +328,7 @@ var sim = {
                         }
                         backend.emit("start", [sim.script, sim.run_type, SGI.mode])
                     }, 0)
-                } else {
+                } else if (SGI.mode == "editor") {
 
 
                     sim.script = SGI.editor.getValue();
@@ -345,12 +349,20 @@ var sim = {
                         }
                         backend.emit("start", [sim.script, sim.run_type, SGI.mode, bp])
                     }, 0)
+                }else if( SGI.mode == "blockly"){
+                    sim.script = scripts.blocklyCode2JSCode(false,true)
+                    setTimeout(function () {
+                        if (sim.script == "" || sim.script == undefined) {
+                            sim.script = " ";
+                        }
+                        backend.emit("start", [sim.script, sim.run_type, SGI.mode, bp])
+                    }, 0)
                 }
-                $(document).bind("new_data", function (event, data) {
-                    if (SGI.sim_run) {
-                        sim_p.send(["new_data", data])
-                    }
-                });
+                // $(document).bind("new_data", function (event, data) {
+                //     if (SGI.sim_run) {
+                //         sim_p.send(["new_data", data])
+                //     }
+                // });
             }
             catch (err) {
                 var err_text = "";
