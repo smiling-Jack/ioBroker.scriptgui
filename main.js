@@ -8,7 +8,7 @@ var LE = require(utils.controllerDir + '/lib/letsencrypt.js');
 var path = require('path');
 var fs = require('fs');
 var cp = require('child_process');
-
+var portfinder = require('portfinder');
 
 var main = {
     objects: {},
@@ -51,26 +51,6 @@ process.on("exit", function (err) {
         }
     }
 });
-
-
-
-function freePort (cb) {
-    var port = portrange;
-    portrange += 1;
-
-    var server = net.createServer();
-    server.listen(port, function (err) {
-        server.once('close', function () {
-            portrange = 45032;
-            console.log(port);
-            cb(port)
-        });
-        server.close()
-    });
-    server.on('error', function (err) {
-        freePort(cb)
-    })
-}
 
 
 function l(data) {
@@ -465,13 +445,17 @@ function init_web(settings) {
         };
         socket.on("start", function (script, callback) {
 
-                freePort(function (port) {
+            try {
+                portfinder.getPort(function (err,port) {
 
                     bp = {};
                     sockets[sockid].mode = script[2];
 
                     sim.stepSpeed = script[2] + 100;
-                    sockets[sockid].sim_p = cp.fork(__dirname + '/js/engine/sim_engine.js', [script[0], script[1]], {execArgv: ['--debug-brk=' + port ], silent:true});
+                    sockets[sockid].sim_p = cp.fork(__dirname + '/js/engine/sim_engine.js', [script[0], script[1]], {
+                        execArgv: ['--debug-brk=' + port],
+                        silent: true
+                    });
                     // sockets[sockid].sim_p = cp.fork(__dirname + '/js/engine/sim_process_test.js', [script[0], script[1]], {execArgv: ['--debug-brk']});
 
 
@@ -607,7 +591,8 @@ function init_web(settings) {
 
                     sockets[sockid].deb.connect(function () {
 
-                        console.log("Debugger connect")
+                        socket.emit("log_info", "Debugger connect on Port: " + port);
+                        // console.log("Debugger connect on Port: " + port)
                         //running_id = socket.id;
 
                         sockets[sockid].sim_p.on('close', function (code, signal) {
@@ -619,8 +604,8 @@ function init_web(settings) {
                         });
                         sockets[sockid].sim_p.on('exit', function (code, signal) {
                             console.log('exit ' + code + "   " + signal);
-                                    // sockets[sockid].deb.disconnect(function () {
-                                    // });
+                            // sockets[sockid].deb.disconnect(function () {
+                            // });
                         });
 
                         sockets[sockid].sim_p.on('message', function (data) {
@@ -649,8 +634,8 @@ function init_web(settings) {
                             } else {
                                 if (data[0] == "script_err") {
 
-                                    try{
-                                        if (sockets[sockid].deb ) {
+                                    try {
+                                        if (sockets[sockid].deb) {
                                             sockets[sockid].deb.disconnect(function () {
                                                 sockets[sockid].deb = false;
                                                 sockets[sockid].sim_p.kill('SIGINT');
@@ -658,7 +643,7 @@ function init_web(settings) {
                                             });
 
                                         }
-                                    }catch(err){
+                                    } catch (err) {
 
                                     }
 
@@ -677,6 +662,9 @@ function init_web(settings) {
 
                     });
                 });
+            }catch (err){
+
+            }
         });
         socket.on("delObject", function (id) {
             adapter.delForeignObject(id, "", function (err, data) {
