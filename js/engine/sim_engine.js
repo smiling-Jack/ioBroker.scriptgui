@@ -61,8 +61,6 @@ process.on("uncaughtException", function (e) {
 return false;
 });
 
-a = b+c;
-
 
 Date = function () {
     if (_time_mode == "auto") {
