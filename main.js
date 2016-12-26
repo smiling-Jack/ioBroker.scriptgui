@@ -15,7 +15,7 @@ var main = {
     states: {}
 };
 var web;
-var running_id;
+
 var sim = {
     run_type: "sim",
     time_mode: "auto",
@@ -31,7 +31,7 @@ var socketUrl = ":8088";
 var sockets = {};
 
 process.on("uncaughtException", function (err) {
-    console.log(err.stack);
+adapter.log
 
     for(var key in sockets) {
         if (sockets[key].deb) {
@@ -55,18 +55,18 @@ process.on("exit", function (err) {
 
 
 function freePort (cb) {
-    var port = portrange
-    portrange += 1
+    var port = portrange;
+    portrange += 1;
 
-    var server = net.createServer()
+    var server = net.createServer();
     server.listen(port, function (err) {
         server.once('close', function () {
-            portrange = 45032
-            console.log(port)
+            portrange = 45032;
+            console.log(port);
             cb(port)
-        })
+        });
         server.close()
-    })
+    });
     server.on('error', function (err) {
         freePort(cb)
     })
@@ -199,12 +199,12 @@ pDebug.prototype = {
                 }
             });
         });
-
         this.client.on('end', function () {
+            console.log('client disconnected');
             if (typeof(end_cb) == 'function') {
                 end_cb();
             }
-            //console.log('client disconnected');
+
         });
     },
     disconnect: function (callback) {
@@ -221,7 +221,12 @@ pDebug.prototype = {
         obj.type = 'request';
 
         str = JSON.stringify(obj);
-        this.client.write(cL + str.length + "\r\n\r\n" + str);
+        try {
+            this.client.write(cL + str.length + "\r\n\r\n" + str);
+        }catch (err){
+
+        }
+
 
         this.outstandingRequests[this.seq] = callback;
 
@@ -452,7 +457,7 @@ function init_web(settings) {
     socketSettings.forceWebSockets = settings.forceWebSockets || false;
 
     socketSettings.extensions = function (socket) {
-        var sockid = socket.id
+        var sockid = socket.id;
         sockets[sockid] = {
             sim_p : false,
             deb : false,
@@ -466,7 +471,7 @@ function init_web(settings) {
                     sockets[sockid].mode = script[2];
 
                     sim.stepSpeed = script[2] + 100;
-                    sockets[sockid].sim_p = cp.fork(__dirname + '/js/engine/sim_engine.js', [script[0], script[1]], {execArgv: ['--debug-brk=' + port ]});
+                    sockets[sockid].sim_p = cp.fork(__dirname + '/js/engine/sim_engine.js', [script[0], script[1]], {execArgv: ['--debug-brk=' + port ], silent:true});
                     // sockets[sockid].sim_p = cp.fork(__dirname + '/js/engine/sim_process_test.js', [script[0], script[1]], {execArgv: ['--debug-brk']});
 
 
@@ -614,7 +619,8 @@ function init_web(settings) {
                         });
                         sockets[sockid].sim_p.on('exit', function (code, signal) {
                             console.log('exit ' + code + "   " + signal);
-
+                                    // sockets[sockid].deb.disconnect(function () {
+                                    // });
                         });
 
                         sockets[sockid].sim_p.on('message', function (data) {
@@ -641,7 +647,22 @@ function init_web(settings) {
                             } else if (data[0] == "add_subscribe") {
                                 socket.emit("add_subscribe", data[1])
                             } else {
+                                if (data[0] == "script_err") {
 
+                                    try{
+                                        if (sockets[sockid].deb ) {
+                                            sockets[sockid].deb.disconnect(function () {
+                                                sockets[sockid].deb = false;
+                                                sockets[sockid].sim_p.kill('SIGINT');
+
+                                            });
+
+                                        }
+                                    }catch(err){
+
+                                    }
+
+                                }
                                 socket.emit("message", data);
                             }
 
@@ -652,7 +673,6 @@ function init_web(settings) {
                         // sockets[sockid].sim_p.send(["home", "homematic"])
 
                         sockets[sockid].deb.send({command: 'continue'}, function () {
-console.log("cont1")
                         });
 
                     });

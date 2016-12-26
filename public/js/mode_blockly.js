@@ -40,7 +40,7 @@ var scripts = {
 
 
 
-var systemLang = "de"
+var systemLang = "de";
 jQuery.extend(true, SGI, {
     load_blockly: function (callback) {
 

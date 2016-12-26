@@ -1,3 +1,4 @@
+
 var mods = {
     //'vm':               require('vm'),
     //'fs': require('fs'),
@@ -15,9 +16,9 @@ var mods = {
 
     //'coffee-compiler':  require('coffee-compiler'),
 
-    'node-schedule': require('node-schedule'),
-    'suncalc': require('suncalc'),
-    'request': require('request'),
+    'node-schedule': require(__dirname+'/../../../iobroker.javascript/node_modules/node-schedule'),
+    'suncalc': require(__dirname+'/../../../iobroker.javascript/node_modules/suncalc'),
+    'request': require(__dirname+'/../../../iobroker.javascript/node_modules/request'),
     //'wake_on_lan': require('wake_on_lan')
 }
 //process.send(__dirname)
@@ -37,7 +38,6 @@ var __engine = {
     __subscriptions: 0,
     __schedules: 0
 };
-console.log(process.env.TZ)
 var old_date = Date;
 var sd = [];
 
@@ -58,8 +58,10 @@ process.on('message', function (data) {
 
 process.on("uncaughtException", function (e) {
     process.send(["script_err", e.stack]);
-    process.exit(9990)
+return false;
 });
+
+a = b+c;
 
 
 Date = function () {
