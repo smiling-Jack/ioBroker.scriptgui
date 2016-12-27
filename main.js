@@ -31,9 +31,9 @@ var socketUrl = ":8088";
 var sockets = {};
 
 process.on("uncaughtException", function (err) {
-adapter.log
+    adapter.log
 
-    for(var key in sockets) {
+    for (var key in sockets) {
         if (sockets[key].deb) {
             sockets[key].deb.disconnect(function () {
                 sockets[key].sim_p.kill('SIGINT');
@@ -43,7 +43,7 @@ adapter.log
 });
 
 process.on("exit", function (err) {
-    for(var key in sockets) {
+    for (var key in sockets) {
         if (sockets[key].deb) {
             sockets[key].deb.disconnect(function () {
                 sockets[key].sim_p.kill('SIGINT');
@@ -204,7 +204,7 @@ pDebug.prototype = {
         str = JSON.stringify(obj);
         try {
             this.client.write(cL + str.length + "\r\n\r\n" + str);
-        }catch (err){
+        } catch (err) {
 
         }
 
@@ -226,8 +226,8 @@ function init() {
 
             adapter.on('stateChange', function (id, state) {
                 main.states[id] = state;
-                for(var key in sockets) {
-                    if (sockets[key].deb){
+                for (var key in sockets) {
+                    if (sockets[key].deb) {
                         sockets[key].sim_p.send(["objectChange", id, obj]);
                     }
                 }
@@ -235,8 +235,8 @@ function init() {
             adapter.on('objectChange', function (id, obj) {
                 main.objects[id] = obj;
 
-                for(var key in sockets) {
-                    if (sockets[key].deb){
+                for (var key in sockets) {
+                    if (sockets[key].deb) {
                         sockets[key].sim_p.send(["objectChange", id, obj]);
                     }
                 }
@@ -439,223 +439,221 @@ function init_web(settings) {
 
     socketSettings.extensions = function (socket) {
         sockets[socket.id] = {
-            sim_p : false,
-            deb : false,
-            mode : false
+            sim_p: false,
+            deb: false,
+            mode: false
         };
         socket.on("start", function (script, callback) {
 
 
-                portfinder.getPort(function (err,port) {
+            portfinder.getPort(function (err, port) {
 
-                    bp = {};
-                    sockets[socket.id].mode = script[2];
+                bp = {};
+                sockets[socket.id].mode = script[2];
 
-                    sim.stepSpeed = script[2] + 100;
-                    sockets[socket.id].sim_p = cp.fork(__dirname + '/js/engine/sim_engine.js', [script[0], script[1]], {
-                        execArgv: ['--debug=' + port],
-                        silent: true
-                    });
-                    // sockets[ this.sockid].sim_p = cp.fork(__dirname + '/js/engine/sim_process_test.js', [script[0], script[1]], {execArgv: ['--debug-brk']});
+                sim.stepSpeed = script[2] + 100;
+                sockets[socket.id].sim_p = cp.fork(__dirname + '/js/engine/sim_engine.js', [script[0], script[1]], {
+                    execArgv: ['--debug=' + port],
+                    silent: true
+                });
+                // sockets[ this.sockid].sim_p = cp.fork(__dirname + '/js/engine/sim_process_test.js', [script[0], script[1]], {execArgv: ['--debug-brk']});
 
 
-                    sim.split_script = script.toString().split("\n");
+                sim.split_script = script.toString().split("\n");
 
-                    var first_break = true;
-                    sockets[socket.id].deb = new pDebug({
-                        port: port,
-                        sockid: this.sockid,
-                        eventHandler: function (event) {
-                            //console.log('Event: ' + event.event + " seq: " + event.seq + " Script: " + event.body.script.name + " Line: " + event.body.sourceLine + " Column: " + event.body.sourceColumn + " Text: " + event.body.sourceLineText + "\n");
+                var first_break = true;
+                sockets[socket.id].deb = new pDebug({
+                    port: port,
+                    sockid: this.sockid,
+                    eventHandler: function (event) {
+                        //console.log('Event: ' + event.event + " seq: " + event.seq + " Script: " + event.body.script.name + " Line: " + event.body.sourceLine + " Column: " + event.body.sourceColumn + " Text: " + event.body.sourceLineText + "\n");
 
-                            if (event.event == "break") {
-                                //{
-                                //    seq: 8,
-                                //    type: 'event',
-                                //    event: 'break',
-                                //    body: {
-                                //        invocationText: '[anonymous](//@ sourceURL=s_engine\nvar a = 0\n\nfor (var i = 0; i < 10; i++){\n debugger;\n log(... (length: 1111))',
-                                //        sourceLine: 4,
-                                //        sourceColumn: 1,
-                                //        sourceLineText: ' debugger;',
-                                //        script: {
-                                //            id: 103,
-                                //            name: 's_engine',
-                                //            lineOffset: 0,
-                                //            columnOffset: 0,
-                                //            lineCount: 45
-                                //        }
-                                //    }
-                                //};
+                        if (event.event == "break") {
+                            //{
+                            //    seq: 8,
+                            //    type: 'event',
+                            //    event: 'break',
+                            //    body: {
+                            //        invocationText: '[anonymous](//@ sourceURL=s_engine\nvar a = 0\n\nfor (var i = 0; i < 10; i++){\n debugger;\n log(... (length: 1111))',
+                            //        sourceLine: 4,
+                            //        sourceColumn: 1,
+                            //        sourceLineText: ' debugger;',
+                            //        script: {
+                            //            id: 103,
+                            //            name: 's_engine',
+                            //            lineOffset: 0,
+                            //            columnOffset: 0,
+                            //            lineCount: 45
+                            //        }
+                            //    }
+                            //};
 
-                                if (first_break) {
-                                    var i = 0;
+                            if (first_break) {
+                                var i = 0;
 
-                                    function a() {
-                                        if (i < script[3].length) {
-                                            if (script[3][i]) {
-                                                sockets[socket.id].deb.send({
-                                                    "command": "setbreakpoint",
-                                                    "arguments": {
-                                                        "type": "script",
-                                                        "target": "s_engine.js",
-                                                        "line": i+1,
-                                                        "column": 0,
-                                                    }
-                                                }, function () {
+                                function a() {
+                                    if (i < script[3].length) {
+                                        if (script[3][i]) {
+                                            sockets[socket.id].deb.send({
+                                                "command": "setbreakpoint",
+                                                "arguments": {
+                                                    "type": "script",
+                                                    "target": "s_engine.js",
+                                                    "line": i + 1,
+                                                    "column": 0,
+                                                }
+                                            }, function () {
 
-                                                    i++;
-                                                    a()
-                                                });
-
-                                            } else {
                                                 i++;
-
                                                 a()
-                                            }
+                                            });
 
                                         } else {
-                                            first_break = false;
-                                            sockets[socket.id].deb.send({command: 'continue'}, function () {
+                                            i++;
 
-                                            });
+                                            a()
                                         }
-                                    }
 
-                                    if (script[3]) {
-                                        a();
                                     } else {
                                         first_break = false;
-                                        sockets[this.sockid].deb.send({command: 'continue'}, function () {
+                                        sockets[socket.id].deb.send({command: 'continue'}, function () {
 
                                         });
                                     }
+                                }
+
+                                if (script[3]) {
+                                    a();
+                                } else {
+                                    first_break = false;
+                                    sockets[this.sockid].deb.send({command: 'continue'}, function () {
+
+                                    });
+                                }
+
+                            } else {
+                                if (sockets[socket.id].mode == "gui") {
+                                    var debug_info = sim.split_script[event.body.sourceLine - 1].split("//")[1];
+                                    var step = debug_info.split("--")[0];
+                                    var baustein = debug_info.split("--")[1];
+                                    if (step == "trigger_highlight") {
+                                        socket.emit("trigger_highlight", baustein);
+                                    } else if (step == "step_fbs_highlight") {
+                                        socket.emit("step_fbs_highlight", baustein);
+                                    } else if (step == "step_mbs_highlight_in") {
+                                        socket.emit("step_mbs_highlight_in", baustein);
+                                    } else if (step == "step_mbs_highlight_out") {
+                                        socket.emit("step_mbs_highlight_out", baustein);
+                                    } else if (step == "step_mbs_highlight_reset") {
+                                        socket.emit("step_mbs_highlight_reset", baustein);
+                                    } else {
+                                        //client.continue(function (err, doneOrNot) {
+                                        //    console.log(err)
+                                        //     sockets[socket.id].sim_p.send(["home", homematic])
+                                        //});
+                                    }
+                                } else if (sockets[socket.id].mode == "editor" && event.body.script.name != "s_engine.js") {
+                                    //console.log("---------------AUTO CONTINUE-----------------")
+                                    sockets[socket.id].deb.send({
+                                        command: 'continue',
+                                        arguments: {"stepaction": "next"}
+                                    }, function () {
+                                    });
 
                                 } else {
-                                    if (sockets[socket.id].mode == "gui") {
-                                        var debug_info = sim.split_script[event.body.sourceLine - 1].split("//")[1];
-                                        var step = debug_info.split("--")[0];
-                                        var baustein = debug_info.split("--")[1];
-                                        if (step == "trigger_highlight") {
-                                            socket.emit("trigger_highlight", baustein);
-                                        } else if (step == "step_fbs_highlight") {
-                                            socket.emit("step_fbs_highlight", baustein);
-                                        } else if (step == "step_mbs_highlight_in") {
-                                            socket.emit("step_mbs_highlight_in", baustein);
-                                        } else if (step == "step_mbs_highlight_out") {
-                                            socket.emit("step_mbs_highlight_out", baustein);
-                                        } else if (step == "step_mbs_highlight_reset") {
-                                            socket.emit("step_mbs_highlight_reset", baustein);
-                                        } else {
-                                            //client.continue(function (err, doneOrNot) {
-                                            //    console.log(err)
-                                            //     sockets[socket.id].sim_p.send(["home", homematic])
-                                            //});
+                                    socket.emit("brake", event.body);
+                                    //console.log("emit scope")
+                                    sockets[socket.id].deb.send({
+                                        "command": "scopes",
+                                        "arguments": {
+                                            frameNumber: 0,
+                                            inlineRefs: true
                                         }
-                                    } else if (sockets[socket.id].mode == "editor" && event.body.script.name != "s_engine.js") {
-                                        //console.log("---------------AUTO CONTINUE-----------------")
-                                        sockets[socket.id].deb.send({
-                                            command: 'continue',
-                                            arguments: {"stepaction": "next"}
-                                        }, function () {
-                                        });
+                                    }, function (data) {
+                                        //console.log("scope")
+                                        socket.emit("scopes", data)
+                                        //console.dir(data, {depth: null})
 
-                                    } else {
-                                        socket.emit("brake", event.body);
-                                        //console.log("emit scope")
-                                        sockets[socket.id].deb.send({
-                                            "command": "scopes",
-                                            "arguments": {
-                                                frameNumber: 0,
-                                                inlineRefs: true
-                                            }
-                                        }, function (data) {
-                                            //console.log("scope")
-                                            socket.emit("scopes", data)
-                                            //console.dir(data, {depth: null})
-
-                                            //sockets[socket.id].deb.send({
-                                            //    "command": "lookup",
-                                            //    "arguments": {
-                                            //        handles: [11],
-                                            //        inlineRefs: true
-                                            //    }
-                                            //}, function (data) {
-                                            //    jl(data)
-                                            //});
-                                        });
-                                    }
+                                        //sockets[socket.id].deb.send({
+                                        //    "command": "lookup",
+                                        //    "arguments": {
+                                        //        handles: [11],
+                                        //        inlineRefs: true
+                                        //    }
+                                        //}, function (data) {
+                                        //    jl(data)
+                                        //});
+                                    });
                                 }
                             }
                         }
-                    });
-
-
-                    sockets[socket.id].sim_p.on('message', function (data) {
-                        console.log(data)
-                        if (data[0] == "init") {
-                            sockets[socket.id].deb.connect(function () {
-
-                                socket.emit("log_info", "Debugger connect on Port: " + port);
-
-                                sockets[socket.id].sim_p.on('close', function (code, signal) {
-                                    console.log('close ' + code + "   " + signal);
-                                    socket.emit("sim_exit");
-                                });
-                                sockets[socket.id].sim_p.on('error', function (code, signal) {
-                                    console.log('error ' + code + "   " + signal);
-                                });
-                                sockets[socket.id].sim_p.on('exit', function (code, signal) {
-                                    console.log('exit ' + code + "   " + signal);
-                                });
-                                sockets[socket.id].deb.send({command: 'continue'}, function () {
-                                });
-                            });
-                            sockets[socket.id].sim_p.send(["iobroker", main.objects, main.states]);
-                        } else if (data[0] == "log") {
-                            //console.log(data[1])
-                            socket.emit("log_log", data[1])
-                        } else if (data[0] == "info") {
-                            //console.info(data[1])
-                            socket.emit("log_info", data[1])
-                        } else if (data[0] == "warn") {
-                            //console.warn(data[1])
-                            socket.emit("log_warn", data[1])
-                        } else if (data[0] == "error") {
-                            //console.error(data[1])
-                            socket.emit("log_error", data[1])
-                        } else if (data[0] == "debug") {
-                            //console.log(data[1])
-                            socket.emit("log_debug", data[1])
-                        } else if (data[0] == "sim_Time") {
-                            socket.emit("sim_Time", data[1])
-                        } else if (data[0] == "add_subscribe") {
-                            socket.emit("add_subscribe", data[1])
-                        } else {
-                            if (data[0] == "script_err") {
-
-                                try {
-                                    if (sockets[socket.id].deb) {
-                                        sockets[socket.id].deb.disconnect(function () {
-                                            sockets[socket.id].deb = false;
-                                            sockets[socket.id].sim_p.kill('SIGINT');
-
-                                        });
-
-                                    }
-                                } catch (err) {
-
-                                }
-
-                            }
-                            socket.emit("message", data);
-                        }
-                    });
-
-
-
-
+                    }
                 });
+
+
+                sockets[socket.id].sim_p.on('message', function (data) {
+                    console.log(data)
+                    if (data[0] == "init") {
+                        sockets[socket.id].deb.connect(function () {
+
+                            socket.emit("log_info", "Debugger connect on Port: " + port);
+
+                            sockets[socket.id].sim_p.on('close', function (code, signal) {
+                                console.log('close ' + code + "   " + signal);
+                                socket.emit("sim_exit");
+                            });
+                            sockets[socket.id].sim_p.on('error', function (code, signal) {
+                                console.log('error ' + code + "   " + signal);
+                            });
+                            sockets[socket.id].sim_p.on('exit', function (code, signal) {
+                                console.log('exit ' + code + "   " + signal);
+                            });
+                            sockets[socket.id].deb.send({command: 'continue'}, function () {
+                            });
+                        });
+                        sockets[socket.id].sim_p.send(["iobroker", main.objects, main.states]);
+                    } else if (data[0] == "log") {
+                        //console.log(data[1])
+                        socket.emit("log_log", data[1])
+                    } else if (data[0] == "info") {
+                        //console.info(data[1])
+                        socket.emit("log_info", data[1])
+                    } else if (data[0] == "warn") {
+                        //console.warn(data[1])
+                        socket.emit("log_warn", data[1])
+                    } else if (data[0] == "error") {
+                        //console.error(data[1])
+                        socket.emit("log_error", data[1])
+                    } else if (data[0] == "debug") {
+                        //console.log(data[1])
+                        socket.emit("log_debug", data[1])
+                    } else if (data[0] == "sim_Time") {
+                        socket.emit("sim_Time", data[1])
+                    } else if (data[0] == "add_subscribe") {
+                        socket.emit("add_subscribe", data[1])
+                    } else {
+                        if (data[0] == "script_err") {
+
+                            try {
+                                if (sockets[socket.id].deb) {
+                                    sockets[socket.id].deb.disconnect(function () {
+                                        sockets[socket.id].deb = false;
+                                        sockets[socket.id].sim_p.kill('SIGINT');
+
+                                    });
+
+                                }
+                            } catch (err) {
+
+                            }
+
+                        }
+                        socket.emit("message", data);
+                    }
+                });
+
+
+            });
         });
         socket.on("delObject", function (id) {
             adapter.delForeignObject(id, "", function (err, data) {
@@ -673,7 +671,7 @@ function init_web(settings) {
 
         });
         socket.on("disconnect", function () {
-            if (sockets[socket.id].deb ) {
+            if (sockets[socket.id].deb) {
                 sockets[socket.id].deb.disconnect(function () {
                     sockets[socket.id].sim_p.kill('SIGINT');
                     delete  sockets[socket.id]
@@ -697,9 +695,9 @@ function init_web(settings) {
 
             });
         });
-        socket.on("debug_lookup", function (data, callback) {
+        socket.on("deb_lookup", function (data, callback) {
 
-            deb.send({
+            sockets[socket.id].deb.send({
                 "command": "lookup",
                 "arguments": {
                     handles: [data],
@@ -728,7 +726,7 @@ function init_web(settings) {
                 "arguments": {
                     "type": "script",
                     "target": "s_engine.js",
-                    "line": data +1,
+                    "line": data + 1,
                     "column": 0,
                 }
             }, function (data) {
@@ -743,7 +741,10 @@ function init_web(settings) {
         });
         socket.on("play_subscribe", function (data) {
             sockets[socket.id].sim_p.send(["play_subscribe", data])
-        })
+        });
+        socket.on("gui_version", function (callback) {
+            callback(adapter.ioPack.common.version)
+        });
         socket.on("getObjectList", function (callback) {
             adapter.objects.getObjectList({include_docs: true}, function (err, res) {
                 res = res.rows;

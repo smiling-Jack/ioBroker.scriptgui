@@ -13,9 +13,9 @@ jQuery.extend(true, SGI, {
 
 
     connect_backend: function (__url) {
-        if (!$.fn.selectId) {
-            $("head").append('<script type="text/javascript" src="js/lib/socket.io_10.js"></script>');
-        }
+        // if (!$.fn.selectId) {
+        //     $("head").append('<script type="text/javascript" src="js/lib/socket.io_10.js"></script>');
+        // }
         $("#img_con_backend").attr("src", "img/icon/flag-blue.png");
 
 
@@ -71,6 +71,13 @@ jQuery.extend(true, SGI, {
             $('window').unload(function () {
                 backend.disconnect()
             });
+
+            backend.emit("gui_version",function (ver) {
+                $("#version").html(ver)
+                SGI.version = ver;
+
+            });
+
 
             backend.emit("getObjectList", function (data) {
                 main.objects = data

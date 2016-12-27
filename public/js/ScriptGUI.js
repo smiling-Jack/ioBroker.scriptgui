@@ -846,7 +846,8 @@ function error_box(data) {
 
         var send_data = {
             subject: data.toString().split("\n")[0],
-            text: data + "\n\nKommentar: " + komment + "\n\nE-mail: " + mail
+            text: data + "\n\nKommentar: " + komment + "\n\nE-mail: " + mail,
+            version: SGI.version
 
         };
         console.log(send_data)

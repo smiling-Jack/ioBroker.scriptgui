@@ -2702,6 +2702,7 @@ function run(script) {
     function simout(key, data) {
         process.send(["simout", key, data]);
     }
+
     debugger;
     process.send(["running"]);
     //vm.runInThisContext(script, "s_engine")
