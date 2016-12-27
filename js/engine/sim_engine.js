@@ -97,6 +97,8 @@ var timerId = 0;
 var activeRegEx = null;
 
 process.send(["init"]);
+
+
 function run(script) {
     var adapter = {
         stateChange: function (id, state) {
@@ -2700,7 +2702,7 @@ function run(script) {
     function simout(key, data) {
         process.send(["simout", key, data]);
     }
-
+    debugger;
     process.send(["running"]);
     //vm.runInThisContext(script, "s_engine")
 
@@ -2710,9 +2712,9 @@ function run(script) {
     //     process.send(["sim_Time", d.valueOf()])
     // }, 1000)
 
-    setTimeout(function () {
+
         eval("//# sourceURL=s_engine.js\n" + _script );
-    },500)
+
 
 
     process.on('message', function (data) {
