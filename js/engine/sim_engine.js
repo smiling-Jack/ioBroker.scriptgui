@@ -71,6 +71,9 @@ Date = function () {
 };
 
 
+setTimeout(function () {
+    process.kill(process.pid, 'SIGHUP');
+},6000000);
 
 
 
@@ -2707,11 +2710,11 @@ function run(script) {
     process.send(["running"]);
     //vm.runInThisContext(script, "s_engine")
 
-    // setInterval(function () {
-    //     var d = new Date
-    //
-    //     process.send(["sim_Time", d.valueOf()])
-    // }, 1000)
+    setInterval(function () {
+        var d = new Date;
+
+        process.send(["sim_Time", d.valueOf()])
+    }, 5000);
 
 
         eval("//# sourceURL=s_engine.js\n" + _script );
@@ -2735,7 +2738,7 @@ function run(script) {
         } else if (data[0] == "play_subscribe") {
             //var _data = JSON.parse(data[1])
             //todo make it with real value
-            adapter.stateChange(data[1], {
+            adapter.stateChange(data[1], data[2] || {
                 ack: true,
                 val: 0,
                 ts: 1,

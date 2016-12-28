@@ -76,7 +76,7 @@ var SGI = {
 
     dev: false,
     //version: main_manifest.version,
-    version: "0.8.3",
+    version: "0",
 
     HOST: '37.120.169.17',
     HOST_PORT: 3000,
@@ -772,26 +772,25 @@ var SGI = {
         });
     },
 
-    add_subscribe: function (data) {
-        var _data = JSON.parse(data)
-        var name = _data.pattern.id.replace(/\./g, "").replace(/\-/g, "")
-        $('#toolbox_sim_param').append('<div style="width: 100%" class="subscriber"><button class="subscriber_btn" onclick="SGI.play_subscribe(\'' + _data.pattern.id + '\')"  id="btn_play_' + name + '"></button><span class="subscribe_pattern">' + _data.pattern.id + '</span><input style="width: 60px" id="ino_play_' + name + '" val="0"></div>');
-        $("#btn_play_" + name).button()
-
-
-    },
-
-    play_subscribe: function (id) {
-        backend.emit("play_subscribe", id)
-    },
-
     log: function (type, data) {
         SGI.log_nr++;
-        $("#sim_output").prepend("<tr id='log_nr" + SGI.log_nr + "'><td style='width: 100px'>" + sim.gettime_m() + "</td><td class='log_" + type + "'>" + type + ": " + data + "</td></tr>")
 
+        if(typeof data === 'object' ){
+            $("#sim_output").prepend("<tr id='log_nr" + SGI.log_nr + "'><td style='width: 100px'>" + sim.gettime_m() + "</td><td id='obj_"+ SGI.log_nr +"' class='log_" + type + "'></td></tr>")
+
+            var formatter_log = new JSONFormatter(data);
+            $("#obj_"+ SGI.log_nr).html(
+                formatter_log.render()
+            );
+            formatter_log.openAtDepth(0);
+
+        }else{
+            $("#sim_output").prepend("<tr id='log_nr" + SGI.log_nr + "'><td style='width: 100px'>" + sim.gettime_m() + "</td><td class='log_" + type + "'>" + type + ": " + data + "</td></tr>")
+        }
         if (SGI.log_nr >= 100) {
             $("#log_nr" + (SGI.log_nr - 100)).remove();
         }
+
     },
 
     setMain: function () {

@@ -58,6 +58,8 @@ var sim = {
     step: "false",
     stepSpeed: 900,
     script: "",
+    sim_pattern:{},
+
     script_err: function (err) {
 
         console.log(err)
@@ -357,6 +359,8 @@ var sim = {
                         }
                         backend.emit("start", [sim.script, sim.run_type, SGI.mode, bp])
                     }, 0)
+                }else{
+                    sim_exit()
                 }
                 // $(document).bind("new_data", function (event, data) {
                 //     if (SGI.sim_run) {
@@ -387,7 +391,20 @@ var sim = {
                 sim_exit()
             }
         }
-    }
+    },
+    add_subscribe: function (data) {
+        var _data = JSON.parse(data);
+        sim.sim_pattern[_data.pattern.id] = true;
+        var name = _data.pattern.id.replace(/\./g, "").replace(/\-/g, "")
+        $('#toolbox_sim_param').append('<div style="width: 100%" class="subscriber"><button class="subscriber_btn" onclick="sim.play_subscribe(\'' + _data.pattern.id + '\')"  id="btn_play_' + name + '"></button><span class="subscribe_pattern">' + _data.pattern.id + '</span><input style="width: 60px" value="'+main.states[_data.pattern.id].val+'" id="ino_play_' + name + '" val="0"></div>');
+        $("#btn_play_" + name).button()
+
+
+    },
+
+    play_subscribe: function (id) {
+        backend.emit("play_subscribe", id)
+    },
 };
 
 

@@ -72,12 +72,15 @@ jQuery.extend(true, SGI, {
                 backend.disconnect()
             });
 
+            backend.emit("getStates",function (err, data) {
+                main.states = data;
+            });
+
             backend.emit("gui_version",function (ver) {
                 $("#version").html(ver)
                 SGI.version = ver;
 
             });
-
 
             backend.emit("getObjectList", function (data) {
                 main.objects = data
@@ -658,7 +661,7 @@ jQuery.extend(true, SGI, {
         backend.on("brake", function (data) {
             SGI.set_mark(data.sourceLine - 1)
             $(".img_debug").button({disabled: false});
-        })
+        });
 
         backend.on("scopes", function (data) {
             console.log("scope")
@@ -721,7 +724,7 @@ jQuery.extend(true, SGI, {
         });
 
         backend.on("????", function (err) {
-        })
+        });
 
         backend.on("sim_exit", function (err) {
             sim_exit();
@@ -748,38 +751,38 @@ jQuery.extend(true, SGI, {
             } else {
                 console.log(data);
             }
-        })
+        });
         backend.on("sim_Time", function (data) {
             if (!SGI.datePicker) {
                 var d = new Date(data)
                 $("#sim_date").val(d.toLocaleDateString() + " " + d.toLocaleTimeString())
             }
 
-        })
+        });
 
         backend.on("log_log", function (data) {
-            SGI.log("log", data);
-        })
+                SGI.log("log", data);
+        });
         backend.on("log_info", function (data) {
             SGI.log("info", data);
-        })
+        });
         backend.on("log_warn", function (data) {
             SGI.log("warn", data);
-        })
+        });
         backend.on("log_error", function (data) {
             SGI.log("error", data);
-        })
+        });
         backend.on("log_debug", function (data) {
             SGI.log("debug", data);
-        })
+        });
         backend.on("add_subscribe", function (data) {
-            SGI.add_subscribe(data)
-        })
+           sim.add_subscribe(data)
+        });
 
         backend.on("_log", function (data) {
             console.log("---------- Log from backend -----------");
             console.log(data);
-        })
+        });
 
         backend.on("_jlog", function (data) {
             console.log("---------- jLog from backend -----------");
@@ -789,12 +792,22 @@ jQuery.extend(true, SGI, {
                 console.log(data)
             }
 
-        })
+        });
         backend.on("already_running", function (data) {
             console.log("already_running")
             SGI.confirmMessage("<div style='width: 100%; text-align: center; font-weight: bold; font-size: 14px'><p style='color: red; font-size: 22px'>Es wurde bereits eine Simulation gestartet </p><br> eventual durch einen anderen Browser ?</div>", "info", false, {})
             sim_exit()
+        });
+
+        backend.on("new_state",function (data) {
+       main.states[data[0]] = data[1];
+            if(sim.sim_pattern[data[0]]){
+                console.log( $("#ino_play_"+data[0].replace(/\./g, "").replace(/\-/g, "")))
+            $("#ino_play_"+data[0].replace(/\./g, "").replace(/\-/g, "")).val(data[1].val)
+            }
+
         })
+
     },
 
 

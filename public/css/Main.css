@@ -2291,7 +2291,7 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
 .img_flag {
     position: absolute;
     right: 20px;
-    top: 0px;
+    top: -3px;
 }
 
 
@@ -2724,9 +2724,32 @@ ul.fancytree-container {
 }
 
 .json-formatter-row .json-formatter-number {
-    color: #00bfff !important;
+    /*color: #00bfff !important;*/
 }
 
+.json-formatter-constructor-name{
+    color: black;
+}
+.obj_placeholder{
+    color: black!important;
+}
+
+#editor_deb_scopes .json-formatter-row .json-formatter-toggler {
+    color: blue
+}
+#sim_output_body .json-formatter-row .json-formatter-toggler {
+    color: red
+}
+.json-formatter-row .json-formatter-boolean {
+    color: darkcyan!important;
+}
+.json-formatter-row .json-formatter-string {
+    color: darkred!important;
+}
+
+.json-formatter-row .json-formatter-key{
+    color: #f52ff5!important;
+}
 
 #selectID_header_1 button {
     padding: 10px 10px!important;
@@ -2753,6 +2776,7 @@ ul.fancytree-container {
 .subscribe_pattern{
     width: 300px;
     display: inline-block;
+    font-size: 12px;
 }
 
 .log_log{color:black}

@@ -63,7 +63,6 @@ function l(data) {
 var pDebug = function (obj) {
     this.port = obj && obj.port || 5858;
     this.host = obj && obj.host || 'localhost';
-    this.sockid = obj.sockid;
     this.seq = 0;
     this.outstandingRequests = {};
     this.eventHandler = obj && obj.eventHandler;
@@ -228,9 +227,11 @@ function init() {
                 main.states[id] = state;
                 for (var key in sockets) {
                     if (sockets[key].deb) {
-                        sockets[key].sim_p.send(["objectChange", id, obj]);
+                        sockets[key].sim_p.send(["stateChange", id, obj]);
                     }
+                    sockets[key].sock.emit("new_state",[id,state])
                 }
+
             });
             adapter.on('objectChange', function (id, obj) {
                 main.objects[id] = obj;
@@ -240,7 +241,7 @@ function init() {
                         sockets[key].sim_p.send(["objectChange", id, obj]);
                     }
                 }
-
+                sockets[key].sock.emit("new_obj",[id,obj])
 
             });
 
@@ -439,6 +440,7 @@ function init_web(settings) {
 
     socketSettings.extensions = function (socket) {
         sockets[socket.id] = {
+            sock: socket,
             sim_p: false,
             deb: false,
             mode: false
@@ -456,7 +458,7 @@ function init_web(settings) {
                     execArgv: ['--debug=' + port],
                     silent: true
                 });
-                // sockets[ this.sockid].sim_p = cp.fork(__dirname + '/js/engine/sim_process_test.js', [script[0], script[1]], {execArgv: ['--debug-brk']});
+                // sockets[socket.id].sim_p = cp.fork(__dirname + '/js/engine/sim_process_test.js', [script[0], script[1]], {execArgv: ['--debug-brk']});
 
 
                 sim.split_script = script.toString().split("\n");
@@ -464,7 +466,6 @@ function init_web(settings) {
                 var first_break = true;
                 sockets[socket.id].deb = new pDebug({
                     port: port,
-                    sockid: this.sockid,
                     eventHandler: function (event) {
                         //console.log('Event: ' + event.event + " seq: " + event.seq + " Script: " + event.body.script.name + " Line: " + event.body.sourceLine + " Column: " + event.body.sourceColumn + " Text: " + event.body.sourceLineText + "\n");
 
@@ -526,7 +527,7 @@ function init_web(settings) {
                                     a();
                                 } else {
                                     first_break = false;
-                                    sockets[this.sockid].deb.send({command: 'continue'}, function () {
+                                    sockets[socket.id].deb.send({command: 'continue'}, function () {
 
                                     });
                                 }
