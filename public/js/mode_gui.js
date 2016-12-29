@@ -140,13 +140,14 @@ jQuery.extend(true, SGI, {
     },
 
     show_gui: function(){
-        SGI.hide_editor();
+
         if (!SGI.gui_rendered) {
             SGI.load_gui()
         }
 
-        $(".main").css({height: 'calc(100% - ' + (61 + $('#sim_log').height())+ 'px)'});
-        $(".main").css({width: 'calc(100% - ' + (2 + $('#right_panel').width())+ 'px)'});
+        SGI.hide_editor();
+        SGI.hide_blockly();
+        SGI.setMain();
 
         sim.step = $('#lba_run_step').attr("aria-pressed")
         if (sim.step == "true") {
@@ -1508,12 +1509,15 @@ jQuery.extend(true, SGI, {
     add_trigger_oid: function (_this, type, type2) {
         var $this = _this;
 
-        $('#select_oid').selectId('show',{
+        $(main.selectId).selectId('show',{
                 common: {
                     //custom: instance
                 }
             },
             function (newId, ignore, obj) {
+            console.log(newId)
+            console.log(ignore)
+            console.log(obj)
                 var _name = obj.common.name;
                 var nr = $($this).data("nr");
                 scope.mbs[nr]["oid"].push(newId.toString());
@@ -1550,7 +1554,7 @@ jQuery.extend(true, SGI, {
         var $this = _this;
 
 
-        $('#select_oid').selectId('show',{
+        $(main.selectId).selectId('show',{
                 common: {
                     //custom: instance
                 }
@@ -2645,7 +2649,7 @@ jQuery.extend(true, SGI, {
 
     change_id: function (opt) {
 
-        $('#select_oid').selectId('show',{
+        $(main.selectId).selectId('show',{
                 common: {
                     //custom: instance
                 }

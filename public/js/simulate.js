@@ -19,26 +19,30 @@ function sim_exit() {
     $("#img_set_script_stop").button({disabled: true});
     //}
 
-    $("#prg_body").css("border-color", "transparent");
+    $(".main").removeClass("main_runShadow");
 
-    $(".btn_min_trigger").unbind("click");
-    $(document).unbind("new_data");
-    $('.force_input').unbind("change");
 
-    $(".btn_min_trigger").attr("src", "img/icon/bullet_toggle_minus.png");
-    $(".btn_min_trigger").css({
-        height: "10px",
-        top: 3,
-        width: "10px"
-    });
 
     if (SGI.mode == "gui") {
+        $(".btn_min_trigger").unbind("click");
+        $('.force_input').unbind("change");
+
+        $(".btn_min_trigger").attr("src", "img/icon/bullet_toggle_minus.png");
+        $(".btn_min_trigger").css({
+            height: "10px",
+            top: 3,
+            width: "10px"
+        });
         $.each(SGI.plumb_inst, function () {
             var con = this.getAllConnections();
             $.each(con, function () {
                 this.removeOverlay("sim")
             });
         });
+    }else if(SGI.mode == "editor"){
+        $(".img_debug").button({disabled: true});
+        SGI.clear_mark();
+        $("#editor_deb_scopes").html("");
     }
 
 
@@ -54,6 +58,8 @@ var sim = {
     step: "false",
     stepSpeed: 900,
     script: "",
+    sim_pattern:{},
+
     script_err: function (err) {
 
         console.log(err)
@@ -263,6 +269,7 @@ var sim = {
             //sim_p.send(["exit"]);
             $("body").css("cursor", "default");
             //SGI.clear_mark();
+            console.log("kill")
             backend.emit("kill")
         }
     },
@@ -270,7 +277,7 @@ var sim = {
         SGI.sim_run = true;
         $(".menuBlocker").show();
         $("body").css("cursor", "pointer");
-        $("#prg_body").css("border-color", "red");
+        $(".main").addClass("main_runShadow")
         var scope = angular.element($('body')).scope();
         var that = this;
 
@@ -323,7 +330,7 @@ var sim = {
                         }
                         backend.emit("start", [sim.script, sim.run_type, SGI.mode])
                     }, 0)
-                } else {
+                } else if (SGI.mode == "editor") {
 
 
                     sim.script = SGI.editor.getValue();
@@ -344,12 +351,22 @@ var sim = {
                         }
                         backend.emit("start", [sim.script, sim.run_type, SGI.mode, bp])
                     }, 0)
+                }else if( SGI.mode == "blockly"){
+                    sim.script = scripts.blocklyCode2JSCode(false,true)
+                    setTimeout(function () {
+                        if (sim.script == "" || sim.script == undefined) {
+                            sim.script = " ";
+                        }
+                        backend.emit("start", [sim.script, sim.run_type, SGI.mode, bp])
+                    }, 0)
+                }else{
+                    sim_exit()
                 }
-                $(document).bind("new_data", function (event, data) {
-                    if (SGI.sim_run) {
-                        sim_p.send(["new_data", data])
-                    }
-                });
+                // $(document).bind("new_data", function (event, data) {
+                //     if (SGI.sim_run) {
+                //         sim_p.send(["new_data", data])
+                //     }
+                // });
             }
             catch (err) {
                 var err_text = "";
@@ -374,7 +391,20 @@ var sim = {
                 sim_exit()
             }
         }
-    }
+    },
+    add_subscribe: function (data) {
+        var _data = JSON.parse(data);
+        sim.sim_pattern[_data.pattern.id] = true;
+        var name = _data.pattern.id.replace(/\./g, "").replace(/\-/g, "")
+        $('#toolbox_sim_param').append('<div style="width: 100%" class="subscriber"><button class="subscriber_btn" onclick="sim.play_subscribe(\'' + _data.pattern.id + '\')"  id="btn_play_' + name + '"></button><span class="subscribe_pattern">' + _data.pattern.id + '</span><input style="width: 60px" value="'+main.states[_data.pattern.id].val+'" id="ino_play_' + name + '" val="0"></div>');
+        $("#btn_play_" + name).button()
+
+
+    },
+
+    play_subscribe: function (id) {
+        backend.emit("play_subscribe", id)
+    },
 };
 
 

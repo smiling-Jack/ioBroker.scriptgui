@@ -379,20 +379,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	                value.setAttribute('href', this.json);
 	            }
 	            // Append value content to value element
-                //console.log(this.json)
-				if((this.json).toString().includes("§§")){
-					//$(value).append('<span style="display: none">'+this.json+'</span>')
-					$(value).attr('onclick','SGI.deb_lookup("'+this.json+'")')
-					$(value).attr('id',''+this.json+'')
-					var valuePreview = "{...}";
-				}else if((this.json).toString().includes("func.")){
-					//$(value).append('<span style="display: none">'+this.json+'</span>')
-					$(value).css("color","red")
-					var valuePreview = helpers_ts_1.getValuePreview(this.json, this.json);
-				}else {
+                if(this.json) {
+                    if ((this.json).toString().includes("§§")) {
+                        //$(value).append('<span style="display: none">'+this.json+'</span>')
+                        $(value).attr('onclick', 'SGI.deb_lookup("' + this.json + '")')
+                        $(value).attr('id', '' + this.json + '');
+                        $(value).addClass("obj_placeholder");
+                        var valuePreview = "{...}";
+                    } else if ((this.json).toString().includes("func.")) {
+                        //$(value).append('<span style="display: none">'+this.json+'</span>')
+                        $(value).css("color", "red")
+                        var valuePreview = helpers_ts_1.getValuePreview(this.json, this.json);
+                    } else {
 
-					var valuePreview = helpers_ts_1.getValuePreview(this.json, this.json);
-				}
+                        var valuePreview = helpers_ts_1.getValuePreview(this.json, this.json);
+                    }
+                }
 	            value.appendChild(document.createTextNode(valuePreview));
 	            // append the value element to toggler link
 	            togglerLink.appendChild(value);
@@ -959,7 +961,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        el.classList.add(cssClass(className));
 	    }
 
-	    if (content !== undefined) {
+	    if (content !== undefined && content.split) {
 			var name = content.split("§§§")[0];
 			var ref = content.split("§§§")[1];
 

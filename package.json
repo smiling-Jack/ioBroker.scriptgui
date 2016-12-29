@@ -60,7 +60,8 @@
     "letsencrypt": "^2.1.5",
     "le-challenge-fs": "^2.0.4",
     "le-sni-auto": "^2.0.1",
-    "le-store-certbot": "^2.0.3"
+    "le-store-certbot": "^2.0.3",
+    "portfinder": "*"
   },
   "description": "ScriptGUI",
   "devDependencies": {
@@ -94,5 +95,5 @@
     "url": "git+https://github.com/smiling-Jack/ScriptGUI.app"
   },
   "scripts": {},
-  "version": "0.8.3"
+  "version": "0.8.8"
 }

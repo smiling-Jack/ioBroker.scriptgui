@@ -1,4 +1,4 @@
-﻿
+
 <html id="html" ng-app="tutorialApp">
 
 <head>
@@ -195,9 +195,12 @@
             </ul>
         </li>
     </ul>
+    <img src="img/icon/flag-red.png" class="img_iconbar img_flag title_translate" id="flag_red" title="Status Backend"/>
+    <img src="img/icon/flag-green.png" class="img_iconbar img_flag title_translate" id="flag_green" title="Status Backend"/>
+    <div style="position: absolute;top: 4px;right: 100px;font-size: 14px !important;">Version:</div>
+    <div id="version" style="position: absolute;top: 4px;right: 59px;font-size: 14px !important;"></div>
 
-    <a id="m_file" class="translate">********</a>
-    <a id="m_file_lb" class="translate">Script:</a>
+
 </div>
 <div id="icon_bar" class="icon_bar ui-state-default">
 
@@ -231,7 +234,14 @@
             <!--</div>-->
         <!--</div>-->
     <!--</div>-->
-    <img src="img/icon/flag-red.png" class="img_iconbar title_translate" id="img_con_backend" title="Status Backend"/>
+    <div style="position: absolute;right: 3px;top:2px;width: 260px;height: 22px;display: flex;align-items: center;">
+        <a id="m_file_lb" class="translate m_file_lb">Script:</a>
+        <input type="text" id="m_file" class="translate frame_color ">
+        <a id="m_engine_lb" class="translate m_file_lb">Engine:</a>
+        <input type="text" id="m_engine" class="translate frame_color ">
+
+    </div>
+
 </div>
 
 

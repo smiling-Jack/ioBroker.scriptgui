@@ -241,24 +241,35 @@ body {
     border-radius: 4px;
 }
 
-.main_gui {
+.main{
+    border: 0px solid transparent !important;
     position: relative;
     overflow: hidden;
     left: 0;
-    width: calc(100% - 2px);
+    width: 10px;
     margin: 0 !important;
     min-height: 142px;
-    height: calc(100% - 188px);
+    height: 10px;
+
+}
+.main_runShadow::after{
+    content: " ";
+    width: 100%;
+    height: 100%;
+    -webkit-box-shadow: inset 0px 0px 0px 3px rgba(255, 0, 0, 1);
+    -moz-box-shadow: inset 0px 0px 0px 3px rgba(255, 0, 0, 1);
+    box-shadow: inset 0px 0px 0px 3px rgba(255, 0, 0, 1);
+    position: absolute;
+    top: 0;
+    z-index: 235;
+    pointer-events: none;
+}
+
+.main_gui {
+
 }
 
 .main_editor {
-    position: relative;
-    overflow: hidden;
-    left: 0;
-    width: calc(100% - 2px);
-    margin: 0 !important;
-    min-height: 142px;
-    height: calc(100% - 193px);
     display: inline-flex;
 }
 
@@ -561,12 +572,10 @@ body {
     position: relative !important;
     top: -30px;
     left: 182px;
-    width: calc(100% - 195px);
-    height: calc(100% - 11px);
+    width: calc(100% - 184px);
+    height: calc(100% - 2px);
     overflow: scroll;
     max-height: 100%;
-    border: 5px solid transparent;
-
 }
 
 .prg_panel {
@@ -625,8 +634,7 @@ body {
     border-right: 1px solid;
 }
 
-#m_file_lb {
-    float: right;
+.m_file_lb {
     margin-right: 3px;
     font-size: 14px !important;
     line-height: 1.4 !important;
@@ -634,11 +642,28 @@ body {
 }
 
 #m_file {
-    float: right;
     margin-right: 20px;
-    font-size: 14px !important;
+    font-size: 11px !important;
     line-height: 1.4 !important;
-    width: auto !important;
+    width: 100px;
+    border-radius: 7px;
+    padding-left: 3px;
+    font-weight: bold;
+
+    color: inherit;
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+}
+#m_engine{
+    margin-right: 20px;
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+    width: 20px;
+    border-radius: 7px;
+    font-weight: bold;
+    text-align: center;
+
+    color: inherit;
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
 }
 
 .ui-helper-hidden {
@@ -2263,15 +2288,13 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
 }
 
-#img_con_backend {
+.img_flag {
     position: absolute;
-    right: 10px;
+    right: 20px;
+    top: -3px;
 }
 
-#img_con_web {
-    position: absolute;
-    right: 10px;
-}
+
 
 #con_panel {
 
@@ -2516,9 +2539,10 @@ div.ui-selectmenu-menu.ui-front.ui-selectmenu-open {
 }
 
 #editor_code {
-    height: 100%;
+    height: calc(100% - 7px);
     width: calc(100% - 250px);
     display: inline-block;
+    border: 3px solid transparent;
 }
 
 .img_debug {
@@ -2700,9 +2724,32 @@ ul.fancytree-container {
 }
 
 .json-formatter-row .json-formatter-number {
-    color: #00bfff !important;
+    /*color: #00bfff !important;*/
 }
 
+.json-formatter-constructor-name{
+    color: black;
+}
+.obj_placeholder{
+    color: black!important;
+}
+
+#editor_deb_scopes .json-formatter-row .json-formatter-toggler {
+    color: blue
+}
+#sim_output_body .json-formatter-row .json-formatter-toggler {
+    color: red
+}
+.json-formatter-row .json-formatter-boolean {
+    color: darkcyan!important;
+}
+.json-formatter-row .json-formatter-string {
+    color: darkred!important;
+}
+
+.json-formatter-row .json-formatter-key{
+    color: #f52ff5!important;
+}
 
 #selectID_header_1 button {
     padding: 10px 10px!important;
@@ -2729,6 +2776,7 @@ ul.fancytree-container {
 .subscribe_pattern{
     width: 300px;
     display: inline-block;
+    font-size: 12px;
 }
 
 .log_log{color:black}
@@ -2736,3 +2784,7 @@ ul.fancytree-container {
 .log_warn{color:orange}
 .log_error{color:red}
 .log_debug{color:darkblue}
+
+.blocklySvg {
+    position: absolute;
+}

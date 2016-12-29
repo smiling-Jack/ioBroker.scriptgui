@@ -35,14 +35,48 @@ var main = {
     objectsLoaded: false,
     waitForRestart: false,
     selectId: null,
-    watcher: {}
+    watcher: {},
+    initSelectId: function () {
+        if (main.selectId) return main.selectId;
+        main.selectId = $('#select_oid').selectId('init', {
+            connCfg: {
+                          socketUrl: socketUrl,
+                          socketSession: socketSession,
+                          socketName: 'scriptGUI',
+                          upgrade: typeof socketForceWebSockets !== 'undefined' ? !socketForceWebSockets : undefined,
+                          rememberUpgrade: typeof socketForceWebSockets !== 'undefined' ? socketForceWebSockets : undefined,
+                          transports: typeof socketForceWebSockets !== 'undefined' ? (socketForceWebSockets ? ['websocket'] : undefined) : undefined
+                      },
+            noMultiselect: true,
+            filter: {type: 'state'},
+            name: 'admin-select-member',
+            texts: {
+                select: _('Select'),
+                cancel: _('Cancel'),
+                all: _('All'),
+                id: _('ID'),
+                name: _('Name'),
+                role: _('Role'),
+                room: _('Room'),
+                value: _('Value'),
+                selectid: _('Select ID'),
+                from: _('From'),
+                lc: _('Last changed'),
+                ts: _('Time stamp'),
+                wait: _('Processing...'),
+                ack: _('Acknowledged')
+            },
+            columns: ['image', 'name', 'role', 'room', 'value']
+        });
+        return main.selectId;
+    }
 }
 
 var SGI = {
 
     dev: false,
     //version: main_manifest.version,
-    version: "0.8.3",
+    version: "0",
 
     HOST: '37.120.169.17',
     HOST_PORT: 3000,
@@ -281,11 +315,12 @@ var SGI = {
                         height: "10px",
                         "min-height": "10px"
                     });
-                    $(".main ,#right_panel").css({height: 'calc(100% - ' + (61 + 10) + 'px)'});
+                    $("#right_panel").css({height: 'calc(100% - ' + (65 + 10) + 'px)'});
                 } else {
                     $("#sim_log").css({height: "" + log_h + "px"});
-                    $(".main ,#right_panel ").css({height: 'calc(100% - ' + (61 + log_h) + 'px)'});
+                    $("#right_panel ").css({height: 'calc(100% - ' + (65 + log_h) + 'px)'});
                 }
+                SGI.setMain();
             })
 
             .drag("init", function () {
@@ -299,10 +334,11 @@ var SGI = {
             .drag(function (ev, dd) {
                 if (start_h - dd.deltaY < 130) {
                     $("#sim_log").css({height: "130px"});
-                    $(".main,#right_panel").css({height: 'calc(100% - ' + (58 + 130) + 'px)'});
+                    $("#right_panel").css({height: 'calc(100% - ' + (62 + 130) + 'px)'});
+                    SGI.setMain();
                 } else {
                     $("#sim_log").css({height: start_h - dd.deltaY + "px"});
-                    $(".main").css({height: 'calc(100% - ' + (62 + start_h - dd.deltaY) + 'px)'});
+                    SGI.setMain();
                 }
 
             });
@@ -312,7 +348,8 @@ var SGI = {
                 height: "10px",
                 "min-height": "10px"
             });
-            $(".main #right_panel").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
+            $("#right_panel").css({height: 'calc(100% - ' + (58 + 10) + 'px)'});
+            SGI.setMain();
         }
 
 
@@ -329,14 +366,12 @@ var SGI = {
                     $("#right_panel").css({
                         width: "10px",
                     });
-                    $(".main").css({width: 'calc(100% - 14px)'});
                 } else {
                     $("#right_panel").css({
                         width: "400px"
                     });
-                    $('.main ').css({width: 'calc(100% - 405px)'});
-
                 }
+                SGI.setMain();
             })
 
 
@@ -462,7 +497,7 @@ var SGI = {
             } else if (SGI.key == 86 && event.ctrlKey == true && SGI.mode == "gui") {
                 SGI.paste_selected();
                 $("body").css({cursor: "default"});
-            }else if (SGI.key == 83 && event.ctrlKey == true) {
+            } else if (SGI.key == 83 && event.ctrlKey == true) {
                 //SGI.save_Script();
                 $("#img_save_local").trigger("click")
                 return false;
@@ -558,7 +593,7 @@ var SGI = {
             $("#prg_panel").children().remove();
             SGI.mbs_n = 0;
             SGI.fbs_n = 0;
-            $("#m_file").text("neu");
+            $("#m_file").val("neu");
             SGI.file_name = "";
 
             PRG = {
@@ -680,9 +715,23 @@ var SGI = {
             $("#wait_div").show();
             if (script) {
                 if (script.common.engineType == "Blockly") {
-                    console.log("engine not supportet")
-                    $("#wait_div").hide();
-                    return
+
+                    SGI.show_blockly(function () {
+
+
+                            scripts.blocklyWorkspace.clear();
+                                try {
+                                    var xml = scripts.jsCode2Blockly(script.common.source) || '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>';
+                                    var dom = Blockly.Xml.textToDom(xml);
+                                    Blockly.Xml.domToWorkspace(dom, scripts.blocklyWorkspace);
+                                } catch (e) {
+                                    console.error(e);
+                                    window.alert('Cannot extract Blockly code!');
+                                }
+
+
+                        }
+                    )
                 } else if (script.native && script.native.editor == "ScriptGUI") {
 
                     if (SGI.mode == "gui") {
@@ -705,7 +754,8 @@ var SGI = {
                 SGI.file_name = script.common.name;
                 main.currentId = id;
 
-                $("#m_file").html(SGI.file_name)
+                $("#m_file").val(SGI.file_name)
+                $("#m_engine").val(script.common.engine.replace("system.adapter.javascript.", ""))
             }
 
 
@@ -722,27 +772,35 @@ var SGI = {
         });
     },
 
-    add_subscribe: function (data) {
-        var _data = JSON.parse(data)
-        var name = _data.pattern.id.replace(/\./g, "").replace(/\-/g, "")
-        $('#toolbox_sim_param').append('<div style="width: 100%" class="subscriber"><button class="subscriber_btn" onclick="SGI.play_subscribe(\'' + _data.pattern.id + '\')"  id="btn_play_' + name + '"></button><span class="subscribe_pattern">' + _data.pattern.id + '</span><input style="width: 60px" id="ino_play_' + name + '" val="0"></></div>');
-        $("#btn_play_" + name).button()
-
-
-    },
-
-    play_subscribe: function (id) {
-        backend.emit("play_subscribe", id)
-    },
-
     log: function (type, data) {
         SGI.log_nr++;
-        $("#sim_output").prepend("<tr id='log_nr" + SGI.log_nr + "'><td style='width: 100px'>" + sim.gettime_m() + "</td><td class='log_" + type + "'>" + type + ": " + data + "</td></tr>")
 
+        if(typeof data === 'object' ){
+            $("#sim_output").prepend("<tr id='log_nr" + SGI.log_nr + "'><td style='width: 100px'>" + sim.gettime_m() + "</td><td id='obj_"+ SGI.log_nr +"' class='log_" + type + "'></td></tr>")
+
+            var formatter_log = new JSONFormatter(data);
+            $("#obj_"+ SGI.log_nr).html(
+                formatter_log.render()
+            );
+            formatter_log.openAtDepth(0);
+
+        }else{
+            $("#sim_output").prepend("<tr id='log_nr" + SGI.log_nr + "'><td style='width: 100px'>" + sim.gettime_m() + "</td><td class='log_" + type + "'>" + type + ": " + data + "</td></tr>")
+        }
         if (SGI.log_nr >= 100) {
             $("#log_nr" + (SGI.log_nr - 100)).remove();
         }
+
+    },
+
+    setMain: function () {
+        $(".main").css({height: 'calc(100% - ' + (61 + $('#sim_log').height()) + 'px)'});
+        $(".main").css({width: 'calc(100% - ' + (3 + $('#right_panel').width()) + 'px)'});
+
+
     }
+
+
 };
 
 
@@ -787,7 +845,8 @@ function error_box(data) {
 
         var send_data = {
             subject: data.toString().split("\n")[0],
-            text: data + "\n\nKommentar: " + komment + "\n\nE-mail: " + mail
+            text: data + "\n\nKommentar: " + komment + "\n\nE-mail: " + mail,
+            version: SGI.version
 
         };
         console.log(send_data)

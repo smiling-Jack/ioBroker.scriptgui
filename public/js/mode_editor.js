@@ -34,14 +34,14 @@ jQuery.extend(true, SGI, {
                 return;
 
 
-            var row = e.getDocumentPosition().row
+            var row = e.getDocumentPosition().row;
 
 
             if (editor.session.getBreakpoints()[row]) {
-                SGI.clearBP(row)
+                SGI.clearBP(row);
                 e.editor.session.clearBreakpoint(row)
             } else {
-                SGI.setBP(row)
+                SGI.setBP(row);
                 e.editor.session.setBreakpoint(row)
             }
 
@@ -147,10 +147,10 @@ jQuery.extend(true, SGI, {
         }
 
         SGI.hide_gui();
-        $(".main").css({height: 'calc(100% - ' + (61 + $('#sim_log').height()) + 'px)'});
-        $(".main").css({width: 'calc(100% - ' + (2 + $('#right_panel').width()) + 'px)'});
+        SGI.hide_blockly();
+
+SGI.setMain();
         $("#lba_run_step").hide();
-        $("#lba_run_type2").hide();
         $('#stepSpeed').hide()
         $("#lba_run_type1").trigger("click");
         $("#main_editor").show();
@@ -187,6 +187,7 @@ jQuery.extend(true, SGI, {
 
     deb_lookup: function (ref) {
         var handel = parseInt(ref.replace("§§", ""));
+        console.log("deb_lookup")
         backend.emit("deb_lookup", handel, function (data) {
             var obj = {};
 

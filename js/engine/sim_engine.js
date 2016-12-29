@@ -1,3 +1,4 @@
+
 var mods = {
     //'vm':               require('vm'),
     //'fs': require('fs'),
@@ -15,12 +16,12 @@ var mods = {
 
     //'coffee-compiler':  require('coffee-compiler'),
 
-    'node-schedule': require('node-schedule'),
-    'suncalc': require('suncalc'),
-    'request': require('request'),
+    'node-schedule': require(__dirname+'/../../../iobroker.javascript/node_modules/node-schedule'),
+    'suncalc': require(__dirname+'/../../../iobroker.javascript/node_modules/suncalc'),
+    'request': require(__dirname+'/../../../iobroker.javascript/node_modules/request'),
     //'wake_on_lan': require('wake_on_lan')
 }
-process.send(__dirname)
+//process.send(__dirname)
 var run_type = process.argv[3];
 var _script = process.argv[2];
 var _time_mode = "auto";
@@ -37,7 +38,6 @@ var __engine = {
     __subscriptions: 0,
     __schedules: 0
 };
-console.log(process.env.TZ)
 var old_date = Date;
 var sd = [];
 
@@ -58,7 +58,7 @@ process.on('message', function (data) {
 
 process.on("uncaughtException", function (e) {
     process.send(["script_err", e.stack]);
-    process.exit(9990)
+return false;
 });
 
 
@@ -71,11 +71,10 @@ Date = function () {
 };
 
 
-setInterval(function () {
-    var d = new Date
+setTimeout(function () {
+    process.kill(process.pid, 'SIGHUP');
+},6000000);
 
-    process.send(["sim_Time", d.valueOf()])
-}, 1000)
 
 
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -101,6 +100,8 @@ var timerId = 0;
 var activeRegEx = null;
 
 process.send(["init"]);
+
+
 function run(script) {
     var adapter = {
         stateChange: function (id, state) {
@@ -234,24 +235,24 @@ function run(script) {
                 process.send(["log", "<b style='color: blue'>Pushover: </b>" + msg.message + ""]);
             }
         }
-    }
-    console = {
+    };
+    var console = {
         log: function (msg) {
-            log('log', msg)
+            log(msg, 'log')
         },
         info: function (msg) {
-            log('info', msg)
+            log( msg,'info')
         },
         warn: function (msg) {
-            log('warn', msg)
+            log(msg,'warn')
         },
         error: function (msg) {
-            log('error', msg)
+            log(msg,'error')
         },
         debug: function (msg) {
-            log('debug', msg)
+            log(msg,'debug')
         }
-    }
+    };
 
     function $(selector) {
         // following is supported
@@ -802,7 +803,7 @@ function run(script) {
         var subs = {
             pattern: pattern,
             callback: function (obj) {
-                if (callback) callback.call(obj);
+                if (callback) callback.call("sandbox",obj);
             },
             name: name
         };
@@ -2705,11 +2706,20 @@ function run(script) {
         process.send(["simout", key, data]);
     }
 
+    debugger;
     process.send(["running"]);
     //vm.runInThisContext(script, "s_engine")
 
+    setInterval(function () {
+        var d = new Date;
 
-    eval(_script + "//# sourceURL=s_engine.js");
+        process.send(["sim_Time", d.valueOf()])
+    }, 5000);
+
+
+        eval("//# sourceURL=s_engine.js\n" + _script );
+
+
 
     process.on('message', function (data) {
         if (data[0] == "trigger") {
@@ -2728,7 +2738,7 @@ function run(script) {
         } else if (data[0] == "play_subscribe") {
             //var _data = JSON.parse(data[1])
             //todo make it with real value
-            adapter.stateChange(data[1], {
+            adapter.stateChange(data[1], data[2] || {
                 ack: true,
                 val: 0,
                 ts: 1,
@@ -2739,9 +2749,15 @@ function run(script) {
 
         }
         else if (data[0] == "stateChange") {
-            adapter.stateChange(data[1], data[2])
+    if(run_type == "trigger" || run_type == "hotrun"){
+        adapter.stateChange(data[1], data[2])
+    }
+
         } else if (data[0] == "objectChange") {
-            objects[data[1]] = data[2]
+            if(run_type == "trigger" || run_type == "hotrun"){
+                objects[data[1]] = data[2]
+            }
+
         }
     });
 }

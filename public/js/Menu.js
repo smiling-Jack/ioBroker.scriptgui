@@ -152,7 +152,7 @@ jQuery.extend(true, SGI, {
             //
             //    });
 
-            //$('#select_oid').selectId('show', {
+            //$(main.selectId).selectId('show', {
             //    filter:{
             //        _id:"javascript.0"
             //    },
@@ -835,7 +835,7 @@ jQuery.extend(true, SGI, {
 
 
         $("#img_set_show_oid").click(function () {
-            $('#select_oid').selectId('show', {
+            $(main.selectId).selectId('show', {
                     common: {
                         custom: "javascript.0"
                     }
@@ -868,7 +868,6 @@ jQuery.extend(true, SGI, {
         //        $(this).stop(true, true).effect("highlight", "linear", 6000, function () {
         //            script_engine_lock = false;
         //        })
-        //
         //    }
         //}).hover(
         //    function () {
@@ -1913,7 +1912,8 @@ jQuery.extend(true, SGI, {
             scope.$apply();
             $("#wait_div").hide();
 
-        } else {
+        }
+        else {
             SGI.editor.setValue(localStorage.getItem("script_editor"))
             SGI.editor.navigateFileEnd()
         }
@@ -1990,37 +1990,14 @@ jQuery.extend(true, SGI, {
                 SGI.clear();
                 SGI.load_prg(data);
                 SGI.file_name = _data.file;
-                $("#m_file").text(SGI.file_name);
+                $("#m_file").val(SGI.file_name);
             });
         });
     },
 
     save_Script: function () {
-        // todo make new
-        //if (SGI.file_name == undefined || SGI.file_name == "Neu" || SGI.file_name == "") {
-        //    alert("Bitte erst local Speichern");
-        //
-        //} else {
-        //    var script;
-        //
-        //    if (SGI.mode == "gui") {
-        //        script = Compiler.make_prg(false, false);
-        //    } else {
-        //        script = SGI.editor.getValue();
-        //
-        //    }
-        //
-        //    try {
-        //        var name = SGI.file_name.replace('.prg', '.js');
-        //        SGI.socket.emit("writeRawFile", "scripts/" + name, script);
-        //    } catch (err) {
-        //        alert("Keine Verbindung zu CCU.IO")
-        //    }
-        //}
-
-
-        // todo make new
         var obj = main.objects[main.currentId]
+
         if (SGI.mode == "gui") {
             obj.native.prg = SGI.make_savedata();
             obj.native.version = SGI.version;
@@ -2029,11 +2006,21 @@ jQuery.extend(true, SGI, {
         } else  if (SGI.mode == "editor") {
             obj.common.source = SGI.editor.getValue();
         }else  if (SGI.mode == "blockly") {
-          //todo
+
+            obj.common.source = scripts.blocklyCode2JSCode(false,true)
         }
 
-        backend.emit('setObject', main.currentId, obj, function (err) {
-            console.log(err)
+        obj.common.engine = "system.adapter.javascript." + $("#m_engine").val();
+
+        var id = main.currentId.split(".")
+        id.pop()
+        id = id.join(".") +"."+ $("#m_file").val();
+
+        obj._id = id
+        obj.common.name = $("#m_file").val()
+
+        main.objects[id] = obj
+        backend.emit('setObject', id, obj, function (err) {
         })
 
 
@@ -2084,8 +2071,13 @@ jQuery.extend(true, SGI, {
         if (SGI.mode == "gui") {
             //editor.setValue(js_beautify(data.toString(), {indent_size: 2}), -1);
             editor.setValue(data.toString(), {indent_size: 2}, -1);
-        } else {
+        } else if(SGI.mode == "editor") {
             editor.setValue(SGI.editor.getValue(), -1);
+        }else if (SGI.mode == "blockly"){
+
+            var code = scripts.blocklyCode2JSCode(false,true)
+
+            editor.setValue(code);
         }
 
         editor.setReadOnly(true)
