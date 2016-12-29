@@ -42,7 +42,7 @@ var SGI = {
 
     dev: false,
     //version: main_manifest.version,
-    version: "new",
+    version: "0.8.3",
 
     HOST: '37.120.169.17',
     HOST_PORT: 3000,
@@ -462,7 +462,12 @@ var SGI = {
             } else if (SGI.key == 86 && event.ctrlKey == true && SGI.mode == "gui") {
                 SGI.paste_selected();
                 $("body").css({cursor: "default"});
-            } else if (SGI.key == 68 && event.altKey == true) {
+            }else if (SGI.key == 83 && event.ctrlKey == true) {
+                //SGI.save_Script();
+                $("#img_save_local").trigger("click")
+                return false;
+            }
+            else if (SGI.key == 68 && event.altKey == true) {
                 $("#develop_menu").show()
             } else if (SGI.key == 89 && event.altKey == true) {
                 //main_win.showDevTools();
@@ -479,7 +484,6 @@ var SGI = {
                     console.log(err)
 
                 });
-
             }
         });
 
@@ -668,41 +672,45 @@ var SGI = {
     },
 
     open: function (id) {
-        var script = main.objects[id]
 
-        $("#wait_div").show();
-        if (script) {
-            if (script.common.engineType == "Blockly") {
-                console.log("engine not supportet")
-                $("#wait_div").hide();
-                return
-            } else if (script.native && script.native.editor == "ScriptGUI") {
+        main.currentId = id;
+        if (main.objects[id].type == "script") {
+            var script = main.objects[id]
 
-                if (SGI.mode == "gui") {
-                    SGI.clear();
+            $("#wait_div").show();
+            if (script) {
+                if (script.common.engineType == "Blockly") {
+                    console.log("engine not supportet")
+                    $("#wait_div").hide();
+                    return
+                } else if (script.native && script.native.editor == "ScriptGUI") {
+
+                    if (SGI.mode == "gui") {
+                        SGI.clear();
+
+                    } else {
+                        SGI.show_gui();
+                        SGI.clear();
+                    }
+
+                    SGI.load_prg(script);
+                    scope.$apply();
 
                 } else {
-                    SGI.show_gui();
-                    SGI.clear();
+                    SGI.show_editor();
+                    SGI.editor.setValue(script.common.source)
+                    SGI.editor.navigateFileEnd()
+
                 }
+                SGI.file_name = script.common.name;
+                main.currentId = id;
 
-                SGI.load_prg(script);
-                scope.$apply();
-
-            } else {
-                SGI.show_editor();
-                SGI.editor.setValue(script.common.source)
-                SGI.editor.navigateFileEnd()
-
+                $("#m_file").html(SGI.file_name)
             }
-            SGI.file_name = script.common.name;
-            main.currentId = id;
 
-            $("#m_file").html(SGI.file_name)
+
+            $("#wait_div").hide();
         }
-
-
-        $("#wait_div").hide();
     },
 
     set_Rightpanel: function () {

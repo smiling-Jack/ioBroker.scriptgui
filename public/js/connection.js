@@ -7,6 +7,7 @@ var backend;
 var $newGroupDialog;
 var groups = {'script.js': 'script.js', 'script.js.common': 'script.js.common', 'script.js.global': 'script.js.global'};
 var open_timeout;
+var list;
 jQuery.extend(true, SGI, {
 
 
@@ -66,11 +67,9 @@ jQuery.extend(true, SGI, {
                 backend.disconnect()
             });
 
-            backend.emit("getObjects", function (err, data) {
-
+            backend.emit("getObjectList",function(data){
                 main.objects = data
 
-                backend.emit('getObjectView', 'script', 'javascript', {}, function (err, doc) {
 
                     backend.emit('getObjectView', 'system', 'instance', {
                         startkey: 'system.adapter.javascript',
@@ -89,13 +88,15 @@ jQuery.extend(true, SGI, {
                     })
 
                     // assemble global script
-                    for (var g = 0; g < doc.rows.length; g++) {
-                        var group = doc.rows[g].value._id.split(".");
+                    for (var g = 0; g < main.objects.length; g++) {
+                        if(main.objects[g].type == "type" && main.objects[g]._id.contains("script.js.") )
+                        var group = main.object._id;
                         group.pop()
                         group = group.join(".")
                         groups[group] = group;
 
-                        main.objects[doc.rows[g].value._id] = doc.rows[g].value;
+
+                        //main.objects[doc.rows[g].value._id] = doc.rows[g].value;
                     }
 
 
@@ -175,7 +176,7 @@ jQuery.extend(true, SGI, {
                                 data.common.engineType = "Javascript/js";
                                 data.native = {
                                     editor: 'ScriptGUI',
-                                    version: SGI.version,
+                                    version: SGI.version || "new",
                                     prg: {
                                         mbs: {},
                                         fbs: {},
@@ -259,7 +260,7 @@ jQuery.extend(true, SGI, {
                     function addScriptInGroup(_group) {
                         fillGroups('edit-new-group-group');
 
-                        if (main.objects[_group] && that.main.objects[_group].type === 'script') {
+                        if (main.objects[_group] && main.objects[_group].type === 'script') {
                             _group = getGroup(_group);
                         }
                         $('#edit-new-group-group').val(_group || 'script.js');
@@ -280,8 +281,8 @@ jQuery.extend(true, SGI, {
                                             var group = $('#edit-new-group-group').val() || 'script.js';
                                             var name = $('#edit-new-group-name').val();
                                             if (!name) {
-                                                that.main.showError(_('No group name'));
-                                                that.$newGroupDialog.dialog('close');
+                                                main.showError(_('No group name'));
+                                                $newGroupDialog.dialog('close');
                                                 return;
                                             }
                                             group += '.' + name.replace(/["'\s.]+/g, '_');
@@ -290,6 +291,7 @@ jQuery.extend(true, SGI, {
                                             $('#script-group-button-cancel').button('disable');
 
                                             // check if object with such name exists
+                                            console.log(group)
                                             if (main.objects[group]) {
                                                 SGI.showMessage(_('Object %s yet exists', group));
                                                 $newGroupDialog.dialog('close');
@@ -300,14 +302,15 @@ jQuery.extend(true, SGI, {
                                                     },
                                                     type: 'channel'
                                                 }, function (err) {
+
                                                     $newGroupDialog.dialog('close');
                                                     if (err) {
-                                                        that.main.showError(err);
-                                                        that.init(true);
+                                                        main.showError(err);
+                                                        init(true);
                                                     } else {
                                                         setTimeout(function () {
-                                                            that.$grid.selectId('show', group);
-                                                            editScript(group);
+                                                            $('#grid-scripts').selectId('show', group);
+                                                            //SGI.editScript(group);
                                                         }, 500);
                                                     }
                                                 });
@@ -318,7 +321,7 @@ jQuery.extend(true, SGI, {
                                         id: 'script-group-button-cancel',
                                         text: _('Cancel'),
                                         click: function () {
-                                            that.$newGroupDialog.dialog('close');
+                                            $newGroupDialog.dialog('close');
                                         }
                                     }
                                 ],
@@ -386,9 +389,9 @@ jQuery.extend(true, SGI, {
                                 },
                             },
                             {
-                                name: 'x',
+                                name: 'icon',
                                 data: function (id, name) {
-                                    if (data[id]) {
+                                    if (data[id] && data[id].type == "script" ) {
                                         if (data[id].common.engineType == "Blockly") {
                                             return '<img src="img/blockly.png" style="height: 18px; width: 18px" alt="">'
                                         } else if (data[id].native && data[id].native.editor == "ScriptGUI") {
@@ -425,7 +428,7 @@ jQuery.extend(true, SGI, {
                                     backend.emit('setObject', id, main.objects[id], function (err) {
                                         if (err) {
                                             main.showError(err);
-                                            that.init(true);
+                                            init(true);
                                         }
                                         $('#grid-scripts').selectId('reinit');
                                     });
@@ -500,7 +503,7 @@ jQuery.extend(true, SGI, {
                                             } else {
                                                 newId = obj._id + '(' + i + ')';
                                             }
-                                        } while (that.list.indexOf(newId) != -1);
+                                        } while (list.indexOf(newId) != -1);
 
                                         obj._id = newId;
                                         main.socket.emit('setObject', newId, obj, function (err, obj) {
@@ -529,7 +532,7 @@ jQuery.extend(true, SGI, {
                                 click: function () {
                                     var group = main.currentId || 'script.js';
                                     if (data[group] && data[group].type === 'script') group = getGroup(group);
-
+console.log(group)
                                     addScript(group);
                                 }
                             },
@@ -571,7 +574,7 @@ jQuery.extend(true, SGI, {
                                 }, 100);
                             }
                         },
-                        quickEdit: [{
+                        quickEdit: [/*{
                             name: 'instance',
                             options: function (id, name) {
                                 var ins = {};
@@ -586,16 +589,16 @@ jQuery.extend(true, SGI, {
                                 }
                                 return ins;
                             }
-                        }],
+                        }*/],
                         quickEditCallback: function (id, attr, newValue, oldValue) {
-                            main.socket.emit('getObject', id, function (err, _obj) {
+                         /*   main.socket.emit('getObject', id, function (err, _obj) {
                                 if (err) return main.showError(err);
 
                                 _obj.common.engine = 'system.adapter.javascript.' + newValue;
                                 main.socket.emit('setObject', _obj._id, _obj, function (err) {
                                     if (err) main.showError(err);
                                 });
-                            });
+                            });*/
                         }
                     }).selectId('show');
 
@@ -603,7 +606,8 @@ jQuery.extend(true, SGI, {
                     $("#1-div > div:nth-child(2)").addClass("script_list")
                 })
             });
-        });
+
+
 
         backend.on('disconnect', function () {
             $("#img_con_web").attr("src", "img/icon/flag-red.png");

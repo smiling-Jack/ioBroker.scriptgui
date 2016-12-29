@@ -2645,19 +2645,13 @@ jQuery.extend(true, SGI, {
 
     change_id: function (opt) {
 
-        $.id_select({
-            type: "singel",
-            close: function (oid) {
-
-            }
-        });
-
         $('#select_oid').selectId('show',{
                 common: {
                     //custom: instance
                 }
             },
             function (newId, ignore, obj) {
+
                 if (newId != null) {
                     if (newId != null) {
 
@@ -3053,7 +3047,7 @@ jQuery.extend(true, SGI, {
     load_prg: function (script) {
         var data = script.native.prg;
         try {
-            if (data.version == undefined || data.version == "old") {
+            if (script.native.version == undefined || script.native.version == "old") {
 
                 $.each(data.mbs, function () {
                     this["style"] = {
@@ -3286,7 +3280,7 @@ jQuery.extend(true, SGI, {
         }
         catch (err) {
             $("#wait_div").hide();
-            SGI.error_box("load_prg  <br> " + err.stack)
+            error_box("load_prg  <br> " + err.stack)
         }
     },
 });

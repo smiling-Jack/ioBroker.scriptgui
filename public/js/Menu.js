@@ -211,10 +211,10 @@ jQuery.extend(true, SGI, {
 //            }
         });
         $("#m_save_script").click(function () {
-            if(SGI.local){
+            if (SGI.local) {
                 SGI.save_local();
 
-            }else{
+            } else {
                 SGI.save_Script();
             }
 
@@ -241,8 +241,12 @@ jQuery.extend(true, SGI, {
                             <td>-> ' + SGI.translate("Markierung umschalten") + ' </td>\
                         </tr>\
                         <tr>\
-                            <td>Ctrl + C</td>\
+                            <td>Ctrl + c</td>\
                             <td>-> ' + SGI.translate("Markierte Bausteine kopieren") + ' </td>\
+                        </tr>\ \
+                        <tr>\
+                           <td>Ctrl + s</td>\
+                            <td>-> ' + SGI.translate("Speichern") + ' </td>\
                         </tr>\
                         <tr>\
                             <td>"Entf</td>\
@@ -460,10 +464,10 @@ jQuery.extend(true, SGI, {
 
 // Local
         $("#img_save_local").click(function () {
-            if(SGI.local){
+            if (SGI.local) {
                 SGI.save_local();
 
-            }else{
+            } else {
                 SGI.save_Script();
             }
 
@@ -1016,9 +1020,6 @@ jQuery.extend(true, SGI, {
             $(this).stop(true, true).effect("highlight");
 
         });
-
-
-
 
 
         $('.img_debug').click(function () {
@@ -1785,7 +1786,6 @@ jQuery.extend(true, SGI, {
         });
 
 
-
         $.contextMenu({
             selector: '.watchable',
             zIndex: 9999,
@@ -1796,7 +1796,7 @@ jQuery.extend(true, SGI, {
                     className: "item_font ",
                     callback: function (key, opt) {
                         main.watcher[$(opt.$trigger[0]).data("ref")] = $(opt.$trigger[0]).html();
-                        $("#editor_deb_watcher").append("<div id='"+$(opt.$trigger[0]).data("ref")+"'><span>"+$(opt.$trigger[0]).html()+" : </span><span id='"+$(opt.$trigger[0]).data("ref")+"_val'></span></div>")
+                        $("#editor_deb_watcher").append("<div id='" + $(opt.$trigger[0]).data("ref") + "'><span>" + $(opt.$trigger[0]).html() + " : </span><span id='" + $(opt.$trigger[0]).data("ref") + "_val'></span></div>")
                     }
                 },
             }
@@ -1808,8 +1808,8 @@ jQuery.extend(true, SGI, {
         // todo local is dead
         //if (SGI.mode == "gui") {
         if (SGI.mode == "gui") {
-            var obj ={
-                natvive:{
+            var obj = {
+                natvive: {
                     prg: SGI.make_savedata()
                 }
             }
@@ -1842,10 +1842,10 @@ jQuery.extend(true, SGI, {
 
     save_local: function () {
 
-        if(SGI.local){
+        if (SGI.local) {
             if (SGI.mode == "gui") {
-                var obj ={
-                    native:{
+                var obj = {
+                    native: {
                         prg: SGI.make_savedata()
                     }
                 }
@@ -1855,7 +1855,7 @@ jQuery.extend(true, SGI, {
 
                 localStorage.setItem("script_editor", SGI.editor.getValue());
             }
-        }else{
+        } else {
 
         }
 
@@ -1890,15 +1890,15 @@ jQuery.extend(true, SGI, {
     open_local: function () {
         // todo local is dead
         //if (SGI.mode == "gui") {
-   /*     if (!SGI.mode) {
-            SGI.mode = "gui"
-            //if (scope.setup.mode == "gui") {
-                SGI.show_gui();
+        /*     if (!SGI.mode) {
+         SGI.mode = "gui"
+         //if (scope.setup.mode == "gui") {
+         SGI.show_gui();
 
-            //} else {
-                //SGI.show_editor();
-            //}
-        }*/
+         //} else {
+         //SGI.show_editor();
+         //}
+         }*/
         if (!SGI.mode) {
             SGI.mode = "editor"
             SGI.show_editor();
@@ -2019,14 +2019,6 @@ jQuery.extend(true, SGI, {
         //}
 
 
-
-
-
-
-
-
-
-
         // todo make new
         var obj = main.objects[main.currentId]
         if (SGI.mode == "gui") {
@@ -2034,8 +2026,10 @@ jQuery.extend(true, SGI, {
             obj.native.version = SGI.version;
             obj.common.source = Compiler.make_prg(false, false);
 
-        } else {
+        } else  if (SGI.mode == "editor") {
             obj.common.source = SGI.editor.getValue();
+        }else  if (SGI.mode == "blockly") {
+          //todo
         }
 
         backend.emit('setObject', main.currentId, obj, function (err) {
@@ -2097,7 +2091,6 @@ jQuery.extend(true, SGI, {
         editor.setReadOnly(true)
 
     },
-
 
 
 })
