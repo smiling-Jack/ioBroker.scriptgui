@@ -65,6 +65,8 @@
   },
   "description": "ScriptGUI",
   "devDependencies": {
+    "mocha": "^2.3.4",
+    "chai": "^3.4.1"
   },
   "directories": {},
   "dist": {
@@ -94,6 +96,9 @@
     "type": "git",
     "url": "git+https://github.com/smiling-Jack/ScriptGUI.app"
   },
-  "scripts": {},
+  "main": "main.js",
+  "scripts": {
+    "test": "node node_modules/mocha/bin/mocha"
+  },
   "version": "0.8.8"
 }
