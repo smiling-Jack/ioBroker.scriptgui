@@ -32,14 +32,15 @@ var script = {
 };
 
 var name = "s_engine";
-var verbose = true;
-
+var verbose = false;
+var debug = false;
 var __engine = {
     __subscriptions: 0,
     __schedules: 0
 };
 var old_date = Date;
 var sd = [];
+
 
 
 process.on('message', function (data) {
@@ -112,7 +113,7 @@ function run(script) {
             if (state) {
 
                 // enable or disable script
-                if (!state.ack && activeRegEx.test(id)) {
+                if (!state.ack /*&& activeRegEx.test(id)*/) {
                     adapter.extendForeignObject(objects[id].native.script, {common: {enabled: state.val}});
                 }
                 if (stateIds.indexOf(id) === -1) {
