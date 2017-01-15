@@ -841,7 +841,7 @@ jQuery.extend(true, SGI, {
                     }
                 },
                 function (newId, ignore, obj) {
-                    SGI.editor.insert(newId + ' /*' + obj.common.name + '*/')
+                    SGI.editor.insert('"'+ newId + '" /*' + obj.common.name + '*/')
                 });
 
         }).hover(

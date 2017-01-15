@@ -154,19 +154,20 @@ jQuery.extend(true, SGI, {
 
                     function add() {
                         newText = $("#new_name").val();
-                        group = $("#add_in_group").val() || "script.js"
+                        var _newText = $("#new_name").val();
+                        group = $("#add_in_group").val() || "script.js";
                         $("#dialog_neu").remove();
-                        idx = 1
+                        idx = 1;
 
 
-                        while (main.objects[group + '.' + name]) {
+                        while (main.objects[group + '.' + newText]) {
                             if (idx === '') idx = 0;
                             idx++;
-                            name = newText + idx;
+                            newText = _newText + idx;
                         }
 
-                        data.common.name = name;
-                        var id = group + '.' + name.replace(/[\s"']/g, '_');
+                        data.common.name = newText;
+                        var id = group + '.' + newText.replace(/[\s"']/g, '_');
 
                         backend.emit('setObject', id, data, function (err) {
                             if (err) {
@@ -196,7 +197,7 @@ jQuery.extend(true, SGI, {
                                     fbs: {},
                                     con: {}
                                 }
-                            }
+                            };
                             add()
 
                         }
@@ -802,7 +803,6 @@ jQuery.extend(true, SGI, {
         backend.on("new_state",function (data) {
        main.states[data[0]] = data[1];
             if(sim.sim_pattern[data[0]]){
-                console.log( $("#ino_play_"+data[0].replace(/\./g, "").replace(/\-/g, "")))
             $("#ino_play_"+data[0].replace(/\./g, "").replace(/\-/g, "")).val(data[1].val)
             }
 

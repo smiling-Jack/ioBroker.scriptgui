@@ -227,7 +227,7 @@ function init() {
                 main.states[id] = state;
                 for (var key in sockets) {
                     if (sockets[key].deb) {
-                        sockets[key].sim_p.send(["stateChange", id, obj]);
+                        sockets[key].sim_p.send(["stateChange", id, state]);
                     }
                     sockets[key].sock.emit("new_state",[id,state])
                 }

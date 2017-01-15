@@ -99,7 +99,7 @@ var sim = {
             } else {
                 $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td style='color: red'>" + err.split(":")[0] + "</td></tr>");
                 $("#sim_output").prepend("<tr><td  style='width: 100px'></td><td><b>Fehler in Zeile:</b> " + (parseInt(line_number) - 1) + "</td></tr>");
-                $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td><b>Zeilentext:</b>" + sim.split_script[line_number - 2] + "</td></tr>");
+                $("#sim_output").prepend("<tr><td  style='width: 100px'>" + sim.gettime_m() + "</td><td><b>Zeilentext:</b>" + SGI.editor.getValue().split("\n")[line_number - 1] + "</td></tr>");
             }
 
         } else {
@@ -394,9 +394,15 @@ var sim = {
     },
     add_subscribe: function (data) {
         var _data = JSON.parse(data);
+        var val = 0;
+        if(main.states[_data.pattern.id] && main.states[_data.pattern.id].val){
+            val = main.states[_data.pattern.id].val
+        }
         sim.sim_pattern[_data.pattern.id] = true;
         var name = _data.pattern.id.replace(/\./g, "").replace(/\-/g, "")
-        $('#toolbox_sim_param').append('<div style="width: 100%" class="subscriber"><button class="subscriber_btn" onclick="sim.play_subscribe(\'' + _data.pattern.id + '\')"  id="btn_play_' + name + '"></button><span class="subscribe_pattern">' + _data.pattern.id + '</span><input style="width: 60px" value="'+main.states[_data.pattern.id].val+'" id="ino_play_' + name + '" val="0"></div>');
+
+
+        $('#toolbox_sim_param').append('<div style="width: 100%" class="subscriber"><button class="subscriber_btn" onclick="sim.play_subscribe(\'' + _data.pattern.id + '\')"  id="btn_play_' + name + '"></button><span class="subscribe_pattern">' + _data.pattern.id + '</span><input style="width: 60px" value="'+val+'" id="ino_play_' + name + '" ></div>');
         $("#btn_play_" + name).button()
 
 
