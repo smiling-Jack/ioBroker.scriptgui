@@ -240,9 +240,9 @@ function init() {
                     if (sockets[key].deb) {
                         sockets[key].sim_p.send(["objectChange", id, obj]);
                     }
+                    sockets[key].sock.emit("new_obj",[id,obj])
                 }
-                sockets[key].sock.emit("new_obj",[id,obj])
-
+                
             });
 
         });
@@ -797,5 +797,3 @@ if (process.argv[2] == "local") {
 
     });
 }
-
-
