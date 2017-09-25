@@ -65,8 +65,8 @@
   },
   "description": "ScriptGUI",
   "devDependencies": {
-    "mocha": "^2.3.4",
-    "chai": "^3.4.1"
+    "mocha": "^3.5.3",
+    "chai": "^4.1.2"
   },
   "directories": {},
   "dist": {
