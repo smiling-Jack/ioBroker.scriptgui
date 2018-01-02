@@ -3,7 +3,7 @@ var express = require('express');
 
 var net = require('net');
 var utils = require(__dirname + '/lib/utils');
-var adapter = utils.adapter('scriptgui');
+var adapter = utils.Adapter('scriptgui');
 var LE = require(utils.controllerDir + '/lib/letsencrypt.js');
 var path = require('path');
 var fs = require('fs');
