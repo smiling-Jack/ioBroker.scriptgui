@@ -2,7 +2,7 @@ var express = require('express');
 
 
 var net = require('net');
-var utils = require(__dirname + '/lib/utils');
+var utils = require('@iobroker/adapter-core');
 var adapter = utils.Adapter('scriptgui');
 var LE = require(utils.controllerDir + '/lib/letsencrypt.js');
 var path = require('path');
