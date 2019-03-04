@@ -61,13 +61,13 @@
     "le-challenge-fs": "^2.0.4",
     "le-sni-auto": "^2.0.1",
     "le-store-certbot": "^2.0.3",
-    "portfinder": "*"
+    "portfinder": "*",
+    "@iobroker/adapter-core": "^1.0.3"
   },
   "description": "ScriptGUI",
   "devDependencies": {
     "mocha": "^4.1.0",
-    "chai": "^4.1.2",
-    "@iobroker/adapter-core": "^1.0.3"
+    "chai": "^4.1.2"
   },
   "directories": {},
   "dist": {
