@@ -10,6 +10,12 @@ var fs = require('fs');
 var cp = require('child_process');
 var portfinder = require('portfinder');
 
+function getAppName() {
+    const parts = __dirname.replace(/\\/g, '/').split('/');
+    return parts[parts.length - 1].split('.')[0];
+}
+utils.appName = getAppName();
+
 var main = {
     objects: {},
     states: {}
