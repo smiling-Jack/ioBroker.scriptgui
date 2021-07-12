@@ -61,12 +61,13 @@
     "le-challenge-fs": "^2.0.4",
     "le-sni-auto": "^2.0.1",
     "le-store-certbot": "^2.0.3",
-    "portfinder": "*"
+    "portfinder": "*",
+    "@iobroker/adapter-core": "^1.0.3"
   },
   "description": "ScriptGUI",
   "devDependencies": {
-    "mocha": "^2.3.4",
-    "chai": "^3.4.1"
+    "mocha": "^4.1.0",
+    "chai": "^4.1.2"
   },
   "directories": {},
   "dist": {
@@ -98,7 +99,7 @@
   },
   "main": "main.js",
   "scripts": {
-    "test": "node node_modules/mocha/bin/mocha"
+    "test": "node node_modules/mocha/bin/mocha --exit"
   },
   "version": "0.8.9"
 }
